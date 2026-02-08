@@ -273,7 +273,9 @@
                     {{ tech }}
                   </span>
                   <span
-                    v-if="project.technologies?.length > 3"
+                    v-if="
+                      project.technologies && project.technologies.length > 3
+                    "
                     class="text-[8px] font-black text-[#702DFF] pt-1 ml-1"
                     >+{{ project.technologies.length - 3 }}</span
                   >
@@ -476,7 +478,6 @@ const searchQuery = ref("");
 const statusFilter = ref("all");
 const visibilityFilter = ref("all");
 const areaFilter = ref("all");
-const techFilter = ref("all");
 const sortOrder = ref("newest");
 const selectedIds = ref<string[]>([]);
 const currentPage = ref(1);

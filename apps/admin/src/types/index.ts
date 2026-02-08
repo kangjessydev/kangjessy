@@ -30,6 +30,7 @@ export interface Client {
   deadline?: string
   external_link?: string
   lead_id?: string | null
+  projects?: any[]
 }
 
 export interface Profile {

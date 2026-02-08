@@ -311,8 +311,6 @@ import {
   Zap,
   Plus,
   RotateCw,
-  MessageSquare,
-  Star,
   CheckCircle2,
   TrendingUp,
 } from "lucide-vue-next";
@@ -323,14 +321,11 @@ import DashboardCard from "../components/ui/DashboardCard.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
 import ErrorAlert from "../components/ui/ErrorAlert.vue";
-import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
-import SkeletonCard from "../components/ui/SkeletonCard.vue";
 import { useErrorHandler } from "../composables/useErrorHandler";
 import { useLoading } from "../composables/useLoading";
 
 // Composables
-const { globalError, handleError, clearError, withErrorHandling } =
-  useErrorHandler();
+const { globalError, handleError, clearError } = useErrorHandler();
 const { isLoading, withLoading } = useLoading("dashboard");
 
 const statsData = ref({
@@ -488,7 +483,7 @@ const getDebtColor = (p: any) => {
 const fetchDashboardData = async () => {
   await withLoading(async () => {
     try {
-      const [allClients, portfolioItems] = await Promise.all([
+      const [allClients] = await Promise.all([
         clientsService.getAll(),
         portfolioService.getAll(),
       ]);

@@ -750,7 +750,6 @@ import {
   FileText,
   Trash2,
   Lock,
-  SlidersHorizontal,
   FlaskConical,
 } from "lucide-vue-next";
 import { clientsService } from "../services/clientsService";

@@ -365,7 +365,7 @@ const seedBlueprint = async () => {
       log(`Stage saved with ID: ${savedStage.id}`);
 
       // Upsert Steps
-      const stepsWithStageId = steps.map((step) => ({
+      const stepsWithStageId = (steps || []).map((step) => ({
         ...step,
         stage_id: savedStage.id,
       }));

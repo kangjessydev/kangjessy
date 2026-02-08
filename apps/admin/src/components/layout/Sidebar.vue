@@ -189,7 +189,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -198,14 +198,12 @@ import {
   Briefcase,
   DollarSign,
   Tag,
-  LogOut,
   Settings,
   Image,
   ChevronDown,
   Layers,
   Zap,
 } from "lucide-vue-next";
-import { auth } from "@kangjessy/database";
 import { useSidebar } from "../../composables/useSidebar";
 
 // Menu Data definition
@@ -276,7 +274,6 @@ const menuGroups: { title: string; items: MenuItem[] }[] = [
 ];
 
 const route = useRoute();
-const router = useRouter();
 const { isCollapsed, isMobileOpen, closeMobileSidebar } = useSidebar();
 
 // State for expanding menus
@@ -355,11 +352,6 @@ watch(
 // But we need to make sure we are inside setup context where route is available.
 // Let's use immediate watch for initialization of expanded items logic or just call it.
 initExpanded();
-
-const handleLogout = async () => {
-  await auth.signOut();
-  router.push("/login");
-};
 </script>
 
 <style scoped>

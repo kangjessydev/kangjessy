@@ -439,8 +439,7 @@
                     <button
                       v-if="
                         order.status === 'Deal' &&
-                        (!(order as any).projects ||
-                          (order as any).projects.length === 0)
+                        (!order.projects || order.projects.length === 0)
                       "
                       @click="convertToProject(order)"
                       class="p-2.5 rounded-xl text-indigo-100 bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transition-all active:scale-95"
@@ -451,7 +450,7 @@
                     <button
                       v-else-if="
                         order.status === 'Deal' &&
-                        (order as any).projects?.length > 0
+                        (order.projects?.length || 0) > 0
                       "
                       class="p-2.5 rounded-xl text-emerald-600 bg-emerald-50 hover:bg-emerald-100 transition-all"
                       title="Project Exists"
@@ -1093,7 +1092,6 @@ import {
   Check,
   Zap,
   Hash,
-  Eye,
   Receipt,
   Rocket,
 } from "lucide-vue-next";

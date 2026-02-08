@@ -313,13 +313,7 @@
                         >
                           <button
                             v-if="project.client_portal_token"
-                            @click="
-                              window.open(
-                                'https://kangjessy.com/portal/' +
-                                  project.client_portal_token,
-                                '_blank',
-                              )
-                            "
+                            @click="openPortal(project)"
                             class="w-full px-4 py-2.5 text-left text-[10px] font-black uppercase tracking-widest text-[#702DFF] hover:bg-indigo-50 transition-all flex items-center gap-3"
                           >
                             <ExternalLink :size="14" /> View Portal
@@ -782,6 +776,7 @@ import {
   ExternalLink,
 } from "lucide-vue-next";
 import { projectsService } from "../services/projectsService";
+import type { Project } from "../types";
 import DashboardCard from "../components/ui/DashboardCard.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
 import ButtonPrimary from "../components/ui/ButtonPrimary.vue";
@@ -906,11 +901,11 @@ const moveStatus = async (project: any, direction: "next" | "prev") => {
   if (direction === "prev" && currentIndex > 0) nextIndex--;
 
   if (nextIndex !== currentIndex) {
-    const newStatus = statusFlow[nextIndex];
+    const newStatus = statusFlow[nextIndex] as Project["status"];
     try {
       await projectsService.update(project.id, { status: newStatus });
       project.status = newStatus;
-      showToast(`Moved to ${newStatus.replace("_", " ").toUpperCase()}`);
+      showToast(`Moved to ${newStatus?.replace("_", " ").toUpperCase()}`);
     } catch (err) {
       showToast("Failed to move project stage", "error");
     }
@@ -994,6 +989,13 @@ function openWhatsAppModal(project: any) {
     project.client_portal_token;
   waModal.isOpen = true;
 }
+
+const openPortal = (project: any) => {
+  window.open(
+    "https://kangjessy.com/portal/" + project.client_portal_token,
+    "_blank",
+  );
+};
 
 async function executeDelete() {
   const id = confirmModal.value.targetId;

@@ -404,6 +404,7 @@ import type { Client } from "../../types";
 const props = defineProps<{
   isOpen: boolean;
   lead: Client | null;
+  loading?: boolean;
 }>();
 
 const emit = defineEmits(["close", "save"]);

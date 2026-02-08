@@ -1538,8 +1538,6 @@ import {
   Plus,
   Search,
   Zap,
-  Settings,
-  Layers,
   Palette,
   Info,
 } from "lucide-vue-next";

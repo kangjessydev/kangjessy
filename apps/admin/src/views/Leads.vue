@@ -1056,7 +1056,6 @@ import { useLoading } from "../composables/useLoading";
 import type { Client } from "../types";
 import PageHeader from "../components/ui/PageHeader.vue";
 import DashboardCard from "../components/ui/DashboardCard.vue";
-import ButtonPrimary from "../components/ui/ButtonPrimary.vue";
 import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
 import Toast from "../components/ui/Toast.vue";

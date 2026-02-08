@@ -47,14 +47,14 @@ export const useImport = () => {
       return result
     }
 
-    const headers = parseLine(lines[0])
+    const headers = parseLine(lines[0] || '')
     return lines.slice(1).map(line => {
       const values = parseLine(line)
       const obj: any = {}
       headers.forEach((header, i) => {
-        let val = values[i]
+        let val: any = values[i]
         // Try to parse numbers
-        if (val && !isNaN(val as any) && val.trim() !== '') {
+        if (typeof val === 'string' && val.trim() !== '' && !isNaN(val as any)) {
           val = Number(val)
         }
         // Try to parse JSON strings (for nested categories/tags)
@@ -189,9 +189,11 @@ export const useImport = () => {
         
         for (let i = 0; i < modules.length; i++) {
           const moduleName = modules[i]
-          const moduleData = Array.isArray(data.data[moduleName]) 
-            ? data.data[moduleName] 
-            : [data.data[moduleName]]
+          if (!moduleName) continue
+          
+          const moduleData = Array.isArray(data.data[moduleName as any]) 
+            ? data.data[moduleName as any] 
+            : [data.data[moduleName as any]]
           
           const result = await importHandler(moduleName, moduleData)
           

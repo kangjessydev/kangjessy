@@ -122,10 +122,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { Search } from "lucide-vue-next";
-import DashboardCard from "./DashboardCard.vue";
-
+<script lang="ts">
 export interface TableColumn {
   key: string;
   label: string;
@@ -133,6 +130,11 @@ export interface TableColumn {
   headerClass?: string;
   cellClass?: string;
 }
+</script>
+
+<script setup lang="ts">
+import { Search } from "lucide-vue-next";
+import DashboardCard from "./DashboardCard.vue";
 
 interface Props {
   columns: TableColumn[];

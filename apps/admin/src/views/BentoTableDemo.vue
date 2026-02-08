@@ -212,14 +212,14 @@ import {
   Edit,
   Trash2,
 } from "lucide-vue-next";
-import BentoTable from "../components/ui/BentoTable.vue";
+import BentoTable, { type TableColumn } from "../components/ui/BentoTable.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
 import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
 import Toast from "../components/ui/Toast.vue";
 
 // Table Configuration
-const columns = [
+const columns: TableColumn[] = [
   { key: "name", label: "Name", headerClass: "!pl-8" },
   { key: "email", label: "Email" },
   { key: "role", label: "Role" },

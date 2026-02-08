@@ -173,7 +173,7 @@ onUnmounted(() => {
 watch(
   () => [props.modelValue, props.isOpen],
   ([newVal, newIsOpen]) => {
-    const active = newVal || newIsOpen;
+    const active = !!(newVal || newIsOpen);
     sheetManager.syncWithModel(active);
     if (active) {
       localFullHeight.value = props.fullHeight;

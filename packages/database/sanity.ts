@@ -1,6 +1,8 @@
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 
+declare const process: any;
+
 const getEnv = (name: string) => {
     if (typeof process !== 'undefined' && process.env && process.env[name]) return process.env[name];
     // @ts-ignore

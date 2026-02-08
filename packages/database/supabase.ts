@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
+declare const process: any;
+
 // We expect environment variables to be provided by the consuming app (Vite/Nuxt)
 const getEnv = (name: string) => {
     // Check for Vite/Nuxt env patterns

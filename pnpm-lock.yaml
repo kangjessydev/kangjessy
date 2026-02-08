@@ -85,7 +85,7 @@ importers:
         specifier: ^0.8.1
         version: 0.8.1(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3))
       autoprefixer:
-        specifier: ^10.4.23
+        specifier: ^10.4.24
         version: 10.4.24(postcss@8.5.6)
       postcss:
         specifier: ^8.5.6
@@ -18706,7 +18706,7 @@ snapshots:
 
   tsx@4.21.0:
     dependencies:
-      esbuild: 0.27.0
+      esbuild: 0.27.3
       get-tsconfig: 4.13.6
     optionalDependencies:
       fsevents: 2.3.3

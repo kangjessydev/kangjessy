@@ -29,7 +29,7 @@
         title="Lead-Linked"
         :value="leadLinkedCount"
         :icon="Users"
-        variant="indigo"
+        variant="primary"
         unit="Leads"
         tooltip="Proposal yang bermula dari inkuiri form kontak/konsultasi."
       />
@@ -37,7 +37,7 @@
         title="Independent"
         :value="independentCount"
         :icon="Zap"
-        variant="amber"
+        variant="warning"
         unit="Proposals"
         tooltip="Proposal yang dibuat langsung via generator (Manual/Quick)."
       />
@@ -420,10 +420,7 @@ import {
   Edit2,
   Trash2,
   CheckCircle,
-  Hash,
   CheckSquare,
-  X,
-  SlidersHorizontal,
 } from "lucide-vue-next";
 import { clientsService } from "../services/clientsService";
 import { useErrorHandler } from "../composables/useErrorHandler";

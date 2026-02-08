@@ -1016,7 +1016,7 @@ const handleSave = async () => {
       // We UPDATE the existing lead record to add proposal details
       // We do NOT create a new record, we enrich the lead
       const leadId = String(route.query.leadId);
-      payload.id = leadId; // Ensure ID is set
+      (payload as any).id = leadId; // Ensure ID is set
       payload.status = "Concept"; // Move status to Concept
 
       res = await clientsService.update(leadId, {
@@ -1079,6 +1079,7 @@ const resetForm = () => {
     selected_timeline: "Standard",
     status: "Lead",
     type: "",
+    lead_id: null as string | null,
   };
   narrative.value = { bg: "", prob: "", sol: "" };
   selectedFeatureIds.value = [];

@@ -40,6 +40,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { blueprintService } from "../services/blueprintService";
+import type { RoadmapStage } from "@kangjessy/config";
 
 const loading = ref(false);
 const status = ref("");
@@ -51,7 +52,7 @@ const log = (msg: string) => {
   console.log(msg);
 };
 
-const roadmapData = [
+const roadmapData: RoadmapStage[] = [
   {
     id: "visionary",
     name: "The Visionary",

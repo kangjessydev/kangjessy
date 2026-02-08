@@ -64,13 +64,16 @@
             >
               Ekosistem Klien
             </h3>
-            <div v-if="formData.type === 'general_inquiry'" class="ml-auto">
+            <div v-if="formData.origin_type === 'from_lead'" class="ml-auto">
               <span
                 class="px-2 py-1 bg-indigo-50 text-indigo-500 text-[8px] font-black rounded-lg uppercase tracking-widest border border-indigo-100/50"
                 >Lead Linked</span
               >
             </div>
-            <div v-else-if="formData.type === 'project_order'" class="ml-auto">
+            <div
+              v-else-if="formData.origin_type === 'independent'"
+              class="ml-auto"
+            >
               <span
                 class="px-2 py-1 bg-amber-50 text-amber-500 text-[8px] font-black rounded-lg uppercase tracking-widest border border-amber-100/50"
                 >Independent</span
@@ -141,7 +144,7 @@
                 >Nama Klien</label
               >
               <input
-                v-model="formData.name"
+                v-model="formData.client_name"
                 type="text"
                 placeholder="misal: Budi Santoso"
                 class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all"
@@ -403,7 +406,7 @@
                     }}
                   </p>
                   <p class="text-[9px] font-bold text-slate-400 truncate">
-                    {{ prop.name }} • {{ prop.company || "Personal" }}
+                    {{ prop.client_name }} • {{ prop.company || "Personal" }}
                   </p>
                 </div>
               </div>
@@ -412,7 +415,7 @@
                   {{ prop.status }}
                 </span>
                 <span
-                  v-if="prop.is_converted"
+                  v-if="prop.status === 'approved'"
                   class="px-2 py-0.5 bg-emerald-500 text-white text-[8px] font-black rounded uppercase tracking-widest shadow-lg shadow-emerald-500/20"
                 >
                   Converted
@@ -509,7 +512,7 @@
                       Dipersiapkan Untuk
                     </p>
                     <p class="text-xs font-black">
-                      {{ formData.name || "Nama Klien" }}
+                      {{ formData.client_name || "Nama Klien" }}
                     </p>
                     <p class="text-[9px] font-bold text-indigo-300 opacity-60">
                       {{ formData.company || "Organisasi" }}
@@ -752,11 +755,15 @@ import {
   Lock,
   FlaskConical,
 } from "lucide-vue-next";
+import {
+  proposalService,
+  type Proposal,
+  type ProposalInput,
+} from "../services/proposalService";
 import { clientsService } from "../services/clientsService";
 import { couponsService, type Coupon } from "../services/couponsService";
 import { projectTypes } from "../data/order/projects";
 import { availableFeatures } from "../data/order/features";
-import type { Client } from "../types";
 import { BaseButton } from "@kangjessy/ui";
 import Toast from "../components/ui/Toast.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
@@ -765,23 +772,22 @@ const router = useRouter();
 const route = useRoute();
 const saving = ref(false);
 const showResetConfirm = ref(false);
-const activeProposals = ref<Client[]>([]);
+const activeProposals = ref<Proposal[]>([]);
 const fetchingLead = ref(false);
 const editingId = ref<string | null>(null);
 
 const formData = ref({
   project_name: "",
-  name: "",
+  client_name: "",
   company: "",
   email: "",
   phone: "",
   project_type: "",
-  features: "",
-  voucher: "",
-  brief: "",
+  features: [] as string[],
+  voucher_code: "",
   selected_timeline: "Standard",
-  status: "Lead",
-  type: "", // Will be populated from data or default if new
+  status: "draft" as any,
+  origin_type: "independent" as any,
   lead_id: null as string | null,
 });
 
@@ -806,19 +812,19 @@ const showToast = (msg: string, variant: "success" | "error" = "success") => {
 
 const selectedFeatureIds = ref<string[]>([]);
 const activeVouchers = ref<Coupon[]>([]);
-const availableLeads = ref<Client[]>([]);
+const availableLeads = ref<any[]>([]);
 
 function handleLeadSelect() {
   const selectedLead = availableLeads.value.find(
     (l) => l.id === formData.value.lead_id,
   );
   if (selectedLead) {
-    formData.value.name = selectedLead.name;
+    formData.value.client_name = selectedLead.name;
     formData.value.company = selectedLead.company || "";
     formData.value.email = selectedLead.email || "";
     formData.value.phone = selectedLead.phone || "";
     formData.value.project_type = selectedLead.project_type || "";
-    formData.value.type = "general_inquiry";
+    formData.value.origin_type = "from_lead";
     if (selectedLead.brief) {
       narrative.value.bg = selectedLead.brief;
     }
@@ -827,76 +833,37 @@ function handleLeadSelect() {
 
 const loadProposal = async (id: string) => {
   if (!id || id === "undefined" || id === "null") return;
-  if (editingId.value === id) return; // Skip if already loaded
+  if (editingId.value === id) return;
 
   fetchingLead.value = true;
   try {
-    const data = await clientsService.getById(id);
-    if (!data) {
-      console.warn("Client data record found but is empty for ID:", id);
-      return;
-    }
+    const data = await proposalService.getById(id);
+    if (!data) return;
 
-    // Success: Now clear and load
     editingId.value = data.id;
-    selectedFeatureIds.value = [];
-    narrative.value = { bg: "", prob: "", sol: "" };
+    selectedFeatureIds.value = data.features || [];
+    narrative.value = {
+      bg: data.background || "",
+      prob: data.problem || "",
+      sol: data.solution || "",
+    };
 
     formData.value = {
       project_name: data.project_name || "",
-      name: data.name || "",
+      client_name: data.client_name || "",
       company: data.company || "",
       email: data.email || "",
       phone: data.phone || "",
       project_type: data.project_type || "",
-      features: data.features || "",
-      voucher: data.voucher || "",
-      brief: data.brief || "",
+      features: data.features || [],
+      voucher_code: data.voucher_code || "",
       selected_timeline: data.selected_timeline || "Standard",
-      status: data.status || "Lead",
-      type: data.type || "project_order",
+      status: data.status,
+      origin_type: data.origin_type,
       lead_id: data.lead_id || null,
     };
-
-    // Parse narrative markers
-    const briefText = data.brief || "";
-    if (briefText.includes("[BG]")) {
-      const bgMatch = briefText.match(/\[BG\]([\s\S]*?)(?=\[PROB\]|\[SOL\]|$)/);
-      const probMatch = briefText.match(
-        /\[PROB\]([\s\S]*?)(?=\[BG\]|\[SOL\]|$)/,
-      );
-      const solMatch = briefText.match(
-        /\[SOL\]([\s\S]*?)(?=\[BG\]|\[PROB\]|$)/,
-      );
-
-      narrative.value = {
-        bg: bgMatch?.[1]?.trim() || "",
-        prob: probMatch?.[1]?.trim() || "",
-        sol: solMatch?.[1]?.trim() || "",
-      };
-    } else {
-      // Legacy or simple brief: everything to BG
-      narrative.value = {
-        bg: briefText,
-        prob: "",
-        sol: "",
-      };
-    }
-
-    if (data.features) {
-      selectedFeatureIds.value = data.features.split(",").filter(Boolean);
-    } else {
-      selectedFeatureIds.value = [];
-    }
-
-    // Only show success toast if needed, or suppress to reduce noise
-    // showToast("Data Proposal Berhasil Dimuat");
-  } catch (err) {
-    // Only show error if it's NOT a "Row not found" which might happen during transitions
-    console.error("DEBUG - Load Proposal Failed:", err);
-    if ((err as any)?.code !== "PGRST116") {
-      showToast("Gagal memuat data proposal", "error");
-    }
+  } catch (e) {
+    console.error("Load failed", e);
   } finally {
     fetchingLead.value = false;
   }
@@ -904,21 +871,14 @@ const loadProposal = async (id: string) => {
 
 onMounted(async () => {
   try {
-    const [coupons, allClients, inboxLeads] = await Promise.all([
+    const [coupons, allProposals, inboxLeads] = await Promise.all([
       couponsService.getAll(),
-      clientsService.getAll(),
+      proposalService.getAll(),
       clientsService.getLeads(),
     ]);
     activeVouchers.value = coupons;
     availableLeads.value = inboxLeads;
-    // History: Show all records that are either leads or project orders
-    activeProposals.value = allClients.filter(
-      (p) =>
-        (p.type === "project_order" || p.type === "general_inquiry") &&
-        (p.project_name || p.name),
-    );
-
-    // Load lead via watch below
+    activeProposals.value = allProposals;
   } catch (e) {
     console.error("Init failed", e);
   }
@@ -937,7 +897,7 @@ const toggleFeature = (id: string) => {
   const idx = selectedFeatureIds.value.indexOf(id);
   if (idx > -1) selectedFeatureIds.value.splice(idx, 1);
   else selectedFeatureIds.value.push(id);
-  formData.value.features = selectedFeatureIds.value.join(",");
+  formData.value.features = [...selectedFeatureIds.value];
 };
 
 const foundationPrice = computed(() => {
@@ -964,7 +924,9 @@ const finalTotal = computed(() => {
   if (formData.value.selected_timeline === "Urgent") multiplier = 1.5;
 
   let voucherVal = 0;
-  const v = activeVouchers.value.find((v) => v.code === formData.value.voucher);
+  const v = activeVouchers.value.find(
+    (v) => v.code === formData.value.voucher_code,
+  );
   if (v) {
     voucherVal =
       v.type === "percent"
@@ -984,69 +946,54 @@ const selectedFeatures = computed(() => {
 const formatPrice = (v: number) => "Rp " + (v || 0).toLocaleString("id-ID");
 
 const handleSave = async () => {
-  if (!formData.value.name)
+  if (!formData.value.client_name)
     return showToast("Nama klien wajib diisi!", "error");
   if (!formData.value.project_type)
     return showToast("Pilih pondasi proyek dulu Kak!", "error");
 
   saving.value = true;
   try {
-    formData.value.brief = `[BG] ${narrative.value.bg} [PROB] ${narrative.value.prob} [SOL] ${narrative.value.sol}`;
-    formData.value.features = selectedFeatureIds.value.join(",");
-
-    if (!formData.value.project_name) {
-      formData.value.project_name = `${formData.value.project_type || "Solusi Digital"} - ${formData.value.name}`;
-    }
-
-    const payload = {
+    const payload: ProposalInput = {
       ...formData.value,
-      total_amount: finalTotal.value,
+      background: narrative.value.bg,
+      problem: narrative.value.prob,
+      solution: narrative.value.sol,
+      base_price: foundationPrice.value,
+      feature_total: selectedFeatures.value.reduce(
+        (sum, f) => sum + f.price,
+        0,
+      ),
+      final_total: finalTotal.value,
+      features: [...selectedFeatureIds.value],
     };
 
+    if (!payload.project_name) {
+      payload.project_name = `${formData.value.project_type || "Solusi Digital"} - ${formData.value.client_name}`;
+    }
+
     let res;
-    // Scenario 1: Editing an existing proposal (ID already loaded)
     if (editingId.value) {
-      // If we are editing, we just update
-      res = await clientsService.update(editingId.value, payload);
+      res = await proposalService.update(editingId.value, payload);
       showToast("Proposal Berhasil Diperbarui!");
-    }
-    // Scenario 2: Creating from a Lead (first time converting lead to proposal)
-    else if (route.query.leadId) {
-      // We UPDATE the existing lead record to add proposal details
-      // We do NOT create a new record, we enrich the lead
-      const leadId = String(route.query.leadId);
-      (payload as any).id = leadId; // Ensure ID is set
-      payload.status = "Concept"; // Move status to Concept
-
-      res = await clientsService.update(leadId, {
-        ...payload,
-        project_status: "Concept",
-      });
+    } else if (route.query.leadId) {
+      res = await proposalService.createFromLead(
+        String(route.query.leadId),
+        payload,
+      );
       showToast("Lead Berhasil Dikonversi ke Proposal!");
-    }
-    // Scenario 3: Creating a brand new independent proposal
-    else {
-      if (!payload.type) payload.type = "project_order";
-
-      res = await clientsService.create({
-        ...payload,
-        paid_amount: 0,
-        payment_status: "unpaid",
-        project_status: "Concept",
-        is_converted: false,
-      } as any);
+    } else {
+      res = await proposalService.create(payload);
       showToast("Proposal Baru Berhasil Dibuat!");
     }
 
-    // Redirect to proposal view
     if (res && res.id) {
       setTimeout(() => {
-        router.push(`/proposals/${res.id}`);
+        router.push(`/proposals`);
       }, 1000);
     }
   } catch (e) {
     console.error("Save failed", e);
-    showToast("Gagal menyambung ke satelit data.", "error");
+    showToast("Gagal menyambung ke database proposal.", "error");
   } finally {
     saving.value = false;
   }
@@ -1055,7 +1002,7 @@ const handleSave = async () => {
 const deleteProposal = async (id: string) => {
   if (!confirm("Hapus proposal ini?")) return;
   try {
-    await clientsService.delete(id);
+    await proposalService.delete(id);
     activeProposals.value = activeProposals.value.filter((p) => p.id !== id);
     showToast("Proposal Berhasil Dihapus");
   } catch (err) {
@@ -1067,17 +1014,16 @@ const resetForm = () => {
   editingId.value = null;
   formData.value = {
     project_name: "",
-    name: "",
+    client_name: "",
     company: "",
     email: "",
     phone: "",
     project_type: "",
-    features: "",
-    voucher: "",
-    brief: "",
+    features: [],
+    voucher_code: "",
     selected_timeline: "Standard",
-    status: "Lead",
-    type: "",
+    status: "draft",
+    origin_type: "independent",
     lead_id: null as string | null,
   };
   narrative.value = { bg: "", prob: "", sol: "" };
@@ -1089,7 +1035,7 @@ const resetForm = () => {
 
 const fillDummyData = () => {
   formData.value.project_name = "Revamp E-Commerce TokoBaju";
-  formData.value.name = "Budi Santoso";
+  formData.value.client_name = "Budi Santoso";
   formData.value.company = "PT Toko Baju Maju";
   formData.value.email = "budi@tokobaju.com";
   formData.value.phone = "081234567890";

@@ -224,11 +224,13 @@
                   <div class="flex items-center gap-2">
                     <span
                       class="text-[9px] font-black text-slate-400 uppercase tracking-widest italic"
-                      >{{ prop.name }}</span
+                      >{{ prop.client_name }}</span
                     >
                     <span class="text-slate-200">•</span>
                     <span class="text-[9px] font-bold text-slate-300"
-                      >#{{ prop.id.substring(0, 8).toUpperCase() }}</span
+                      >#{{
+                        prop.id ? prop.id.substring(0, 8).toUpperCase() : "NEW"
+                      }}</span
                     >
                   </div>
                 </div>
@@ -245,15 +247,12 @@
                   <div
                     class="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
                     :class="
-                      prop.lead_id || prop.type === 'general_inquiry'
+                      prop.origin_type === 'from_lead'
                         ? 'bg-indigo-50 text-indigo-500'
                         : 'bg-amber-50 text-amber-500'
                     "
                   >
-                    <Users
-                      v-if="prop.lead_id || prop.type === 'general_inquiry'"
-                      :size="14"
-                    />
+                    <Users v-if="prop.origin_type === 'from_lead'" :size="14" />
                     <Zap v-else :size="14" />
                   </div>
                   <div>
@@ -261,7 +260,7 @@
                       class="text-[10px] font-black text-[#1B2559] uppercase tracking-tighter"
                     >
                       {{
-                        prop.lead_id || prop.type === "general_inquiry"
+                        prop.origin_type === "from_lead"
                           ? "Lead-Linked"
                           : "Independent"
                       }}
@@ -269,11 +268,7 @@
                     <p
                       class="text-[8px] font-bold text-slate-400 uppercase tracking-widest opacity-60"
                     >
-                      {{
-                        prop.lead_id
-                          ? "Database Match"
-                          : prop.source || "manual"
-                      }}
+                      {{ prop.lead_id ? "Database Match" : "manual" }}
                     </p>
                   </div>
                 </div>
@@ -287,7 +282,7 @@
                     {{ prop.status || "New" }}
                   </span>
                   <span
-                    v-if="prop.is_converted"
+                    v-if="prop.status === 'approved'"
                     class="text-[8px] font-black text-emerald-500 flex items-center gap-1"
                   >
                     <CheckCircle :size="10" /> CONVERTED
@@ -388,12 +383,13 @@
 
     <!-- Modals & Toasts -->
     <ConfirmModal
-      v-model:isOpen="isConfirmDeleteOpen"
+      :is-open="isConfirmDeleteOpen"
       title="Mass Destruction Protocol"
       :message="`Are you sure you want to permanently delete ${selectedIds.length} selected proposals? This action bypasses all protocols and cannot be undone.`"
       confirm-text="Confirm Permanent Delete"
       variant="danger"
       :loading="isBulkDeleting"
+      @close="isConfirmDeleteOpen = false"
       @confirm="confirmBulkDelete"
     />
 
@@ -406,7 +402,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   FileText,
   Plus,
@@ -422,10 +418,9 @@ import {
   CheckCircle,
   CheckSquare,
 } from "lucide-vue-next";
-import { clientsService } from "../services/clientsService";
+import proposalService, { type Proposal } from "../services/proposalService";
 import { useErrorHandler } from "../composables/useErrorHandler";
 import { useLoading } from "../composables/useLoading";
-import type { Client } from "../types";
 import PageHeader from "../components/ui/PageHeader.vue";
 import DashboardCard from "../components/ui/DashboardCard.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
@@ -434,7 +429,7 @@ import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 import Toast from "../components/ui/Toast.vue";
 
-const proposals = ref<Client[]>([]);
+const proposals = ref<Proposal[]>([]);
 const selectedIds = ref<string[]>([]);
 const isBulkDeleting = ref(false);
 const isConfirmDeleteOpen = ref(false);
@@ -480,7 +475,9 @@ async function handleBulkDelete() {
 async function confirmBulkDelete() {
   isBulkDeleting.value = true;
   try {
-    await clientsService.deleteMany(selectedIds.value);
+    for (const id of selectedIds.value) {
+      await proposalService.delete(id);
+    }
     showToast(`${selectedIds.value.length} proposals deleted`, "success");
     selectedIds.value = [];
     isSelectionMode.value = false;
@@ -496,7 +493,7 @@ async function confirmBulkDelete() {
 async function handleDelete(id: string) {
   if (!confirm("Are you sure you want to delete this proposal?")) return;
   try {
-    await clientsService.delete(id);
+    await proposalService.delete(id);
     proposals.value = proposals.value.filter((p) => p.id !== id);
     showToast("Proposal deleted", "success");
   } catch (err: any) {
@@ -509,7 +506,7 @@ const filteredProposals = computed(() => {
     const matchesSearch =
       !searchQuery.value ||
       p.project_name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      p.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+      p.client_name.toLowerCase().includes(searchQuery.value.toLowerCase());
 
     const matchesStatus =
       statusFilter.value === "all" || p.status === statusFilter.value;
@@ -517,27 +514,22 @@ const filteredProposals = computed(() => {
     // Type Filter
     let matchesType = true;
     if (typeFilter.value === "lead")
-      matchesType = !!p.lead_id || p.type === "general_inquiry";
+      matchesType = p.origin_type === "from_lead";
     if (typeFilter.value === "independent")
-      matchesType = !p.lead_id && (p.type === "project_order" || !p.type);
+      matchesType = p.origin_type === "independent";
 
     return matchesSearch && matchesStatus && matchesType;
   });
 });
 
 const leadLinkedCount = computed(
-  () =>
-    proposals.value.filter((p) => p.lead_id || p.type === "general_inquiry")
-      .length,
+  () => proposals.value.filter((p) => p.origin_type === "from_lead").length,
 );
 const independentCount = computed(
-  () =>
-    proposals.value.filter(
-      (p) => !p.lead_id && (p.type === "project_order" || !p.type),
-    ).length,
+  () => proposals.value.filter((p) => p.origin_type === "independent").length,
 );
 const convertedCount = computed(
-  () => proposals.value.filter((p) => p.is_converted).length,
+  () => proposals.value.filter((p) => p.status === "approved").length,
 );
 
 function getStatusClass(status: string | undefined) {
@@ -557,15 +549,7 @@ function getStatusClass(status: string | undefined) {
 async function fetchProposals() {
   await withLoading(async () => {
     try {
-      const all = await clientsService.getAll();
-      proposals.value = all.filter(
-        (p) =>
-          (p.type === "project_order" ||
-            p.type === "general_inquiry" ||
-            !p.type ||
-            !!p.lead_id) &&
-          (p.project_name || p.name),
-      );
+      proposals.value = await proposalService.getAll();
     } catch (err) {
       handleError(err, "Sync CMS");
     }
@@ -574,11 +558,5 @@ async function fetchProposals() {
 
 onMounted(() => {
   fetchProposals();
-  const subscription = clientsService.subscribeToClients(() =>
-    fetchProposals(),
-  );
-  onUnmounted(() => {
-    subscription.unsubscribe();
-  });
 });
 </script>

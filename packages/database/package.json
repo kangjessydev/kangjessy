@@ -1,0 +1,12 @@
+{
+  "name": "@kangjessy/database",
+  "version": "1.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "@sanity/client": "^6.0.0",
+    "@sanity/image-url": "^1.0.0"
+  }
+}

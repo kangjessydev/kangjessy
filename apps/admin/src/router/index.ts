@@ -152,16 +152,6 @@ const router = createRouter({
           component: () => import('../views/BlueprintSteps.vue')
         },
         {
-          path: 'blueprint/steps/new',
-          name: 'blueprint-step-create',
-          component: () => import('../views/BlueprintStepEditor.vue')
-        },
-        {
-          path: 'blueprint/steps/:id/edit',
-          name: 'blueprint-step-edit',
-          component: () => import('../views/BlueprintStepEditor.vue')
-        },
-        {
           path: 'projects',
           name: 'projects',
           component: () => import('../views/Projects.vue')

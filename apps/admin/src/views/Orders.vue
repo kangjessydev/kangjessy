@@ -1357,7 +1357,7 @@ async function executePaymentUpdate(payload: {
       category: "services",
       title: `Payment for ${order.project_name || "Project"}`,
       description: payload.notes,
-      date: new Date().toISOString(),
+      transaction_date: new Date().toISOString(),
     });
 
     order.paid_amount = newTotalPaid;

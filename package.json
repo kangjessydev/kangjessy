@@ -2,6 +2,11 @@
   "name": "kangjessy-ecosystem",
   "private": true,
   "description": "The unified digital engine for KangJessy ecosystem",
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "pnpm -r dev",
     "build": "pnpm -r build",

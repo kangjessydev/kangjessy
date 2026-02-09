@@ -464,14 +464,13 @@ import {
   Trash2,
   History,
   PieChart,
-  CheckCircle,
-  Target,
+  ChevronDown,
 } from "lucide-vue-next";
 import {
   transactionsService,
   type FinanceTransaction,
 } from "../services/transactionsService";
-import { clientsService } from "../services/clientsService";
+import { projectsService } from "../services/projectsService";
 import PageHeader from "../components/ui/PageHeader.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
 import DashboardCard from "../components/ui/DashboardCard.vue";

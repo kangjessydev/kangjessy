@@ -1,273 +1,430 @@
 <template>
-  <div class="page-container">
+  <div class="page-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <PageHeader
       title="Financial Intelligence"
-      subtitle="Monitor your agency's cash flow, debt recovery, and profit margins"
+      subtitle="Monitor cash flow, debt recovery, and project profitability"
     >
-      <div class="flex gap-3">
-        <BaseButton variant="secondary" @click="fetchData" :loading="loading">
-          <RotateCw :size="18" />
-          Sync Data
-        </BaseButton>
-        <BaseButton variant="primary" @click="isModalOpen = true">
+      <div class="flex gap-2">
+        <ButtonSecondary @click="fetchData">
+          <RotateCw :size="18" :class="{ 'animate-spin': loading }" />
+          Sync Ledger
+        </ButtonSecondary>
+        <ButtonPrimary @click="isModalOpen = true">
           <Plus :size="18" />
-          Record Entry
-        </BaseButton>
+          Add Transaction
+        </ButtonPrimary>
       </div>
     </PageHeader>
 
-    <!-- Financial Core Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <StatsCard
-        title="Gross Income"
-        :value="formatPrice(stats.totalIncome)"
-        :icon="TrendingUp"
-        colorClass="bg-emerald-50 text-emerald-600"
-      />
-      <StatsCard
-        title="Total Expense"
-        :value="formatPrice(stats.totalExpense)"
-        :icon="TrendingDown"
-        colorClass="bg-rose-50 text-rose-600"
-      />
-      <StatsCard
-        title="Net Profit"
-        :value="formatPrice(stats.netProfit)"
+    <!-- Navigation Tabs -->
+    <div
+      class="flex gap-1 p-1 bg-slate-100/50 backdrop-blur-md rounded-[22px] w-fit mb-8 border border-slate-200/50"
+    >
+      <button
+        @click="activeTab = 'ledger'"
+        class="flex items-center gap-2.5 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+        :class="
+          activeTab === 'ledger'
+            ? 'bg-white text-[#702DFF] shadow-sm'
+            : 'text-slate-400 hover:text-slate-600'
+        "
+      >
+        <BookOpen :size="14" />
+        Buku Kas
+      </button>
+      <button
+        @click="activeTab = 'commitments'"
+        class="flex items-center gap-2.5 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+        :class="
+          activeTab === 'commitments'
+            ? 'bg-white text-[#702DFF] shadow-sm'
+            : 'text-slate-400 hover:text-slate-600'
+        "
+      >
+        <HandCoins :size="14" />
+        Hutang & Piutang
+      </button>
+      <button
+        @click="activeTab = 'intelligence'"
+        class="flex items-center gap-2.5 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+        :class="
+          activeTab === 'intelligence'
+            ? 'bg-white text-[#702DFF] shadow-sm'
+            : 'text-slate-400 hover:text-slate-600'
+        "
+      >
+        <TrendingUp :size="14" />
+        Intelligence
+      </button>
+    </div>
+
+    <!-- Stats Summary Section -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
+      <BentoStat
+        title="Saldo Kas (Cash)"
+        :value="stats.netCashflow"
         :icon="Wallet"
-        colorClass="bg-[#702DFF]/5 text-[#702DFF]"
+        variant="primary"
+        is-currency
+        tooltip="Total uang nyata yang ada di tangan saat ini (Pemasukan dikurangi Pengeluaran)."
+        simulation="Pastikan saldo ini cukup untuk menutupi biaya operasional (Burn Rate) minimal untuk 3 bulan ke depan."
       />
-      <StatsCard
-        title="Debt Recovery"
-        :value="formatPrice(stats.pendingPayments)"
+      <BentoStat
+        title="Piutang (Receivables)"
+        :value="stats.totalReceivables"
+        :icon="ArrowUpRight"
+        variant="success"
+        is-currency
+        tooltip="Uang klien yang seharusnya masuk ke kita tapi belum dibayar (Misal: Sisa pelunasan proyek)."
+        simulation="Tagih Piutang ini segera! Ini adalah modal Kakak yang tertahan di orang lain."
+      />
+      <BentoStat
+        title="Pengeluaran (Expenses)"
+        :value="stats.totalExpenses"
+        :icon="ArrowDownLeft"
+        variant="danger"
+        is-currency
+        tooltip="Total uang yang sudah keluar untuk operasional maupun modal proyek."
+        simulation="Fokuskan pengeluaran pada aset yang mendatangkan ROI (Return on Investment) tinggi."
+      />
+      <BentoStat
+        title="Hutang (Debts)"
+        :value="stats.totalDebts"
         :icon="CreditCard"
-        colorClass="bg-amber-50 text-amber-600"
+        variant="warning"
+        is-currency
+        tooltip="Uang yang Kakak pinjam dari orang lain/vendor dan harus dikembalikan."
+        simulation="Hutang produktif (untuk modal kerja) itu bagus, asal cicilannya tidak mengganggu cashflow."
       />
     </div>
 
-    <!-- Analytics Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-      <!-- 7-Day Growth Chart -->
-      <DashboardCard
-        title="7-Day Performance"
-        class="lg:col-span-8"
-        :stretch="false"
-      >
+    <!-- Tab Content: Ledger -->
+    <div v-if="activeTab === 'ledger'" class="space-y-6 animate-fade-in">
+      <DashboardCard title="Global Transaction Ledger" no-padding>
         <template #action>
-          <span
-            class="text-[10px] font-black text-slate-300 uppercase tracking-widest"
-            >Revenue vs Date</span
-          >
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <Search
+                :size="14"
+                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300"
+              />
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Cari transaksi..."
+                class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold outline-none focus:ring-2 focus:ring-indigo-500/10 transition-all w-48 md:w-64"
+              />
+            </div>
+          </div>
         </template>
-        <div class="h-64 flex items-end justify-between gap-4 mt-8 px-4">
-          <div
-            v-for="day in last7Days"
-            :key="day.date"
-            class="flex-1 flex flex-col items-center gap-3 group cursor-pointer"
+
+        <div v-if="loading" class="p-20 text-center">
+          <RotateCw
+            :size="32"
+            class="animate-spin text-indigo-500 mx-auto mb-4"
+          />
+          <p
+            class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
           >
-            <div class="relative w-full flex items-end justify-center gap-1">
-              <!-- Income Bar -->
+            Processing Data...
+          </p>
+        </div>
+
+        <div v-else class="overflow-x-auto">
+          <table class="table-main">
+            <thead>
+              <tr>
+                <th class="!pl-8">Deskripsi & Tipe</th>
+                <th>Kategori</th>
+                <th>Project/Link</th>
+                <th>Nominal</th>
+                <th>Tanggal</th>
+                <th class="text-right !pr-8">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="filteredLedger.length === 0">
+                <td
+                  colspan="6"
+                  class="p-20 text-center text-slate-300 font-bold uppercase tracking-widest text-[10px]"
+                >
+                  Tidak ada data transaksi ditemukan
+                </td>
+              </tr>
+              <tr
+                v-for="tx in filteredLedger"
+                :key="tx.id"
+                class="table-row-hover group"
+              >
+                <td class="!pl-8">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border"
+                      :class="getTypeClass(tx.type)"
+                    >
+                      <component :is="getIconComponent(tx.type)" :size="18" />
+                    </div>
+                    <div>
+                      <p
+                        class="font-black text-[#1B2559] leading-tight text-sm tracking-tight capitalize"
+                      >
+                        {{ tx.title }}
+                      </p>
+                      <p
+                        class="text-[9px] text-slate-400 font-black uppercase tracking-widest mt-1 opacity-60"
+                      >
+                        {{ tx.type }} •
+                        {{ tx.payment_method?.replace("_", " ") || "Manual" }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span
+                    class="px-2 py-1 bg-slate-50 text-slate-500 text-[8px] font-black rounded-lg uppercase tracking-widest border border-slate-100"
+                  >
+                    {{ tx.category || "General" }}
+                  </span>
+                </td>
+                <td>
+                  <div v-if="tx.project" class="flex flex-col">
+                    <p
+                      class="text-[10px] font-black text-indigo-600 uppercase tracking-tight truncate max-w-[150px]"
+                    >
+                      {{ tx.project.project_name }}
+                    </p>
+                    <p
+                      class="text-[8px] font-bold text-slate-400 uppercase opacity-60"
+                    >
+                      {{ tx.client?.name || "Linked Project" }}
+                    </p>
+                  </div>
+                  <span
+                    v-else
+                    class="text-[9px] font-black text-slate-300 uppercase italic"
+                    >Internal</span
+                  >
+                </td>
+                <td
+                  class="font-black text-sm"
+                  :class="
+                    tx.type === 'income' || tx.type === 'receivable'
+                      ? 'text-emerald-600'
+                      : 'text-rose-600'
+                  "
+                >
+                  <div class="flex flex-col">
+                    <span
+                      >{{
+                        tx.type === "income" || tx.type === "receivable"
+                          ? "+"
+                          : "-"
+                      }}
+                      {{ formatPrice(tx.amount) }}</span
+                    >
+                    <span
+                      v-if="tx.status === 'pending'"
+                      class="text-[8px] text-amber-500 uppercase tracking-widest"
+                      >PENDING</span
+                    >
+                  </div>
+                </td>
+                <td>
+                  <p
+                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                  >
+                    {{ formatDate(tx.transaction_date) }}
+                  </p>
+                </td>
+                <td class="!pr-8 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button
+                      @click="confirmDelete(tx)"
+                      class="p-2 rounded-xl text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-all active:scale-90"
+                    >
+                      <Trash2 :size="16" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </DashboardCard>
+    </div>
+
+    <!-- Tab Content: Commitments (Hutang Piutang) -->
+    <div
+      v-else-if="activeTab === 'commitments'"
+      class="animate-fade-in space-y-8"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Receivables (Piutang) -->
+        <DashboardCard title="Daftar Piutang (Uang Masuk Tertunda)" no-padding>
+          <div class="overflow-x-auto">
+            <table class="table-main">
+              <thead>
+                <tr>
+                  <th class="!pl-6">Klien/Proyek</th>
+                  <th>Nominal</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="tx in receivables"
+                  :key="tx.id"
+                  class="table-row-hover"
+                >
+                  <td class="!pl-6">
+                    <p class="text-[11px] font-black text-[#1B2559] uppercase">
+                      {{ tx.client?.name || tx.title }}
+                    </p>
+                    <p class="text-[9px] font-bold text-slate-400">
+                      {{ tx.project?.project_name || "General" }}
+                    </p>
+                  </td>
+                  <td class="font-black text-emerald-600">
+                    {{ formatPrice(tx.amount) }}
+                  </td>
+                  <td>
+                    <button
+                      @click="markAsCompleted(tx)"
+                      class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[8px] font-black rounded-lg uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all"
+                    >
+                      Mark Paid
+                    </button>
+                  </td>
+                </tr>
+                <tr v-if="receivables.length === 0">
+                  <td
+                    colspan="3"
+                    class="p-10 text-center text-slate-300 font-bold uppercase text-[9px]"
+                  >
+                    Zero receivables recorded
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </DashboardCard>
+
+        <!-- Debts (Hutang) -->
+        <DashboardCard title="Daftar Hutang (Uang Keluar Tertunda)" no-padding>
+          <div class="overflow-x-auto">
+            <table class="table-main">
+              <thead>
+                <tr>
+                  <th class="!pl-6">Kreditur/Keterangan</th>
+                  <th>Nominal</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="tx in debts" :key="tx.id" class="table-row-hover">
+                  <td class="!pl-6">
+                    <p class="text-[11px] font-black text-[#1B2559] uppercase">
+                      {{ tx.title }}
+                    </p>
+                    <p class="text-[9px] font-bold text-slate-400 capitalize">
+                      {{ tx.category }}
+                    </p>
+                  </td>
+                  <td class="font-black text-rose-600">
+                    {{ formatPrice(tx.amount) }}
+                  </td>
+                  <td>
+                    <button
+                      @click="markAsCompleted(tx)"
+                      class="px-3 py-1 bg-rose-50 text-rose-600 text-[8px] font-black rounded-lg uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all"
+                    >
+                      Mark Repaid
+                    </button>
+                  </td>
+                </tr>
+                <tr v-if="debts.length === 0">
+                  <td
+                    colspan="3"
+                    class="p-10 text-center text-slate-300 font-bold uppercase text-[9px]"
+                  >
+                    Zero active debts
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </DashboardCard>
+      </div>
+    </div>
+
+    <!-- Tab Content: Intelligence (Analytic Charts) -->
+    <div
+      v-else-if="activeTab === 'intelligence'"
+      class="animate-fade-in space-y-8"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <DashboardCard title="90-Day Cashflow Momentum" class="lg:col-span-8">
+          <div class="h-80 flex items-end justify-between px-4 pb-4">
+            <div
+              v-for="(day, idx) in monthlyTrends"
+              :key="idx"
+              class="flex flex-col items-center gap-4 flex-1"
+            >
+              <div class="w-full flex items-end justify-center gap-1 h-full">
+                <!-- Progress bar for income -->
+                <div
+                  class="w-8 bg-indigo-500/10 rounded-t-lg relative overflow-hidden group/bar"
+                  :style="{ height: (day.income / maxTrendValue) * 100 + '%' }"
+                >
+                  <div
+                    class="absolute inset-0 bg-indigo-500 opacity-80 transition-all hover:opacity-100"
+                  ></div>
+                </div>
+              </div>
+              <span
+                class="text-[8px] font-black text-slate-400 uppercase tracking-tighter"
+                >{{ day.month }}</span
+              >
+            </div>
+          </div>
+        </DashboardCard>
+
+        <DashboardCard title="Expense Distribution" class="lg:col-span-4">
+          <div class="space-y-6 mt-4">
+            <div v-for="cat in expenseCategories" :key="cat.name">
+              <div class="flex justify-between items-center mb-2">
+                <span
+                  class="text-[10px] font-black text-[#1B2559] uppercase tracking-widest"
+                  >{{ cat.name }}</span
+                >
+                <span class="text-[10px] font-black text-slate-400"
+                  >{{ cat.percent }}%</span
+                >
+              </div>
               <div
-                class="w-full max-w-[12px] bg-slate-100 relative rounded-full overflow-hidden transition-all duration-700 hover:w-[14px]"
-                :style="{ height: getBarHeight(day.income) + 'px' }"
+                class="h-2 bg-slate-50 rounded-full overflow-hidden border border-slate-100"
               >
                 <div
-                  class="absolute bottom-0 w-full bg-[#702DFF] h-full opacity-20"
-                ></div>
-                <div
-                  class="absolute bottom-0 w-full bg-[#702DFF] h-full rounded-t-full shadow-[0_0_10px_rgba(112,45,255,0.3)]"
+                  class="h-full bg-[#702DFF] rounded-full transition-all duration-1000"
+                  :style="{ width: cat.percent + '%' }"
                 ></div>
               </div>
             </div>
-            <div class="flex flex-col items-center">
-              <span
-                class="text-[9px] font-black text-[#1B2559] group-hover:text-[#702DFF] transition-colors"
-                >{{ formatPriceShort(day.income) }}</span
-              >
-              <span
-                class="text-[8px] font-bold text-slate-300 uppercase tracking-tighter mt-1"
-                >{{ day.label }}</span
-              >
-            </div>
-          </div>
-        </div>
-      </DashboardCard>
-
-      <!-- Category Analysis -->
-      <DashboardCard
-        title="Expense Breakdown"
-        class="lg:col-span-4"
-        :stretch="false"
-      >
-        <div
-          v-if="expenseCategories.length === 0"
-          class="h-64 flex flex-col items-center justify-center text-slate-300"
-        >
-          <PieChart :size="48" class="opacity-20 mb-2" />
-          <p class="text-[10px] font-black uppercase tracking-widest">
-            No expense data
-          </p>
-        </div>
-        <div v-else class="space-y-6 mt-4">
-          <div v-for="cat in expenseCategories.slice(0, 5)" :key="cat.name">
-            <div class="flex justify-between items-center mb-2">
-              <span
-                class="text-[10px] font-black text-[#1B2559] uppercase tracking-widest"
-                >{{ cat.name }}</span
-              >
-              <span class="text-[10px] font-black text-slate-400"
-                >{{ cat.percent }}%</span
-              >
-            </div>
             <div
-              class="h-1.5 bg-slate-50 rounded-full overflow-hidden border border-slate-100"
+              v-if="expenseCategories.length === 0"
+              class="py-20 text-center text-slate-300"
             >
-              <div
-                class="h-full bg-indigo-500 rounded-full transition-all duration-1000"
-                :style="{ width: cat.percent + '%' }"
-              ></div>
+              <PieChart :size="48" class="mx-auto opacity-20 mb-4" />
+              <p class="text-[10px] font-black uppercase tracking-widest">
+                No detailed analytics
+              </p>
             </div>
           </div>
-        </div>
-      </DashboardCard>
+        </DashboardCard>
+      </div>
     </div>
 
-    <!-- History Table -->
-    <DashboardCard title="Global Ledger" no-padding>
-      <div v-if="loading" class="p-20 text-center">
-        <div
-          class="inline-block w-8 h-8 border-4 border-[#702DFF] border-t-transparent rounded-full animate-spin"
-        ></div>
-        <p
-          class="mt-4 text-slate-400 font-bold uppercase tracking-widest text-[10px]"
-        >
-          Calculating balance sheets...
-        </p>
-      </div>
-
-      <div v-else class="overflow-x-auto">
-        <table class="table-main">
-          <thead>
-            <tr>
-              <th>Entity & Transaction</th>
-              <th>Reference Status</th>
-              <th>Value</th>
-              <th>Verification Date</th>
-              <th class="text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="transactions.length === 0">
-              <td
-                colspan="5"
-                class="p-20 text-center text-slate-300 font-black uppercase tracking-[0.2em] text-[10px]"
-              >
-                Zero ledger entries recorded
-              </td>
-            </tr>
-            <tr
-              v-for="tx in transactions"
-              :key="tx.id"
-              class="table-row-hover group"
-            >
-              <td>
-                <div class="flex items-center gap-4">
-                  <div
-                    class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border"
-                    :class="
-                      tx.type === 'income'
-                        ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
-                        : 'bg-rose-50 text-rose-600 border-rose-100'
-                    "
-                  >
-                    <ArrowUpRight v-if="tx.type === 'income'" :size="18" />
-                    <ArrowDownLeft v-else :size="18" />
-                  </div>
-                  <div>
-                    <p
-                      class="font-black text-[#1B2559] leading-tight text-sm tracking-tight"
-                    >
-                      {{ tx.title || tx.description }}
-                    </p>
-                    <div class="flex items-center gap-1.5 mt-1">
-                      <p
-                        class="text-[9px] text-slate-400 font-black uppercase tracking-widest flex items-center gap-1"
-                      >
-                        <User :size="10" />
-                        {{ tx.client?.name || "Internal" }}
-                      </p>
-                      <span
-                        v-if="tx.project?.name"
-                        class="text-[9px] font-black text-[#702DFF] uppercase bg-indigo-50 px-1.5 py-0.5 rounded"
-                      >
-                        PROJ: {{ tx.project.name }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="flex flex-col gap-1">
-                  <div class="flex gap-2">
-                    <span
-                      class="badge-chip border-none !bg-slate-50 !text-slate-500 text-[8px] px-1.5 py-0.5 uppercase"
-                    >
-                      {{ tx.category || "General" }}
-                    </span>
-                    <span
-                      class="badge-chip border-none text-[8px] px-1.5 py-0.5 uppercase"
-                      :class="
-                        tx.type === 'income' ? 'badge-success' : 'badge-danger'
-                      "
-                    >
-                      {{ tx.type }}
-                    </span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <span
-                      class="text-[9px] font-bold text-slate-300 uppercase tracking-tighter"
-                      >{{ tx.sub_category || "-" }}</span
-                    >
-                    <span
-                      v-if="tx.source"
-                      class="text-[9px] font-bold text-slate-300 uppercase tracking-tighter"
-                      >• via {{ tx.source }}</span
-                    >
-                  </div>
-                </div>
-              </td>
-              <td
-                class="font-black"
-                :class="
-                  tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
-                "
-              >
-                {{ tx.type === "income" ? "+" : "-" }}
-                {{ formatPrice(tx.amount) }}
-              </td>
-              <td>
-                <p
-                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
-                >
-                  {{ formatDate(tx.date) }}
-                </p>
-              </td>
-              <td>
-                <div class="flex items-center justify-end gap-2 transition-all">
-                  <button
-                    @click="confirmDelete(tx)"
-                    class="p-2 rounded-lg text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-colors"
-                  >
-                    <Trash2 :size="16" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </DashboardCard>
-
-    <!-- Components -->
+    <!-- Modals & Toasts -->
     <TransactionModal
       :is-open="isModalOpen"
       @close="isModalOpen = false"
@@ -276,8 +433,9 @@
 
     <ConfirmModal
       :is-open="confirmModal.isOpen"
-      title="Delete Transaction"
-      message="Deleting this ledger entry will permanently affect your balance records. Proceed?"
+      title="Mass Destruction Protocol"
+      message="Deleting this ledger entry will permanently alter your financial history. This cannot be undone. Proceed?"
+      variant="danger"
       @close="confirmModal.isOpen = false"
       @confirm="executeDelete"
     />
@@ -286,7 +444,6 @@
       v-if="toast.show"
       :message="toast.message"
       :variant="toast.variant"
-      @close="toast.show = false"
     />
   </div>
 </template>
@@ -295,152 +452,229 @@
 import { ref, computed, onMounted } from "vue";
 import {
   Plus,
-  Trash2,
+  RotateCw,
+  Wallet,
   ArrowUpRight,
   ArrowDownLeft,
-  RotateCw,
-  TrendingUp,
-  TrendingDown,
-  Wallet,
   CreditCard,
-  User,
+  Search,
+  BookOpen,
+  HandCoins,
+  TrendingUp,
+  Trash2,
+  History,
   PieChart,
+  CheckCircle,
+  Target,
 } from "lucide-vue-next";
-import { transactionsService } from "../services/transactionsService";
+import {
+  transactionsService,
+  type FinanceTransaction,
+} from "../services/transactionsService";
 import { clientsService } from "../services/clientsService";
-import DashboardCard from "../components/ui/DashboardCard.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
-import { BaseButton } from "@kangjessy/ui";
-import StatsCard from "../components/ui/StatsCard.vue";
+import BentoStat from "../components/ui/BentoStat.vue";
+import DashboardCard from "../components/ui/DashboardCard.vue";
+import ButtonPrimary from "../components/ui/ButtonPrimary.vue";
+import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
 import TransactionModal from "../components/finance/TransactionModal.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 import Toast from "../components/ui/Toast.vue";
 
-const transactions = ref<any[]>([]);
-const clients = ref<any[]>([]);
+// State
+const activeTab = ref("ledger");
+const transactions = ref<FinanceTransaction[]>([]);
 const loading = ref(true);
+const searchQuery = ref("");
 const isModalOpen = ref(false);
 const toast = ref({
   show: false,
   message: "",
   variant: "success" as "success" | "error",
 });
+const confirmModal = ref({ isOpen: false, targetId: null as string | null });
 
-const confirmModal = ref({
-  isOpen: false,
-  targetId: null as string | null,
-});
-
-onMounted(fetchData);
-
-async function fetchData() {
+// Fetch Data
+const fetchData = async () => {
   loading.value = true;
   try {
-    const [txData, clientData] = await Promise.all([
-      transactionsService.getAll(),
-      clientsService.getAll(),
-    ]);
-    transactions.value = txData;
-    clients.value = clientData;
+    const data = await transactionsService.getAll();
+    transactions.value = data;
   } catch (err) {
     console.error(err);
-    showToast("Failed to sync financial bridge", "error");
+    showToast("Gagal sinkronisasi satelit data keuangan.", "error");
   } finally {
     loading.value = false;
   }
-}
+};
 
-// Compute Stats
+onMounted(fetchData);
+
+// Computed Stats
 const stats = computed(() => {
   const inc = transactions.value
-    .filter((t) => t.type === "income")
-    .reduce((s, t) => s + (t.amount || 0), 0);
+    .filter((t) => t.type === "income" && t.status === "completed")
+    .reduce((s, t) => s + Number(t.amount), 0);
+
   const exp = transactions.value
-    .filter((t) => t.type === "expense")
-    .reduce((s, t) => s + (t.amount || 0), 0);
-  const debt = clients.value
-    .filter((c) => c.status === "Deal")
-    .reduce((s, c) => s + ((c.budget || 0) - (c.paid_amount || 0)), 0);
+    .filter((t) => t.type === "expense" && t.status === "completed")
+    .reduce((s, t) => s + Number(t.amount), 0);
+
+  const rcv = transactions.value
+    .filter((t) => t.type === "receivable" && t.status === "pending")
+    .reduce((s, t) => s + Number(t.amount), 0);
+
+  const dbt = transactions.value
+    .filter((t) => t.type === "debt" && t.status === "pending")
+    .reduce((s, t) => s + Number(t.amount), 0);
 
   return {
-    totalIncome: inc,
-    totalExpense: exp,
-    netProfit: inc - exp,
-    pendingPayments: debt,
+    netCashflow: inc - exp,
+    totalReceivables: rcv,
+    totalExpenses: exp,
+    totalDebts: dbt,
   };
 });
 
-// Analytics Logic: Last 7 Days Performance
-const last7Days = computed(() => {
-  const days = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split("T")[0];
-    const dayIncome = transactions.value
-      .filter((t) => t.date === dateStr && t.type === "income")
-      .reduce((s, t) => s + t.amount, 0);
-
-    days.push({
-      date: dateStr,
-      label: d.toLocaleDateString("en-US", { weekday: "short" }),
-      income: dayIncome,
-    });
-  }
-  return days;
+// Filtering
+const filteredLedger = computed(() => {
+  if (!searchQuery.value) return transactions.value;
+  const q = searchQuery.value.toLowerCase();
+  return transactions.value.filter(
+    (tx) =>
+      tx.title.toLowerCase().includes(q) ||
+      tx.category?.toLowerCase().includes(q) ||
+      tx.client?.name?.toLowerCase().includes(q),
+  );
 });
 
-const getBarHeight = (amount: number) => {
-  if (amount === 0) return 4;
-  const max = Math.max(...last7Days.value.map((d) => d.income), 1000000);
-  return Math.min(200, (amount / max) * 180);
-};
+const receivables = computed(() =>
+  transactions.value.filter(
+    (t) => t.type === "receivable" && t.status === "pending",
+  ),
+);
+const debts = computed(() =>
+  transactions.value.filter((t) => t.type === "debt" && t.status === "pending"),
+);
 
-// Analytics Logic: Top Expenses
+// Analytics Logic
 const expenseCategories = computed(() => {
   const expenses = transactions.value.filter((t) => t.type === "expense");
   if (expenses.length === 0) return [];
 
   const cats: Record<string, number> = {};
   expenses.forEach((e) => {
-    cats[e.category || "Other"] = (cats[e.category || "Other"] || 0) + e.amount;
+    cats[e.category || "Other"] =
+      (cats[e.category || "Other"] || 0) + Number(e.amount);
   });
 
-  const total = expenses.reduce((s, e) => s + e.amount, 0);
+  const total = Object.values(cats).reduce((a, b) => a + b, 0);
   return Object.entries(cats)
     .map(([name, amount]) => ({
       name,
-      amount,
       percent: Math.round((amount / total) * 100),
     }))
-    .sort((a, b) => b.amount - a.amount);
+    .sort((a, b) => b.percent - a.percent);
 });
 
-// Handlers
-const formatPrice = (p: number) => "Rp " + (p || 0).toLocaleString("id-ID");
-const formatPriceShort = (p: number) => {
-  if (p >= 1000000) return (p / 1000000).toFixed(1) + "M";
-  if (p >= 1000) return (p / 1000).toFixed(0) + "K";
-  return p;
-};
-const formatDate = (d: string) =>
-  d
-    ? new Date(d).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
+const monthlyTrends = computed(() => {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const now = new Date();
+  const res = [];
+
+  for (let i = 2; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const mLabel = months[d.getMonth()];
+    const mValue = d.getMonth() + 1;
+    const yValue = d.getFullYear();
+
+    const income = transactions.value
+      .filter((t) => {
+        const td = new Date(t.transaction_date);
+        return (
+          td.getMonth() + 1 === mValue &&
+          td.getFullYear() === yValue &&
+          t.type === "income"
+        );
       })
-    : "-";
+      .reduce((s, t) => s + Number(t.amount), 0);
+
+    res.push({ month: mLabel, income });
+  }
+  return res;
+});
+
+const maxTrendValue = computed(() =>
+  Math.max(...monthlyTrends.value.map((t) => t.income), 1000000),
+);
+
+// Helpers
+const formatPrice = (v: number) =>
+  new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(v);
+const formatDate = (v: string) =>
+  new Date(v).toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
+const getTypeClass = (type: string) => {
+  switch (type) {
+    case "income":
+      return "bg-emerald-50 text-emerald-600 border-emerald-100";
+    case "expense":
+      return "bg-rose-50 text-rose-600 border-rose-100";
+    case "receivable":
+      return "bg-indigo-50 text-indigo-600 border-indigo-100";
+    case "debt":
+      return "bg-amber-50 text-amber-600 border-amber-100";
+    default:
+      return "bg-slate-50 text-slate-400 border-slate-100";
+  }
+};
+
+const getIconComponent = (type: string) => {
+  switch (type) {
+    case "income":
+      return ArrowUpRight;
+    case "receivable":
+      return Target;
+    case "debt":
+      return History;
+    default:
+      return ArrowDownLeft;
+  }
+};
 
 const showToast = (
   message: string,
   variant: "success" | "error" = "success",
 ) => {
   toast.value = { show: true, message, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
 };
 
 const onPostUpdate = () => {
-  showToast("Transaction record verified and added");
+  showToast("Sirkulasi kas berhasil diverifikasi dan dicatat.");
   fetchData();
 };
 
@@ -450,32 +684,60 @@ const confirmDelete = (tx: any) => {
 
 const executeDelete = async () => {
   if (!confirmModal.value.targetId) return;
-  const id = confirmModal.value.targetId;
-  confirmModal.value.isOpen = false;
   try {
-    await transactionsService.delete(id);
-    showToast("Ledger entry removed");
+    await transactionsService.delete(confirmModal.value.targetId);
+    showToast("Catatan transaksi berhasil dihapus dari ledger.");
     fetchData();
   } catch (err) {
-    showToast("Failed to void transaction", "error");
+    showToast("Gagal menghapus catatan.", "error");
+  } finally {
+    confirmModal.value.isOpen = false;
+  }
+};
+
+const markAsCompleted = async (tx: FinanceTransaction) => {
+  try {
+    // If it was a receivable, mark as income
+    // If it was a debt, mark as settled
+    const payload: Partial<FinanceTransaction> = {
+      status: "completed",
+      type: tx.type === "receivable" ? "income" : tx.type,
+    };
+    await transactionsService.update(tx.id, payload);
+    showToast("Status komitmen telah diverifikasi!");
+    fetchData();
+  } catch (err) {
+    showToast("Gagal merubah status.", "error");
   }
 };
 </script>
 
 <style scoped>
-.badge-chip {
-  @apply px-3 py-1 rounded-lg font-black uppercase tracking-widest text-[9px] shadow-sm flex items-center border;
+.page-container {
+  padding-top: 2rem;
+  padding-bottom: 5rem;
 }
 
-.badge-success {
-  @apply bg-emerald-50 text-emerald-600 border-emerald-100;
+.table-main th {
+  @apply text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] py-5 px-4 bg-slate-50/50 border-y border-slate-100;
 }
 
-.badge-danger {
-  @apply bg-rose-50 text-rose-500 border-rose-100;
+.table-main td {
+  @apply py-5 px-4 border-b border-slate-50 transition-all;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

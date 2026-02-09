@@ -85,11 +85,12 @@ export interface Task {
 export interface Transaction {
   id: string
   project_id?: string
-  category: 'services' | 'store' | 'subscription' | 'other'
-  sub_category?: string // hosting, domain, ads, tools, etc.
+  category: string
+  sub_category?: string
   amount: number
-  type: 'income' | 'expense'
+  type: 'income' | 'expense' | 'debt' | 'receivable'
   date: string
+  transaction_date?: string
   description?: string
   created_at: string
   notes?: string
@@ -99,7 +100,9 @@ export interface Transaction {
   title?: string
   product_id?: string
   platform?: string
-  source?: string // Manual, Web, Stripe, Midtrans
+  source?: string
+  status?: 'completed' | 'pending' | 'void' | 'repaid'
+  payment_method?: string
 }
 
 export interface BlogPost {

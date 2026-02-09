@@ -117,7 +117,7 @@ Berdasarkan audit terbaru, berikut adalah area yang belum tersinkronisasi ("Kabe
 
 | Modul              | Status      | Isu Utama                                                                                                      |
 | :----------------- | :---------- | :------------------------------------------------------------------------------------------------------------- |
-| **The Blueprint**  | 🔴 UNSYNCED | Agency masih pakai data lokal (`roadmapConfig.ts`). Struktur field berbeda (camelCase vs snake_case).          |
+| **The Blueprint**  | 🟢 SYNCED   | Database Centralized (Supabase). Admin can manage Stages & Steps dynamically.                                  |
 | **Pricing Master** | 🔴 UNSYNCED | Harga fitur & paket masih hardcoded di kode masing-masing. Belum ada tabel `features` di database.             |
 | **Voucher System** | 🟢 SYNCED   | Agency sudah mengambil data live dari tabel `coupons` di Supabase.                                             |
 | **Portfolio**      | 🟡 PARTIAL  | Data tersinkron via Sanity, namun field "Deep Dive Metrics" seringkali tidak selaras antara editor dan viewer. |
@@ -185,5 +185,37 @@ Total estimasi pengerjaan: **~5-6 Jam** (dilakukan secara bertahap agar aman).
 
 ---
 
-**Last Updated**: 2026-02-08
-**Status**: MASTER CENTRALIZED | ADMIN REFACTOR PENDING
+## 👥 10. ADMIN EXPANSION BRAINSTORM (CRM & OPS)
+
+Dokumen ini berisi ide-ide fitur strategis untuk pengembangan `kangjessy-admin` agar menjadi pusat operasi bisnis yang sangat efisien dan cerdas.
+
+### 10.1 CRM (Customer Relationship Management) - "Otak Relasi"
+
+- **Interaction Logs**: Riwayat komunikasi per klien (WA, Call, Meeting notes).
+- **Client Segmentation**: Labeling otomatis (`VIP`, `Whale`, `Prospect`).
+- **Lifetime Value (LTV)**: Tracking total pendapatan dari awal hingga kini per klien.
+- **Follow-up Reminders**: Notifikasi otomatis untuk leads yang "dingin".
+- **Client Vault**: Penyimpanan dokumen legal (KTP/NPWP/Kontrak) terpusat.
+
+### 10.2 Digital Store Management
+
+- **Product Library**: Manajemen aset digital (Source Code, E-Book).
+- **License Generator**: Pembuatan kode lisensi unik otomatis setelah pembelian.
+- **Sales Analytics**: Performa penjualan produk terbaik (Best Sellers).
+
+### 10.3 Finance & Reporting Engine
+
+- **One-Click Invoice**: Export data order ke PDF Invoice premium.
+- **Profitability Audit**: Analisis untung-rugi per proyek secara real-time.
+- **Tax & Export**: Rekap data untuk pajak dan export ke Excel.
+
+### 10.4 Internal Agency Ops
+
+- **RBAC (Role Access Control)**: Pembatasan akses tim (Admin, PM, Finance).
+- **Workload Tracker**: Monitoring beban kerja tim internal.
+- **Internal Knowledge Base**: Repository SOP dan snippet kode agensi.
+
+---
+
+**Last Updated**: 2026-02-09
+**Status**: MASTER CENTRALIZED | BLUEPRINT SYNCED

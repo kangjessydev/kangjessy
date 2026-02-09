@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@kangjessy/database": "workspace:*",
-    "@kangjessy/config": "workspace:*",
-    "@kangjessy/ui": "workspace:*",
+    "@kangjessy/database": "file:../../packages/database",
+    "@kangjessy/config": "file:../../packages/config",
+    "@kangjessy/ui": "file:../../packages/ui",
     "@portabletext/vue": "^1.0.14",
     "@sanity/client": "^7.14.0",
     "@sanity/image-url": "^2.0.2",

@@ -453,19 +453,20 @@ import { ref, computed, onMounted } from "vue";
 import {
   Wallet,
   ArrowUpRight,
-  ArrowDownRight,
+  ArrowDownLeft, // Changed from ArrowDownRight
   Plus,
   Search,
-  Filter,
-  MoreVertical,
-  Download,
-  AlertCircle,
-  FileText,
-  Edit2,
+  // Filter, // Removed unused
+  // MoreVertical, // Removed unused
+  // Download, // Removed unused
+  // AlertCircle, // Removed unused
+  // FileText, // Removed unused
+  Edit2, // Actually used for edit
   Trash2,
   History,
   PieChart,
   Target,
+  CreditCard, // Restored missing
 } from "lucide-vue-next";
 import {
   transactionsService,

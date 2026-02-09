@@ -451,26 +451,27 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import {
-  Plus,
-  RotateCw,
   Wallet,
   ArrowUpRight,
-  ArrowDownLeft,
-  CreditCard,
+  ArrowDownRight,
+  Plus,
   Search,
-  BookOpen,
-  HandCoins,
-  TrendingUp,
+  Filter,
+  MoreVertical,
+  Download,
+  AlertCircle,
+  FileText,
+  Edit2,
   Trash2,
   History,
   PieChart,
-  ChevronDown,
+  Target,
 } from "lucide-vue-next";
 import {
   transactionsService,
   type FinanceTransaction,
 } from "../services/transactionsService";
-import { projectsService } from "../services/projectsService";
+
 import PageHeader from "../components/ui/PageHeader.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
 import DashboardCard from "../components/ui/DashboardCard.vue";

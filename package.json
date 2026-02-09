@@ -4,13 +4,14 @@
   "description": "The unified digital engine for KangJessy ecosystem",
   "packageManager": "pnpm@9.0.0",
   "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
   },
   "scripts": {
     "dev": "pnpm -r dev",
     "build": "pnpm -r build",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "install": "npx pnpm install --no-frozen-lockfile" 
   },
   "devDependencies": {
     "typescript": "^5.0.0"

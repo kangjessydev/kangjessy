@@ -203,6 +203,7 @@ import {
   ChevronDown,
   Layers,
   Zap,
+  Database,
 } from "lucide-vue-next";
 import { useSidebar } from "../../composables/useSidebar";
 
@@ -258,6 +259,22 @@ const menuGroups: { title: string; items: MenuItem[] }[] = [
       },
       { path: "/media", label: "Galeri Media", icon: Image },
       { path: "/blueprint", label: "The Blueprint", icon: Layers },
+    ],
+  },
+  {
+    title: "Service Management",
+    items: [
+      {
+        path: "/services",
+        label: "Master Data",
+        icon: Database,
+        children: [
+          { path: "/services/main", label: "Layanan (Services)" },
+          { path: "/services/project-types", label: "Tipe Proyek" },
+          { path: "/services/style-vibes", label: "Style Vibes" },
+          { path: "/services/deadlines", label: "Deadlines" },
+        ],
+      },
     ],
   },
   {

@@ -68,6 +68,10 @@
             :isMicro="isMicro"
             :formatPrice="formatPrice"
             :available-features="features"
+            :project-types="projectTypes"
+            :service-types="serviceTypes"
+            :styles="styles"
+            :timelines="timelines"
             @toggle-feature="toggleFeature"
           >
             <template #summary>
@@ -238,7 +242,10 @@ const {
   getFeatureName,
   getFeaturePrice,
   formatPrice,
-  features, // Destructure features
+  features,
+  projectTypes,
+  styles,
+  timelines,
 } = useOrderCalculator();
 
 const step = ref(1);

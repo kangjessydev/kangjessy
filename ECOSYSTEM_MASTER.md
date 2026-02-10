@@ -115,12 +115,12 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 
 Berdasarkan audit terbaru, berikut adalah area yang belum tersinkronisasi ("Kabel Belum Tersambung") antara Agency dan Admin:
 
-| Modul              | Status      | Isu Utama                                                                                                      |
-| :----------------- | :---------- | :------------------------------------------------------------------------------------------------------------- |
-| **The Blueprint**  | 🟢 SYNCED   | Database Centralized (Supabase). Admin can manage Stages & Steps dynamically.                                  |
-| **Pricing Master** | 🔴 UNSYNCED | Harga fitur & paket masih hardcoded di kode masing-masing. Belum ada tabel `features` di database.             |
-| **Voucher System** | 🟢 SYNCED   | Agency sudah mengambil data live dari tabel `coupons` di Supabase.                                             |
-| **Portfolio**      | 🟡 PARTIAL  | Data tersinkron via Sanity, namun field "Deep Dive Metrics" seringkali tidak selaras antara editor dan viewer. |
+| Modul              | Status     | Isu Utama                                                                                                                     |
+| :----------------- | :--------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| **The Blueprint**  | 🟢 SYNCED  | Database Centralized (Supabase). Admin can manage Stages & Steps dynamically.                                                 |
+| **Pricing Master** | 🟢 SYNCED  | Agency Calculator mengambil data live dari `pricing_master`. Admin memiliki UI `GenericPricingList.vue` untuk mengelola data. |
+| **Voucher System** | 🟢 SYNCED  | Agency sudah mengambil data live dari tabel `coupons` di Supabase.                                                            |
+| **Portfolio**      | 🟡 PARTIAL | Data tersinkron via Sanity, namun field "Deep Dive Metrics" seringkali tidak selaras antara editor dan viewer.                |
 
 ---
 
@@ -217,5 +217,139 @@ Dokumen ini berisi ide-ide fitur strategis untuk pengembangan `kangjessy-admin` 
 
 ---
 
-**Last Updated**: 2026-02-09
-**Status**: MASTER CENTRALIZED | BLUEPRINT SYNCED
+**Last Updated**: 2026-02-10
+**Status**: PRICE MASTER SYNCED | BLUEPRINT SYNCED
+
+---
+
+## 🏗️ 11. DETAILED ORDER WORKFLOW (APPENDIX)
+
+Isi di bawah ini adalah **Single Source of Truth** untuk alur pemesanan (Order Flow) di sistem KangJessy, yang harus disinkronkan antara Database dan Frontend Logic.
+
+---
+
+## 🗺️ TAHAP 1: SERVICE CATEGORY SELECTION
+
+**Lokasi**: Halaman Depan / Menu Layanan (Agency)
+
+1. **User Action**: Klien memilih Kategori Layanan Utama.
+   - _Contoh_: "Web High-Conversion", "Business System", "Automation".
+2. **Data yang Ditampilkan**:
+   - Nama Layanan (e.g., "Web High-Conversion")
+   - Deskripsi Singkat
+   - **General Benefits**: Manfaat umum dari kategori layanan ini.
+
+---
+
+## 🔎 TAHAP 2: SERVICE DETAIL & PROJECT TYPE SELECTION
+
+**Lokasi**: Halaman Detail Service (e.g., /services/web-app)
+
+1. **User Action**: Klien mempelajari detil layanan dan memilih Tipe Proyek spesifik.
+2. **Data yang Ditampilkan (Level Service)**:
+   - Estimasi Harga (Range)
+   - Kebijakan Umum (Revisi, Garansi)
+   - **Service Workflow (Induk)**: Langkah kerja default untuk semua paket di kategori ini.
+     - _Logika_: Ditampilkan jika Paket yang dipilih tidak punya workflow khusus.
+3. **Data yang Ditampilkan (Level Project Type)**:
+   - **Nama Paket**: (e.g., "Starter Landing Page", "Ecommerce Ecosystem")
+   - **Base Price**: Harga dasar sebelum add-on.
+   - **Spesifikasi**:
+     - Max Pages (e.g., "1 Halaman Panjang")
+     - Revisions (e.g., "2x Revisi Mayor")
+     - Delivery Time (e.g., "3-7 Hari Kerja")
+   - **Included Features**: Fitur yang SUDAH include valuenya (Gratis/Bundle).
+     - _Logika_: Admin mencentang fitur mana saja yang masuk paket ini.
+   - **Specific Workflow (Anak/Override)**: Langkah kerja KHUSUS paket ini.
+     - _Logika_: Jika diisi, akan MENIMPA workflow dari Service Induk.
+     - _Contoh_: Paket "Speed Optimization" punya langkah audit beda dengan "Landing Page".
+
+---
+
+## 🛍️ TAHAP 3: THE ORDER CONFIGURATOR
+
+**Lokasi**: Halaman Order (e.g., /order?type=landing-page)
+
+User melakukan kustomisasi "LEGO" berdasarkan Tipe Proyek yang dipilih.
+
+### 3.1. Add-on Features (Fitur Tambahan)
+
+- Klien memilih fitur tambahan yang **relevan** dengan Kategori Layanan.
+- _Logika_:
+  - **Included**: Fitur yang sudah masuk paket akan otomatis tercentang/disabled (Free).
+  - **Relevant**: Fitur yang tag-nya cocok dengan Service Category (e.g., "SEO" relevant to "Web").
+  - **Buyable**: Fitur yang belum include bisa dibeli terpisah (+Harga).
+- _Data Source_: Tabel `pricing_master` (Category: `feature`).
+
+### 3.2. Style Vibes (Nuansa Desain)
+
+- Klien memilih "Rasa" visual dari proyek.
+- _Pilihan_: "Modern Dark", "Minimalist Luxury", "Playful".
+- _Data Source_: Tabel `pricing_master` (Category: `style_vibe`).
+
+### 3.3. Project Deadline (Kecepatan)
+
+- Klien memilih seberapa cepat proyek harus selesai.
+- _Logika_: Menggunakan **Multiplier** terhadap total harga.
+  - Normal (1x)
+  - Priority (1.25x)
+  - Express (1.5x)
+- _Data Source_: Tabel `pricing_master` (Category: `project_deadline`).
+
+---
+
+## 📝 TAHAP 4: CLIENT INFORMATION & SUBMIT
+
+**Lokasi**: Bottom Sheet / Form Akhir
+
+1. **User Action**: Mengisi Nama, WhatsApp, dan Brief Singkat.
+2. **System Action**:
+   - Hitung Total Estimasi.
+   - Generate Pesan WhatsApp.
+   - Simpan data ke Tabel `leads` (Supabase).
+   - Redirect ke WhatsApp Admin.
+
+---
+
+## ⚠️ DATA STRUCTURE IMPLICATIONS (ADMIN)
+
+Agar Admin bisa mengontrol flow di atas, struktur database harus mengakomodasi:
+
+1. **Hierarchy**: `Service Category` -> `Project Type`.
+2. **Relations**:
+   - `Features` harus memiliki tag `relevant_to` (array of service_ids).
+   - `Project Types` harus memiliki field `included_features` (array of feature_ids).
+3. **Deep Content**:
+   - `Project Type` butuh field JSON untuk menyimpan "Detailed Benefits" (Title + Icon + List Items) agar tampilan Agency yang kaya tetap terjaga.
+4. **Inheritance Logic**:
+   - Kolom `workflow` di Project Type bersifat OPTIONAL.
+   - Frontend Logic: `const finalWorkflow = project.workflow || service.workflow`.
+
+---
+
+## 🏗️ 5. TECHNICAL IMPLEMENTATION (SOT)
+
+**Status per 2026-02-10**: System is now **Dynamic**.
+
+### Data Source
+
+- **Primary**: Supabase Table `pricing_master`.
+- **Legacy/Fallback**: `orderConfig.ts` (Hanya digunakan jika koneksi DB putus total).
+
+### Architecture
+
+1. **Database (`pricing_master`)**:
+   - Menyimpan seluruh data: Services, Project Types, Features, Styles, Deadlines.
+   - Menggunakan kolom `metadata` (JSONB) untuk menyimpan relasi kompleks seperti `relevant_to` dan `included_features`.
+   - Menggunakan kolom `category` untuk memisahkan jenis data (`service_type`, `project_type`, `feature`, `style_vibe`, `project_deadline`).
+
+2. **Frontend Service (`pricingService.ts`)**:
+   - Bertugas mengambil data dari DB dan melakukan transformasi (mapping) ke format UI.
+   - Menangani _Graceful Degradation_ (return `[]` jika error, agar UI tidak crash).
+
+3. **State Management (`useOrderCalculator.ts`)**:
+   - Composable Vue yang menghubungkan UI dengan Service.
+   - Melakukan kalkulasi harga secara realtime berdasarkan data yang ditarik dari DB.
+
+4. **Admin Management**:
+   - Menggunakan `GenericPricingList.vue` untuk CRUD semua tipe data pricing tanpa duplikasi kode.

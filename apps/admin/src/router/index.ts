@@ -170,6 +170,83 @@ const router = createRouter({
           path: 'settings',
           name: 'settings',
           component: () => import('../views/Settings.vue')
+        },
+        // Service Management
+        {
+          path: 'services/style-vibes',
+          name: 'service-style-vibes',
+          component: () => import('../views/services/GenericPricingList.vue')
+        },
+        {
+          path: 'services/style-vibes/new',
+          name: 'service-style-vibes-create',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        {
+          path: 'services/style-vibes/:id/edit',
+          name: 'service-style-vibes-edit',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        {
+          path: 'services/project-types',
+          name: 'service-project-types',
+          component: () => import('../views/services/GenericPricingList.vue')
+        },
+        {
+          path: 'services/project-types/new',
+          name: 'service-project-types-create',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        {
+          path: 'services/project-types/:id/edit',
+          name: 'service-project-types-edit',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        {
+           path: 'services/main',
+           name: 'service-list',
+           component: () => import('../views/services/GenericPricingList.vue')
+        },
+        {
+          path: 'services/main/new',
+          name: 'service-create',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        {
+          path: 'services/main/:id/edit',
+          name: 'service-edit',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        {
+           path: 'services/deadlines',
+           name: 'service-deadlines',
+           component: () => import('../views/services/GenericPricingList.vue')
+        },
+        {
+          path: 'services/deadlines/new',
+          name: 'service-deadlines-create',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        {
+          path: 'services/deadlines/:id/edit',
+          name: 'service-deadlines-edit',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        // ADDED FEATURES ROUTE
+        {
+           path: 'services/features',
+           name: 'service-features',
+           component: () => import('../views/services/GenericPricingList.vue')
+        },
+        {
+          path: 'services/features/new',
+          name: 'service-features-create',
+          component: () => import('../views/services/PricingEditor.vue')
+        },
+        {
+          path: 'services/features/:id/edit',
+          name: 'service-features-edit',
+          component: () => import('../views/services/PricingEditor.vue')
         }
       ]
     }

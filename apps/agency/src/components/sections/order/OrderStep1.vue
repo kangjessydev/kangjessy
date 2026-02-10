@@ -448,7 +448,7 @@
                 <div
                   class="w-14 h-14 rounded-2xl bg-bg-secondary flex items-center justify-center text-accent-primary group-hover:scale-110 transition-transform relative"
                 >
-                  <component :is="type.icon" :size="28" />
+                  <component :is="getIconComponent(type.icon)" :size="28" />
                 </div>
                 <div
                   v-if="selectedType === type.id"
@@ -599,7 +599,7 @@
                   v-if="time.multiplier > 1"
                   class="w-fit bg-accent-primary/10 text-accent-primary border border-accent-primary/20 px-3 py-1 rounded-lg text-[0.65rem] font-black tracking-widest uppercase mt-1 mb-3"
                 >
-                  {{ Math.round((time.multiplier - 1) * 100) }}% Fast Speed
+                  {{ Math.round((time.multiplier - 1) * 100) }}% Lebih Cepat
                 </div>
 
                 <p
@@ -728,7 +728,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import {
   Layout as LayoutIcon,
   Zap as ZapIcon,
@@ -742,11 +742,26 @@ import {
   Trash2 as TrashIcon,
   FileText as FileTextIcon,
   RefreshCw as RefreshCwIcon,
+  Globe,
+  Cpu,
+  Rocket,
+  ShoppingCart,
+  BookOpen,
+  Users,
+  PieChart,
+  Activity,
+  Workflow,
+  Bot,
+  FileSearch,
+  TrendingUp,
+  MessageSquare,
+  Database,
+  Layers,
 } from "lucide-vue-next";
+import * as LucideIcons from "lucide-vue-next";
 import {
-  projectTypes,
-  styleOptions,
-  timelineOptions,
+  styleOptions as staticStyleOptions,
+  timelineOptions as staticTimelineOptions,
   type ProjectType,
   type Feature,
 } from "../../../data/config/orderConfig";
@@ -761,7 +776,11 @@ const props = defineProps<{
   totalBundleSavings: number;
   isMicro: boolean;
   formatPrice: (price: number) => string;
-  availableFeatures: Feature[]; // New Prop
+  availableFeatures: Feature[];
+  projectTypes: ProjectType[];
+  serviceTypes: any[];
+  styles: any[];
+  timelines: any[];
 }>();
 
 const emit = defineEmits([
@@ -770,6 +789,19 @@ const emit = defineEmits([
   "update:selectedTimeline",
   "toggle-feature",
 ]);
+
+// Use props for style selection
+const styleOptions = computed(() => {
+  return Array.isArray(props.styles) && props.styles.length > 0
+    ? props.styles
+    : staticStyleOptions;
+});
+
+const timelineOptions = computed(() => {
+  return Array.isArray(props.timelines) && props.timelines.length > 0
+    ? props.timelines
+    : staticTimelineOptions;
+});
 
 const isTimelineVisible = computed(() => !props.isMicro);
 const isStyleVisible = computed(() => {
@@ -787,10 +819,12 @@ const featureHintText = computed(() =>
 );
 
 const selectedTypeData = computed<ProjectType | undefined>(() => {
-  return projectTypes.find((t) => t.id === props.selectedType);
+  if (!props.projectTypes) return undefined;
+  return props.projectTypes.find((t) => t.id === props.selectedType);
 });
 
 const previewFeatures = computed<Feature[]>(() => {
+  if (!props.selectedFeatures || !props.availableFeatures) return [];
   return props.selectedFeatures
     .slice(0, 3)
     .map((id) => props.availableFeatures.find((f) => f.id === id))
@@ -819,11 +853,11 @@ const openSelectionSheet = (
 };
 
 const selectedStyleData = computed(() => {
-  return styleOptions.find((s) => s.id === props.selectedStyle);
+  return styleOptions.value.find((s) => s.id === props.selectedStyle);
 });
 
 const selectedTimelineData = computed(() => {
-  return timelineOptions.find((t) => t.id === props.selectedTimeline);
+  return timelineOptions.value.find((t) => t.id === props.selectedTimeline);
 });
 
 const searchQuery = ref("");
@@ -831,31 +865,30 @@ const activeCategory = ref("Semua");
 
 const currentCategories = computed(() => {
   if (sheetMode.value === "type") {
-    const cats = new Set(projectTypes.map((t) => t.category || "Other"));
+    const types = props.projectTypes || [];
+    const cats = new Set(types.map((t) => t.category || "Proyek Umum"));
     return ["Semua", ...Array.from(cats)];
   } else {
-    // Feature mode: Categories are the services (Web, System, etc.)
-    // Map service internal IDs to human readable names for the tabs
-    const serviceMap: Record<string, string> = {
-      "web-app": "Website",
-      "business-system": "System",
-      automation: "AI & Auto",
-      "saas-accelerator": "SaaS",
-    };
+    // Feature mode
     const allServiceIds = new Set<string>();
-    props.availableFeatures.forEach((f) =>
-      f.relevantTo.forEach((s) => allServiceIds.add(s)),
-    );
+    const features = props.availableFeatures || [];
 
+    features.forEach((f) => f.relevantTo?.forEach((s) => allServiceIds.add(s)));
+
+    // Map service internal IDs to human readable names from DB
     return [
       "Semua",
-      ...Array.from(allServiceIds).map((id) => serviceMap[id] || id),
+      ...Array.from(allServiceIds).map((id) => {
+        const services = props.serviceTypes || [];
+        const svc = services.find((s) => s.slug === id);
+        return svc ? svc.name : id;
+      }),
     ];
   }
 });
 
 const filteredProjectTypes = computed(() => {
-  let result = [...projectTypes];
+  let result = props.projectTypes ? [...props.projectTypes] : [];
   if (activeCategory.value !== "Semua") {
     result = result.filter((t) => t.category === activeCategory.value);
   }
@@ -881,24 +914,21 @@ const filteredProjectTypes = computed(() => {
 });
 
 const filteredFeatures = computed(() => {
-  let result = [...props.availableFeatures];
+  let result = props.availableFeatures ? [...props.availableFeatures] : [];
 
   // 1. Handle Categorization (Tabs)
   if (activeCategory.value !== "Semua") {
-    const serviceMapReverse: Record<string, string> = {
-      Website: "web-app",
-      System: "business-system",
-      "AI & Auto": "automation",
-      SaaS: "saas-accelerator",
-    };
-    const targetServiceId = serviceMapReverse[activeCategory.value];
+    const services = props.serviceTypes || [];
+    const targetService = services.find((s) => s.name === activeCategory.value);
+    const targetServiceId = targetService
+      ? targetService.slug
+      : activeCategory.value;
+
     if (targetServiceId) {
       result = result.filter((f) => f.relevantTo?.includes(targetServiceId));
     }
   } else {
     // 'Semua' is active.
-    // If it's NOT custom maintenance, we MUST still filter by the project's serviceId
-    // unless the user specifically switched tabs.
     if (
       selectedTypeData.value?.id !== "custom-maintenance" &&
       selectedTypeData.value?.serviceId
@@ -930,14 +960,33 @@ const handleReset = () => {
   if (sheetMode.value === "type") {
     emit("update:selectedType", "");
   } else {
-    // Clear all features by toggling them one by one or sending empty array if parent supports it
-    // Since toggle-feature toggles one ID, we might need a clear-all event or just iterate
-    // BUT better to just emit an event to parent to clear.
-    // However, current props logic relies on toggle.
-    // Let's assume parent can handle a reset by iterating or we just update parent.
-    // The most robust way without changing parent too much:
     props.selectedFeatures.forEach((id) => emit("toggle-feature", id));
   }
+};
+
+const getIconComponent = (name: any) => {
+  if (typeof name !== "string") return name || LayoutIcon;
+  const iconMap: any = {
+    Zap: ZapIcon,
+    Globe: Globe,
+    Cpu: Cpu,
+    Rocket: Rocket,
+    Layout: LayoutIcon,
+    ShoppingCart: ShoppingCart,
+    BookOpen: BookOpen,
+    Clock: ClockIcon,
+    Users: Users,
+    PieChart: PieChart,
+    Activity: Activity,
+    Workflow: Workflow,
+    Bot: Bot,
+    FileSearch: FileSearch,
+    TrendingUp: TrendingUp,
+    MessageSquare: LucideIcons.MessageSquare,
+    Database: LucideIcons.Database,
+    Layers: LucideIcons.Layers,
+  };
+  return iconMap[name] || (LucideIcons as any)[name] || LayoutIcon;
 };
 </script>
 

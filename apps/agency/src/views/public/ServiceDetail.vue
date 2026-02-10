@@ -1041,8 +1041,13 @@ import { ref, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { servicesData, type Service } from "../../data/landing/services";
 import { projectsData } from "../../data/landing/projects";
-import { projectTypes } from "../../data/config/orderConfig";
-import { featureService, type Feature } from "../../services/featureService";
+// import { projectTypes } from "../../data/config/orderConfig"; // REMOVED: Static Data
+import {
+  pricingService,
+  type Feature,
+  type ProjectType,
+} from "../../services/pricingService"; // ADDED: Dynamic Service
+
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import { BaseButton } from "@kangjessy/ui";
 import AccordionItem from "../../components/ui/AccordionItem.vue";
@@ -1088,6 +1093,7 @@ import {
   Workflow,
   Activity,
   CreditCard,
+  PlusIcon, // Added missing import if needed, assuming it was used in template
 } from "lucide-vue-next";
 
 // ...
@@ -1098,6 +1104,7 @@ const popup = usePopupManager();
 
 const service = ref<Service | null>(null);
 const features = ref<Feature[]>([]);
+const allProjectTypes = ref<ProjectType[]>([]); // ADDED: Dynamic State
 
 // SEO Setup
 useSEO({
@@ -1108,10 +1115,11 @@ useSEO({
   ),
   url: computed(() => `/services/${route.params.id}`),
 });
-const selectedPkg = ref<any>(null);
+const selectedPkg = ref<ProjectType | null>(null); // Updated Type
 
 const relevantFeatures = computed(() => {
   if (!service.value) return [];
+  // Use 'relevantTo' from dynamic feature service
   return features.value.filter((f) => f.relevantTo.includes(service.value!.id));
 });
 const activeFaqIndex = ref<number | null>(null);
@@ -1126,6 +1134,30 @@ const relatedProjects = computed(() => {
   return projectsData.filter((p) =>
     p.relatedServices?.includes(service.value!.id),
   );
+});
+
+const availablePackages = computed(() => {
+  if (!service.value || !allProjectTypes.value.length) return [];
+
+  // Filter packages for this service using dynamic data
+  let packages = allProjectTypes.value.filter(
+    (p) => p.serviceId === service.value?.id,
+  );
+
+  // Sort Logic:
+  // 1. Recommended/Featured goes first
+  // 2. Then sort by Lowest Price
+  return packages.sort((a, b) => {
+    // Check for badges
+    const aIsFeatured = a.badge || a.isFeatured;
+    const bIsFeatured = b.badge || b.isFeatured;
+
+    if (aIsFeatured && !bIsFeatured) return -1;
+    if (!aIsFeatured && bIsFeatured) return 1;
+
+    // If both featured or both not, sort by price
+    return (a.basePrice || 0) - (b.basePrice || 0);
+  });
 });
 
 const filteredPackages = computed(() => {
@@ -1221,28 +1253,6 @@ const getProjectIcon = (iconName: string) => {
   return icons[iconName] || Puzzle;
 };
 
-const availablePackages = computed(() => {
-  if (!service.value) return [];
-
-  // Filter packages for this service
-  let packages = projectTypes.filter((p) => p.serviceId === service.value?.id);
-
-  // Sort Logic:
-  // 1. Recommended/Featured goes first
-  // 2. Then sort by Lowest Price
-  return packages.sort((a, b) => {
-    // Check for badges
-    const aIsFeatured = a.badge || a.isFeatured;
-    const bIsFeatured = b.badge || b.isFeatured;
-
-    if (aIsFeatured && !bIsFeatured) return -1;
-    if (!aIsFeatured && bIsFeatured) return 1;
-
-    // If both featured or both not, sort by price
-    return (a.basePrice || 0) - (b.basePrice || 0);
-  });
-});
-
 const formatCurrency = (val: number) => {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -1259,8 +1269,14 @@ const fetchData = async () => {
     service.value = foundData;
     window.scrollTo({ top: 0, behavior: "instant" } as any);
 
-    // Fetch dynamic features
-    features.value = await featureService.getAllActive();
+    // Fetch dynamic project types & features concurrently
+    const [fetchedFeatures, fetchedProjects] = await Promise.all([
+      pricingService.getAllFeatures(), // Use new pricing service
+      pricingService.getAllProjectTypes(), // Use new pricing service
+    ]);
+
+    features.value = fetchedFeatures;
+    allProjectTypes.value = fetchedProjects;
 
     // Set initial selected package
     if (availablePackages.value.length > 0) {

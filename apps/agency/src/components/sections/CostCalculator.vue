@@ -24,6 +24,10 @@
           :is-micro="isMicro"
           :format-price="formatPrice"
           :available-features="features"
+          :project-types="projectTypes"
+          :service-types="serviceTypes"
+          :styles="styles"
+          :timelines="timelines"
         >
           <template #summary>
             <OrderSummaryCard
@@ -111,6 +115,10 @@ const {
   getFeaturePrice,
   formatPrice,
   features,
+  projectTypes,
+  serviceTypes,
+  styles,
+  timelines,
   availableCoupons,
 } = useOrderCalculator();
 

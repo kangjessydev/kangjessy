@@ -510,6 +510,15 @@
               </td>
               <td class="!pr-8">
                 <div class="flex items-center justify-end gap-1 transition-all">
+                  <!-- 0. CRM Intelligence -->
+                  <button
+                    @click="router.push(`/clients/${lead.id}`)"
+                    class="btn-action bg-indigo-50 text-indigo-600 hover:bg-[#702DFF] hover:text-white"
+                    title="Intelijen CRM"
+                  >
+                    <User :size="16" />
+                  </button>
+
                   <!-- 1. View / Edit Detail -->
                   <button
                     @click="openEditModal(lead)"
@@ -1032,6 +1041,7 @@ import {
   Hash,
   FileText,
   Edit2,
+  User,
 } from "lucide-vue-next";
 import { clientsService } from "../services/clientsService";
 import { useErrorHandler } from "../composables/useErrorHandler";

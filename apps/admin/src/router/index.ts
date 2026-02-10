@@ -62,6 +62,11 @@ const router = createRouter({
           component: () => import('../views/Leads.vue')
         },
         {
+          path: 'clients/:id',
+          name: 'client-detail',
+          component: () => import('../views/ClientDetail.vue')
+        },
+        {
           path: 'leads/new',
           name: 'lead-create',
           component: () => import('../views/OrderEditor.vue')

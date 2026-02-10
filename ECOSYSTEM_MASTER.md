@@ -122,6 +122,7 @@ Berdasarkan audit terbaru, berikut adalah area yang telah tersinkronisasi dan di
 | **Bento UI 2.0**       | 🟢 SYNCED | Konsistensi rounding `rounded-[32px]!` dan border-based design diimplementasikan di seluruh Admin Card & Table.                 |
 | **Pricing Master**     | 🟢 SYNCED | Agency Calculator mengambil data live dari `pricing_master`. Admin memiliki UI `GenericPricingList.vue` untuk mengelola data.   |
 | **Standardized UI**    | 🟢 SYNCED | Admin Form & Content Views kini seragam menggunakan komponen Bento terpusat (`@kangjessy/ui`).                                  |
+| **CRM Intelligence**   | 🟢 SYNCED | Modul `ClientDetail.vue` & `interactionsService` sudah aktif untuk tracking LTV Klien dan Profil Interaksi.                     |
 
 ---
 
@@ -135,6 +136,7 @@ Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosis
 - **Tailwind v4 Fixes**: Refactoring masif syntax utilitas dari `!important` prefix ke suffix (e.g., `rounded-[32px]!`).
 - **Premium Aesthetics**: Memastikan penggunaan `rounded-[32px]!` pada `AdminCard` dan `Table Headers` untuk tampilan Bento UI 2.0 yang "alive" dan premium.
 - **Content Management**: Table/Grid Switcher pada `Portfolio.vue` dan `Blog.vue` kini mendukung lokalisasi dan seleksi bulk yang lebih bersih.
+- **CRM Intelligence**: Penambahan tabel `client_interactions` dan halaman Detail Klien untuk mencatat Log Meeting, LTV, dan WA Automator.
 
 ---
 
@@ -295,6 +297,7 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
 - [ ] **Filter & Search**: Coba ketik di kolom pencarian pada setiap view dan pastikan data terfilter.
 - [ ] **Status Update**: Coba ubah status salah satu Order atau Lead (e.g. dari "New" ke "Follow Up") dan pastikan toast berhasil muncul.
 - [ ] **Table/Grid Switcher**: Pada view Portfolio dan Blog, coba pindah antara mode Tabel dan Grid.
+- [ ] **New Feature (CRM Intel)**: Klik ikon 'User' di tabel Leads, pastikan masuk ke halaman Detail Klien. Coba tambahkan catatan manual dan lihat apakah LTV muncul.
 
 #### 4. Responsiveness (Mobile Check)
 

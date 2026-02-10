@@ -158,6 +158,15 @@ export interface Technology {
   slug: string
 }
 
+export interface Interaction {
+  id: string
+  client_id: string
+  type: 'whatsapp' | 'call' | 'meeting' | 'note'
+  content: string
+  metadata?: any
+  created_at: string
+}
+
 // Legacy - keeping for backward compatibility
 export interface Order extends Client {}
 export interface Lead extends Client {}

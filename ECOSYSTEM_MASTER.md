@@ -178,7 +178,7 @@ Total estimasi pengerjaan: **~5-6 Jam** (dilakukan secara bertahap agar aman).
    Ekstraksi logika Supabase/Sanity ke `packages/database` agar semua aplikasi memakai "pipa" tunggal.
 4. **Fase 4: Deployment Sync & UI Unified (DONE)**  
    Update setting "Root Directory" di Vercel Dashboard dan migrasi komponen core ke `@kangjessy/ui`. Seluruh aplikasi (`agency`, `admin`) kini menggunakan repositori komponen tunggal.
-5. **Fase 5: Admin Refactoring & Standardization (PENDING)**
+5. **Fase 5: Admin Refactoring & Standardization (DONE)**
    - **Tailwind v4 Upgrade**: Menyamakan stack CSS Admin dengan Agency (tanpa config JS).
    - **Config Cleanup**: Menghapus `tailwind.config.js` dan `postcss.config.js` dari Admin.
    - **Unified Style**: Memastikan Admin menggunakan `@kangjessy/ui` secara native via `@source`.

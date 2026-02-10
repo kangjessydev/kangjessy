@@ -1415,6 +1415,7 @@ const currentClientPhone = computed(
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .page-container {
   animation: fade-in 0.6s ease-out;
 }

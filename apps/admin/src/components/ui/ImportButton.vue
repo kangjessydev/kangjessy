@@ -295,6 +295,7 @@ const variantClass = computed(() => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .import-button {
   @apply inline-flex items-center justify-center font-bold rounded-xl transition-all duration-200;
 }

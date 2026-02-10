@@ -72,6 +72,7 @@ const sizeClass = computed(() => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .export-btn {
   @apply flex items-center gap-2 font-black uppercase tracking-widest rounded-lg transition-all duration-200;
   @apply text-slate-500 hover:text-[#702DFF] hover:bg-white dark:hover:bg-slate-700;

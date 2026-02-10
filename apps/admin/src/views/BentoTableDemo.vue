@@ -353,6 +353,7 @@ function showToast(message: string, variant: "success" | "error" = "success") {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .btn-action {
   @apply w-10 h-10 rounded-2xl transition-all flex items-center justify-center;
 }

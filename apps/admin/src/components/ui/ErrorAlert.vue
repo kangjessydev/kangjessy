@@ -111,6 +111,7 @@ const handleClose = () => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .error-alert {
   @apply border rounded-2xl p-4 shadow-lg;
 }

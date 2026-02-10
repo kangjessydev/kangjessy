@@ -744,6 +744,7 @@ const handleSave = async () => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .tab-button {
   @apply px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-200;
   @apply text-slate-500 hover:text-slate-700 hover:bg-slate-50;

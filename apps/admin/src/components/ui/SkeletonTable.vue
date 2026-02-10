@@ -35,6 +35,7 @@ const getCellWidth = (colIndex: number) => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .skeleton-table {
   @apply bg-white rounded-2xl border border-slate-100 overflow-hidden;
 }

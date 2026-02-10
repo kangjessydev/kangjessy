@@ -446,6 +446,7 @@ const removeLink = () => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .toolbar-btn {
     @apply w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 hover:text-[#702DFF] hover:bg-slate-50 transition-all active:scale-90;
 }

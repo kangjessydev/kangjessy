@@ -851,6 +851,7 @@ const showToast = (message: string, variant: 'success' | 'error') => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .label-heading {
     @apply text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5;
 }

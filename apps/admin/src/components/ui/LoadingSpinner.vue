@@ -62,6 +62,7 @@ const textSizeClass = computed(() => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .spinner {
   @apply rounded-full animate-spin;
 }

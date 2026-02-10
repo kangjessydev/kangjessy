@@ -714,6 +714,7 @@ const markAsCompleted = async (tx: FinanceTransaction) => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .page-container {
   padding-top: 2rem;
   padding-bottom: 5rem;

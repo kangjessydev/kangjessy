@@ -529,6 +529,8 @@ onMounted(fetchDashboardData);
 </script>
 
 <style scoped>
+@reference "tailwindcss";
+
 .badge-chip {
   @apply px-2.5 py-1 rounded-lg font-black uppercase tracking-widest text-[9px] shadow-sm flex items-center gap-2;
 }

@@ -22,6 +22,7 @@ const { theme, isDark, toggleTheme } = useDarkMode()
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .theme-toggle {
   @apply w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300;
   @apply bg-slate-100 hover:bg-slate-200 text-slate-600;

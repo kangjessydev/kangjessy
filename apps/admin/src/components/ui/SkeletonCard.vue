@@ -50,6 +50,7 @@ const getLineWidth = (index: number) => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
 .skeleton-card {
   @apply bg-white rounded-2xl p-6 border border-slate-100 space-y-6;
 }

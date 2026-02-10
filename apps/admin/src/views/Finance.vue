@@ -100,7 +100,7 @@
 
     <!-- Tab Content: Ledger -->
     <div v-if="activeTab === 'ledger'" class="space-y-6 animate-fade-in">
-      <DashboardCard title="Global Transaction Ledger" no-padding>
+      <AdminCard title="Global Transaction Ledger" no-padding>
         <template #action>
           <div class="flex items-center gap-4">
             <div class="relative">
@@ -250,7 +250,7 @@
             </tbody>
           </table>
         </div>
-      </DashboardCard>
+      </AdminCard>
     </div>
 
     <!-- Tab Content: Commitments (Hutang Piutang) -->
@@ -260,7 +260,7 @@
     >
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Receivables (Piutang) -->
-        <DashboardCard title="Daftar Piutang (Uang Masuk Tertunda)" no-padding>
+        <AdminCard title="Daftar Piutang (Uang Masuk Tertunda)" no-padding>
           <div class="overflow-x-auto">
             <table class="table-main">
               <thead>
@@ -307,10 +307,10 @@
               </tbody>
             </table>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
         <!-- Debts (Hutang) -->
-        <DashboardCard title="Daftar Hutang (Uang Keluar Tertunda)" no-padding>
+        <AdminCard title="Daftar Hutang (Uang Keluar Tertunda)" no-padding>
           <div class="overflow-x-auto">
             <table class="table-main">
               <thead>
@@ -353,7 +353,7 @@
               </tbody>
             </table>
           </div>
-        </DashboardCard>
+        </AdminCard>
       </div>
     </div>
 
@@ -363,7 +363,7 @@
       class="animate-fade-in space-y-8"
     >
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <DashboardCard title="90-Day Cashflow Momentum" class="lg:col-span-8">
+        <AdminCard title="90-Day Cashflow Momentum" class="lg:col-span-8">
           <div class="h-80 flex items-end justify-between px-4 pb-4">
             <div
               v-for="(day, idx) in monthlyTrends"
@@ -387,9 +387,9 @@
               >
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
-        <DashboardCard title="Expense Distribution" class="lg:col-span-4">
+        <AdminCard title="Expense Distribution" class="lg:col-span-4">
           <div class="space-y-6 mt-4">
             <div v-for="cat in expenseCategories" :key="cat.name">
               <div class="flex justify-between items-center mb-2">
@@ -420,7 +420,7 @@
               </p>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
       </div>
     </div>
 
@@ -475,7 +475,7 @@ import {
 
 import PageHeader from "../components/ui/PageHeader.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import ButtonPrimary from "../components/ui/ButtonPrimary.vue";
 import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
 import TransactionModal from "../components/finance/TransactionModal.vue";

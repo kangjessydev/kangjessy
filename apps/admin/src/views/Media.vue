@@ -27,7 +27,7 @@
     <div class="flex gap-6">
       <!-- Folder Sidebar -->
       <div class="w-64 shrink-0 hidden lg:block">
-        <DashboardCard title="Folders" :stretch="false">
+        <AdminCard title="Folders" :stretch="false">
           <div class="space-y-1">
             <!-- All Files -->
             <button
@@ -82,7 +82,7 @@
               of {{ formatBytes(maxStorage) }}
             </p>
           </div>
-        </DashboardCard>
+        </AdminCard>
       </div>
 
       <!-- Main Content Area -->
@@ -703,7 +703,7 @@ import {
 } from "lucide-vue-next";
 import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import Toast from "../components/ui/Toast.vue";
 import FolderItem from "../components/media/FolderItem.vue";
 import { sanityClient, sanityWriteClient } from "@kangjessy/database";

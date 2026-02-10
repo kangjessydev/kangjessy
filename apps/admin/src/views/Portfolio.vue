@@ -39,7 +39,7 @@
     </div>
 
     <!-- Filter Bar -->
-    <DashboardCard
+    <AdminCard
       class="mb-6 !rounded-[32px] shadow-lg shadow-slate-200/20 px-6 py-4"
     >
       <div class="flex flex-col lg:flex-row gap-4 justify-between items-center">
@@ -97,7 +97,7 @@
           </select>
         </div>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <!-- Bulk Action Bar (Float) -->
     <transition
@@ -148,7 +148,7 @@
     </transition>
 
     <!-- Portfolio Table -->
-    <DashboardCard
+    <AdminCard
       no-padding
       class="overflow-hidden !rounded-[32px] border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
     >
@@ -406,7 +406,7 @@
           </button>
         </div>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <ConfirmModal
       :is-open="confirmModal.isOpen"
@@ -451,7 +451,7 @@ import {
   type PortfolioItem,
 } from "../services/portfolioService";
 import PageHeader from "../components/ui/PageHeader.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
 import StatsCard from "../components/ui/StatsCard.vue";
 import Toast from "../components/ui/Toast.vue";

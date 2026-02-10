@@ -84,7 +84,7 @@
     <div v-else class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
       <!-- Main Form Area -->
       <div class="lg:col-span-8 space-y-8">
-        <DashboardCard
+        <AdminCard
           title="A. Definisi Dasar"
           subtitle="Konfigurasi identitas dan slug"
           :stretch="false"
@@ -134,54 +134,38 @@
               </div>
             </div>
 
-            <div class="md:col-span-2 space-y-2.5">
-              <label
-                class="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] ml-2"
-                >Deskripsi Estetik / Detail</label
-              >
-              <textarea
-                v-model="form.description"
-                rows="4"
-                class="input-field min-h-[120px] leading-relaxed resize-none transition-all"
-                placeholder="Jelaskan secara singkat detail atau keunggulan pilihan ini..."
-              ></textarea>
-            </div>
+            <AdminTextarea
+              v-model="form.description"
+              label="Deskripsi Estetik / Detail"
+              placeholder="Jelaskan secara singkat detail atau keunggulan pilihan ini..."
+              class="md:col-span-2"
+            />
 
             <!-- Icon Selection: Only for Service & Project Types -->
             <div
               v-if="
                 ['service_type', 'project_type'].includes(pageDisplay.category)
               "
-              class="md:col-span-2 space-y-2"
+              class="md:col-span-2 space-y-4"
             >
-              <label
-                class="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] ml-2"
-                >Pilih Ikon Visual</label
-              >
-              <div class="flex gap-4">
-                <div class="flex-1 relative">
-                  <select
-                    v-model="form.icon"
-                    class="input-field appearance-none cursor-pointer pr-10"
+              <div class="flex gap-4 items-end">
+                <AdminSelect
+                  v-model="form.icon"
+                  label="Pilih Ikon Visual"
+                  class="flex-1"
+                >
+                  <option value="">Pilih Ikon...</option>
+                  <option
+                    v-for="icon in availableIcons"
+                    :key="icon"
+                    :value="icon"
                   >
-                    <option value="">Pilih Ikon...</option>
-                    <option
-                      v-for="icon in availableIcons"
-                      :key="icon"
-                      :value="icon"
-                    >
-                      {{ icon }}
-                    </option>
-                  </select>
-                  <div
-                    class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300"
-                  >
-                    <ChevronDown :size="16" />
-                  </div>
-                </div>
+                    {{ icon }}
+                  </option>
+                </AdminSelect>
                 <!-- Mini Preview Area -->
                 <div
-                  class="w-[58px] h-[58px] rounded-2xl bg-indigo-50 flex items-center justify-center text-[#702DFF] border border-indigo-100/50 shadow-inner"
+                  class="w-[58px] h-[58px] rounded-2xl bg-indigo-50 flex items-center justify-center text-[#702DFF] border border-indigo-100/50 shadow-inner mb-0.5"
                   title="Preview Ikon"
                 >
                   <component :is="getIconComponent(form.icon)" :size="24" />
@@ -195,10 +179,10 @@
               </p>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
         <!-- Dynamic Metadata for Project Types -->
-        <DashboardCard
+        <AdminCard
           v-if="pageDisplay.category === 'project_type'"
           title="B. Metadata & Relasi"
           subtitle="Hubungkan dengan kategori layanan utama"
@@ -206,25 +190,19 @@
           class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
-            <div class="space-y-2">
-              <label
-                class="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] ml-2"
-                >Kategori Layanan Utama</label
+            <AdminSelect
+              v-model="form.metadata.service_id"
+              label="Kategori Layanan Utama"
+            >
+              <option value="">Pilih Layanan Utama...</option>
+              <option
+                v-for="svc in serviceTypes"
+                :key="svc.slug"
+                :value="svc.slug"
               >
-              <select
-                v-model="form.metadata.service_id"
-                class="input-field appearance-none cursor-pointer"
-              >
-                <option value="">Pilih Layanan Utama...</option>
-                <option
-                  v-for="svc in serviceTypes"
-                  :key="svc.slug"
-                  :value="svc.slug"
-                >
-                  {{ svc.name }}
-                </option>
-              </select>
-            </div>
+                {{ svc.name }}
+              </option>
+            </AdminSelect>
 
             <BaseInput
               v-model="form.metadata.badge"
@@ -234,10 +212,10 @@
               class="!rounded-2xl"
             />
           </div>
-        </DashboardCard>
+        </AdminCard>
 
         <!-- Commercial Data: Price or Multiplier -->
-        <DashboardCard
+        <AdminCard
           v-if="
             ['project_type', 'project_deadline'].includes(pageDisplay.category)
           "
@@ -272,9 +250,9 @@
               class="!rounded-2xl"
             />
           </div>
-        </DashboardCard>
+        </AdminCard>
 
-        <DashboardCard
+        <AdminCard
           v-if="pageDisplay.category === 'style_vibe'"
           title="D. Representasi Visual"
           subtitle="Thumbnail dan aset tampilan gaya"
@@ -367,9 +345,9 @@
               />
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
-        <DashboardCard
+        <AdminCard
           title="E. Pencarian & Indeks"
           subtitle="Organisasi sistem"
           :stretch="false"
@@ -385,14 +363,14 @@
               class="!rounded-2xl"
             />
           </div>
-        </DashboardCard>
+        </AdminCard>
       </div>
 
       <!-- Settings Sidebar -->
       <div class="lg:col-span-4 space-y-8">
         <div class="sticky top-24 space-y-8">
           <!-- Publishing Card -->
-          <DashboardCard
+          <AdminCard
             title="Status & Visibilitas"
             subtitle="Atur ketersediaan di website"
             :stretch="false"
@@ -432,7 +410,7 @@
                 </label>
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
 
           <!-- Info Card -->
           <div
@@ -521,8 +499,10 @@ import {
 } from "lucide-vue-next";
 import * as LucideIcons from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
-import DashboardCard from "../../components/ui/DashboardCard.vue";
+import AdminCard from "../../components/ui/AdminCard.vue";
 import BaseInput from "../../components/ui/BaseInput.vue";
+import AdminSelect from "../../components/ui/AdminSelect.vue";
+import AdminTextarea from "../../components/ui/AdminTextarea.vue";
 import Toast from "../../components/ui/Toast.vue";
 import MediaPickerModal from "../../components/media/MediaPickerModal.vue";
 import {
@@ -624,8 +604,11 @@ const loadItem = async () => {
         badge: "Professional Solution",
         status: "active",
         is_featured: false,
-        features: ["100% Kepemilikan & Akses Source Code", "Desain Premium & UX Copywriting"], // Default template
-        ...(form.value.metadata || {})
+        features: [
+          "100% Kepemilikan & Akses Source Code",
+          "Desain Premium & UX Copywriting",
+        ], // Default template
+        ...(form.value.metadata || {}),
       };
     }
     loading.value = false;
@@ -661,14 +644,14 @@ const loadItem = async () => {
 };
 
 const addFeature = () => {
-    if (!form.value.metadata.features) form.value.metadata.features = [];
-    form.value.metadata.features.push("");
+  if (!form.value.metadata.features) form.value.metadata.features = [];
+  form.value.metadata.features.push("");
 };
 
 const removeFeature = (index: number) => {
-    if (form.value.metadata.features) {
-        form.value.metadata.features.splice(index, 1);
-    }
+  if (form.value.metadata.features) {
+    form.value.metadata.features.splice(index, 1);
+  }
 };
 
 const saveItem = async (redirect: boolean = true) => {

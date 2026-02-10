@@ -38,7 +38,7 @@
       </p>
     </div>
 
-    <DashboardCard
+    <AdminCard
       v-else
       no-padding
       overflow-visible
@@ -287,7 +287,7 @@
           </tbody>
         </table>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <!-- Confirm Dialog -->
     <ConfirmModal
@@ -338,7 +338,7 @@ import {
 } from "lucide-vue-next";
 import * as LucideIcons from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
-import DashboardCard from "../../components/ui/DashboardCard.vue";
+import AdminCard from "../../components/ui/AdminCard.vue";
 import PageHeader from "../../components/ui/PageHeader.vue";
 import ConfirmModal from "../../components/ui/ConfirmModal.vue";
 import Toast from "../../components/ui/Toast.vue";

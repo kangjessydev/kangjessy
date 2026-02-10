@@ -52,7 +52,7 @@
     </div>
 
     <!-- Filter Bar -->
-    <DashboardCard
+    <AdminCard
       no-padding
       class="hidden lg:block mb-6 !rounded-[32px] shadow-lg shadow-slate-200/5 border-slate-50 overflow-hidden"
     >
@@ -119,7 +119,7 @@
           </div>
         </div>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <!-- Mobile Tools -->
     <div class="lg:hidden flex gap-2 mb-6">
@@ -160,7 +160,7 @@
       </p>
     </div>
 
-    <DashboardCard
+    <AdminCard
       v-else
       no-padding
       class="overflow-hidden !rounded-[32px] border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
@@ -318,7 +318,7 @@
           </tbody>
         </table>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <!-- Bulk Action Bar -->
     <transition
@@ -422,7 +422,7 @@ import proposalService, { type Proposal } from "../services/proposalService";
 import { useErrorHandler } from "../composables/useErrorHandler";
 import { useLoading } from "../composables/useLoading";
 import PageHeader from "../components/ui/PageHeader.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
 import ButtonPrimary from "../components/ui/ButtonPrimary.vue";
 import ButtonSecondary from "../components/ui/ButtonSecondary.vue";

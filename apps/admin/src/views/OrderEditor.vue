@@ -425,7 +425,7 @@
 
           <!-- STEP 2: DETAILS -->
           <div v-else class="space-y-8 animate-fade-in-up">
-            <DashboardCard
+            <AdminCard
               title="A. Client Connection"
               subtitle="Identify the stakeholder for this project"
               :stretch="false"
@@ -462,9 +462,9 @@
                   class="!rounded-2xl"
                 />
               </div>
-            </DashboardCard>
+            </AdminCard>
 
-            <DashboardCard
+            <AdminCard
               title="B. Requirement Specs"
               subtitle="Technical discovery and project blueprints"
               :stretch="false"
@@ -485,21 +485,16 @@
                   :icon="Globe"
                   class="!rounded-2xl"
                 />
-                <div class="md:col-span-2 space-y-2.5">
-                  <label
-                    class="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] ml-2"
-                    >Technical Brief / Discovery Notes</label
-                  >
-                  <textarea
-                    v-model="formData.brief"
-                    class="input-field min-h-[160px] leading-relaxed resize-none transition-all"
-                    placeholder="Summarize the core needs, colors, and functionalities..."
-                  ></textarea>
-                </div>
+                <AdminTextarea
+                  v-model="formData.brief"
+                  label="Technical Brief / Discovery Notes"
+                  class="md:col-span-2"
+                  placeholder="Summarize the core needs, colors, and functionalities..."
+                />
               </div>
-            </DashboardCard>
+            </AdminCard>
 
-            <DashboardCard
+            <AdminCard
               title="C. Financial & Stage Ledger"
               subtitle="Accounting logic and production timeline"
               :stretch="false"
@@ -534,44 +529,30 @@
                     >Accounting Logic</label
                   >
                   <div class="grid grid-cols-1 gap-5">
-                    <div class="relative group">
-                      <span
-                        class="absolute left-6 top-1/2 -translate-y-1/2 text-[#7029FF] font-black text-[10px] uppercase tracking-tighter opacity-70 group-focus-within:opacity-100 transition-opacity"
-                        >Deal: Rp</span
-                      >
-                      <input
-                        type="number"
-                        v-model="formData.total_amount"
-                        class="w-full pl-28 pr-6 py-4 bg-slate-50 border-2 border-transparent rounded-[24px] text-[#1B2559] font-black text-lg outline-none focus:ring-8 focus:ring-indigo-500/5 focus:bg-white focus:border-[#7029FF]/20 transition-all"
-                        placeholder="0"
-                      />
-                    </div>
-                    <div class="relative group">
-                      <span
-                        class="absolute left-6 top-1/2 -translate-y-1/2 text-emerald-600 font-black text-[10px] uppercase tracking-tighter opacity-70 group-focus-within:opacity-100 transition-opacity"
-                        >Paid: Rp</span
-                      >
-                      <input
-                        type="number"
-                        v-model="formData.paid_amount"
-                        class="w-full pl-24 pr-6 py-4 bg-slate-50 border-2 border-transparent rounded-[24px] text-emerald-700 font-black text-lg outline-none focus:ring-8 focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all font-mono"
-                        placeholder="0"
-                      />
-                    </div>
+                    <BaseInput
+                      v-model="formData.total_amount"
+                      type="number"
+                      label="Deal Weight"
+                      prefix="Rp"
+                      placeholder="0"
+                    />
+                    <BaseInput
+                      v-model="formData.paid_amount"
+                      type="number"
+                      label="Paid Weight"
+                      prefix="Rp"
+                      placeholder="0"
+                      class="!text-emerald-700"
+                    />
                   </div>
 
-                  <div class="space-y-2.5 mt-4">
-                    <label
-                      class="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] ml-2"
-                      >Accounting Notes</label
-                    >
-                    <textarea
-                      v-model="formData.payment_notes"
-                      rows="3"
-                      class="input-field min-h-[100px] text-sm resize-none"
-                      placeholder="e.g. DP 50%, friend discount, installment plans..."
-                    ></textarea>
-                  </div>
+                  <AdminTextarea
+                    v-model="formData.payment_notes"
+                    label="Accounting Notes"
+                    :rows="3"
+                    placeholder="e.g. DP 50%, friend discount, installment plans..."
+                    class="mt-4"
+                  />
 
                   <div
                     class="p-8 bg-[#1B2559] text-white rounded-[38px] shadow-2xl relative overflow-hidden group"
@@ -616,7 +597,7 @@
                   </div>
                 </div>
               </div>
-            </DashboardCard>
+            </AdminCard>
           </div>
         </div>
 
@@ -742,7 +723,7 @@
               </div>
             </div>
 
-            <DashboardCard
+            <AdminCard
               title="Sales Intelligence"
               :stretch="false"
               class="!rounded-[32px] border-none shadow-xl shadow-slate-200/5"
@@ -888,7 +869,7 @@
                   </div>
                 </div>
               </div>
-            </DashboardCard>
+            </AdminCard>
           </div>
         </div>
       </div>
@@ -1541,12 +1522,12 @@ import {
   Palette,
   Info,
 } from "lucide-vue-next";
-import { BaseButton } from "@kangjessy/ui";
+import { BaseButton, BottomSheet } from "@kangjessy/ui";
 import BaseInput from "../components/ui/BaseInput.vue";
 import Toast from "../components/ui/Toast.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
-import { BottomSheet } from "@kangjessy/ui";
+import AdminCard from "../components/ui/AdminCard.vue";
+import AdminTextarea from "../components/ui/AdminTextarea.vue";
 
 import { clientsService } from "../services/clientsService";
 import { couponsService, type Coupon } from "../services/couponsService";

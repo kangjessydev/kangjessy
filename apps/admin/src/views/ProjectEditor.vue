@@ -89,7 +89,7 @@
         <!-- Main Form Column (8) -->
         <div class="lg:col-span-8 space-y-8">
           <!-- Project Context -->
-          <DashboardCard
+          <AdminCard
             title="Project Foundation"
             class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl !rounded-[40px] border-none"
             :stretch="false"
@@ -161,10 +161,10 @@
                 </div>
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
 
           <!-- Technical & Deliverables -->
-          <DashboardCard
+          <AdminCard
             title="Deliverables & Assets"
             :stretch="false"
             class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl !rounded-[40px] border-none"
@@ -193,47 +193,29 @@
               <div
                 class="md:col-span-2 space-y-6 pt-4 border-t border-slate-50 mt-2"
               >
-                <div class="space-y-1.5">
-                  <label
-                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1"
-                    >Core Brief & Objective</label
-                  >
-                  <textarea
-                    v-model="formData.brief"
-                    class="input-field min-h-[100px] pt-3"
-                    placeholder="What is the main goal and requirements for this project?"
-                  ></textarea>
-                </div>
+                <AdminTextarea
+                  v-model="formData.brief"
+                  label="Core Brief & Objective"
+                  placeholder="What is the main goal and requirements for this project?"
+                />
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div class="space-y-1.5">
-                    <label
-                      class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1"
-                      >Visual Style & Mood</label
-                    >
-                    <textarea
-                      v-model="formData.visual_style"
-                      class="input-field min-h-[80px] pt-3"
-                      placeholder="Premium, minimal, dark mode, high contrast, typography focused..."
-                    ></textarea>
-                  </div>
-                  <div class="space-y-1.5">
-                    <label
-                      class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1"
-                      >Timeline & Delivery Notes</label
-                    >
-                    <textarea
-                      v-model="formData.timeline_notes"
-                      class="input-field min-h-[80px] pt-3"
-                      placeholder="Milestone deadlines, specific meeting schedules..."
-                    ></textarea>
-                  </div>
+                  <AdminTextarea
+                    v-model="formData.visual_style"
+                    label="Visual Style & Mood"
+                    placeholder="Premium, minimal, dark mode, high contrast, typography focused..."
+                  />
+                  <AdminTextarea
+                    v-model="formData.timeline_notes"
+                    label="Timeline & Delivery Notes"
+                    placeholder="Milestone deadlines, specific meeting schedules..."
+                  />
                 </div>
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
 
           <!-- Task & Milestone Management -->
-          <DashboardCard
+          <AdminCard
             title="Production Roadmap"
             :stretch="false"
             class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl !rounded-[40px] border-none overflow-hidden pb-8"
@@ -538,33 +520,24 @@
                 </p>
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
         </div>
 
         <!-- Sidebar Column (4) -->
         <div class="lg:col-span-4 space-y-6">
-          <DashboardCard
+          <AdminCard
             title="Lifecycle & Meta"
             :stretch="false"
             class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl !rounded-[40px] border-none"
           >
             <div class="space-y-6">
-              <div>
-                <label
-                  class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1"
-                  >Status</label
-                >
-                <select
-                  v-model="formData.status"
-                  class="select-field !text-[10px] !font-black !py-3 !rounded-xl !bg-white border-slate-100 shadow-sm"
-                >
-                  <option value="planning">PLANNING</option>
-                  <option value="in_progress">IN PROGRESS</option>
-                  <option value="done">DONE</option>
-                  <option value="pending">PENDING</option>
-                  <option value="hold">HOLD</option>
-                </select>
-              </div>
+              <AdminSelect v-model="formData.status" label="Status Pengerjaan">
+                <option value="planning">PLANNING</option>
+                <option value="in_progress">IN PROGRESS</option>
+                <option value="done">DONE</option>
+                <option value="pending">PENDING</option>
+                <option value="hold">HOLD</option>
+              </AdminSelect>
 
               <div>
                 <label class="flex justify-between items-center mb-2">
@@ -625,7 +598,7 @@
                 </div>
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
         </div>
       </div>
 
@@ -722,11 +695,13 @@ import {
 } from "../data/projectTemplates";
 import { timelineOptions } from "../data/order/options";
 import type { Project, Task } from "../types";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
 import BaseInput from "../components/ui/BaseInput.vue";
 import WhatsAppModal from "../components/ui/WhatsAppModal.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
+import AdminSelect from "../components/ui/AdminSelect.vue";
+import AdminTextarea from "../components/ui/AdminTextarea.vue";
 import Toast from "../components/ui/Toast.vue";
 
 const route = useRoute();

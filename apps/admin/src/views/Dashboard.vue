@@ -32,12 +32,12 @@
 
     <!-- Key Performance Indicators -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
-      <StatsCard v-for="stat in statItems" :key="stat.title" v-bind="stat" />
+      <BentoStat v-for="stat in statItems" :key="stat.title" v-bind="stat" />
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
       <!-- Performance Analytics (Actual Monthly Revenue) -->
-      <DashboardCard
+      <AdminCard
         title="Revenue Performance"
         class="lg:col-span-8"
         :stretch="false"
@@ -79,14 +79,10 @@
             </div>
           </div>
         </div>
-      </DashboardCard>
+      </AdminCard>
 
       <!-- Conversion Funnel -->
-      <DashboardCard
-        title="Sales Pipeline"
-        class="lg:col-span-4"
-        :stretch="false"
-      >
+      <AdminCard title="Sales Pipeline" class="lg:col-span-4" :stretch="false">
         <div class="space-y-6 mt-6">
           <div
             v-for="stage in pipelineStages"
@@ -131,11 +127,11 @@
             </p>
           </div>
         </div>
-      </DashboardCard>
+      </AdminCard>
     </div>
 
     <!-- Active High-Value Projects Table -->
-    <DashboardCard title="Priority Delivery Lane" no-padding>
+    <AdminCard title="Priority Delivery Lane" no-padding>
       <template #action>
         <router-link
           to="/orders"
@@ -299,7 +295,7 @@
           </div>
         </div>
       </div>
-    </DashboardCard>
+    </AdminCard>
   </div>
 </template>
 
@@ -316,8 +312,8 @@ import {
 } from "lucide-vue-next";
 import { portfolioService } from "../services/portfolioService";
 import { clientsService } from "../services/clientsService";
-import StatsCard from "../components/ui/StatsCard.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import BentoStat, { type BentoVariant } from "../components/ui/BentoStat.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
 import ErrorAlert from "../components/ui/ErrorAlert.vue";
@@ -358,7 +354,7 @@ const statItems = computed(() => [
     title: "Active Orders",
     value: statsData.value.activeDeals,
     icon: Zap,
-    colorClass: "bg-emerald-50 text-emerald-600",
+    variant: "success" as BentoVariant,
     unit: "Production",
     tooltip:
       "Jumlah proyek yang saat ini sedang dalam fase pengerjaan aktif oleh tim.",
@@ -369,7 +365,7 @@ const statItems = computed(() => [
     title: "Prospect Leads",
     value: statsData.value.pendingLeads,
     icon: Users,
-    colorClass: "bg-indigo-50 text-[#702DFF]",
+    variant: "primary" as BentoVariant,
     unit: "Inbox",
     tooltip:
       "Daftar calon klien potensial yang baru menghubungi dan menunggu respon/follow-up.",
@@ -380,7 +376,7 @@ const statItems = computed(() => [
     title: "Project Value",
     value: statsData.value.totalRevenue,
     icon: DollarSign,
-    colorClass: "bg-[#1B2559]/5 text-[#1B2559]",
+    variant: "primary" as BentoVariant,
     isCurrency: true,
     tooltip:
       "Estimasi total nilai kontrak dari seluruh proyek yang berstatus Deal.",
@@ -391,7 +387,7 @@ const statItems = computed(() => [
     title: "Pipeline conversion",
     value: funnelScore.value + "%",
     icon: TrendingUp,
-    colorClass: "bg-amber-50 text-amber-600",
+    variant: "warning" as BentoVariant,
     unit: "Success",
     tooltip: "Efektivitas tim dalam mengubah Leads menjadi Deal yang sah.",
     simulation:

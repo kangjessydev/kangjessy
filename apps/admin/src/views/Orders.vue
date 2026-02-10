@@ -101,7 +101,7 @@
       </div>
 
       <!-- Desktop Filter Bar -->
-      <DashboardCard
+      <AdminCard
         no-padding
         class="hidden lg:block mb-6 !rounded-[24px] shadow-sm bg-white/80 backdrop-blur-xl border-none"
       >
@@ -175,7 +175,7 @@
             </div>
           </div>
         </div>
-      </DashboardCard>
+      </AdminCard>
 
       <!-- Mobile Search & Filter Actions -->
       <div class="lg:hidden flex gap-2 mb-6 px-1">
@@ -233,7 +233,7 @@
       </transition>
 
       <!-- Desktop Table -->
-      <DashboardCard
+      <AdminCard
         no-padding
         overflow-visible
         class="hidden lg:block !rounded-[40px] border border-slate-100/50 shadow-2xl shadow-indigo-500/5 mb-12 bg-white/70 backdrop-blur-xl"
@@ -510,7 +510,7 @@
             </tbody>
           </table>
         </div>
-      </DashboardCard>
+      </AdminCard>
 
       <!-- Bulk Action Bar (Float) - Same style as Leads -->
       <Teleport to="body">
@@ -1101,7 +1101,7 @@ import { transactionsService } from "../services/transactionsService";
 import { useErrorHandler } from "../composables/useErrorHandler";
 import { useLoading } from "../composables/useLoading";
 import type { Client } from "../types";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
 import BentoStat from "../components/ui/BentoStat.vue";

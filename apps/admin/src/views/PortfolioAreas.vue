@@ -12,7 +12,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Areas List -->
-      <DashboardCard title="Project Areas" no-padding class="lg:col-span-2">
+      <AdminCard title="Project Areas" no-padding class="lg:col-span-2">
         <div v-if="loading" class="p-20 text-center">
           <div
             class="inline-block w-8 h-8 border-4 border-[#702DFF] border-t-transparent rounded-full animate-spin"
@@ -64,10 +64,10 @@
             </tbody>
           </table>
         </div>
-      </DashboardCard>
+      </AdminCard>
 
       <!-- Quick Tips -->
-      <DashboardCard title="Expertise Layout">
+      <AdminCard title="Expertise Layout">
         <div class="space-y-6">
           <div
             class="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100/50"
@@ -96,7 +96,7 @@
             </p>
           </div>
         </div>
-      </DashboardCard>
+      </AdminCard>
     </div>
 
     <!-- Add Modal -->
@@ -161,7 +161,7 @@ import { ref, onMounted } from "vue";
 import { Plus, Edit2, Trash2, Briefcase, Target } from "lucide-vue-next";
 import { portfolioService } from "../services/portfolioService";
 import PageHeader from "../components/ui/PageHeader.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
 import Toast from "../components/ui/Toast.vue";
 

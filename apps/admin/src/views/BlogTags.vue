@@ -11,7 +11,7 @@
     </PageHeader>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <DashboardCard title="Popular Tags" no-padding class="lg:col-span-2">
+      <AdminCard title="Popular Tags" no-padding class="lg:col-span-2">
         <div v-if="loading" class="p-20 text-center">
           <div
             class="inline-block w-8 h-8 border-4 border-[#702DFF] border-t-transparent rounded-full animate-spin"
@@ -60,9 +60,9 @@
             </tbody>
           </table>
         </div>
-      </DashboardCard>
+      </AdminCard>
 
-      <DashboardCard title="Tag Cloud">
+      <AdminCard title="Tag Cloud">
         <div class="flex flex-wrap gap-2">
           <span
             v-for="tag in tags"
@@ -72,7 +72,7 @@
             #{{ tag.name }}
           </span>
         </div>
-      </DashboardCard>
+      </AdminCard>
     </div>
 
     <!-- Simple Add Modal -->
@@ -131,7 +131,7 @@ import { Plus, Hash, Trash2 } from "lucide-vue-next";
 import { blogService } from "../services/blogService";
 import type { BlogTag } from "../types";
 import PageHeader from "../components/ui/PageHeader.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
 
 const tags = ref<BlogTag[]>([]);

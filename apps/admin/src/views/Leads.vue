@@ -108,7 +108,7 @@
       <!-- Marketing Analysis Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
         <!-- Project Distribution -->
-        <DashboardCard
+        <AdminCard
           title="Market Interest"
           subtitle="Top demanded project categories"
           class="h-full"
@@ -140,10 +140,10 @@
               </div>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
         <!-- Conversion Funnel -->
-        <DashboardCard
+        <AdminCard
           title="Conversion Funnel"
           subtitle="Lead processing efficiency"
           class="h-full"
@@ -192,10 +192,10 @@
               >
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
         <!-- Insights & Momentum -->
-        <DashboardCard
+        <AdminCard
           title="Marketing Insights"
           subtitle="Growth & Quality Performance"
           class="h-full bg-[#0F172A] !border-none"
@@ -259,7 +259,7 @@
               </p>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
       </div>
 
       <!-- Quick Tips for Insights -->
@@ -291,67 +291,48 @@
     </div>
 
     <!-- Desktop Filter Bar -->
-    <DashboardCard
+    <AdminCard
       no-padding
       class="hidden lg:block mb-6 !rounded-[32px] shadow-lg shadow-slate-200/5 border-slate-50 overflow-hidden"
     >
       <div class="flex gap-4 justify-between items-center p-3 sm:p-4">
-        <!-- Search -->
-        <div class="flex-1 relative group max-w-md">
-          <Search
-            :size="16"
-            class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 transition-colors group-focus-within:text-[#702DFF]"
-          />
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search leads..."
-            @input="currentPage = 1"
-            class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-11 pr-4 text-xs font-bold text-[#1B2559] focus:bg-white focus:border-[#7029FF]/20 focus:ring-4 focus:ring-[#7029FF]/5 transition-all outline-none"
-          />
-        </div>
+        <BaseInput
+          v-model="searchQuery"
+          placeholder="Search leads..."
+          :icon="Search"
+          class="flex-1 max-w-md"
+          @input="currentPage = 1"
+        />
 
         <div class="flex gap-3">
-          <div class="relative">
-            <select
-              v-model="statusFilter"
-              @change="currentPage = 1"
-              class="w-44 appearance-none bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 pr-10 text-[10px] font-black uppercase tracking-widest text-[#1B2559] focus:bg-white focus:border-[#7029FF]/20 transition-all outline-none cursor-pointer"
-            >
-              <option value="all">All Status</option>
-              <option value="New">NEW</option>
-              <option value="Pending">PENDING</option>
-              <option value="Follow Up">FOLLOW UP</option>
-              <option value="Deal">DEAL</option>
-              <option value="Cancel">CANCEL</option>
-            </select>
-            <ChevronDown
-              :size="14"
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none"
-            />
-          </div>
+          <AdminSelect
+            v-model="statusFilter"
+            class="w-44 h-full"
+            @change="currentPage = 1"
+          >
+            <option value="all">All Status</option>
+            <option value="New">NEW</option>
+            <option value="Pending">PENDING</option>
+            <option value="Follow Up">FOLLOW UP</option>
+            <option value="Deal">DEAL</option>
+            <option value="Cancel">CANCEL</option>
+          </AdminSelect>
 
-          <div class="relative">
-            <select
-              v-model="sourceFilter"
-              @change="currentPage = 1"
-              class="w-44 appearance-none bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 pr-10 text-[10px] font-black uppercase tracking-widest text-[#1B2559] focus:bg-white focus:border-[#7029FF]/20 transition-all outline-none cursor-pointer"
-            >
-              <option value="all">Any Source</option>
-              <option value="contact_form">Contact Form (Old)</option>
-              <option value="web_consultation_wait">Consultation (Wait)</option>
-              <option value="web_consultation_instant">
-                Consultation (Instant)
-              </option>
-            </select>
-            <ChevronDown
-              :size="14"
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none"
-            />
-          </div>
+          <AdminSelect
+            v-model="sourceFilter"
+            class="w-44 h-full"
+            @change="currentPage = 1"
+          >
+            <option value="all">Any Source</option>
+            <option value="contact_form">Contact Form (Old)</option>
+            <option value="web_consultation_wait">Consultation (Wait)</option>
+            <option value="web_consultation_instant">
+              Consultation (Instant)
+            </option>
+          </AdminSelect>
         </div>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <!-- Mobile Search & Filter Button -->
     <div class="lg:hidden flex gap-2 mb-6 px-1">
@@ -412,7 +393,7 @@
     </div>
 
     <!-- Desktop Table View -->
-    <DashboardCard
+    <AdminCard
       no-padding
       class="hidden md:block overflow-hidden !rounded-[32px] border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
     >
@@ -561,7 +542,7 @@
           </tbody>
         </table>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <div class="md:hidden space-y-4 mb-20 px-1">
       <!-- Mobile Bulk Header -->
@@ -1055,9 +1036,11 @@ import { useErrorHandler } from "../composables/useErrorHandler";
 import { useLoading } from "../composables/useLoading";
 import type { Client } from "../types";
 import PageHeader from "../components/ui/PageHeader.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
-import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
+import AdminSelect from "../components/ui/AdminSelect.vue";
+import BaseInput from "../components/ui/BaseInput.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
+import { BaseButton, ButtonSecondary } from "@kangjessy/ui";
 import Toast from "../components/ui/Toast.vue";
 import WhatsAppModal from "../components/ui/WhatsAppModal.vue";
 import LeadEditModal from "../components/ui/LeadEditModal.vue";

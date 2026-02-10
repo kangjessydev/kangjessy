@@ -12,7 +12,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Tech List -->
-      <DashboardCard title="All Technologies" no-padding class="lg:col-span-2">
+      <AdminCard title="All Technologies" no-padding class="lg:col-span-2">
         <div v-if="loading" class="p-20 text-center">
           <div
             class="inline-block w-8 h-8 border-4 border-[#702DFF] border-t-transparent rounded-full animate-spin"
@@ -68,9 +68,9 @@
             </tbody>
           </table>
         </div>
-      </DashboardCard>
+      </AdminCard>
 
-      <DashboardCard title="Stack Highlights">
+      <AdminCard title="Stack Highlights">
         <div class="flex flex-wrap gap-2">
           <span
             v-for="tech in technologies"
@@ -80,7 +80,7 @@
             {{ tech.name }}
           </span>
         </div>
-      </DashboardCard>
+      </AdminCard>
     </div>
 
     <!-- Add Modal -->
@@ -145,7 +145,7 @@ import { ref, onMounted } from "vue";
 import { Plus, Code, Trash2 } from "lucide-vue-next";
 import { portfolioService } from "../services/portfolioService";
 import PageHeader from "../components/ui/PageHeader.vue";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
 import Toast from "../components/ui/Toast.vue";
 

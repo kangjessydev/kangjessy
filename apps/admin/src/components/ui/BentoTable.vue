@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Desktop Table View -->
-    <DashboardCard
+    <AdminCard
       no-padding
       class="hidden md:block overflow-hidden !rounded-[32px] border border-slate-100/50 shadow-xl shadow-slate-200/20"
       :class="containerClass"
@@ -69,7 +69,7 @@
         <h3 class="text-[#1B2559] font-black text-lg">{{ emptyTitle }}</h3>
         <p class="text-slate-400 text-sm mt-1">{{ emptyMessage }}</p>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <!-- Mobile Card View -->
     <div
@@ -134,7 +134,7 @@ export interface TableColumn {
 
 <script setup lang="ts">
 import { Search } from "lucide-vue-next";
-import DashboardCard from "./DashboardCard.vue";
+import AdminCard from "./AdminCard.vue";
 
 interface Props {
   columns: TableColumn[];

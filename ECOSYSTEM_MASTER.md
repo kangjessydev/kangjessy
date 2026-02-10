@@ -115,16 +115,38 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 
 Berdasarkan audit terbaru, berikut adalah area yang belum tersinkronisasi ("Kabel Belum Tersambung") antara Agency dan Admin:
 
-| Modul              | Status     | Isu Utama                                                                                                                     |
-| :----------------- | :--------- | :---------------------------------------------------------------------------------------------------------------------------- |
-| **The Blueprint**  | 🟢 SYNCED  | Database Centralized (Supabase). Admin can manage Stages & Steps dynamically.                                                 |
-| **Pricing Master** | 🟢 SYNCED  | Agency Calculator mengambil data live dari `pricing_master`. Admin memiliki UI `GenericPricingList.vue` untuk mengelola data. |
-| **Voucher System** | 🟢 SYNCED  | Agency sudah mengambil data live dari tabel `coupons` di Supabase.                                                            |
-| **Portfolio**      | 🟡 PARTIAL | Data tersinkron via Sanity, namun field "Deep Dive Metrics" seringkali tidak selaras antara editor dan viewer.                |
+| Modul               | Status     | Isu Utama                                                                                                                     |
+| :------------------ | :--------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| **The Blueprint**   | 🟢 SYNCED  | Database Centralized (Supabase). Admin can manage Stages & Steps dynamically.                                                 |
+| **Pricing Master**  | 🟢 SYNCED  | Agency Calculator mengambil data live dari `pricing_master`. Admin memiliki UI `GenericPricingList.vue` untuk mengelola data. |
+| **Voucher System**  | 🟢 SYNCED  | Agency sudah mengambil data live dari tabel `coupons` di Supabase.                                                            |
+| **Standardized UI** | 🟢 SYNCED  | Admin Form (Input, Select, Textarea) kini menggunakan komponen Bento terpusat (`@kangjessy/ui`).                              |
+| **Portfolio**       | 🟡 PARTIAL | Data tersinkron via Sanity, namun field "Deep Dive Metrics" seringkali tidak selaras antara editor dan viewer.                |
 
 ---
 
-## 📂 8. PORTFOLIO STRATEGY
+## � 11. TECHNICAL AUDIT & HOTFIX LOG (2026-02-10)
+
+Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosistem:
+
+### 🎨 Admin UI & Layout Polish
+
+- **Sidebar Master**: Perbaikan padding bawah (`pb-12`) dan lebar ramping (`270px`) untuk estetika premium. Navigasi kini tetap terlihat utuh saat dscroll maksimal.
+- **Unified Headers**: Implementasi `.heading-xl` dan `.subtitle` di `style.css` untuk hierarki visual yang konsisten di seluruh dashboard.
+- **Bento Components**: Migrasi penuh dari native `<select>` dan `<textarea>` ke `AdminSelect` dan `AdminTextarea` di seluruh editor (`Project`, `Portfolio`, `Blog`, `Order`).
+
+### 🛠️ Supabase Schema Gap
+
+Teridentifikasi "Missing Sync" pada tabel `clients`. Jalankan SQL ini untuk mencegah error di Dashboard Admin:
+
+```sql
+ALTER TABLE public.clients ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'general_inquiry';
+ALTER TABLE public.clients ADD COLUMN IF NOT EXISTS is_converted BOOLEAN DEFAULT false;
+```
+
+---
+
+## �📂 8. PORTFOLIO STRATEGY
 
 - **Narrative**: Case study menggunakan 3 fase (Problem → Strategy → Impact).
 - **Metrics**: Tampilkan hasil nyata dalam angka/persentase.
@@ -218,11 +240,11 @@ Dokumen ini berisi ide-ide fitur strategis untuk pengembangan `kangjessy-admin` 
 ---
 
 **Last Updated**: 2026-02-10
-**Status**: PRICE MASTER SYNCED | BLUEPRINT SYNCED
+**Status**: PRICE MASTER SYNCED | BLUEPRINT SYNCED | BENTO UI STANDARDIZED
 
 ---
 
-## 🏗️ 11. DETAILED ORDER WORKFLOW (APPENDIX)
+## 🏗️ 12. DETAILED ORDER WORKFLOW (APPENDIX)
 
 Isi di bawah ini adalah **Single Source of Truth** untuk alur pemesanan (Order Flow) di sistem KangJessy, yang harus disinkronkan antara Database dan Frontend Logic.
 

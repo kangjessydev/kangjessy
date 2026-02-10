@@ -53,7 +53,7 @@
     </div>
 
     <!-- Filters & Search -->
-    <DashboardCard
+    <AdminCard
       no-padding
       class="mb-6 !rounded-[24px] border-none shadow-sm overflow-hidden"
     >
@@ -131,10 +131,10 @@
           </div>
         </div>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <!-- Projects Content -->
-    <DashboardCard
+    <AdminCard
       no-padding
       class="overflow-hidden border border-slate-100/50 shadow-xl shadow-slate-200/20 rounded-[32px]"
     >
@@ -626,7 +626,7 @@
           </div>
         </div>
       </div>
-    </DashboardCard>
+    </AdminCard>
 
     <!-- Parking Lot: Pending & Hold -->
     <div
@@ -651,7 +651,7 @@
         </div>
       </div>
 
-      <DashboardCard
+      <AdminCard
         no-padding
         class="overflow-hidden border border-slate-100/50 shadow-xl shadow-slate-200/10 rounded-[32px]"
       >
@@ -724,7 +724,7 @@
             </tbody>
           </table>
         </div>
-      </DashboardCard>
+      </AdminCard>
     </div>
 
     <ConfirmModal
@@ -777,7 +777,7 @@ import {
 } from "lucide-vue-next";
 import { projectsService } from "../services/projectsService";
 import type { Project } from "../types";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
 import ButtonPrimary from "../components/ui/ButtonPrimary.vue";
 import ButtonSecondary from "../components/ui/ButtonSecondary.vue";

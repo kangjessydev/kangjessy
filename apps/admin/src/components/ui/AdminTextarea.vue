@@ -5,42 +5,27 @@
       <span v-if="required" class="text-rose-500 ml-1">*</span>
     </label>
     <div class="relative group">
-      <div
-        v-if="icon"
-        class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 transition-colors group-focus-within:text-[#7029FF]"
-      >
-        <component :is="icon" :size="18" />
-      </div>
-      <div
-        v-else-if="prefix"
-        class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs transition-colors group-focus-within:text-[#7029FF]"
-      >
-        {{ prefix }}
-      </div>
-      <input
+      <textarea
         :id="id"
-        :type="type"
         :value="modelValue"
         :placeholder="placeholder"
         :required="required"
         :disabled="disabled"
-        class="input-field"
-        :class="[
-          { '!border-rose-500 !focus:ring-rose-500': error },
-          { 'pl-14': icon || prefix },
-        ]"
+        :rows="rows"
+        class="input-field min-h-[120px] resize-none py-4"
+        :class="[{ '!border-rose-500 !focus:ring-rose-500': error }]"
         @input="handleInput"
-      />
+      ></textarea>
     </div>
     <p
       v-if="error"
-      class="mt-2 text-[10px] font-bold text-rose-500 ml-2 animate-fade-in"
+      class="mt-2 text-[10px] font-bold text-rose-500 ml-4 animate-fade-in-up"
     >
       {{ error }}
     </p>
     <p
       v-else-if="hint"
-      class="mt-2 text-[10px] font-bold text-slate-300 ml-2 italic"
+      class="mt-2 text-[10px] font-bold text-slate-300 ml-4 italic"
     >
       {{ hint }}
     </p>
@@ -48,24 +33,20 @@
 </template>
 
 <script setup lang="ts">
-import type { Component } from "vue";
-
 interface Props {
   id?: string;
   label?: string;
-  type?: string;
   modelValue?: string | number;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
   error?: string;
   hint?: string;
-  icon?: Component;
-  prefix?: string;
+  rows?: number;
 }
 
 withDefaults(defineProps<Props>(), {
-  type: "text",
+  rows: 4,
 });
 
 const emit = defineEmits<{
@@ -73,7 +54,7 @@ const emit = defineEmits<{
 }>();
 
 function handleInput(e: Event) {
-  const target = e.target as HTMLInputElement;
+  const target = e.target as HTMLTextAreaElement;
   emit("update:modelValue", target.value);
 }
 </script>

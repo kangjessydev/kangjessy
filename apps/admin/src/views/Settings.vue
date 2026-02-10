@@ -46,7 +46,7 @@
       >
         <!-- Admin Core Info -->
         <div class="lg:col-span-4 space-y-8">
-          <DashboardCard title="Profile" :stretch="false">
+          <AdminCard title="Profile" :stretch="false">
             <div class="flex flex-col items-center py-6">
               <div class="relative group cursor-pointer mb-6">
                 <div
@@ -92,12 +92,12 @@
                 />
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
         </div>
 
         <!-- Preferences -->
         <div class="lg:col-span-8 space-y-8">
-          <DashboardCard title="Preferences">
+          <AdminCard title="Preferences">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-4">
               <div class="space-y-8">
                 <div class="flex items-center justify-between group">
@@ -150,33 +150,17 @@
               </div>
 
               <div class="space-y-6">
-                <div class="space-y-2">
-                  <label
-                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest block ml-1"
-                    >Currency</label
-                  >
-                  <select
-                    class="select-field !py-3 !text-[10px] !font-black !uppercase !tracking-widest"
-                  >
-                    <option>Rupiah (IDR)</option>
-                    <option>Dollar (USD)</option>
-                  </select>
-                </div>
-                <div class="space-y-2">
-                  <label
-                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest block ml-1"
-                    >Language</label
-                  >
-                  <select
-                    class="select-field !py-3 !text-[10px] !font-black !uppercase !tracking-widest"
-                  >
-                    <option>Bahasa Indonesia</option>
-                    <option>English</option>
-                  </select>
-                </div>
+                <AdminSelect label="Currency" class="!text-[10px]">
+                  <option>Rupiah (IDR)</option>
+                  <option>Dollar (USD)</option>
+                </AdminSelect>
+                <AdminSelect label="Language" class="!text-[10px]">
+                  <option>Bahasa Indonesia</option>
+                  <option>English</option>
+                </AdminSelect>
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
         </div>
       </div>
 
@@ -187,7 +171,7 @@
         class="space-y-8 animate-fade-in-up"
       >
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <DashboardCard
+          <AdminCard
             title="Proposal Links"
             subtitle="Link GDrive Proposal sesuai tipe proyek"
           >
@@ -197,27 +181,17 @@
                 :key="doc.id"
                 class="p-4 bg-slate-50 rounded-2xl space-y-3"
               >
-                <label
-                  class="text-[10px] font-black text-[#702DFF] uppercase tracking-widest ml-1"
-                  >{{ doc.project_type }}</label
-                >
-                <div class="relative group">
-                  <div
-                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"
-                  >
-                    <LinkIcon :size="14" />
-                  </div>
-                  <input
-                    v-model="doc.proposal_link"
-                    class="w-full pl-10 pr-4 py-3 bg-white border-2 border-transparent rounded-xl text-xs font-medium text-[#1B2559] outline-none focus:border-[#7029FF]/20 transition-all placeholder:text-slate-300"
-                    placeholder="Pastikan link GDrive sudah 'Anyone with link'..."
-                  />
-                </div>
+                <BaseInput
+                  v-model="doc.proposal_link"
+                  :label="doc.project_type"
+                  placeholder="Pastikan link GDrive sudah 'Anyone with link'..."
+                  :icon="LinkIcon"
+                />
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
 
-          <DashboardCard
+          <AdminCard
             title="Kontrak Kerja"
             subtitle="Link GDrive Kontrak sesuai tipe proyek"
           >
@@ -227,25 +201,15 @@
                 :key="doc.id"
                 class="p-4 bg-slate-50 rounded-2xl space-y-3"
               >
-                <label
-                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1"
-                  >{{ doc.project_type }}</label
-                >
-                <div class="relative group">
-                  <div
-                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"
-                  >
-                    <FileText :size="14" />
-                  </div>
-                  <input
-                    v-model="doc.contract_link"
-                    class="w-full pl-10 pr-4 py-3 bg-white border-2 border-transparent rounded-xl text-xs font-medium text-[#1B2559] outline-none focus:border-[#7029FF]/20 transition-all placeholder:text-slate-300"
-                    placeholder="Link Draft Kontrak Kerja..."
-                  />
-                </div>
+                <BaseInput
+                  v-model="doc.contract_link"
+                  :label="doc.project_type"
+                  placeholder="Link Draft Kontrak Kerja..."
+                  :icon="FileText"
+                />
               </div>
             </div>
-          </DashboardCard>
+          </AdminCard>
         </div>
 
         <div class="flex justify-end pt-4">
@@ -262,7 +226,7 @@
 
       <!-- Security Tab -->
       <div v-else-if="activeTab === 'security'" key="security">
-        <DashboardCard title="Security Settings">
+        <AdminCard title="Security Settings">
           <div class="space-y-6">
             <div
               class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between p-4 bg-slate-50 rounded-2xl"
@@ -333,12 +297,12 @@
               </button>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
       </div>
 
       <!-- Backup & Export Tab -->
       <div v-else-if="activeTab === 'backup'" key="backup">
-        <DashboardCard title="Backup & Export">
+        <AdminCard title="Backup & Export">
           <div class="space-y-6">
             <!-- Full Backup -->
             <div
@@ -474,10 +438,10 @@
               </p>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
         <!-- Restore / Import Section -->
-        <DashboardCard title="Restore Data" class="mt-6">
+        <AdminCard title="Restore Data" class="mt-6">
           <div
             class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-100"
           >
@@ -514,7 +478,7 @@
               updated.
             </p>
           </div>
-        </DashboardCard>
+        </AdminCard>
       </div>
     </transition>
 
@@ -548,7 +512,8 @@ import {
   FileText,
   Link as LinkIcon,
 } from "lucide-vue-next";
-import DashboardCard from "../components/ui/DashboardCard.vue";
+import AdminCard from "../components/ui/AdminCard.vue";
+import AdminSelect from "../components/ui/AdminSelect.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
 import BaseInput from "../components/ui/BaseInput.vue";

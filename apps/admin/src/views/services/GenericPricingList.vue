@@ -1,169 +1,181 @@
 <template>
   <div class="page-container max-w-7xl mx-auto pb-24 px-4 sm:px-6 relative">
-    <!-- Header -->
-    <div
-      class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"
-    >
-      <div>
-        <h1
-          class="text-2xl md:text-3xl font-black text-[#1B2559] tracking-tight mb-1"
-        >
-          {{ pageConfig.title }}
-        </h1>
-        <p class="text-sm text-slate-500 font-medium">
-          {{ pageConfig.subtitle }}
-        </p>
-      </div>
-
+    <PageHeader :title="pageConfig.title" :subtitle="pageConfig.subtitle">
       <div class="flex items-center gap-3">
         <div class="relative group">
           <Search
             class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#7029FF] transition-colors"
-            :size="18"
+            :size="16"
           />
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Cari data..."
-            class="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#7029FF]/20 focus:border-[#7029FF] w-full md:w-64 transition-all shadow-sm"
+            placeholder="Search data..."
+            class="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-[11px] font-black uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-[#7029FF]/20 focus:border-[#7029FF] w-full md:w-64 transition-all shadow-sm"
           />
         </div>
         <BaseButton
           variant="primary"
           @click="router.push(`${route.path}/create`)"
-          class="shadow-lg shadow-[#7029FF]/20"
         >
           <Plus :size="18" />
-          <span>Tambah Baru</span>
+          <span>Add New</span>
         </BaseButton>
       </div>
-    </div>
+    </PageHeader>
 
-    <!-- Loading State -->
-    <div
-      v-if="loading"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    <AdminCard
+      no-padding
+      class="overflow-hidden rounded-[32px]! border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
     >
-      <div
-        v-for="i in 6"
-        :key="i"
-        class="h-40 bg-white rounded-[24px] animate-pulse"
-      ></div>
-    </div>
-
-    <!-- Empty State -->
-    <div
-      v-else-if="filteredItems.length === 0"
-      class="text-center py-20 bg-white rounded-[32px] border border-dashed border-slate-200"
-    >
-      <div
-        class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-300"
-      >
-        <Database :size="32" />
+      <!-- Loading State -->
+      <div v-if="loading" class="p-20 text-center">
+        <div
+          class="inline-block w-10 h-10 border-4 border-[#7029FF] border-t-transparent rounded-full animate-spin"
+        ></div>
+        <p
+          class="mt-6 text-slate-400 font-black uppercase tracking-[0.2em] text-[10px]"
+        >
+          Syncing master data...
+        </p>
       </div>
-      <h3 class="text-lg font-bold text-[#1B2559]">Data Kosong</h3>
-      <p class="text-slate-500 text-sm mb-6">
-        Belum ada data untuk kategori ini.
-      </p>
-      <BaseButton
-        variant="secondary"
-        @click="router.push(`${route.path}/create`)"
-      >
-        Buat Data Pertama
-      </BaseButton>
-    </div>
 
-    <!-- Data Grid -->
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div
-        v-for="item in filteredItems"
-        :key="item.id"
-        class="group bg-white rounded-[24px] p-5 border border-slate-100 hover:border-[#7029FF]/30 hover:shadow-xl hover:shadow-[#7029FF]/5 transition-all duration-300 relative overflow-hidden"
-      >
-        <!-- Status Indicator -->
-        <div class="absolute top-4 right-4 z-10">
-          <span
-            class="inline-flex items-center px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider"
-            :class="
-              item.is_active
-                ? 'bg-emerald-50 text-emerald-600'
-                : 'bg-slate-100 text-slate-400'
-            "
-          >
-            {{ item.is_active ? "Active" : "Draft" }}
-          </span>
+      <!-- Empty State -->
+      <div v-else-if="filteredItems.length === 0" class="text-center py-20">
+        <div
+          class="w-16 h-16 bg-slate-50 rounded-[24px] flex items-center justify-center mx-auto mb-4 text-slate-200"
+        >
+          <Database :size="32" />
         </div>
+        <h3 class="text-lg font-black text-[#1B2559]">Empty Inventory</h3>
+        <p class="text-slate-400 text-sm mt-1">
+          No data found for this category.
+        </p>
+        <BaseButton
+          variant="secondary"
+          @click="router.push(`${route.path}/create`)"
+          class="mt-6 font-black uppercase tracking-widest text-[10px]"
+        >
+          Create First Entry
+        </BaseButton>
+      </div>
 
-        <div class="flex items-start gap-4 mb-4">
-          <!-- Icon/Image -->
-          <div
-            class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors"
-            :class="
-              item.image_url ? 'bg-slate-100' : 'bg-[#7029FF]/5 text-[#7029FF]'
-            "
-          >
-            <img
-              v-if="item.image_url"
-              :src="item.image_url"
-              class="w-full h-full object-cover rounded-xl"
-            />
-            <component v-else :is="getIconComponent(item.icon)" :size="24" />
-          </div>
-
-          <div class="flex-1 min-w-0 pr-8">
-            <h3
-              class="font-bold text-[#1B2559] truncate mb-1 group-hover:text-[#7029FF] transition-colors"
+      <!-- Data Table -->
+      <div v-else class="overflow-x-auto">
+        <table class="table-main">
+          <thead>
+            <tr>
+              <th class="pl-8!">Item Identity</th>
+              <th>Metadata Info</th>
+              <th>Numeric Values</th>
+              <th>Status</th>
+              <th class="text-right pr-8!">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="item in filteredItems"
+              :key="item.id"
+              class="table-row-hover group"
             >
-              {{ item.name }}
-            </h3>
-            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-              {{ item.description || "Tidak ada deskripsi" }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Metadata Values -->
-        <div
-          class="flex items-center gap-3 pt-4 border-t border-slate-50 text-xs font-semibold text-slate-600"
-        >
-          <div
-            v-if="item.base_price"
-            class="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg"
-          >
-            <DollarSign :size="12" class="text-emerald-500" />
-            {{ formatCurrency(item.base_price) }}
-          </div>
-          <div
-            v-if="item.metadata?.multiplier"
-            class="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg"
-          >
-            <Zap :size="12" class="text-amber-500" />
-            {{ item.metadata.multiplier }}x Speed
-          </div>
-        </div>
-
-        <!-- Actions Overlay -->
-        <div
-          class="absolute inset-0 bg-white/90 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3"
-        >
-          <button
-            @click="router.push(`${route.path}/${item.id}/edit`)"
-            class="w-10 h-10 rounded-full bg-[#7029FF] text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-            title="Edit"
-          >
-            <Edit3 :size="18" />
-          </button>
-          <!-- Delete button could be added here if needed -->
-          <button
-            @click="confirmDelete(item.id)"
-            class="w-10 h-10 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-            title="Hapus"
-          >
-            <Trash2 :size="18" />
-          </button>
-        </div>
+              <td class="pl-8!">
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-slate-100"
+                    :class="
+                      item.image_url
+                        ? 'bg-slate-100'
+                        : 'bg-[#7029FF]/5 text-[#7029FF]'
+                    "
+                  >
+                    <img
+                      v-if="item.image_url"
+                      :src="item.image_url"
+                      class="w-full h-full object-cover rounded-xl"
+                    />
+                    <component
+                      v-else
+                      :is="getIconComponent(item.icon)"
+                      :size="20"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <p
+                      class="font-black text-[#1B2559] text-sm tracking-tight group-hover:text-[#702DFF] transition-colors leading-tight"
+                    >
+                      {{ item.name }}
+                    </p>
+                    <p
+                      class="text-[10px] text-slate-400 font-bold uppercase truncate max-w-[200px] mt-0.5"
+                    >
+                      {{ item.description || "No description" }}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="flex flex-wrap gap-1.5">
+                  <span
+                    v-if="item.metadata?.multiplier"
+                    class="px-2 py-0.5 rounded-lg bg-indigo-50 text-[#702DFF] text-[8px] font-black uppercase tracking-widest border border-indigo-100/50"
+                  >
+                    {{ item.metadata.multiplier }}x Impact
+                  </span>
+                  <span
+                    v-if="item.metadata?.originalPrice"
+                    class="px-2 py-0.5 rounded-lg bg-slate-50 text-slate-400 text-[8px] font-black uppercase tracking-widest border border-slate-100"
+                  >
+                    Val: {{ formatCurrency(item.metadata.originalPrice) }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="flex flex-col">
+                  <p class="text-sm font-black text-[#1B2559]">
+                    {{
+                      item.base_price
+                        ? formatCurrency(item.base_price)
+                        : "Variable"
+                    }}
+                  </p>
+                  <p class="text-[9px] font-bold text-slate-300 uppercase">
+                    Base Rate
+                  </p>
+                </div>
+              </td>
+              <td>
+                <span
+                  class="px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest"
+                  :class="
+                    item.is_active
+                      ? 'bg-emerald-50 text-emerald-600'
+                      : 'bg-slate-100 text-slate-400'
+                  "
+                >
+                  {{ item.is_active ? "Active" : "Draft" }}
+                </span>
+              </td>
+              <td class="text-right pr-8!">
+                <div class="flex items-center justify-end gap-1">
+                  <button
+                    @click="router.push(`${route.path}/${item.id}/edit`)"
+                    class="p-2 rounded-xl text-slate-300 hover:text-[#7029FF] hover:bg-indigo-50 transition-all"
+                  >
+                    <Edit3 :size="16" />
+                  </button>
+                  <button
+                    @click="confirmDelete(item.id)"
+                    class="p-2 rounded-xl text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                  >
+                    <Trash2 :size="16" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+    </AdminCard>
 
     <ConfirmDialog
       :is-open="showDeleteDialog"

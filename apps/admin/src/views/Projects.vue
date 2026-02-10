@@ -1,33 +1,37 @@
 <template>
   <div class="page-container">
     <PageHeader
-      title="Project Management"
-      subtitle="Track development progress, deadlines, and client deliverables"
+      title="Lajur Produksi"
+      subtitle="Pantau perkembangan proyek, tenggat waktu, dan pengiriman klien"
     >
       <div class="flex gap-3">
-        <ButtonSecondary @click="fetchProjects">
-          <RotateCw :size="18" :class="{ 'animate-spin': loading }" />
-          Refresh
-        </ButtonSecondary>
-        <ButtonPrimary @click="router.push('/projects/new')">
+        <BaseButton
+          variant="secondary"
+          @click="fetchProjects"
+          :loading="loading"
+        >
+          <RotateCw :size="18" />
+          Selaraskan Data
+        </BaseButton>
+        <BaseButton variant="primary" @click="router.push('/projects/new')">
           <Plus :size="18" />
-          Add New Project
-        </ButtonPrimary>
+          Tambah Proyek Baru
+        </BaseButton>
       </div>
     </PageHeader>
 
     <!-- Project Stats -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
       <BentoStat
-        title="In Queue"
+        title="Dalam Antrean"
         :value="stats.review"
         :icon="FolderOpen"
         variant="blue"
         tooltip="Daftar proyek yang baru masuk atau masih dalam tahap persiapan (Planning)."
-        simulation="Setelah persiapan matang, pindahkan status ke 'In Progress' agar tim mulai eksekusi."
+        simulation="Setelah persiapan matang, pindahkan status ke 'Sedang Dikerjakan' agar tim mulai eksekusi."
       />
       <BentoStat
-        title="In Progress"
+        title="Sedang Dikerjakan"
         :value="stats.active"
         :icon="Zap"
         variant="primary"
@@ -35,7 +39,7 @@
         simulation="Simulasi: Jika load di sini > 5, agensi mungkin mulai sibuk. Pertimbangkan menaikkan estimasi deadline untuk klien baru."
       />
       <BentoStat
-        title="Near Deadline"
+        title="Mendekati Tenggat"
         :value="stats.nearDeadline"
         :icon="Clock"
         variant="danger"
@@ -43,7 +47,7 @@
         simulation="Prioritaskan proyek di sini untuk menjaga reputasi pengerjaan tepat waktu agensi."
       />
       <BentoStat
-        title="Completed"
+        title="Selesai"
         :value="stats.completed"
         :icon="CheckCircle"
         variant="success"
@@ -55,22 +59,17 @@
     <!-- Filters & Search -->
     <AdminCard
       no-padding
-      class="mb-6 !rounded-[24px] border-none shadow-sm overflow-hidden"
+      class="mb-6 rounded-[32px]! border-none shadow-sm overflow-hidden"
     >
       <div
         class="flex flex-col lg:flex-row gap-4 justify-between items-center p-3 sm:p-4"
       >
-        <!-- Search Group -->
-        <div class="flex-1 w-full lg:max-w-md relative group">
-          <Search
-            :size="16"
-            class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#7029FF] transition-colors"
-          />
-          <input
+        <div class="flex-1 w-full lg:max-w-md relative group px-1 lg:px-0">
+          <BaseInput
             v-model="searchQuery"
-            type="text"
-            placeholder="Search projects..."
-            class="input-field !pl-11 !py-2.5 !rounded-xl !text-[11px] !bg-slate-50/80"
+            placeholder="Cari proyek..."
+            :icon="Search"
+            class="w-full"
             @input="currentPage = 1"
           />
         </div>
@@ -110,25 +109,18 @@
 
           <div class="h-6 w-px bg-slate-200 hidden lg:block mx-1"></div>
 
-          <!-- Status Filter -->
-          <div class="relative group shrink-0 w-40 lg:w-44">
-            <select
-              v-model="statusFilter"
-              @change="currentPage = 1"
-              class="select-field !py-2 !pl-4 !pr-10 !text-[10px] !font-black !rounded-xl !bg-white border border-slate-100 shadow-sm transition-all group-hover:border-indigo-100"
-            >
-              <option value="all">ANY STATUS</option>
-              <option value="planning">PLANNING</option>
-              <option value="in_progress">IN PROGRESS</option>
-              <option value="done">DONE</option>
-              <option value="pending">PENDING</option>
-              <option value="hold">HOLD</option>
-            </select>
-            <ChevronDown
-              :size="14"
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none transition-colors group-hover:text-[#702DFF]"
-            />
-          </div>
+          <AdminSelect
+            v-model="statusFilter"
+            class="w-40 lg:w-44"
+            @change="currentPage = 1"
+          >
+            <option value="all">SEMUA STATUS</option>
+            <option value="planning">PERENCANAAN</option>
+            <option value="in_progress">SEDANG DIKERJAKAN</option>
+            <option value="done">SELESAI</option>
+            <option value="pending">PENDING</option>
+            <option value="hold">HOLD</option>
+          </AdminSelect>
         </div>
       </div>
     </AdminCard>
@@ -136,7 +128,7 @@
     <!-- Projects Content -->
     <AdminCard
       no-padding
-      class="overflow-hidden border border-slate-100/50 shadow-xl shadow-slate-200/20 rounded-[32px]"
+      class="overflow-hidden border border-slate-100/50 shadow-xl shadow-slate-200/20 rounded-[32px]!"
     >
       <!-- Loading State -->
       <div v-if="loading" class="p-6">
@@ -150,9 +142,9 @@
         >
           <FolderOpen :size="32" class="text-slate-200" />
         </div>
-        <h3 class="text-[#1B2559] font-bold">No projects found</h3>
+        <h3 class="text-[#1B2559] font-bold">Proyek tidak ditemukan</h3>
         <p class="text-slate-400 text-sm mt-1">
-          Try refreshing or adjusting your search filters.
+          Coba segarkan atau sesuaikan filter pencarian Anda.
         </p>
       </div>
 
@@ -166,11 +158,11 @@
           <table class="table-main">
             <thead>
               <tr>
-                <th class="!pl-8">Project & Client</th>
-                <th>Progress</th>
-                <th>Stage</th>
-                <th>Deadline</th>
-                <th class="text-right !pr-8">Action</th>
+                <th class="pl-8!">Proyek & Klien</th>
+                <th>Kemajuan</th>
+                <th>Tahapan</th>
+                <th>Tenggat Waktu</th>
+                <th class="text-right pr-8!">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -179,7 +171,7 @@
                 :key="project.id"
                 class="table-row-hover group"
               >
-                <td class="!pl-8 py-5">
+                <td class="pl-8! py-5">
                   <div class="flex items-center gap-4">
                     <div
                       class="w-11 h-11 rounded-2xl bg-[#702DFF]/5 text-[#702DFF] flex items-center justify-center font-black text-xs border border-[#702DFF]/10 shadow-sm transition-all group-hover:bg-[#702DFF] group-hover:text-white"
@@ -212,7 +204,7 @@
                     <div
                       class="flex justify-between items-center text-[9px] font-black uppercase tracking-widest mb-0.5"
                     >
-                      <span class="text-slate-300">Completion</span>
+                      <span class="text-slate-300">Penyelesaian</span>
                       <span
                         :class="
                           project.progress === 100
@@ -779,8 +771,9 @@ import { projectsService } from "../services/projectsService";
 import type { Project } from "../types";
 import AdminCard from "../components/ui/AdminCard.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
-import ButtonPrimary from "../components/ui/ButtonPrimary.vue";
-import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
+import { BaseButton } from "@kangjessy/ui";
+import AdminSelect from "../components/ui/AdminSelect.vue";
+import BaseInput from "../components/ui/BaseInput.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 import WhatsAppModal from "../components/ui/WhatsAppModal.vue";

@@ -1,8 +1,8 @@
 <template>
   <div class="page-container">
     <PageHeader
-      title="Intelligence Hub"
-      subtitle="Comprehensive overview of your agency's sales performance and operational health"
+      title="Pusat Intelijen"
+      subtitle="Ringkasan komprehensif kinerja penjualan dan kesehatan operasional agensi Anda"
     >
       <div class="flex gap-3">
         <BaseButton
@@ -11,11 +11,11 @@
           :loading="isLoading"
         >
           <RotateCw :size="18" />
-          Refresh
+          Segarkan
         </BaseButton>
         <BaseButton variant="primary" @click="$router.push('/orders/new')">
           <Plus :size="18" />
-          New Project
+          Proyek Baru
         </BaseButton>
       </div>
     </PageHeader>
@@ -38,14 +38,14 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
       <!-- Performance Analytics (Actual Monthly Revenue) -->
       <AdminCard
-        title="Revenue Performance"
+        title="Kinerja Pendapatan"
         class="lg:col-span-8"
         :stretch="false"
       >
         <template #action>
           <span
             class="text-[10px] font-black text-slate-300 uppercase tracking-widest"
-            >Calculated by Deal Value</span
+            >Dihitung berdasarkan Nilai Deal</span
           >
         </template>
 
@@ -82,7 +82,7 @@
       </AdminCard>
 
       <!-- Conversion Funnel -->
-      <AdminCard title="Sales Pipeline" class="lg:col-span-4" :stretch="false">
+      <AdminCard title="Pipa Penjualan" class="lg:col-span-4" :stretch="false">
         <div class="space-y-6 mt-6">
           <div
             v-for="stage in pipelineStages"
@@ -351,18 +351,18 @@ const monthLabels = [
 
 const statItems = computed(() => [
   {
-    title: "Active Orders",
+    title: "Pesanan Aktif",
     value: statsData.value.activeDeals,
     icon: Zap,
     variant: "success" as BentoVariant,
-    unit: "Production",
+    unit: "Produksi",
     tooltip:
       "Jumlah proyek yang saat ini sedang dalam fase pengerjaan aktif oleh tim.",
     simulation:
       "Makin tinggi angka ini, makin sibuk kapasitas produksi agensi Kakak saat ini.",
   },
   {
-    title: "Prospect Leads",
+    title: "Prospek Baru",
     value: statsData.value.pendingLeads,
     icon: Users,
     variant: "primary" as BentoVariant,
@@ -373,7 +373,7 @@ const statItems = computed(() => [
       'Potensi "Uang Masuk" di masa depan. Jika angka ini tinggi, fokuslah pada tim sales/CRM.',
   },
   {
-    title: "Project Value",
+    title: "Nilai Proyek",
     value: statsData.value.totalRevenue,
     icon: DollarSign,
     variant: "primary" as BentoVariant,
@@ -384,11 +384,11 @@ const statItems = computed(() => [
       "Ini adalah target omzet kotor yang harus dikawal hingga menjadi pelunasan (Cash in).",
   },
   {
-    title: "Pipeline conversion",
+    title: "Konversi Alur",
     value: funnelScore.value + "%",
     icon: TrendingUp,
     variant: "warning" as BentoVariant,
-    unit: "Success",
+    unit: "Sukses",
     tooltip: "Efektivitas tim dalam mengubah Leads menjadi Deal yang sah.",
     simulation:
       "Jika skor di bawah 20%, mungkin penawaran atau harga agensi perlu dievaluasi ulang.",
@@ -400,7 +400,7 @@ const pipelineStages = computed(() => {
   const total = allRecords.value.length || 1;
   return [
     {
-      label: "Deals Closed",
+      label: "Deal Selesai",
       count: allRecords.value.filter((r) => r.status === "Deal").length,
       icon: CheckCircle2,
       percent:
@@ -417,7 +417,7 @@ const pipelineStages = computed(() => {
         100,
     },
     {
-      label: "Discovery/New",
+      label: "Penemuan Baru",
       count: allRecords.value.filter((r) =>
         ["New", "Pending"].includes(r.status),
       ).length,

@@ -1,19 +1,18 @@
 <template>
   <div class="page-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center gap-4 mb-4">
-      <BaseButton
-        variant="secondary"
-        @click="router.push('/blueprint')"
-        class="!px-3 !py-2 !rounded-xl"
-      >
-        <ArrowLeft :size="16" />
-      </BaseButton>
-    </div>
-
     <PageHeader
       :title="stage?.name || 'Loading Stage...'"
       :subtitle="stage?.subtitle || 'Managing steps for this stage'"
     >
+      <template #breadcrumb>
+        <BaseButton
+          variant="secondary"
+          @click="router.push('/blueprint')"
+          class="!px-3 !py-2 !rounded-xl mb-2"
+        >
+          <ArrowLeft :size="16" />
+        </BaseButton>
+      </template>
       <div class="flex gap-2">
         <BaseButton variant="primary" @click="openStepModal()">
           <Plus :size="18" />

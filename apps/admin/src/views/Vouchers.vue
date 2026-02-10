@@ -1,176 +1,185 @@
 <template>
   <div class="page-container">
     <PageHeader
-      title="Promos & Vouchers"
-      subtitle="Create and manage discount codes for your clients"
+      title="Promo & Voucher"
+      subtitle="Buat dan kelola kode diskon untuk klien Anda"
     >
       <BaseButton variant="primary" @click="handleCreate">
         <Plus :size="18" />
-        Create Voucher
+        Buat Voucher
       </BaseButton>
     </PageHeader>
 
     <!-- Voucher Stats -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <StatsCard
-        title="Active Vouchers"
+      <BentoStat
+        title="Voucher Aktif"
         :value="activeCount"
         :icon="Tag"
-        colorClass="bg-blue-50 text-blue-600"
+        variant="blue"
+        tooltip="Total voucher yang saat ini aktif dan dapat digunakan."
       />
-      <StatsCard
-        title="Total Used"
+      <BentoStat
+        title="Total Digunakan"
         value="128"
         :icon="ShoppingCart"
-        colorClass="bg-emerald-50 text-emerald-600"
+        variant="success"
+        tooltip="Jumlah akumulasi penggunaan semua voucher."
       />
-      <StatsCard
-        title="Total Discount"
+      <BentoStat
+        title="Diskon Terberikan"
         :value="formatPrice(4500000)"
         :icon="TrendingDown"
-        colorClass="bg-rose-50 text-rose-600"
+        variant="danger"
+        tooltip="Total nilai diskon yang telah dinikmati klien."
       />
-      <StatsCard
-        title="Conversion Rate"
+      <BentoStat
+        title="Tingkat Konversi"
         value="12%"
         :icon="TrendingUp"
-        colorClass="bg-indigo-50 text-indigo-600"
+        variant="primary"
+        tooltip="Rasio penggunaan voucher terhadap total konversi."
       />
     </div>
 
-    <!-- Vouchers Grid -->
-    <div v-if="loading" class="p-20 text-center">
-      <div
-        class="inline-block w-8 h-8 border-4 border-[#702DFF] border-t-transparent rounded-full animate-spin"
-      ></div>
-      <p
-        class="mt-4 text-slate-400 font-bold uppercase tracking-widest text-xs"
-      >
-        Fetching active promos...
-      </p>
-    </div>
-
-    <div
-      v-else-if="vouchers.length === 0"
-      class="p-20 text-center card bg-slate-50/50 border-dashed"
+    <!-- Vouchers Table -->
+    <AdminCard
+      no-padding
+      class="overflow-hidden rounded-[32px]! border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
     >
-      <div
-        class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm"
-      >
-        <Tag :size="32" class="text-slate-300" />
-      </div>
-      <h3 class="text-lg font-bold text-[#1B2559]">No Vouchers Yet</h3>
-      <p class="text-slate-400 text-sm mb-6 max-w-xs mx-auto">
-        Create your first discount code to boost sales and customer loyalty.
-      </p>
-      <BaseButton variant="primary" @click="handleCreate"
-        >Create Now</BaseButton
-      >
-    </div>
-
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div
-        v-for="voucher in vouchers"
-        :key="voucher.id"
-        class="card group relative border-none overflow-hidden hover:shadow-xl transition-all duration-300"
-      >
-        <!-- Ticket Design Style -->
+      <div v-if="loading" class="p-20 text-center">
         <div
-          class="p-6 bg-slate-50/50 border-b border-dashed border-slate-200 relative"
+          class="inline-block w-10 h-10 border-4 border-[#7029FF] border-t-transparent rounded-full animate-spin"
+        ></div>
+        <p
+          class="mt-6 text-slate-400 font-black uppercase tracking-[0.2em] text-[10px]"
         >
-          <!-- Decorative punch holes -->
-          <div
-            class="absolute -bottom-3 -left-3 w-6 h-6 bg-[#f4f7fe] rounded-full border border-slate-100"
-          ></div>
-          <div
-            class="absolute -bottom-3 -right-3 w-6 h-6 bg-[#f4f7fe] rounded-full border border-slate-100"
-          ></div>
-
-          <div class="flex justify-between items-start mb-4">
-            <span
-              class="badge-chip"
-              :class="voucher.is_active ? 'badge-success' : 'badge-gray'"
-            >
-              {{ voucher.is_active ? `Active` : `Inactive` }}
-            </span>
-            <div class="flex items-center gap-1 transition-all">
-              <button
-                @click="handleEdit(voucher)"
-                class="btn-ghost w-8 h-8"
-                title="Edit"
-              >
-                <Edit2 :size="14" />
-              </button>
-              <button
-                @click="handleDelete(voucher)"
-                class="btn-ghost w-8 h-8 hover:text-rose-600 hover:bg-rose-50"
-                title="Delete"
-              >
-                <Trash2 :size="14" />
-              </button>
-            </div>
-          </div>
-
-          <h3
-            class="text-2xl font-black text-[#702DFF] tracking-widest font-mono uppercase truncate"
-            :title="voucher.code"
-          >
-            {{ voucher.code }}
-          </h3>
-          <p class="text-xs font-bold text-[#1B2559] mt-1 truncate">
-            {{ voucher.label }}
-          </p>
-        </div>
-
-        <div class="p-6 space-y-4">
-          <p
-            class="text-[11px] text-slate-500 font-medium leading-relaxed italic line-clamp-2 min-h-[2.5em]"
-          >
-            "{{ voucher.desc || "No description provided." }}"
-          </p>
-
-          <div class="grid grid-cols-2 gap-4 py-4 border-y border-slate-50">
-            <div>
-              <p
-                class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"
-              >
-                Discount
-              </p>
-              <p class="text-lg font-black text-[#1B2559]">
-                {{
-                  voucher.type === "percent"
-                    ? `${voucher.value}%`
-                    : formatPrice(voucher.value)
-                }}
-              </p>
-            </div>
-            <div class="text-right">
-              <p
-                class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"
-              >
-                Expires
-              </p>
-              <p class="text-xs font-black text-slate-700 mt-1">
-                {{ formatDate(voucher.expiry_date) }}
-              </p>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-if="voucher.is_global"
-              class="text-[9px] px-2 py-1 bg-indigo-50 text-indigo-600 rounded-lg font-black uppercase tracking-widest"
-              >Global</span
-            >
-            <span
-              v-if="voucher.min_order"
-              class="text-[9px] px-2 py-1 bg-slate-100 text-slate-500 rounded-lg font-black uppercase tracking-widest"
-              >Min. {{ formatPrice(voucher.min_order) }}</span
-            >
-          </div>
-        </div>
+          Menyelaraskan Promo...
+        </p>
       </div>
-    </div>
+
+      <div v-else-if="vouchers.length === 0" class="p-20 text-center">
+        <div
+          class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm"
+        >
+          <Tag :size="32" class="text-slate-200" />
+        </div>
+        <h3 class="text-lg font-bold text-[#1B2559]">
+          Voucher Tidak Ditemukan
+        </h3>
+        <p class="text-slate-400 text-sm mt-1">
+          Buat kode diskon pertama Anda untuk meningkatkan penjualan.
+        </p>
+        <BaseButton variant="primary" @click="handleCreate" class="mt-6"
+          >Buat Voucher</BaseButton
+        >
+      </div>
+
+      <div v-else class="overflow-x-auto">
+        <table class="table-main">
+          <thead>
+            <tr>
+              <th class="pl-8!">Identitas Voucher</th>
+              <th>Reward</th>
+              <th>Persyaratan</th>
+              <th>Berlaku Sampai</th>
+              <th>Status</th>
+              <th class="text-right pr-8!">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="voucher in vouchers"
+              :key="voucher.id"
+              class="table-row-hover group"
+            >
+              <td class="pl-8!">
+                <div class="flex flex-col">
+                  <p
+                    class="font-black text-[#1B2559] text-sm tracking-widest font-mono uppercase group-hover:text-[#702DFF] transition-colors"
+                  >
+                    {{ voucher.code }}
+                  </p>
+                  <p
+                    class="text-[10px] font-bold text-slate-400 uppercase mt-0.5"
+                  >
+                    {{ voucher.label }}
+                  </p>
+                </div>
+              </td>
+              <td>
+                <div class="flex flex-col">
+                  <span class="text-sm font-black text-[#1B2559]">
+                    {{
+                      voucher.type === "percent"
+                        ? `${voucher.value}% OFF`
+                        : `${formatPrice(voucher.value)} OFF`
+                    }}
+                  </span>
+                  <span class="text-[9px] font-bold text-slate-400 uppercase">
+                    {{
+                      voucher.type === "percent" ? "Percentage" : "Fixed Amount"
+                    }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="flex flex-wrap gap-1.5">
+                  <span
+                    v-if="voucher.is_global"
+                    class="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[8px] font-black uppercase tracking-widest rounded border border-indigo-100/50"
+                  >
+                    Global
+                  </span>
+                  <span
+                    v-if="voucher.min_order"
+                    class="px-2 py-0.5 bg-slate-50 text-slate-500 text-[8px] font-black uppercase tracking-widest rounded border border-slate-100"
+                  >
+                    Min. {{ formatPrice(voucher.min_order) }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <Clock :size="12" class="text-slate-300" />
+                  <span class="text-xs font-bold text-slate-500">{{
+                    formatDate(voucher.expiry_date)
+                  }}</span>
+                </div>
+              </td>
+              <td>
+                <span
+                  class="px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest"
+                  :class="
+                    voucher.is_active
+                      ? 'bg-emerald-50 text-emerald-600'
+                      : 'bg-slate-100 text-slate-400'
+                  "
+                >
+                  {{ voucher.is_active ? "Active" : "Inactive" }}
+                </span>
+              </td>
+              <td class="text-right pr-8!">
+                <div class="flex items-center justify-end gap-1 transition-all">
+                  <button
+                    @click="handleEdit(voucher)"
+                    class="p-2 rounded-xl text-slate-300 hover:text-[#702DFF] hover:bg-indigo-50 transition-all"
+                  >
+                    <Edit2 :size="16" />
+                  </button>
+                  <button
+                    @click="handleDelete(voucher)"
+                    class="p-2 rounded-xl text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                  >
+                    <Trash2 :size="16" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </AdminCard>
 
     <!-- Modals -->
     <VoucherFormModal
@@ -213,7 +222,7 @@ import {
 import { couponsService, type Coupon } from "../services/couponsService";
 import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
-import StatsCard from "../components/ui/StatsCard.vue";
+import BentoStat from "../components/ui/BentoStat.vue";
 import VoucherFormModal from "../components/promo/VoucherFormModal.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 import Toast from "../components/ui/Toast.vue";

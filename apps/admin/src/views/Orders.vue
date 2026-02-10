@@ -8,22 +8,22 @@
       class="absolute bottom-1/2 left-0 -z-10 w-[400px] h-[400px] bg-blue-50/40 blur-[100px] rounded-full opacity-40"
     ></div>
     <PageHeader
-      title="Client Orders"
-      subtitle="Track payments and manage active development projects"
+      title="Pesanan Klien"
+      subtitle="Pantau pembayaran dan kelola proyek pengembangan aktif"
     >
       <div class="flex gap-3">
         <BaseButton
           variant="secondary"
           @click="fetchOrders"
           :loading="isLoading"
-          class="!bg-white !border-slate-200 !text-slate-600 hover:!bg-slate-50 shadow-sm"
+          class="bg-white! border-slate-200! text-slate-600! hover:bg-slate-50 shadow-sm"
         >
           <RotateCw :size="18" :class="{ 'animate-spin': isLoading }" />
-          Refresh
+          Segarkan
         </BaseButton>
         <BaseButton variant="primary" @click="$router.push('/orders/new')">
           <Plus :size="18" />
-          Add New Order
+          Tambah Pesanan Baru
         </BaseButton>
       </div>
     </PageHeader>
@@ -42,7 +42,7 @@
         "
       >
         <Layout :size="14" />
-        Order Board
+        Papan Pesanan
       </button>
       <button
         @click="activeTab = 'finance'"
@@ -54,7 +54,7 @@
         "
       >
         <Banknote :size="14" />
-        Revenue Intelligence
+        Wawasan Pendapatan
       </button>
     </div>
 
@@ -63,7 +63,7 @@
       <!-- Stats Overview -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 mt-2">
         <BentoStat
-          title="Project Pipeline"
+          title="Pipa Proyek"
           :value="stats.totalRevenue"
           :icon="TrendingUp"
           variant="blue"
@@ -72,7 +72,7 @@
           simulation="Jika ada pesanan baru senilai Rp 5jt, angka ini akan otomatis naik sebesar Rp 5jt meskipun klien belum membayar."
         />
         <BentoStat
-          title="Settled Revenue"
+          title="Pendapatan Cair"
           :value="stats.collected"
           :icon="CheckCircle2"
           variant="success"
@@ -81,7 +81,7 @@
           simulation="Jika klien membayar termin kedua sebesar Rp 2jt, maka angka Settled ini akan bertambah dan Ledger akan berkurang."
         />
         <BentoStat
-          title="Unpaid Ledger"
+          title="Buku Besar Piutang"
           :value="stats.debt"
           :icon="CreditCard"
           variant="danger"
@@ -90,11 +90,11 @@
           simulation="Simulasi: Proyek 10jt, baru bayar 4jt. Maka 6jt sisanya akan nangkring di Unpaid Ledger ini sebagai 'Hutang Klien'."
         />
         <BentoStat
-          title="Production Load"
+          title="Beban Produksi"
           :value="stats.active"
           :icon="Clock"
           variant="warning"
-          unit="Active"
+          unit="Aktif"
           tooltip="Beban kerja aktif tim saat ini. Menghitung pesanan yang belum berstatus 'Done'."
           simulation="Jika Kakak mengubah status proyek Kang Surya menjadi 'Done', angka load ini akan berkurang 1 secara otomatis."
         />
@@ -103,7 +103,7 @@
       <!-- Desktop Filter Bar -->
       <AdminCard
         no-padding
-        class="hidden lg:block mb-6 !rounded-[24px] shadow-sm bg-white/80 backdrop-blur-xl border-none"
+        class="hidden lg:block mb-6 rounded-[32px]! shadow-sm bg-white/80 backdrop-blur-xl border-none"
       >
         <div class="flex gap-4 justify-between items-center p-3 sm:p-4">
           <!-- Search -->
@@ -115,9 +115,9 @@
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Search orders..."
+              placeholder="Cari pesanan..."
               @input="currentPage = 1"
-              class="input-field !pl-14 !py-2.5 !rounded-xl !text-[11px] !bg-slate-50/50"
+              class="input-field pl-14! py-2.5! rounded-xl! text-[11px]! bg-slate-50/50"
             />
           </div>
 
@@ -127,9 +127,9 @@
               <select
                 v-model="statusFilter"
                 @change="currentPage = 1"
-                class="select-field !w-44 !py-2 !pl-4 !pr-10 !text-[10px] !font-black !rounded-xl !bg-white border border-slate-100 shadow-sm transition-all group-hover:border-indigo-100"
+                class="select-field w-44! py-2! pl-4! pr-10! text-[10px]! font-black! rounded-xl! bg-white border border-slate-100 shadow-sm transition-all group-hover:border-indigo-100"
               >
-                <option value="all">ANY STATUS</option>
+                <option value="all">SEMUA STATUS</option>
                 <option v-for="s in statusOptions" :key="s" :value="s">
                   {{ s.toUpperCase() }}
                 </option>
@@ -145,11 +145,11 @@
               <select
                 v-model="paymentFilter"
                 @change="currentPage = 1"
-                class="select-field !w-44 !py-2 !pl-4 !pr-10 !text-[10px] !font-black !rounded-xl !bg-white border border-slate-100 shadow-sm transition-all group-hover:border-indigo-100"
+                class="select-field w-44! py-2! pl-4! pr-10! text-[10px]! font-black! rounded-xl! bg-white border border-slate-100 shadow-sm transition-all group-hover:border-indigo-100"
               >
-                <option value="all">ANY PAYMENT</option>
+                <option value="all">SEMUA PEMBAYARAN</option>
                 <option value="paid">LUNAS / FULL</option>
-                <option value="unpaid">PIUTANG / DEBT</option>
+                <option value="unpaid">PIUTANG / HUBUNG</option>
               </select>
               <ChevronDown
                 :size="14"
@@ -162,11 +162,11 @@
               <select
                 v-model="sortBy"
                 @change="currentPage = 1"
-                class="select-field !w-44 !py-2 !pl-4 !pr-10 !text-[10px] !font-black !rounded-xl !bg-white border border-slate-100 shadow-sm transition-all group-hover:border-indigo-100"
+                class="select-field w-44! py-2! pl-4! pr-10! text-[10px]! font-black! rounded-xl! bg-white border border-slate-100 shadow-sm transition-all group-hover:border-indigo-100"
               >
-                <option value="newest">RECENT FIRST</option>
-                <option value="budget-high">PREMIUM BUDGET</option>
-                <option value="debt-high">LEDEGER DEBT</option>
+                <option value="newest">TERBARU</option>
+                <option value="budget-high">BUDGET TERBESAR</option>
+                <option value="debt-high">PIUTANG TERBESAR</option>
               </select>
               <ArrowUpDown
                 :size="14"
@@ -187,7 +187,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search orders..."
+            placeholder="Cari pesanan..."
             @input="currentPage = 1"
             class="w-full bg-white border-2 border-slate-50 rounded-2xl py-3.5 pl-11 pr-4 text-xs font-bold text-[#1B2559] shadow-sm outline-none focus:border-[#702DFF]/20 transition-all"
           />
@@ -221,13 +221,13 @@
             @click="toggleSelectAll"
             class="text-[10px] font-black uppercase tracking-widest text-[#702DFF] bg-indigo-50 px-4 py-2 rounded-xl"
           >
-            {{ isAllSelected ? "Deselect All" : "Select All Filtered" }}
+            {{ isAllSelected ? "Batalkan Semua" : "Pilih Semua Filtered" }}
           </button>
           <button
             @click="isSelectionMode = false"
             class="text-[10px] font-black uppercase tracking-widest text-slate-400"
           >
-            Done
+            Selesai
           </button>
         </div>
       </transition>
@@ -236,7 +236,7 @@
       <AdminCard
         no-padding
         overflow-visible
-        class="hidden lg:block !rounded-[40px] border border-slate-100/50 shadow-2xl shadow-indigo-500/5 mb-12 bg-white/70 backdrop-blur-xl"
+        class="hidden lg:block rounded-[40px]! border border-slate-100/50 shadow-2xl shadow-indigo-500/5 mb-12 bg-white/70 backdrop-blur-xl"
       >
         <div v-if="isLoading" class="p-20 text-center">
           <div
@@ -245,7 +245,7 @@
           <p
             class="mt-4 text-slate-400 font-bold uppercase tracking-widest text-[10px]"
           >
-            Syncing with Supabase...
+            Menyelaraskan dengan Database...
           </p>
         </div>
 
@@ -255,9 +255,9 @@
           >
             <Search :size="32" class="text-slate-200" />
           </div>
-          <h3 class="text-[#1B2559] font-black">No orders found</h3>
+          <h3 class="text-[#1B2559] font-black">Pesanan tidak ditemukan</h3>
           <p class="text-slate-400 text-sm mt-1">
-            Try adjusting your filters or search terms.
+            Coba sesuaikan filter atau kata kunci pencarian Anda.
           </p>
         </div>
 
@@ -265,7 +265,7 @@
           <table class="table-main">
             <thead>
               <tr>
-                <th class="w-8 !pl-8">
+                <th class="w-8 pl-8!">
                   <input
                     type="checkbox"
                     :checked="isAllSelected"
@@ -273,11 +273,11 @@
                     class="rounded-lg border-slate-300 text-[#7029FF] focus:ring-[#7029FF] h-4 w-4"
                   />
                 </th>
-                <th>Order Identity</th>
+                <th>Identitas Pesanan</th>
                 <th>Status</th>
-                <th>Project Value</th>
-                <th>Payments / Ledger</th>
-                <th class="text-right !pr-8">Actions</th>
+                <th>Nilai Proyek</th>
+                <th>Pembayaran / Buku Besar</th>
+                <th class="text-right pr-8!">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -287,7 +287,7 @@
                 class="table-row-hover group"
                 :class="selectedIds.includes(order.id) ? 'bg-indigo-50/30' : ''"
               >
-                <td class="!pl-8">
+                <td class="pl-8!">
                   <input
                     type="checkbox"
                     :value="order.id"

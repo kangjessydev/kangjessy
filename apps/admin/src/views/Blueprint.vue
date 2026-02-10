@@ -12,17 +12,19 @@
 
     <!-- Stats -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-      <StatsCard
+      <BentoStat
         title="Total Stages"
         :value="stages.length"
         :icon="Layers"
-        colorClass="bg-indigo-50 text-indigo-600"
+        variant="indigo"
+        tooltip="Jumlah tahapan utama dalam Digital Business Roadmap."
       />
-      <StatsCard
+      <BentoStat
         title="Total Steps"
         :value="totalSteps"
         :icon="Zap"
-        colorClass="bg-emerald-50 text-emerald-600"
+        variant="success"
+        tooltip="Akumulasi seluruh langkah aksi dari semua tahapan."
       />
     </div>
 

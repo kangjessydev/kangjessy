@@ -9,10 +9,17 @@
     <div
       class="absolute bottom-0 left-0 -z-10 w-[400px] h-[400px] bg-blue-50/40 blur-[100px] rounded-full opacity-40"
     ></div>
-    <!-- Header -->
-    <div
-      class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-6"
-    >
+    <PageHeader :title="pageTitle">
+      <template #breadcrumb>
+        <nav
+          class="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 mb-1.5 ml-0.5"
+        >
+          <span>Production</span>
+          <ChevronRight :size="10" class="opacity-30" />
+          <span class="text-[#7029FF] brightness-90">Projects</span>
+        </nav>
+      </template>
+
       <div class="flex items-center gap-4">
         <button
           @click="$router.back()"
@@ -20,20 +27,6 @@
         >
           <ArrowLeft :size="20" />
         </button>
-        <div>
-          <nav
-            class="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 mb-1.5 ml-0.5"
-          >
-            <span>Production</span>
-            <ChevronRight :size="10" class="opacity-30" />
-            <span class="text-[#7029FF] brightness-90">Projects</span>
-          </nav>
-          <h1
-            class="text-3xl lg:text-4xl font-black text-[#1B2559] leading-tight tracking-tight drop-shadow-sm"
-          >
-            {{ pageTitle }}
-          </h1>
-        </div>
       </div>
 
       <div class="flex items-center gap-3">
@@ -68,7 +61,7 @@
           </BaseButton>
         </div>
       </div>
-    </div>
+    </PageHeader>
 
     <div
       v-if="loading"

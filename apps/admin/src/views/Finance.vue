@@ -1,17 +1,17 @@
 <template>
   <div class="page-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <PageHeader
-      title="Financial Intelligence"
-      subtitle="Monitor cash flow, debt recovery, and project profitability"
+      title="Intelijen Keuangan"
+      subtitle="Pantau arus kas, pelunasan hutang, dan profitabilitas proyek"
     >
       <div class="flex gap-2">
         <ButtonSecondary @click="fetchData">
           <RotateCw :size="18" :class="{ 'animate-spin': loading }" />
-          Sync Ledger
+          Selaraskan Buku Besar
         </ButtonSecondary>
         <ButtonPrimary @click="isModalOpen = true">
           <Plus :size="18" />
-          Add Transaction
+          Tambah Transaksi
         </ButtonPrimary>
       </div>
     </PageHeader>
@@ -54,7 +54,7 @@
         "
       >
         <TrendingUp :size="14" />
-        Intelligence
+        Wawasan Bisnis
       </button>
     </div>
 
@@ -100,7 +100,7 @@
 
     <!-- Tab Content: Ledger -->
     <div v-if="activeTab === 'ledger'" class="space-y-6 animate-fade-in">
-      <AdminCard title="Global Transaction Ledger" no-padding>
+      <AdminCard title="Buku Besar Transaksi Global" no-padding>
         <template #action>
           <div class="flex items-center gap-4">
             <div class="relative">
@@ -126,7 +126,7 @@
           <p
             class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
           >
-            Processing Data...
+            Memproses Data...
           </p>
         </div>
 
@@ -134,12 +134,12 @@
           <table class="table-main">
             <thead>
               <tr>
-                <th class="!pl-8">Deskripsi & Tipe</th>
+                <th class="pl-8!">Deskripsi & Tipe</th>
                 <th>Kategori</th>
                 <th>Project/Link</th>
                 <th>Nominal</th>
                 <th>Tanggal</th>
-                <th class="text-right !pr-8">Aksi</th>
+                <th class="text-right pr-8!">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -156,7 +156,7 @@
                 :key="tx.id"
                 class="table-row-hover group"
               >
-                <td class="!pl-8">
+                <td class="pl-8!">
                   <div class="flex items-center gap-4">
                     <div
                       class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border"
@@ -276,7 +276,7 @@
                   :key="tx.id"
                   class="table-row-hover"
                 >
-                  <td class="!pl-6">
+                  <td class="pl-6!">
                     <p class="text-[11px] font-black text-[#1B2559] uppercase">
                       {{ tx.client?.name || tx.title }}
                     </p>
@@ -322,7 +322,7 @@
               </thead>
               <tbody>
                 <tr v-for="tx in debts" :key="tx.id" class="table-row-hover">
-                  <td class="!pl-6">
+                  <td class="pl-6!">
                     <p class="text-[11px] font-black text-[#1B2559] uppercase">
                       {{ tx.title }}
                     </p>

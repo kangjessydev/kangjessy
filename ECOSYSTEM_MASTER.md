@@ -111,136 +111,30 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 
 ---
 
-## 🔍 7. SYNC STATUS & INTEGRATION GAPS (Audit 2026-02-08)
+## 🔍 7. SYNC STATUS & INTEGRATION GAPS (Audit 2026-02-11)
 
-Berdasarkan audit terbaru, berikut adalah area yang belum tersinkronisasi ("Kabel Belum Tersambung") antara Agency dan Admin:
+Berdasarkan audit terbaru, berikut adalah area yang telah tersinkronisasi dan distandarisasi:
 
-| Modul               | Status     | Isu Utama                                                                                                                     |
-| :------------------ | :--------- | :---------------------------------------------------------------------------------------------------------------------------- |
-| **The Blueprint**   | 🟢 SYNCED  | Database Centralized (Supabase). Admin can manage Stages & Steps dynamically.                                                 |
-| **Pricing Master**  | 🟢 SYNCED  | Agency Calculator mengambil data live dari `pricing_master`. Admin memiliki UI `GenericPricingList.vue` untuk mengelola data. |
-| **Voucher System**  | 🟢 SYNCED  | Agency sudah mengambil data live dari tabel `coupons` di Supabase.                                                            |
-| **Standardized UI** | 🟢 SYNCED  | Admin Form (Input, Select, Textarea) kini menggunakan komponen Bento terpusat (`@kangjessy/ui`).                              |
-| **Portfolio**       | 🟡 PARTIAL | Data tersinkron via Sanity, namun field "Deep Dive Metrics" seringkali tidak selaras antara editor dan viewer.                |
+| Modul                  | Status    | Keterangan                                                                                                                      |
+| :--------------------- | :-------- | :------------------------------------------------------------------------------------------------------------------------------ |
+| **Admin Localization** | 🟢 SYNCED | Seluruh view utama Admin (Orders, Leads, Projects, Finance, Dashboard, Proposals, Vouchers) telah dilokalisasi ke B. Indonesia. |
+| **Tailwind v4 Sync**   | 🟢 SYNCED | Syntax utilitas `!class` telah diperbaiki menjadi `class!` sesuai standar Tailwind v4 di seluruh view Admin.                    |
+| **Bento UI 2.0**       | 🟢 SYNCED | Konsistensi rounding `rounded-[32px]!` dan border-based design diimplementasikan di seluruh Admin Card & Table.                 |
+| **Pricing Master**     | 🟢 SYNCED | Agency Calculator mengambil data live dari `pricing_master`. Admin memiliki UI `GenericPricingList.vue` untuk mengelola data.   |
+| **Standardized UI**    | 🟢 SYNCED | Admin Form & Content Views kini seragam menggunakan komponen Bento terpusat (`@kangjessy/ui`).                                  |
 
 ---
 
-## � 11. TECHNICAL AUDIT & HOTFIX LOG (2026-02-10)
+## 🎨 11. TECHNICAL AUDIT & HOTFIX LOG (2026-02-11)
 
 Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosistem:
 
-### 🎨 Admin UI & Layout Polish
+### Admin UI & Layout Polish
 
-- **Sidebar Master**: Perbaikan padding bawah (`pb-12`) dan lebar ramping (`270px`) untuk estetika premium. Navigasi kini tetap terlihat utuh saat dscroll maksimal.
-- **Unified Headers**: Implementasi `.heading-xl` dan `.subtitle` di `style.css` untuk hierarki visual yang konsisten di seluruh dashboard.
-- **Bento Components**: Migrasi penuh dari native `<select>` dan `<textarea>` ke `AdminSelect` dan `AdminTextarea` di seluruh editor (`Project`, `Portfolio`, `Blog`, `Order`).
-
-### 🛠️ Supabase Schema Gap
-
-Teridentifikasi "Missing Sync" pada tabel `clients`. Jalankan SQL ini untuk mencegah error di Dashboard Admin:
-
-```sql
-ALTER TABLE public.clients ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'general_inquiry';
-ALTER TABLE public.clients ADD COLUMN IF NOT EXISTS is_converted BOOLEAN DEFAULT false;
-```
-
----
-
-## �📂 8. PORTFOLIO STRATEGY
-
-- **Narrative**: Case study menggunakan 3 fase (Problem → Strategy → Impact).
-- **Metrics**: Tampilkan hasil nyata dalam angka/persentase.
-- **Quality**: No Lorem Ipsum, High-res images (<300KB WebP).
-
----
-
-## 🏗️ 9. MONOREPO MIGRATION BLUEPRINT (pnpm Workspaces)
-
-Rencana migrasi ini dirancang untuk menyatukan 5 projek tanpa merusak fitur yang sudah ada. Monorepo akan menggunakan **pnpm Workspaces** sebagai "mesin" utamanya.
-
-### 🗺️ Target Folder Structure
-
-/kangjessy-ecosystem (Root)
-├── apps/
-│ ├── agency/ (kangjessy.com)
-│ ├── admin/ (admin.kangjessy.com)
-│ ├── store/ (store.kangjessy.com)
-│ ├── tools/ (tools.kangjessy.com)
-│ └── docs/ (docs.kangjessy.com)
-├── packages/
-│ ├── config/ (Shared types, constants, pricing)
-│ ├── ui/ (Shared Tailwind v4 components)
-│ └── database/ (Shared Supabase & Sanity clients)
-├── package.json (Root dependencies)
-└── pnpm-workspace.yaml
-
-### 🛡️ Jaminan Keamanan (Safety Protocols)
-
-1. **Zero Logic Change**: Migrasi ini hanya memindahkan lokasi folder dan cara instalasi _node_modules_. Logika _internal_ Vue/JS tidak akan disentuh.
-2. **Incremental Migration**: Kita tidak pindah semua sekaligus. Kita mulai dari satu projek (misal: Admin), pastikan build sukses di Vercel, baru pindah projek berikutnya.
-3. **Ghosting Node Modules**: pnpm akan memastikan setiap projek tetap memiliki akses ke library-nya sendiri tanpa konflik.
-
-### 🧩 Bagaimana jika ada Backend Baru (Laravel, Go, dll)?
-
-Monorepo ini bersifat **Polyglot** (Bisa banyak bahasa).
-
-- Jika suatu saat ada projek Laravel, kita cukup tambah folder `apps/api-laravel` atau `backends/laravel`.
-- Laravel tetap berjalan dengan `composer`, sementara Vue tetap dengan `pnpm`.
-- Keuntungannya: Anda tetap bisa melihat kode API dan Frontend dalam satu jendela kerja. Sinkronisasi jadi jauh lebih mudah.
-
-### 📅 Tahapan Eksekusi & Estimasi Durasi
-
-Total estimasi pengerjaan: **~5-6 Jam** (dilakukan secara bertahap agar aman).
-
-1. **Fase 1: Rooting (DONE)**  
-   Inisialisasi `pnpm-workspace.yaml` di root dan pembersihan node_modules lama.
-2. **Fase 2: Moving & Apps Refactor (DONE)**  
-   Memindahkan ke-5 folder ke `apps/`, hapus `lockfiles` lokal, dan setup pnpm workspaces. Verifikasi build satu per satu.
-3. **Fase 3: Shared Logic Linking (DONE)**  
-   Ekstraksi logika Supabase/Sanity ke `packages/database` agar semua aplikasi memakai "pipa" tunggal.
-4. **Fase 4: Deployment Sync & UI Unified (DONE)**  
-   Update setting "Root Directory" di Vercel Dashboard dan migrasi komponen core ke `@kangjessy/ui`. Seluruh aplikasi (`agency`, `admin`) kini menggunakan repositori komponen tunggal.
-5. **Fase 5: Admin Refactoring & Standardization (DONE)**
-   - **Tailwind v4 Upgrade**: Menyamakan stack CSS Admin dengan Agency (tanpa config JS).
-   - **Config Cleanup**: Menghapus `tailwind.config.js` dan `postcss.config.js` dari Admin.
-   - **Unified Style**: Memastikan Admin menggunakan `@kangjessy/ui` secara native via `@source`.
-
----
-
-## 👥 10. ADMIN EXPANSION BRAINSTORM (CRM & OPS)
-
-Dokumen ini berisi ide-ide fitur strategis untuk pengembangan `kangjessy-admin` agar menjadi pusat operasi bisnis yang sangat efisien dan cerdas.
-
-### 10.1 CRM (Customer Relationship Management) - "Otak Relasi"
-
-- **Interaction Logs**: Riwayat komunikasi per klien (WA, Call, Meeting notes).
-- **Client Segmentation**: Labeling otomatis (`VIP`, `Whale`, `Prospect`).
-- **Lifetime Value (LTV)**: Tracking total pendapatan dari awal hingga kini per klien.
-- **Follow-up Reminders**: Notifikasi otomatis untuk leads yang "dingin".
-- **Client Vault**: Penyimpanan dokumen legal (KTP/NPWP/Kontrak) terpusat.
-
-### 10.2 Digital Store Management
-
-- **Product Library**: Manajemen aset digital (Source Code, E-Book).
-- **License Generator**: Pembuatan kode lisensi unik otomatis setelah pembelian.
-- **Sales Analytics**: Performa penjualan produk terbaik (Best Sellers).
-
-### 10.3 Finance & Reporting Engine
-
-- **One-Click Invoice**: Export data order ke PDF Invoice premium.
-- **Profitability Audit**: Analisis untung-rugi per proyek secara real-time.
-- **Tax & Export**: Rekap data untuk pajak dan export ke Excel.
-
-### 10.4 Internal Agency Ops
-
-- **RBAC (Role Access Control)**: Pembatasan akses tim (Admin, PM, Finance).
-- **Workload Tracker**: Monitoring beban kerja tim internal.
-- **Internal Knowledge Base**: Repository SOP dan snippet kode agensi.
-
----
-
-**Last Updated**: 2026-02-10
-**Status**: PRICE MASTER SYNCED | BLUEPRINT SYNCED | BENTO UI STANDARDIZED
+- **Full Localization**: Lokalisasi Bahasa Indonesia pada `Orders.vue`, `Leads.vue`, `Projects.vue`, `Finance.vue`, `Dashboard.vue`, `Proposals.vue`, dan `Vouchers.vue`.
+- **Tailwind v4 Fixes**: Refactoring masif syntax utilitas dari `!important` prefix ke suffix (e.g., `rounded-[32px]!`).
+- **Premium Aesthetics**: Memastikan penggunaan `rounded-[32px]!` pada `AdminCard` dan `Table Headers` untuk tampilan Bento UI 2.0 yang "alive" dan premium.
+- **Content Management**: Table/Grid Switcher pada `Portfolio.vue` dan `Blog.vue` kini mendukung lokalisasi dan seleksi bulk yang lebih bersih.
 
 ---
 
@@ -351,7 +245,7 @@ Agar Admin bisa mengontrol flow di atas, struktur database harus mengakomodasi:
 
 ## 🏗️ 5. TECHNICAL IMPLEMENTATION (SOT)
 
-**Status per 2026-02-10**: System is now **Dynamic**.
+**Status per 2026-02-11**: System is now **Dynamic**.
 
 ### Data Source
 
@@ -375,3 +269,35 @@ Agar Admin bisa mengontrol flow di atas, struktur database harus mengakomodasi:
 
 4. **Admin Management**:
    - Menggunakan `GenericPricingList.vue` untuk CRUD semua tipe data pricing tanpa duplikasi kode.
+
+---
+
+## 🧪 13. USER MANUAL TESTING ROADMAP (POST-LOCALIZATION)
+
+Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual untuk memastikan seluruh perubahan UI dan Lokalisasi berjalan sempurna:
+
+#### 1. Verifikasi Lokalisasi (Bahasa Indonesia)
+
+- [ ] **Dashboard**: Cek apakah judul "Pusat Intelijen", statistik KPI, dan label "Pipa Penjualan" sudah benar.
+- [ ] **Pesanan (Orders)**: Pastikan tabel "Pesanan Klien" dan filter (Semua Status, dll) sudah dalam Bahasa Indonesia.
+- [ ] **Leads**: Cek tab "Inbox" vs "Wawasan Pemasaran", serta tombol "Seleksi".
+- [ ] **Finance**: Verifikasi "Selaraskan Buku Besar", "Buku Kas", dan "Hutang & Piutang".
+- [ ] **Proposal & Voucher**: Pastikan judul halaman dan header tabel sudah diterjemahkan.
+
+#### 2. Uji Konsistensi UI (Bento 2.0)
+
+- [ ] **Rounding**: Pastikan seluruh `AdminCard` dan `PageHeader` memiliki sudut membulat lebar (`rounded-[32px]!`).
+- [ ] **Border Consistency**: Pastikan tidak ada bayangan (_shadow_) berlebih, fokus pada border 1px yang bersih.
+- [ ] **Table Selection**: Masuk ke mode seleksi (Selection Mode) di Orders/Leads/Portfolio dan pastikan checkbox muncul dengan benar.
+
+#### 3. Cek Fungsionalitas (Regression Test)
+
+- [ ] **Filter & Search**: Coba ketik di kolom pencarian pada setiap view dan pastikan data terfilter.
+- [ ] **Status Update**: Coba ubah status salah satu Order atau Lead (e.g. dari "New" ke "Follow Up") dan pastikan toast berhasil muncul.
+- [ ] **Table/Grid Switcher**: Pada view Portfolio dan Blog, coba pindah antara mode Tabel dan Grid.
+
+#### 4. Responsiveness (Mobile Check)
+
+- [ ] **Mobile Layout**: Buka dashboard di resolusi 390px - 430px.
+- [ ] **Sticky Header**: Pastikan `PageHeader` tetap terlihat baik di mobile.
+- [ ] **Filter Bar**: Cek apakah filter berubah menjadi ikon-only atau masuk ke dalam menu pencarian di layar kecil.

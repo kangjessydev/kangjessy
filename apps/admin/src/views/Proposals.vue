@@ -1,17 +1,17 @@
 <template>
   <div class="page-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <PageHeader
-      title="Proposal CMS"
-      subtitle="Manage and track all digital solution proposals"
+      title="CMS Proposal"
+      subtitle="Kelola dan pantau seluruh proposal solusi digital"
     >
       <div class="flex gap-2">
         <ButtonSecondary @click="fetchProposals">
           <RotateCw :size="18" :class="{ 'animate-spin': isLoading }" />
-          Sync CMS
+          Selaraskan CMS
         </ButtonSecondary>
         <ButtonPrimary @click="$router.push('/proposals/generator')">
           <Plus :size="18" />
-          Create New Proposal
+          Buat Proposal Baru
         </ButtonPrimary>
       </div>
     </PageHeader>
@@ -19,14 +19,14 @@
     <!-- Stats Summary -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 mt-2">
       <BentoStat
-        title="Total Proposals"
+        title="Total Proposal"
         :value="proposals.length"
         :icon="FileText"
         variant="blue"
         tooltip="Total seluruh proposal yang tersimpan di sistem."
       />
       <BentoStat
-        title="Lead-Linked"
+        title="Terkait Lead"
         :value="leadLinkedCount"
         :icon="Users"
         variant="primary"
@@ -34,27 +34,27 @@
         tooltip="Proposal yang bermula dari inkuiri form kontak/konsultasi."
       />
       <BentoStat
-        title="Independent"
+        title="Independen"
         :value="independentCount"
         :icon="Zap"
         variant="warning"
-        unit="Proposals"
-        tooltip="Proposal yang dibuat langsung via generator (Manual/Quick)."
+        unit="Proposal"
+        tooltip="Proposal yang dibuat langsung via generator (Manual/Cepat)."
       />
       <BentoStat
-        title="Converted Dealt"
+        title="Konversi Deal"
         :value="convertedCount"
         :icon="TrendingUp"
         variant="success"
         unit="Deals"
-        tooltip="Proposal yang berhasil dikonversi menjadi project aktif."
+        tooltip="Proposal yang berhasil dikonversi menjadi proyek aktif."
       />
     </div>
 
     <!-- Filter Bar -->
     <AdminCard
       no-padding
-      class="hidden lg:block mb-6 !rounded-[32px] shadow-lg shadow-slate-200/5 border-slate-50 overflow-hidden"
+      class="hidden lg:block mb-6 rounded-[32px]! shadow-lg shadow-slate-200/5 border-slate-50 overflow-hidden"
     >
       <div class="flex gap-4 justify-between items-center p-3 sm:p-4">
         <!-- Search -->
@@ -66,7 +66,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search by project or client..."
+            placeholder="Cari berdasarkan proyek atau klien..."
             class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-11 pr-4 text-xs font-bold text-[#1B2559] focus:bg-white focus:border-[#7029FF]/20 transition-all outline-none"
           />
         </div>
@@ -83,7 +83,7 @@
           >
             <CheckSquare :size="16" />
             <span class="text-[10px] font-black uppercase tracking-widest">{{
-              isSelectionMode ? "Mode ON" : "Selection"
+              isSelectionMode ? "Mode AKTIF" : "Seleksi"
             }}</span>
           </button>
 
@@ -92,9 +92,9 @@
               v-model="typeFilter"
               class="w-44 appearance-none bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 pr-10 text-[10px] font-black uppercase tracking-widest text-[#1B2559] focus:bg-white focus:border-[#7029FF]/20 transition-all outline-none cursor-pointer"
             >
-              <option value="all">All Types</option>
-              <option value="lead">Lead Linked</option>
-              <option value="independent">Independent</option>
+              <option value="all">Semua Tipe</option>
+              <option value="lead">Terkait Lead</option>
+              <option value="independent">Independen</option>
             </select>
             <ChevronDown
               :size="14"
@@ -163,7 +163,7 @@
     <AdminCard
       v-else
       no-padding
-      class="overflow-hidden !rounded-[32px] border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
+      class="overflow-hidden rounded-[32px]! border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
     >
       <div v-if="filteredProposals.length === 0" class="p-20 text-center">
         <div
@@ -171,16 +171,18 @@
         >
           <Search :size="32" class="text-slate-200" />
         </div>
-        <h3 class="text-[#1B2559] font-black text-lg">No proposals found</h3>
+        <h3 class="text-[#1B2559] font-black text-lg">
+          Proposal tidak ditemukan
+        </h3>
         <p class="text-slate-400 text-sm mt-1">
-          Try adjusting your filters or create a new one.
+          Coba sesuaikan filter Anda atau buat proposal baru.
         </p>
       </div>
       <div v-else class="overflow-x-auto">
         <table class="table-main">
           <thead>
             <tr>
-              <th v-if="isSelectionMode" class="!pl-8 w-12 text-center">
+              <th v-if="isSelectionMode" class="pl-8! w-12 text-center">
                 <div class="flex items-center justify-center">
                   <input
                     type="checkbox"
@@ -190,11 +192,11 @@
                   />
                 </div>
               </th>
-              <th :class="{ '!pl-8': !isSelectionMode }">Proposal Identity</th>
-              <th>Category</th>
-              <th>Origin Type</th>
+              <th :class="{ 'pl-8!': !isSelectionMode }">Identitas Proposal</th>
+              <th>Kategori</th>
+              <th>Tipe Asal</th>
               <th>Status</th>
-              <th class="text-right !pr-8">Actions</th>
+              <th class="text-right pr-8!">Aksi</th>
             </tr>
           </thead>
           <tbody>

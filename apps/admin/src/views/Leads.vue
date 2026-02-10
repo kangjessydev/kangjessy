@@ -1,13 +1,13 @@
 <template>
   <div class="page-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <PageHeader
-      title="Lead Inbox"
-      subtitle="Incoming inquiries from contact forms and service landings"
+      title="Kotak Masuk Leads"
+      subtitle="Permintaan masuk dari formulir kontak dan landing page"
     >
       <div class="flex gap-2">
         <ButtonSecondary @click="fetchLeads">
           <RotateCw :size="18" :class="{ 'animate-spin': isLoading }" />
-          Sync Records
+          Selaraskan Data
         </ButtonSecondary>
       </div>
     </PageHeader>
@@ -26,7 +26,7 @@
         "
       >
         <Inbox :size="14" />
-        Inquiry Inbox
+        Kotak Masuk Pertanyaan
       </button>
       <button
         @click="activeTab = 'insights'"
@@ -38,7 +38,7 @@
         "
       >
         <BarChart3 :size="14" />
-        Marketing Insights
+        Wawasan Pemasaran
       </button>
     </div>
 
@@ -47,7 +47,7 @@
       <!-- Stats Summary (Minimalist for Inbox) -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
         <BentoStat
-          title="Total Prospects"
+          title="Total Prospek"
           :value="leads.length"
           :icon="Users"
           variant="blue"
@@ -55,7 +55,7 @@
           simulation="Mencerminkan jangkauan pemasaran. Jika angka ini naik tapi Deal rendah, mungkin perlu riset kualitas konten promosi."
         />
         <BentoStat
-          title="Need Response"
+          title="Butuh Balasan"
           :value="newLeadsCount"
           :icon="Zap"
           variant="danger"
@@ -64,16 +64,16 @@
           simulation="Urgent! Balas pesan ini dalam < 1 jam untuk meningkatkan peluang Closing hingga 300%."
         />
         <BentoStat
-          title="Active Handling"
+          title="Penanganan Aktif"
           :value="activeHandlingCount"
           :icon="MessageSquare"
           variant="warning"
-          unit="Active"
+          unit="Aktif"
           tooltip="Jumlah klien yang sedang dalam proses negosiasi, follow-up, atau tanya-jawab."
           simulation="Klien di sini adalah 'pancingan' yang sudah dimakan, tinggal ditarik pelan-pelan ke status 'Deal'."
         />
         <BentoStat
-          title="Opportunity Value"
+          title="Nilai Peluang"
           :value="opportunityValue"
           :icon="TrendingUp"
           variant="success"
@@ -95,12 +95,12 @@
         </div>
         <div>
           <h2 class="text-xl font-black text-[#1B2559] tracking-tight">
-            Market Intelligence
+            Intelijen Pasar
           </h2>
           <p
             class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
           >
-            Growth & Quality Performance Analytics
+            Analisis Kinerja Pertumbuhan & Kualitas
           </p>
         </div>
       </div>
@@ -109,8 +109,8 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
         <!-- Project Distribution -->
         <AdminCard
-          title="Market Interest"
-          subtitle="Top demanded project categories"
+          title="Minat Pasar"
+          subtitle="Kategori proyek yang paling diminati"
           class="h-full"
         >
           <div class="space-y-5 mt-4">
@@ -144,8 +144,8 @@
 
         <!-- Conversion Funnel -->
         <AdminCard
-          title="Conversion Funnel"
-          subtitle="Lead processing efficiency"
+          title="Funnel Konversi"
+          subtitle="Efisiensi pemrosesan leads"
           class="h-full"
         >
           <div class="mt-4 flex flex-col gap-2">
@@ -185,7 +185,7 @@
             >
               <span
                 class="text-[9px] font-black text-slate-300 uppercase tracking-widest"
-                >Effective Conversion</span
+                >Konversi Efektif</span
               >
               <span class="text-sm font-black text-[#702DFF]"
                 >{{ conversionRate }}%</span
@@ -196,16 +196,16 @@
 
         <!-- Insights & Momentum -->
         <AdminCard
-          title="Marketing Insights"
-          subtitle="Growth & Quality Performance"
-          class="h-full bg-[#0F172A] !border-none"
+          title="Wawasan Pemasaran"
+          subtitle="Kinerja Pertumbuhan & Kualitas"
+          class="h-full bg-[#0F172A] border-none!"
         >
           <div class="space-y-6 mt-4">
             <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
               <div class="flex justify-between items-center mb-2">
                 <span
                   class="text-[9px] font-black text-slate-400 uppercase tracking-widest"
-                  >Lead Velocity</span
+                  >Kecepatan Leads</span
                 >
                 <div class="flex items-center gap-1 text-emerald-400">
                   <TrendingUp :size="12" />
@@ -215,7 +215,7 @@
                 </div>
               </div>
               <p class="text-lg font-black text-white italic">
-                "{{ leadsPerDay }} Prospektus / hari"
+                "{{ leadsPerDay }} Prospek / hari"
               </p>
             </div>
 
@@ -226,7 +226,7 @@
                 <p
                   class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1"
                 >
-                  Avg Budget
+                  Rata-rata Budget
                 </p>
                 <p class="text-sm font-black text-white tracking-tighter">
                   {{ formatPriceCompact(avgBudget) }}
@@ -273,11 +273,11 @@
         </div>
         <div class="text-center md:text-left">
           <h4 class="text-lg font-black text-[#1B2559]">
-            Optimal Handling Strategy
+            Strategi Penanganan Optimal
           </h4>
           <p class="text-sm text-slate-500 font-medium">
             Data menunjukkan bahwa merespon leads dalam 5 menit pertama
-            meningkatkan peluang konversi hingga 400%. Pastikan status 'New'
+            meningkatkan peluang konversi hingga 400%. Pastikan status 'Baru'
             selalu segera diproses!
           </p>
         </div>
@@ -285,7 +285,7 @@
           @click="activeTab = 'inbox'"
           class="md:ml-auto px-8 py-4 bg-[#702DFF] text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-indigo-500/20 active:scale-95 transition-all"
         >
-          Go back to Inbox
+          Go back to Inbox Kembali ke Kotak Masuk
         </button>
       </div>
     </div>
@@ -293,12 +293,12 @@
     <!-- Desktop Filter Bar -->
     <AdminCard
       no-padding
-      class="hidden lg:block mb-6 !rounded-[32px] shadow-lg shadow-slate-200/5 border-slate-50 overflow-hidden"
+      class="hidden lg:block mb-6 rounded-[32px]! shadow-lg shadow-slate-200/5 border-slate-50 overflow-hidden"
     >
       <div class="flex gap-4 justify-between items-center p-3 sm:p-4">
         <BaseInput
           v-model="searchQuery"
-          placeholder="Search leads..."
+          placeholder="Cari leads..."
           :icon="Search"
           class="flex-1 max-w-md"
           @input="currentPage = 1"
@@ -310,12 +310,12 @@
             class="w-44 h-full"
             @change="currentPage = 1"
           >
-            <option value="all">All Status</option>
-            <option value="New">NEW</option>
+            <option value="all">Semua Status</option>
+            <option value="New">BARU</option>
             <option value="Pending">PENDING</option>
             <option value="Follow Up">FOLLOW UP</option>
             <option value="Deal">DEAL</option>
-            <option value="Cancel">CANCEL</option>
+            <option value="Cancel">BATAL</option>
           </AdminSelect>
 
           <AdminSelect
@@ -323,11 +323,11 @@
             class="w-44 h-full"
             @change="currentPage = 1"
           >
-            <option value="all">Any Source</option>
-            <option value="contact_form">Contact Form (Old)</option>
-            <option value="web_consultation_wait">Consultation (Wait)</option>
+            <option value="all">Semua Sumber</option>
+            <option value="contact_form">Form Kontak (Lama)</option>
+            <option value="web_consultation_wait">Konsultasi (Tunggu)</option>
             <option value="web_consultation_instant">
-              Consultation (Instant)
+              Konsultasi (Instan)
             </option>
           </AdminSelect>
         </div>
@@ -344,7 +344,7 @@
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="Quick search..."
+          placeholder="Pencarian cepat..."
           @input="currentPage = 1"
           class="w-full bg-white border-2 border-slate-50 rounded-2xl py-3.5 pl-11 pr-4 text-xs font-bold text-[#1B2559] shadow-sm outline-none focus:border-[#702DFF]/20 transition-all"
         />
@@ -376,7 +376,7 @@
       <p
         class="mt-6 text-slate-400 font-black uppercase tracking-[0.2em] text-[10px]"
       >
-        Filtering high-quality prospects...
+        Menyaring prospek berkualitas...
       </p>
     </div>
 
@@ -386,22 +386,24 @@
       >
         <Search :size="32" class="text-slate-200" />
       </div>
-      <h3 class="text-[#1B2559] font-black text-lg">No leads captured</h3>
+      <h3 class="text-[#1B2559] font-black text-lg">
+        Tidak ada leads yang terekam
+      </h3>
       <p class="text-slate-400 text-sm mt-1">
-        Try adjusting your filters or wait for new submissions.
+        Coba sesuaikan filter Anda atau tunggu kiriman baru.
       </p>
     </div>
 
     <!-- Desktop Table View -->
     <AdminCard
       no-padding
-      class="hidden md:block overflow-hidden !rounded-[32px] border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
+      class="hidden md:block overflow-hidden rounded-[32px]! border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
     >
       <div class="overflow-x-auto">
         <table class="table-main">
           <thead>
             <tr>
-              <th class="!pl-8 w-12">
+              <th class="pl-8! w-12">
                 <div class="flex items-center justify-center">
                   <input
                     type="checkbox"
@@ -411,11 +413,11 @@
                   />
                 </div>
               </th>
-              <th>Identity & Details</th>
-              <th>Project Goals</th>
+              <th>Identitas & Detil</th>
+              <th>Tujuan Proyek</th>
               <th>Status</th>
-              <th>Source</th>
-              <th class="text-right !pr-8">Actions</th>
+              <th>Sumber</th>
+              <th class="text-right pr-8!">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -425,7 +427,7 @@
               class="table-row-hover group"
               :class="{ 'bg-indigo-50/30': selectedIds.includes(lead.id) }"
             >
-              <td class="!pl-8 w-12 text-center">
+              <td class="pl-8! w-12 text-center">
                 <div class="flex items-center justify-center">
                   <input
                     type="checkbox"

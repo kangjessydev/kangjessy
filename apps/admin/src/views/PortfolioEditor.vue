@@ -2,25 +2,22 @@
   <div class="page-container" id="portfolio-editor-page">
     <!-- Sticky Header -->
     <!-- Action Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div class="flex flex-col gap-1">
+    <PageHeader :title="headerTitle">
+      <template #breadcrumb>
         <nav
-          class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#B5B5B5]"
+          class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5"
         >
           <router-link
             to="/portfolio"
-            class="hover:text-[#702DFF] transition-colors"
-            >Portfolio Showcase</router-link
+            class="hover:text-[#7029FF] transition-colors"
+            >Portfolio</router-link
           >
           <ChevronRight :size="10" />
-          <span class="text-[#702DFF]">{{
-            isEdit ? "Edit Case Study" : "New Case Study"
+          <span class="text-[#7029FF]">{{
+            isEdit ? "Edit Case" : "New Case"
           }}</span>
         </nav>
-        <h1 class="text-2xl font-black text-[#1B2559] mt-1">
-          {{ headerTitle }}
-        </h1>
-      </div>
+      </template>
       <div class="flex gap-3">
         <BaseButton variant="secondary" @click="router.back()"
           >Cancel</BaseButton
@@ -30,7 +27,7 @@
           {{ isEdit ? "Update Project" : "Publish Project" }}
         </BaseButton>
       </div>
-    </div>
+    </PageHeader>
 
     <!-- Floating Action Button (FAB) -->
     <transition
@@ -84,7 +81,7 @@
               v-model="project.title"
               @input="handleTitleInput"
               type="text"
-              class="w-full bg-transparent border-b-2 border-transparent p-0 pb-3 text-4xl font-black text-[#1B2559] placeholder:text-[#E2E8F0] focus:ring-0 focus:border-[#702DFF]/20 outline-none transition-all duration-300 tracking-tight"
+              class="w-full bg-transparent border-b-2 border-transparent p-0 pb-3 text-2xl sm:text-4xl font-black text-[#1B2559] placeholder:text-slate-200 focus:ring-0 focus:border-[#7029FF]/10 outline-none transition-all duration-300 tracking-tight"
               placeholder="Project Title..."
             />
           </div>

@@ -94,9 +94,10 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 - **Dataset**: `production`
 - **Schemas**: `post` (Blog), `project` (Portfolio), `product` (Store).
 
-### Email & Notification (New)
+### Email & AI Infrastructure (New)
 
 - **Resend API**: Digunakan untuk kirim invoice. Setup ENV: `RESEND_API_KEY`.
+- **Gemini AI API**: Digunakan untuk AI Lead Scoring (Admin) & AI Chat (Agency). Setup ENV: `GEMINI_API_KEY`.
 
 ---
 
@@ -138,6 +139,8 @@ Berdasarkan audit terbaru, berikut adalah area yang telah tersinkronisasi dan di
 | **Pricing Master**     | 🟢 SYNCED | Agency Calculator mengambil data live dari `pricing_master`. Admin memiliki UI `GenericPricingList.vue` untuk mengelola data.   |
 | **Standardized UI**    | 🟢 SYNCED | Admin Form & Content Views kini seragam menggunakan komponen Bento terpusat (`@kangjessy/ui`).                                  |
 | **CRM Intelligence**   | 🟢 SYNCED | Modul `ClientDetail.vue` & `interactionsService` sudah aktif untuk tracking LTV Klien dan Profil Interaksi.                     |
+| **AI Lead Scoring**    | 🟢 SYNCED | Tombol 🧠 di Leads Admin untuk analisa kualitas prospek otomatis menggunakan Gemini 1.5 Flash.                                  |
+| **Client Experience**  | 🟢 SYNCED | `/portal` (Agency) sebagai Dashboard mandiri klien untuk tracking progress, cetak invoice, & konfirmasi bayar.                  |
 | **The Blueprint**      | 🟢 SYNCED | Agency UI (`RoadmapView`) kini mengambil data live dari `blueprint_stages` via `blueprintService`. Legacy config telah dihapus. |
 
 ---

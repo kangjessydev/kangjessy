@@ -510,6 +510,75 @@
               </td>
               <td class="!pr-8">
                 <div class="flex items-center justify-end gap-1 transition-all">
+                  <!-- AI Score Badge / Button -->
+                  <div class="relative group/ai mr-1">
+                    <button
+                      v-if="!aiScores[lead.id]"
+                      @click="scoreLead(lead)"
+                      class="btn-action bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white"
+                      :class="{
+                        'animate-pulse': scoringLeads.includes(lead.id),
+                      }"
+                      :title="
+                        scoringLeads.includes(lead.id)
+                          ? 'Analyzing...'
+                          : 'AI Lead Scoring'
+                      "
+                      :disabled="scoringLeads.includes(lead.id)"
+                    >
+                      <Brain
+                        :size="16"
+                        v-if="!scoringLeads.includes(lead.id)"
+                      />
+                      <RotateCw :size="14" class="animate-spin" v-else />
+                    </button>
+                    <div
+                      v-else
+                      class="px-2.5 py-1.5 rounded-xl text-[9px] font-black cursor-help flex items-center gap-1.5 border-2 transition-all shadow-sm"
+                      :class="{
+                        'bg-rose-50 border-rose-100 text-rose-600':
+                          aiScores[lead.id].label === 'HOT',
+                        'bg-amber-50 border-amber-100 text-amber-600':
+                          aiScores[lead.id].label === 'WARM',
+                        'bg-slate-50 border-slate-100 text-slate-500':
+                          aiScores[lead.id].label === 'COLD',
+                      }"
+                    >
+                      <Brain :size="10" />
+                      {{ aiScores[lead.id].score }}
+
+                      <!-- AI Tooltip -->
+                      <div
+                        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-4 bg-[#1B2559] text-white rounded-2xl text-[10px] font-medium leading-relaxed opacity-0 invisible group-hover/ai:opacity-100 group-hover/ai:visible transition-all z-50 shadow-2xl border border-white/10"
+                      >
+                        <div class="flex items-center gap-2 mb-2">
+                          <Brain :size="14" class="text-purple-400" />
+                          <span
+                            class="font-black uppercase tracking-widest text-purple-400"
+                            >AI Analysis</span
+                          >
+                        </div>
+                        <p class="mb-3 italic">
+                          "{{ aiScores[lead.id].analysis }}"
+                        </p>
+                        <div
+                          class="pt-2 border-t border-white/5 flex flex-col gap-1"
+                        >
+                          <span
+                            class="text-[8px] font-black uppercase text-slate-400"
+                            >Action Item:</span
+                          >
+                          <span class="text-emerald-400 font-bold">{{
+                            aiScores[lead.id].action_item
+                          }}</span>
+                        </div>
+                        <div
+                          class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1B2559] rotate-45 border-r border-b border-white/10"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- 0. CRM Intelligence -->
                   <button
                     @click="router.push(`/clients/${lead.id}`)"
@@ -673,6 +742,32 @@
             >
           </div>
           <div class="flex gap-2">
+            <!-- AI Score (Mobile) -->
+            <button
+              v-if="!aiScores[lead.id]"
+              @click="scoreLead(lead)"
+              class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center transition-all active:scale-95"
+              :class="{ 'animate-pulse': scoringLeads.includes(lead.id) }"
+              :disabled="scoringLeads.includes(lead.id)"
+            >
+              <Brain :size="16" v-if="!scoringLeads.includes(lead.id)" />
+              <RotateCw :size="14" class="animate-spin" v-else />
+            </button>
+            <div
+              v-else
+              class="px-3 rounded-xl flex items-center gap-2 text-[10px] font-black"
+              :class="{
+                'bg-rose-50 text-rose-600': aiScores[lead.id].label === 'HOT',
+                'bg-amber-50 text-amber-600':
+                  aiScores[lead.id].label === 'WARM',
+                'bg-slate-50 text-slate-500':
+                  aiScores[lead.id].label === 'COLD',
+              }"
+            >
+              <Brain :size="12" />
+              {{ aiScores[lead.id].score }}
+            </div>
+
             <!-- 1. View / Edit Detail -->
             <button
               @click="openEditModal(lead)"
@@ -1042,6 +1137,7 @@ import {
   FileText,
   Edit2,
   User,
+  Brain,
 } from "lucide-vue-next";
 import { clientsService } from "../services/clientsService";
 import { useErrorHandler } from "../composables/useErrorHandler";
@@ -1074,28 +1170,42 @@ const activeTab = ref<"inbox" | "insights">("inbox");
 const activeMenuLead = ref<Client | null>(null);
 const menuPosition = ref({ x: 0, y: 0 });
 
-const openMenu = (event: MouseEvent, lead: Client) => {
-  // If clicking the same lead, toggle close
-  if (activeMenuLead.value && activeMenuLead.value.id === lead.id) {
-    closeMenu();
-    return;
+const closeMenu = () => {
+  activeMenuLead.value = null;
+};
+
+// AI Scoring Logic
+const scoringLeads = ref<string[]>([]);
+const aiScores = ref<Record<string, any>>({});
+
+const scoreLead = async (lead: Client) => {
+  if (scoringLeads.value.includes(lead.id)) return;
+
+  scoringLeads.value.push(lead.id);
+  try {
+    const response = await fetch("/api/score-lead", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ lead }),
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch AI score");
+
+    const result = await response.json();
+    aiScores.value[lead.id] = result;
+
+    // Optional: Auto-save back to Supabase if preferred
+    // For now we keep it in memory for session
+  } catch (err) {
+    console.error("Scoring error:", err);
+    toast.message = "Gagal memproses skor AI. Pastikan API Key valid.";
+    toast.variant = "danger";
+    toast.show = true;
+  } finally {
+    scoringLeads.value = scoringLeads.value.filter((id) => id !== lead.id);
   }
-
-  const target = event.currentTarget as HTMLElement;
-  const rect = target.getBoundingClientRect();
-
-  // Calculate position: Align right edge of menu to right edge of button, place below button
-  // Menu width is roughly 192px (w-48 = 12rem = 192px)
-  const menuWidth = 192;
-  let x = rect.right - menuWidth;
-  let y = rect.bottom + 8; // slighly below
-
-  // Boundary check (rudimentary)
-  if (x < 10) x = 10;
-  if (y + 150 > window.innerHeight) y = rect.top - 160; // Flip up if too low
-
-  menuPosition.value = { x, y };
-  activeMenuLead.value = lead;
 };
 
 const closeMenu = () => {

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@headlessui/vue": "^1.7.23",
     "@kangjessy/config": "workspace:*",
     "@kangjessy/database": "workspace:*",
@@ -28,7 +29,8 @@
     "lowlight": "^3.3.0",
     "lucide-vue-next": "^0.563.0",
     "vue": "^3.5.24",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "@vercel/node": "^5.5.17"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",

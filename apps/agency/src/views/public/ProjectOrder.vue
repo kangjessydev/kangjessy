@@ -150,7 +150,7 @@
       :formatPrice="formatPrice"
       :projectId="createdProjectId"
       @close="showSuccess = false"
-      @view-invoice="router.push('/invoice')"
+      @view-invoice="router.push(`/portal?id=${createdProjectId}`)"
       @go-home="goHome"
     />
 

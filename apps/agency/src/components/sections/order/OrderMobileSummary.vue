@@ -790,9 +790,8 @@ import {
   Sparkles as SparklesIcon,
 } from "lucide-vue-next";
 import { BottomSheet, BaseButton, activeSheet } from "@kangjessy/ui";
-import { projectTypes } from "../../../data/config/orderConfig";
 import type { Coupon } from "@kangjessy/config";
-import type { Feature } from "../../../services/featureService";
+import type { Feature, ProjectType } from "../../../services/pricingService";
 
 const props = defineProps<{
   currentType: any;
@@ -812,6 +811,7 @@ const props = defineProps<{
   formatPrice: (price: number) => string;
   step?: number;
   availableFeatures: Feature[];
+  projectTypes: ProjectType[];
 }>();
 
 const emit = defineEmits([
@@ -848,9 +848,9 @@ const applyCoupon = (code: string) => {
 };
 
 const filteredTypes = computed(() => {
-  if (!typeSearchQuery.value) return projectTypes;
+  if (!typeSearchQuery.value) return props.projectTypes || [];
   const query = typeSearchQuery.value.toLowerCase();
-  return projectTypes.filter(
+  return (props.projectTypes || []).filter(
     (t) =>
       t.name.toLowerCase().includes(query) ||
       t.desc.toLowerCase().includes(query),

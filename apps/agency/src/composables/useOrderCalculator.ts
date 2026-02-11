@@ -1,6 +1,5 @@
 import { ref, computed, watch, onMounted } from "vue";
 import {
-  projectTypes as staticProjectTypes,
   defaultConfig
 } from "../data/config/orderConfig";
 import { couponService, type Coupon } from "../services/couponService";
@@ -246,7 +245,7 @@ export function useOrderCalculator() {
     features, 
     styles,   
     timelines, 
-    projectTypes: computed(() => projectTypes.value.length > 0 ? projectTypes.value : staticProjectTypes || []),
+    projectTypes: computed(() => projectTypes.value),
     serviceTypes: serviceTypes,
     getFeatureName,
     getFeaturePrice,

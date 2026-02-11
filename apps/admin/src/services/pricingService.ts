@@ -3,7 +3,7 @@ import { supabase } from '@kangjessy/database';
 export interface PricingItem {
     id: string;
     slug: string;
-    category: 'style_vibe' | 'project_deadline' | 'feature' | 'service_type' | 'project_type' | string;
+    category: 'style_vibe' | 'project_deadline' | 'additional_feature' | 'service_type' | 'project_type' | string;
     name: string;
     description: string | null;
     image_url: string | null;

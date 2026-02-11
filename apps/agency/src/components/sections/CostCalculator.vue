@@ -71,6 +71,7 @@
       :get-feature-price="getFeaturePrice"
       :format-price="formatPrice"
       :available-features="features"
+      :project-types="projectTypes"
       :coupons="availableCoupons"
       @next="handleNext"
       @select-type="(val) => selectType(val)"

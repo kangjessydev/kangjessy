@@ -1039,13 +1039,14 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { servicesData, type Service } from "../../data/landing/services";
+// import { servicesData, type Service } from "../../data/landing/services"; // REMOVED
 import { projectsData } from "../../data/landing/projects";
 // import { projectTypes } from "../../data/config/orderConfig"; // REMOVED: Static Data
 import {
   pricingService,
   type Feature,
   type ProjectType,
+  type ServiceData,
 } from "../../services/pricingService"; // ADDED: Dynamic Service
 
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
@@ -1102,7 +1103,7 @@ const route = useRoute();
 const router = useRouter();
 const popup = usePopupManager();
 
-const service = ref<Service | null>(null);
+const service = ref<ServiceData | null>(null); // Updated Type
 const features = ref<Feature[]>([]);
 const allProjectTypes = ref<ProjectType[]>([]); // ADDED: Dynamic State
 
@@ -1263,20 +1264,21 @@ const formatCurrency = (val: number) => {
 
 const fetchData = async () => {
   const id = route.params.id as string;
-  const foundData = servicesData[id];
+
+  const [allServices, fetchedFeatures, fetchedProjects] = await Promise.all([
+    pricingService.getAllServices(),
+    pricingService.getAllFeatures(),
+    pricingService.getAllProjectTypes(),
+  ]);
+
+  const foundData = allServices.find((s) => s.id === id);
 
   if (foundData) {
     service.value = foundData;
-    window.scrollTo({ top: 0, behavior: "instant" } as any);
-
-    // Fetch dynamic project types & features concurrently
-    const [fetchedFeatures, fetchedProjects] = await Promise.all([
-      pricingService.getAllFeatures(), // Use new pricing service
-      pricingService.getAllProjectTypes(), // Use new pricing service
-    ]);
-
     features.value = fetchedFeatures;
     allProjectTypes.value = fetchedProjects;
+
+    window.scrollTo({ top: 0, behavior: "instant" } as any);
 
     // Set initial selected package
     if (availablePackages.value.length > 0) {

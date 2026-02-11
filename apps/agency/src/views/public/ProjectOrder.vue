@@ -111,7 +111,7 @@
             :getFeatureName="getFeatureName"
             @back="step = 1"
             @submit="submitOrder"
-            @whatsapp="sendToWhatsApp"
+            @whatsapp="redirectToWhatsApp"
           >
             <template #summary>
               <OrderSummaryCard
@@ -134,7 +134,7 @@
                 :showWhatsApp="true"
                 @next="submitOrder"
                 @apply-discount="(code) => applyDiscount(code)"
-                @whatsapp="sendToWhatsApp"
+                @whatsapp="redirectToWhatsApp"
               />
             </template>
           </OrderStep2>
@@ -176,6 +176,7 @@
       :get-feature-price="getFeaturePrice"
       :format-price="formatPrice"
       :available-features="features"
+      :project-types="projectTypes"
       @next="step === 1 ? goToStep2() : submitOrder()"
       @select-type="(val) => selectType(val)"
       @toggle-feature="(id) => toggleFeature(id)"
@@ -244,6 +245,7 @@ const {
   formatPrice,
   features,
   projectTypes,
+  serviceTypes,
   styles,
   timelines,
 } = useOrderCalculator();
@@ -407,6 +409,29 @@ const processOrder = async (isWhatsApp = false) => {
     createdProjectId.value = project.id;
 
     if (!isWhatsApp) {
+      // 3. Trigger Transactional Email (Resend)
+      // Note: This might fail locally if not running with 'vercel dev'
+      try {
+        await fetch("/api/send-invoice", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            order: {
+              id: project.id,
+              name: form.name,
+              email: form.email,
+              projectType: currentType.value?.name,
+              timeline: selectedTimeline.value,
+              features: selectedFeatures.value.map((f) => getFeatureName(f)),
+              total: totalPrice.value,
+            },
+          }),
+        });
+        toast.success("Invoice telah dikirim ke email Anda.");
+      } catch (emailErr) {
+        console.warn("Email service unavailable (local dev?)", emailErr);
+      }
+
       // Save final result to 'GZ_ORDER_TEMP' for Invoice view compatibility
       const finalData = {
         selectedType: selectedType.value,
@@ -437,7 +462,7 @@ const submitOrder = async () => {
   await processOrder(false);
 };
 
-const sendToWhatsApp = async () => {
+const redirectToWhatsApp = async () => {
   // 1. Try to save to DB first (as a Lead)
   try {
     await processOrder(true);
@@ -445,17 +470,39 @@ const sendToWhatsApp = async () => {
     console.warn("Silent fail save to DB, still opening WA");
   }
 
-  // 2. Open WhatsApp
-  const message = `Halo KangJessy! Saya ingin booking sesi untuk proyek:
-    
-- Tipe: ${currentType.value?.name}
-- Fitur: ${selectedFeatures.value.map((f) => getFeatureName(f)).join(", ")}
-- Deadline: ${currentTimeline.value?.label}
-- Estimasi: Rp ${formatPrice(totalPrice.value)}
+  // 2. Open WhatsApp with formatted message
+  const featuresList = selectedFeatures.value
+    .map((f) => `- ${getFeatureName(f)}`)
+    .join("\n");
 
-Nama: ${form.name || "(Belum diisi)"}
-Email: ${form.email || "(Belum diisi)"}
-Brief: ${form.brief || "(Belum diisi)"}`;
+  const discountText =
+    discountAmount.value > 0
+      ? `\n🎉 *Hemat (Kupon ${discountCode.value}):* -Rp ${formatPrice(discountAmount.value)}`
+      : "";
+
+  const message = `Halo Admin! Saya baru saja melakukan order project via website. Berikut detailnya:
+
+📦 *TIPE PROJECT*
+${currentType.value?.name || selectedType.value}
+_(Rp ${formatPrice(currentType.value?.basePrice || 0)})_
+
+✨ *FITUR TAMBAHAN*
+${featuresList || "- Tidak ada tambahan"}
+
+⏱️ *TIMELINE*
+${currentTimeline.value?.label} _(${currentTimeline.value?.multiplier}x Multiplier)_
+
+💰 *TOTAL ESTIMASI: Rp ${formatPrice(totalPrice.value)}* ${discountText}
+
+--------------------------------
+*DATA PEMESAN*
+👤 Nama: ${form.name || "-"}
+📧 Email: ${form.email || "-"}
+🏢 Perusahaan: ${form.company || "-"}
+📝 Brief Singkat:
+${form.brief || "-"}
+
+Mohon segera diproses invoice-nya. Terima kasih!`;
 
   const encoded = encodeURIComponent(message);
   window.open(

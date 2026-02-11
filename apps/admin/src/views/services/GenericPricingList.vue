@@ -238,7 +238,7 @@ const pageConfig = computed(() => {
     return {
       title: "Fitur Tambahan",
       subtitle: "Kelola library fitur & add-ons",
-      category: "feature",
+      category: "additional_feature",
     };
   if (path.includes("project-types"))
     return {

@@ -15,14 +15,23 @@ Ekosistem ini menggunakan strategi **Modular Hub** dengan pembagian repository s
 | **kangjessy-tools**  | `tools.kangjessy.co` | Vue 3 / Nuxt                     | Marketing Utilities       |
 | **kangjessy-store**  | `store.kangjessy.co` | Vue 3 / Nuxt, Supabase           | Digital Products Sale     |
 
-### 💾 Hybrid Storage Strategy
+### � Strict Third-Party Library Policy (MANDATORY)
 
-- **Supabase (Transactional)**: User, Leads, Orders, Transactions, Finance.
-- **Sanity.io (Content)**: Blog, Projects Portfolio, Digital Assets Metadata.
+- **Native First**: Dilarang menggunakan library pihak ketiga (NPM packages) kecuali **SANGAT KRUSIAL** dan sudah disetujui.
+- **Why?**: Mencegah "Dependency Hell", bloatware bundle, dan konflik versi.
+- **Allowed**: `lucide-vue-next`, `@vueuse`, `supabase`, `sanity`.
+- **Forbidden**: `axios` (Gunakan `fetch`), `moment/dayjs` (Gunakan `Intl.DateTimeFormat`), `html2pdf`/`jspdf` (Gunakan `window.print`), UI Frameworks selain Tailwind.
 
 ---
 
-## 💰 2. BUSINESS MODEL & PRICING LOGIC
+## 🎨 2. UI/UX STANDARDS (DISTINCT)
+
+### Distinct Design Systems
+
+- **Agency (`kangjessy.com`)**: Vercel-Inspired (Black/White high contrast). Gunakan file `agency/src/components/ui` lokal jika desain spesifik.
+- **Admin (`admin.kangjessy.co`)**: Bento UI / Google Stitch (Border-based, rounded-32px). Gunakan `@kangjessy/ui` (Admin Components).
+- **Styling**: Tailwind CSS v4 adalah standar mutlak untuk keduanya.
+- **Rule**: Jangan memaksakan komponen Admin ke Agency, atau sebaliknya. Biarkan mereka memiliki identitas visual masing-masing.
 
 ### Modular "LEGO" Approach
 
@@ -85,25 +94,31 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 - **Dataset**: `production`
 - **Schemas**: `post` (Blog), `project` (Portfolio), `product` (Store).
 
+### Email & Notification (New)
+
+- **Resend API**: Digunakan untuk kirim invoice. Setup ENV: `RESEND_API_KEY`.
+
 ---
 
 ## 🚀 6. CONSOLIDATED ROADMAP
 
 ### High Priority (ACTIVE)
 
-1. **The Blueprint CMS Sync**:
-   - Mapping field `description` & `action_label` agar UI Agency tidak pecah.
-   - Hapus ketergantungan Agency pada `roadmapConfig.ts`.
-2. **Pricing & Feature Database**:
+1. **Pricing & Feature Database**:
    - Migrasi konstanta harga di `orderConfig` ke tabel database agar bisa dikontrol via Admin.
-3. **Email/WA Templates**: Implementasi sistem notifikasi otomatis.
+2. **Email/WA Templates (Lean Strategy)**:
+   - **Email**: Gunakan Resend (Free Tier) untuk invoice profesional.
+   - **WhatsApp**: Gunakan _Smart Click-to-Chat_ (User melakukan send manual) untuk 0 biaya.
 
 ### Innovation Lab (FUTURE)
 
+- **Enterprise Notification Infrastructure**:
+  - Migrasi ke **WhatsApp Business API** (Official/Paid) untuk notifikasi background otomatis & centang hijau.
+  - Upgrade **Resend Pro** / Amazon SES jika volume email tembus >3000/bulan.
 - **pnpm Workspaces (Monorepo)**: Migrasi seluruh repo ke apps/ dan packages/ untuk berbagi logic Supabase.
 - **Shared UI Library**: Membuat package UI internal agar styling Agency dan Admin konsisten tanpa copy-paste code.
 - **AI Lead Scoring**: LLM-based scoring untuk menilai kualitas brief klien (Hot/Cold).
-- **Automated WhatsApp Follow-up**: Integrasi API WhatsApp untuk auto-reminder invoice/follow-up via Whacenter/Fonnte.
+- **Automated WhatsApp Follow-up**: Integrasi API WhatsApp untuk auto-reminder invoice/follow-up via Whacenter/Fonnte (Paid Gateway).
 - **One-Click Repurposer**: Tombol "Viralize" untuk mengubah Blog Sanity menjadi Threads (X), Script TikTok, atau Newsletter.
 - **Internal Snippet Manager**: Katalog kode internal di `kangjessy-docs` untuk mempercepat development project baru.
 - **Affiliate & Subscription**: Sistem komisi partner dan paket maintenance (MaaS) bulanan otomatis.
@@ -123,6 +138,7 @@ Berdasarkan audit terbaru, berikut adalah area yang telah tersinkronisasi dan di
 | **Pricing Master**     | 🟢 SYNCED | Agency Calculator mengambil data live dari `pricing_master`. Admin memiliki UI `GenericPricingList.vue` untuk mengelola data.   |
 | **Standardized UI**    | 🟢 SYNCED | Admin Form & Content Views kini seragam menggunakan komponen Bento terpusat (`@kangjessy/ui`).                                  |
 | **CRM Intelligence**   | 🟢 SYNCED | Modul `ClientDetail.vue` & `interactionsService` sudah aktif untuk tracking LTV Klien dan Profil Interaksi.                     |
+| **The Blueprint**      | 🟢 SYNCED | Agency UI (`RoadmapView`) kini mengambil data live dari `blueprint_stages` via `blueprintService`. Legacy config telah dihapus. |
 
 ---
 
@@ -133,7 +149,7 @@ Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosis
 ### Admin UI & Layout Polish
 
 - **Full Localization**: Lokalisasi Bahasa Indonesia pada `Orders.vue`, `Leads.vue`, `Projects.vue`, `Finance.vue`, `Dashboard.vue`, `Proposals.vue`, dan `Vouchers.vue`.
-- **Tailwind v4 Fixes**: Refactoring masif syntax utilitas dari `!important` prefix ke suffix (e.g., `rounded-[32px]!`).
+- **Tailwind v4 Sync**: Syntax utilitas `!class` telah diperbaiki menjadi `class!` sesuai standar Tailwind v4 di seluruh view Admin.
 - **Premium Aesthetics**: Memastikan penggunaan `rounded-[32px]!` pada `AdminCard` dan `Table Headers` untuk tampilan Bento UI 2.0 yang "alive" dan premium.
 - **Content Management**: Table/Grid Switcher pada `Portfolio.vue` dan `Blog.vue` kini mendukung lokalisasi dan seleksi bulk yang lebih bersih.
 - **CRM Intelligence**: Penambahan tabel `client_interactions` dan halaman Detail Klien untuk mencatat Log Meeting, LTV, dan WA Automator.
@@ -304,3 +320,42 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
 - [ ] **Mobile Layout**: Buka dashboard di resolusi 390px - 430px.
 - [ ] **Sticky Header**: Pastikan `PageHeader` tetap terlihat baik di mobile.
 - [ ] **Filter Bar**: Cek apakah filter berubah menjadi ikon-only atau masuk ke dalam menu pencarian di layar kecil.
+
+#### 5. Verifikasi Dynamic Pricing (New Logic)
+
+- [ ] **Admin Input (Edit Item)**:
+  - _Action_: Buka menu **Services > Fitur Tambahan** di Admin. Edit salah satu fitur (misal: "SEO Audit"), ubah harganya.
+  - _Expected Output_: Halaman Admin menampilkan notifikasi "Updated successfully!".
+- [ ] **Agency Reflection (Sync Test)**:
+  - _Action_: Buka halaman **Cost Calculator** di Agency (refresh page).
+  - _Expected Output_: Harga di kalkulator harus sudah berubah sesuai input Admin tadi.
+- [ ] **Feature Filtering (Mapping Test)**:
+  - _Action_: Di Admin, buat fitur baru "Tes Filter". Centang "Relevan Untuk Layanan" hanya pada "Web High-Conversion".
+  - _Expected Output_: Di Agency, jika pilih "System/App", fitur "Tes Filter" **TIDAK MUNCUL**. Jika pilih "Web High-Conversion", fitur "Tes Filter" **MUNCUL**.
+- [ ] **Discount Core (UI Test)**:
+  - _Action_: Di Admin, pada fitur "Tes Filter", isi "Original Price" lebih tinggi dari "Base Price".
+  - _Expected Output_: Di Agency, fitur "Tes Filter" menampilkan harga coret (misal: ~Rp 1.000.000~).
+
+#### 6. Verifikasi Lean Notification (WA & Email)
+
+- [ ] **WA Smart Link (Format Check)**:
+  - _Action_: Isi form order di Agency, pilih fitur dan tipe project, lalu klik "Lanjut ke WhatsApp".
+  - _Expected Output_: Tab baru WhatsApp terbuka. Pesan otomatis di input box harus rapi, ada **BOLD** pada Tipe Project dan Total Harga. Jika pakai kupon, harus ada teks "Hemat (Kupon X)".
+- [ ] **Email Invoice (Resend API)**:
+  - _Action_: Isi form order, tapi gunakan tombol "Submit" (jika tersedia opsi non-WA) atau panggil fungsi email secara manual (dev mode). _Note: Saat ini UI utama mengarahkan ke WA, opsi email berjalan di background jika mode direct submit diaktifkan._
+  - _Expected Output_: Cek Inbox email yang didaftarkan. Harus ada email masuk dengan subjek "[Invoice] Order #...". Tampilan email harus rapi (HTML Template). **Pastikan RESEND_API_KEY sudah dipasang di Vercel**.
+
+#### 7. Verifikasi Client Portal
+
+- [ ] **Access & Login**:
+  - _Action_: Buka `/portal` di Agency. Masukkan Tracking ID (bisa ambil dari Admin > Orders, misal 8 karakter pertama ID Supabase).
+  - _Expected Output_: Dashboard Client terbuka menampilkan nama project yang sesuai.
+- [ ] **Project Roadmap**:
+  - _Action_: Cek bagian "Project Roadmap".
+  - _Expected Output_: Tahapan (Phase) harus sesuai dengan Task yang diinput di Admin. Status (Done/In Progress) harus sinkron.
+- [ ] **Invoice & Billing**:
+  - _Action_: Klik tombol "Billing Info". Klik "Cetak".
+  - _Expected Output_: Dialog Print browser terbuka. Tampilan harus bersih (hanya Invoice), background gelap aplikasi harus hilang (putih bersih), tombol-tombol navigasi harus tersembunyi.
+- [ ] **Payment Confirmation**:
+  - _Action_: Klik "Confirm Paying" di dalam Billing Summary.
+  - _Expected Output_: Modal WhatsApp terbuka dengan template pesan konfirmasi pembayaran beserta sisa tagihan yang otomatis terhitung.

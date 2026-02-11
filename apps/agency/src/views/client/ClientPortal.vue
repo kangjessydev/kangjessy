@@ -621,16 +621,139 @@
                 </div>
               </div>
 
-              <button
-                @click="contactSupport"
-                class="w-full bg-accent-primary hover:bg-accent-secondary text-white font-black py-4 rounded-2xl shadow-xl shadow-accent-primary/20 transition-all active:scale-95"
-              >
-                Send Payment Confirmation
-              </button>
+              <div class="grid grid-cols-2 gap-3">
+                <button
+                  @click="printInvoice"
+                  class="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white font-bold py-4 rounded-2xl border border-white/10 transition-all active:scale-95"
+                >
+                  <Printer :size="18" /> Cetak
+                </button>
+                <button
+                  @click="confirmPayment"
+                  class="flex items-center justify-center gap-2 bg-accent-primary hover:bg-accent-secondary text-white font-bold py-4 rounded-2xl shadow-xl shadow-accent-primary/20 transition-all active:scale-95"
+                >
+                  Confirm Paying
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </Transition>
+
+      <!-- INVOICE PRINT TEMPLATE (HIDDEN IN SCREEN) -->
+      <div
+        v-if="orderData"
+        class="hidden print:block print-container bg-white text-black p-10 font-sans"
+      >
+        <div
+          class="flex justify-between items-start border-b-2 border-slate-200 pb-8 mb-8"
+        >
+          <div>
+            <h1 class="text-3xl font-black text-slate-900 mb-1">INVOICE</h1>
+            <p class="text-slate-500 font-mono text-sm leading-none">
+              ORDER ID: #{{ orderData.orderId }}
+            </p>
+          </div>
+          <div class="text-right">
+            <h2 class="text-xl font-bold text-slate-900">KangJessy Agency</h2>
+            <p class="text-sm text-slate-500">Premium Digital Solutions</p>
+            <p class="text-xs text-slate-400">www.kangjessy.com</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-10 mb-12">
+          <div>
+            <h3
+              class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2"
+            >
+              Billed To
+            </h3>
+            <p class="font-bold text-slate-800 text-lg leading-tight">
+              {{ orderData.clientName }}
+            </p>
+            <p class="text-slate-500 text-sm mt-1">
+              Project: {{ orderData.projectName }}
+            </p>
+          </div>
+          <div class="text-right">
+            <h3
+              class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2"
+            >
+              Billing Details
+            </h3>
+            <p class="text-sm text-slate-600">
+              <span class="font-bold">Start:</span> {{ orderData.startDate }}
+            </p>
+            <p class="text-sm text-slate-600">
+              <span class="font-bold">Deadline:</span> {{ orderData.deadline }}
+            </p>
+          </div>
+        </div>
+
+        <table class="w-full mb-12">
+          <thead>
+            <tr class="border-b-2 border-slate-100 text-left">
+              <th
+                class="py-4 text-[10px] font-black uppercase tracking-widest text-slate-400"
+              >
+                Description
+              </th>
+              <th
+                class="py-4 text-right text-[10px] font-black uppercase tracking-widest text-slate-400"
+              >
+                Amount
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-slate-50">
+              <td class="py-5">
+                <p class="font-bold text-slate-800">
+                  {{ orderData.projectName }}
+                </p>
+                <p class="text-xs text-slate-500 mt-1">
+                  Development & Implementation Services
+                </p>
+              </td>
+              <td class="py-5 text-right font-bold text-slate-800">
+                {{ formatCurrency(orderData.price) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="flex justify-end">
+          <div class="w-64 space-y-3">
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-500">Total Project Value</span>
+              <span class="text-slate-800 font-bold">{{
+                formatCurrency(orderData.price)
+              }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-500">Total Paid</span>
+              <span class="text-emerald-600 font-bold"
+                >- {{ formatCurrency(orderData.paidAmount) }}</span
+              >
+            </div>
+            <div class="flex justify-between border-t border-slate-200 pt-3">
+              <span class="font-black text-slate-900">REMAINING BALANCE</span>
+              <span class="font-black text-rose-600">{{
+                formatCurrency(orderData.price - orderData.paidAmount)
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-20 pt-10 border-t border-slate-100 text-center">
+          <p
+            class="text-[10px] text-slate-400 leading-relaxed uppercase tracking-widest font-bold"
+          >
+            Thank you for choosing KangJessy Agency.<br />
+            All payments are non-refundable after project starts.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -660,6 +783,8 @@ import {
   FileText,
   Palette,
   CreditCard,
+  Printer,
+  X,
 } from "lucide-vue-next";
 import { supabase } from "@kangjessy/database";
 import { projectService } from "../../services/projectService";
@@ -733,6 +858,19 @@ const contactSupport = () => {
     category: "Project Support",
     initialMessage: `Halo Kang Jessy! Saya ingin bertanya mengenai perkembangan proyek saya "${orderData.value.projectName}" (ID: ${orderData.value.orderId}).`,
   });
+};
+
+const confirmPayment = () => {
+  if (!orderData.value) return;
+  const remaining = orderData.value.price - orderData.value.paidAmount;
+  popup.openModal(Popups.CHAT_WA, {
+    category: "Payment Confirmation",
+    initialMessage: `Halo Admin! Saya ingin konfirmasi pembayaran untuk project "${orderData.value.projectName}" (ID: ${orderData.value.orderId}).\n\nNominal: ${formatCurrency(remaining)}\nStatus: ${orderData.value.paymentStatus.toUpperCase()}\n\nMohon dicek ya, bukti transfer saya lampirkan setelah ini.`,
+  });
+};
+
+const printInvoice = () => {
+  window.print();
 };
 
 const handleLogin = async (manualId?: string | Event) => {
@@ -929,5 +1067,67 @@ onMounted(() => {
 
 .animate-shake {
   animation: shake 0.3s ease-in-out;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .print-container,
+  .print-container * {
+    visibility: visible;
+  }
+
+  .print-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm; /* A4 width */
+    height: 297mm; /* A4 height */
+    z-index: 10000;
+    background: white !important;
+    padding: 2cm !important;
+  }
+
+  /* Reset colors for printing */
+  .text-white {
+    color: black !important;
+  }
+  .text-slate-400 {
+    color: #94a3b8 !important;
+  }
+  .text-slate-500 {
+    color: #64748b !important;
+  }
+  .text-slate-600 {
+    color: #475569 !important;
+  }
+  .text-slate-800 {
+    color: #1e293b !important;
+  }
+  .text-slate-900 {
+    color: #0f172a !important;
+  }
+  .bg-white {
+    background-color: white !important;
+  }
+  .border-slate-100 {
+    border-color: #f1f5f9 !important;
+  }
+  .border-slate-200 {
+    border-color: #e2e8f0 !important;
+  }
+  .text-emerald-600 {
+    color: #059669 !important;
+  }
+  .text-rose-600 {
+    color: #e11d48 !important;
+  }
 }
 </style>

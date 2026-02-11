@@ -363,6 +363,66 @@
               class="!rounded-2xl"
             />
           </div>
+        <!-- Feature Settings -->
+        <AdminCard
+          v-if="pageDisplay.category === 'additional_feature'"
+          title="F. Konfigurasi Fitur"
+          subtitle="Relasi dan harga coret"
+          :stretch="false"
+          class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+            <!-- Original Price -->
+            <BaseInput
+              v-model.number="form.metadata.originalPrice"
+              label="Harga Coret (Original Price)"
+              placeholder="0"
+              type="number"
+              prefix="Rp."
+              class="!rounded-2xl"
+            />
+
+            <!-- Relevant Services Checkboxes -->
+            <div class="col-span-1 md:col-span-2 space-y-3">
+              <label
+                class="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] ml-2"
+              >
+                Relevan Untuk Layanan
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div
+                  v-for="svc in serviceTypes"
+                  :key="svc.slug"
+                  class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-100/50 rounded-xl cursor-pointer hover:border-[#7029FF]/20 transition-all select-none"
+                  @click="toggleRelevantService(svc.slug)"
+                >
+                  <div
+                    class="w-5 h-5 rounded-md border flex items-center justify-center transition-all shrink-0"
+                    :class="
+                      form.metadata.relevantTo?.includes(svc.slug)
+                        ? 'bg-[#7029FF] border-[#7029FF] text-white'
+                        : 'bg-white border-slate-200'
+                    "
+                  >
+                    <Check
+                      v-if="form.metadata.relevantTo?.includes(svc.slug)"
+                      :size="12"
+                      stroke-width="3"
+                    />
+                  </div>
+                  <span class="text-sm font-bold text-[#1B2559]">{{
+                    svc.name
+                  }}</span>
+                </div>
+              </div>
+              <p
+                class="text-[9px] text-slate-300 font-bold uppercase tracking-widest ml-2"
+              >
+                *Fitur ini hanya akan muncul jika user memilih layanan yang
+                dicentang.
+              </p>
+            </div>
+          </div>
         </AdminCard>
       </div>
 
@@ -536,6 +596,14 @@ const pageDisplay = computed(() => {
       category: "style_vibe",
       exampleName: "Modern Dark",
     };
+  if (path.includes("features"))
+    return {
+      title: "Fitur Tambahan",
+      listPath: "/services/features",
+      itemLabel: "Fitur",
+      category: "additional_feature",
+      exampleName: "SEO Audit",
+    };
   if (path.includes("project-types"))
     return {
       title: "Tipe Project",
@@ -580,6 +648,8 @@ const form = ref<Partial<PricingItem>>({
   metadata: {
     service_id: "",
     badge: "",
+    relevantTo: [],
+    originalPrice: 0,
   },
 });
 
@@ -592,8 +662,11 @@ const loadServiceTypes = async () => {
 };
 
 const loadItem = async () => {
-  // Always load service categories if we're in project type mode
-  if (pageDisplay.value.category === "project_type") {
+  // Always load service categories if we're in project type mode or additional feature mode
+  if (
+    pageDisplay.value.category === "project_type" ||
+    pageDisplay.value.category === "additional_feature"
+  ) {
     await loadServiceTypes();
   }
 
@@ -610,7 +683,15 @@ const loadItem = async () => {
         ], // Default template
         ...(form.value.metadata || {}),
       };
+    } else if (pageDisplay.value.category === "additional_feature") {
+      // Ensure array init
+      form.value.metadata = {
+        relevantTo: [],
+        originalPrice: 0,
+        ...(form.value.metadata || {}),
+      };
     }
+
     loading.value = false;
     return;
   }
@@ -628,6 +709,8 @@ const loadItem = async () => {
           status: "active",
           is_featured: false,
           features: [],
+          relevantTo: [],
+          originalPrice: 0,
           ...(item.metadata || {}),
         },
       };
@@ -651,6 +734,16 @@ const addFeature = () => {
 const removeFeature = (index: number) => {
   if (form.value.metadata.features) {
     form.value.metadata.features.splice(index, 1);
+  }
+};
+
+const toggleRelevantService = (slug: string) => {
+  if (!form.value.metadata.relevantTo) form.value.metadata.relevantTo = [];
+  const idx = form.value.metadata.relevantTo.indexOf(slug);
+  if (idx === -1) {
+    form.value.metadata.relevantTo.push(slug);
+  } else {
+    form.value.metadata.relevantTo.splice(idx, 1);
   }
 };
 

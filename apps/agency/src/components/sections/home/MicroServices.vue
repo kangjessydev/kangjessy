@@ -371,8 +371,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { projectTypes } from "../../../data/config/orderConfig";
-import { featureService, type Feature } from "../../../services/featureService";
+import {
+  pricingService,
+  type Feature,
+  type ProjectType,
+} from "../../../services/pricingService";
 import {
   Clock,
   ArrowRight,
@@ -396,15 +399,21 @@ const activeTab = ref("all");
 const showFoundation = ref(false);
 const activeFoundationIndex = ref(0);
 const features = ref<Feature[]>([]);
+const projectTypes = ref<ProjectType[]>([]);
 
 onMounted(async () => {
-  features.value = await featureService.getAllActive();
+  const [feats, projs] = await Promise.all([
+    pricingService.getAllFeatures(),
+    pricingService.getAllProjectTypes(),
+  ]);
+  features.value = feats;
+  projectTypes.value = projs;
 });
 
 const isBundle = (item: any) => item && "serviceId" in item;
 
 const filteredItems = computed(() => {
-  const bundles = projectTypes.filter(
+  const bundles = (projectTypes.value || []).filter(
     (p) => !p.id.startsWith("foundation-") && p.id !== "custom-maintenance",
   );
   const featureList = features.value; // Use dynamic features
@@ -432,6 +441,7 @@ const carouselData = computed(() => {
 const animationDuration = computed(() => {
   const baseSpeed = 40;
   const itemCount = filteredItems.value.length;
+  // Handling empty list to avoid NaN if useful, though itemCount 0 is fine
   return Math.max(60, (itemCount / 10) * baseSpeed);
 });
 
@@ -458,7 +468,7 @@ const formatPrice = (price: number) =>
   }).format(Math.round(price));
 
 const foundationPackages = computed(() =>
-  projectTypes.filter((p) => p.id.startsWith("foundation-")),
+  (projectTypes.value || []).filter((p) => p.id.startsWith("foundation-")),
 );
 
 const currentFoundation = computed(

@@ -728,7 +728,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import {
   Layout as LayoutIcon,
   Zap as ZapIcon,
@@ -754,17 +754,12 @@ import {
   Bot,
   FileSearch,
   TrendingUp,
-  MessageSquare,
-  Database,
-  Layers,
 } from "lucide-vue-next";
 import * as LucideIcons from "lucide-vue-next";
 import {
-  styleOptions as staticStyleOptions,
-  timelineOptions as staticTimelineOptions,
   type ProjectType,
   type Feature,
-} from "../../../data/config/orderConfig";
+} from "../../../services/pricingService";
 import { BottomSheet, BaseButton } from "@kangjessy/ui";
 
 const props = defineProps<{
@@ -794,13 +789,13 @@ const emit = defineEmits([
 const styleOptions = computed(() => {
   return Array.isArray(props.styles) && props.styles.length > 0
     ? props.styles
-    : staticStyleOptions;
+    : [];
 });
 
 const timelineOptions = computed(() => {
   return Array.isArray(props.timelines) && props.timelines.length > 0
     ? props.timelines
-    : staticTimelineOptions;
+    : [];
 });
 
 const isTimelineVisible = computed(() => !props.isMicro);
@@ -880,8 +875,8 @@ const currentCategories = computed(() => {
       "Semua",
       ...Array.from(allServiceIds).map((id) => {
         const services = props.serviceTypes || [];
-        const svc = services.find((s) => s.slug === id);
-        return svc ? svc.name : id;
+        const svc = services.find((s) => s.id === id);
+        return svc ? svc.title : id;
       }),
     ];
   }
@@ -919,9 +914,11 @@ const filteredFeatures = computed(() => {
   // 1. Handle Categorization (Tabs)
   if (activeCategory.value !== "Semua") {
     const services = props.serviceTypes || [];
-    const targetService = services.find((s) => s.name === activeCategory.value);
+    const targetService = services.find(
+      (s) => s.title === activeCategory.value,
+    );
     const targetServiceId = targetService
-      ? targetService.slug
+      ? targetService.id
       : activeCategory.value;
 
     if (targetServiceId) {

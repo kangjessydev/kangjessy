@@ -51,6 +51,7 @@ export interface ProjectType {
   basePrice: number;
   originalPrice?: number;
   desc: string;
+  icon?: any; // Added icon support
   maxPages?: string;
   revisions?: string;
   deliveryTime?: string;
@@ -66,11 +67,25 @@ export interface ProjectType {
 
 export interface ServiceData {
   id: string;
+  status: 'active' | 'coming-soon';
+  order: number;
+  badge?: string;
+  isFeatured?: boolean;
+  icon: string;
   title: string;
   tagline: string;
-  icon: string;
-  workflow: { title: string; description: string }[];
+  price: number;
+  originalPrice?: number;
+  deliveryTime?: string;
+  revisions?: string;
+  overview?: string;
+  included?: string[];
+  detailedFeatures?: { title: string; icon?: string; items: string[] }[];
+  process?: { title: string; description: string }[];
+  technologies?: string[];
+  packageFeatures?: string[];
   faq?: { question: string; answer: string }[];
+  workflow: { title: string; description: string }[];
 }
 
 const iconMap: Record<string, any> = {
@@ -100,8 +115,9 @@ const mapProject = (row: any): ProjectType => {
     serviceId: meta.serviceId || "",
     name: row.name,
     basePrice: Number(row.base_price),
-    // originalPrice: Number(meta.originalPrice), // Optional jika ada di metadata
+    originalPrice: meta.originalPrice ? Number(meta.originalPrice) : undefined,
     desc: row.description,
+    icon: iconMap[row.icon] || Layout, // Map icon
     maxPages: meta.maxPages,
     revisions: meta.revisions,
     deliveryTime: meta.deliveryTime,
@@ -121,7 +137,7 @@ export const pricingService = {
     const { data, error } = await supabase
       .from("pricing_master")
       .select("*")
-      .eq("category", "feature")
+      .eq("category", "additional_feature")
       .order("sort_order");
 
     if (error) {
@@ -136,7 +152,7 @@ export const pricingService = {
     const { data, error } = await supabase
       .from("pricing_master")
       .select("*")
-      .eq("category", "project_type")
+      .eq("category", "project_type") // This was correct
       .order("sort_order");
 
     if (error) {
@@ -160,11 +176,25 @@ export const pricingService = {
 
     return (data || []).map((row) => ({
       id: row.slug,
+      status: row.is_active ? 'active' : 'coming-soon',
+      order: row.sort_order,
+      badge: row.metadata?.badge,
+      isFeatured: row.metadata?.isFeatured,
+      icon: row.icon,
       title: row.name,
       tagline: row.metadata?.tagline || row.description,
-      icon: row.icon,
-      workflow: row.metadata?.workflow || [],
-      faq: row.metadata?.faq || []
+      price: Number(row.base_price),
+      originalPrice: row.metadata?.originalPrice ? Number(row.metadata.originalPrice) : undefined,
+      deliveryTime: row.metadata?.deliveryTime,
+      revisions: row.metadata?.revisions,
+      overview: row.description, // using description as overview
+      included: row.metadata?.included || [],
+      detailedFeatures: row.metadata?.detailedFeatures || [],
+      process: row.metadata?.workflow || [], // mapping workflow to process as well
+      technologies: row.metadata?.technologies || [],
+      packageFeatures: row.metadata?.packageFeatures || [],
+      faq: row.metadata?.faq || [],
+      workflow: row.metadata?.workflow || []
     }));
   },
 

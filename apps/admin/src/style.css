@@ -56,6 +56,11 @@
   body {
     @apply font-sans bg-bg-primary text-text-primary antialiased;
   }
+
+  /* Prevent icons from blocking button clicks */
+  button svg {
+    pointer-events: none;
+  }
 }
 
 /* Bento UI Components */
@@ -119,11 +124,11 @@
 
   /* Sidebar & Layout Fixes */
   .sidebar {
-    @apply fixed top-0 left-0 h-screen w-[var(--sidebar-width)] z-[100] border-r border-slate-100 flex flex-col bg-white transition-all duration-300 ease-in-out;
+    @apply fixed top-0 left-0 h-screen w-(--sidebar-width) z-100 border-r border-slate-100 flex flex-col bg-white transition-all duration-300 ease-in-out;
   }
 
   .sidebar.collapsed {
-    @apply w-[var(--sidebar-collapsed-width)];
+    @apply w-(--sidebar-collapsed-width);
   }
 
   .main-wrapper {

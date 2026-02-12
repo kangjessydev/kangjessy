@@ -164,6 +164,95 @@
         </div>
       </div>
 
+      <!-- Payment Settings Tab -->
+      <div
+        v-else-if="activeTab === 'payment'"
+        key="payment"
+        class="space-y-8 animate-fade-in-up"
+      >
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <AdminCard
+            title="Primary Bank Account"
+            subtitle="Rekening utama penerimaan pembayaran"
+          >
+            <div class="space-y-6">
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Nama Bank</label
+                >
+                <BaseInput v-model="payment.bank_name" placeholder="e.g. BCA" />
+              </div>
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Nomor Rekening</label
+                >
+                <BaseInput
+                  v-model="payment.account_number"
+                  placeholder="e.g. 1234567890"
+                />
+              </div>
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Atas Nama</label
+                >
+                <BaseInput
+                  v-model="payment.account_holder"
+                  placeholder="e.g. PT Kang Jessy"
+                />
+              </div>
+            </div>
+          </AdminCard>
+
+          <AdminCard
+            title="Preview Tampilan"
+            subtitle="Tampilan di Proposal & Invoice"
+          >
+            <div
+              class="p-8 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center min-h-[300px]"
+            >
+              <div
+                class="w-full max-w-sm p-6 bg-white rounded-3xl border border-indigo-100 shadow-sm"
+              >
+                <p
+                  class="text-[9px] font-black text-[#1B2559] uppercase tracking-[0.2em] mb-3"
+                >
+                  Official Payment Gateway
+                </p>
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-8 bg-emerald-50 border border-emerald-100 rounded flex items-center justify-center font-black text-emerald-600 text-[10px]"
+                  >
+                    {{ payment.bank_name || "BANK" }}
+                  </div>
+                  <div>
+                    <p
+                      class="text-[10px] font-black text-[#1B2559] uppercase tracking-widest"
+                    >
+                      {{ payment.account_number || "000-000-000" }}
+                    </p>
+                    <p class="text-[9px] font-bold text-slate-400">
+                      a.n. {{ payment.account_holder || "Nama Pemilik" }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AdminCard>
+        </div>
+        <div class="flex justify-end border-t border-slate-100 pt-6">
+          <BaseButton
+            variant="primary"
+            :loading="saving"
+            @click="handleSavePayment"
+          >
+            <Save :size="18" /> Simpan Konfigurasi
+          </BaseButton>
+        </div>
+      </div>
+
       <!-- Dokumen Settings Tab -->
       <div
         v-else-if="activeTab === 'documents'"
@@ -511,6 +600,7 @@ import {
   Key,
   FileText,
   Link as LinkIcon,
+  CreditCard,
 } from "lucide-vue-next";
 import AdminCard from "../components/ui/AdminCard.vue";
 import AdminSelect from "../components/ui/AdminSelect.vue";
@@ -529,6 +619,7 @@ import { docsService, type DocLink } from "../services/docsService";
 // Tabs Configuration
 const tabs = [
   { id: "general", label: "General", icon: markRaw(Settings) },
+  { id: "payment", label: "Payment Methods", icon: markRaw(CreditCard) },
   { id: "documents", label: "Dokumen", icon: markRaw(FileText) },
   { id: "security", label: "Security", icon: markRaw(Shield) },
   { id: "backup", label: "Backup & Export", icon: markRaw(HardDrive) },
@@ -555,6 +646,25 @@ const toggles = ref({
   notifications: true,
   wa: false,
 });
+
+const payment = ref({
+  bank_name: "",
+  account_number: "",
+  account_holder: "",
+});
+
+const handleSavePayment = async () => {
+  saving.value = true;
+  localStorage.setItem("kgj_payment_settings", JSON.stringify(payment.value));
+  setTimeout(() => {
+    saving.value = false;
+    toast.value = {
+      show: true,
+      message: "Info pembayaran tersimpan!",
+      variant: "success",
+    };
+  }, 800);
+};
 
 // Export functionality
 const { exportFullBackup, isExporting } = useExport();
@@ -673,6 +783,14 @@ const loadDocs = async () => {
 onMounted(() => {
   loadExportData();
   loadDocs();
+  const savedPayment = localStorage.getItem("kgj_payment_settings");
+  if (savedPayment) {
+    try {
+      payment.value = JSON.parse(savedPayment);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 });
 
 const handleSaveDocs = async () => {

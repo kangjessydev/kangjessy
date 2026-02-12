@@ -12,10 +12,7 @@
           <BaseButton variant="secondary" @click="handlePrint">
             <Printer :size="18" /> Cetak / PDF
           </BaseButton>
-          <BaseButton
-            variant="primary"
-            @click="$router.push(`/orders/${id}/edit`)"
-          >
+          <BaseButton variant="primary" @click="handleEdit">
             <Edit2 :size="18" /> Ubah Data
           </BaseButton>
         </div>
@@ -40,15 +37,15 @@
       </div>
 
       <!-- Main Document Wrapper -->
-      <div v-else-if="order" class="space-y-8 print:space-y-0">
+      <div v-else-if="order" class="space-y-6 md:space-y-8 print:space-y-0">
         <!-- SECTION 1: COVER PAGE (Always shows) -->
         <div
-          class="bg-white rounded-[40px] shadow-2xl overflow-hidden border border-slate-100 flex flex-col print:shadow-none print:border-none print:rounded-none"
-          :class="isProposal ? 'min-h-[600px]' : 'min-h-0'"
+          class="bg-white rounded-[24px] md:rounded-[40px] shadow-2xl overflow-hidden border border-slate-100 flex flex-col print:shadow-none print:border-none print:rounded-none"
+          :class="isProposal ? 'min-h-[400px] md:min-h-[600px]' : 'min-h-0'"
         >
           <div
             class="bg-[#1B2559] text-white relative flex-1 flex flex-col justify-center items-center text-center overflow-hidden"
-            :class="isProposal ? 'p-16' : 'p-10'"
+            :class="isProposal ? 'p-6 md:p-16' : 'p-6 md:p-10'"
           >
             <!-- Decor (Proposal Only) -->
             <div
@@ -60,44 +57,48 @@
               class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full -ml-48 -mb-48 blur-2xl"
             ></div>
 
-            <div class="relative z-10 space-y-8 w-full max-w-2xl">
+            <div class="relative z-10 space-y-6 md:space-y-8 w-full max-w-2xl">
               <div class="flex flex-col items-center gap-4">
                 <div
-                  class="bg-white rounded-[32px] shadow-2xl shadow-indigo-500/40"
-                  :class="isProposal ? 'p-4' : 'p-3'"
+                  class="bg-white rounded-[24px] md:rounded-[32px] shadow-2xl shadow-indigo-500/40"
+                  :class="isProposal ? 'p-3 md:p-4' : 'p-3'"
                 >
                   <img
                     src="/logo-agency.png"
                     alt="Kang Jessy Logo"
                     class="object-contain"
-                    :class="isProposal ? 'w-12 h-12' : 'w-8 h-8'"
+                    :class="
+                      isProposal ? 'w-10 h-10 md:w-12 md:h-12' : 'w-8 h-8'
+                    "
                   />
                 </div>
                 <!-- Logic for Title -->
                 <div v-if="!isProposal" class="text-center space-y-1">
-                  <h1 class="text-2xl font-black tracking-tighter uppercase">
+                  <h1
+                    class="text-xl md:text-2xl font-black tracking-tighter uppercase"
+                  >
                     Kang <span class="text-indigo-400">Jessy</span>
                   </h1>
                   <p
-                    class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"
+                    class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest"
                   >
                     Digital Solutions Hub
                   </p>
                 </div>
                 <h1
                   v-else
-                  class="text-3xl font-black tracking-tighter uppercase"
+                  class="text-2xl md:text-3xl font-black tracking-tighter uppercase"
                 >
                   Kang <span class="text-indigo-400">Jessy</span>
                 </h1>
               </div>
 
-              <div class="space-y-4">
+              <div class="space-y-3 md:space-y-4">
                 <p
                   v-if="isProposal"
-                  class="text-[12px] font-black text-indigo-300 uppercase tracking-[0.6em]"
+                  class="text-[10px] md:text-[10px] font-black text-indigo-300 uppercase tracking-[0.4em] md:tracking-[0.6em]"
                 >
-                  Proposal Proyek
+                  Proposal Penawaran Proyek
                 </p>
                 <div
                   v-else
@@ -110,8 +111,8 @@
                   class="font-black text-white tracking-tighter leading-none"
                   :class="
                     isProposal
-                      ? 'text-5xl lg:text-7xl'
-                      : 'text-3xl lg:text-4xl text-indigo-100'
+                      ? 'text-3xl md:text-5xl lg:text-7xl'
+                      : 'text-2xl md:text-3xl lg:text-4xl text-indigo-100'
                   "
                 >
                   {{
@@ -124,42 +125,46 @@
               </div>
 
               <div
-                class="w-full grid grid-cols-2 gap-8 text-left"
+                class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-center md:text-left"
                 :class="
                   isProposal
-                    ? 'pt-12 border-t border-white/10'
+                    ? 'pt-8 md:pt-12 border-t border-white/10'
                     : 'pt-6 border-t border-white/10 mt-6'
                 "
               >
                 <div>
                   <p
-                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2"
+                    class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2"
                   >
                     Dipersiapkan Untuk
                   </p>
                   <p
                     class="font-black text-white tracking-tight"
-                    :class="isProposal ? 'text-xl' : 'text-lg'"
+                    :class="
+                      isProposal ? 'text-lg md:text-xl' : 'text-base md:text-lg'
+                    "
                   >
                     {{ order.name }}
                   </p>
-                  <p class="text-sm font-bold text-indigo-300">
+                  <p class="text-xs md:text-sm font-bold text-indigo-300">
                     {{ order.company || "Entitas Pribadi" }}
                   </p>
                 </div>
-                <div class="text-right">
+                <div class="md:text-right">
                   <p
-                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2"
+                    class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2"
                   >
                     Tanggal Terbit
                   </p>
                   <p
                     class="font-black text-white tracking-tight"
-                    :class="isProposal ? 'text-xl' : 'text-lg'"
+                    :class="
+                      isProposal ? 'text-lg md:text-xl' : 'text-base md:text-lg'
+                    "
                   >
                     {{ formatDate(order.created_at) }}
                   </p>
-                  <p class="text-sm font-bold text-indigo-300">
+                  <p class="text-xs md:text-sm font-bold text-indigo-300">
                     REF: #{{ order.id.slice(0, 8).toUpperCase() }}
                   </p>
                 </div>
@@ -167,11 +172,11 @@
             </div>
           </div>
           <div
-            class="bg-indigo-50/50 flex justify-between items-center"
-            :class="isProposal ? 'p-8 px-16' : 'p-4 px-8'"
+            class="bg-indigo-50/50 flex flex-col md:flex-row gap-2 justify-between items-center text-center md:text-left"
+            :class="isProposal ? 'p-6 md:p-8 md:px-16' : 'p-4 md:px-8'"
           >
             <p
-              class="text-[10px] font-black text-indigo-400 uppercase tracking-widest"
+              class="text-[9px] md:text-[10px] font-black text-indigo-400 uppercase tracking-widest"
             >
               {{
                 isProposal
@@ -180,7 +185,7 @@
               }}
             </p>
             <p
-              class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
+              class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest"
             >
               {{
                 isProposal
@@ -194,9 +199,9 @@
         <!-- SECTION 2: EXECUTIVE SUMMARY & PROBLEM (Proposal Exclusive) -->
         <div
           v-if="isProposal"
-          class="bg-white rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-16 space-y-16 print:shadow-none print:border-none print:rounded-none print:pt-24 print:page-break-before"
+          class="bg-white rounded-[24px] md:rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-6 md:p-16 space-y-8 md:space-y-16 print:shadow-none print:border-none print:rounded-none print:pt-24 print:page-break-before"
         >
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-16">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16">
             <div class="md:col-span-4 space-y-4">
               <div class="flex items-center gap-3">
                 <div
@@ -205,7 +210,7 @@
                   <Info :size="20" />
                 </div>
                 <h3
-                  class="text-xs font-black text-[#1B2559] uppercase tracking-[0.3em]"
+                  class="text-[10px] font-black text-[#1B2559] uppercase tracking-[0.3em]"
                 >
                   01. Gambaran Umum
                 </h3>
@@ -216,12 +221,16 @@
                 digital performa tinggi.
               </p>
             </div>
-            <div class="md:col-span-8 space-y-8">
-              <div class="space-y-4">
-                <h4 class="text-3xl font-black text-[#1B2559] tracking-tighter">
+            <div class="md:col-span-8 space-y-6 md:space-y-8">
+              <div class="space-y-3 md:space-y-4">
+                <h4
+                  class="text-2xl md:text-3xl font-black text-[#1B2559] tracking-tighter"
+                >
                   Ringkasan Eksekutif
                 </h4>
-                <p class="text-base text-slate-500 leading-relaxed font-medium">
+                <p
+                  class="text-sm md:text-base text-slate-500 leading-relaxed font-medium"
+                >
                   {{
                     parsedBrief.background ||
                     "Kami melihat potensi besar dalam mensinergikan proses bisnis Anda dengan teknologi KJ-PRO. Melalui riset awal, kami mengidentifikasi beberapa kunci pertumbuhan yang bisa diakselerasi via sistem otomasi dan desain berbasis konversi."
@@ -231,7 +240,7 @@
 
               <div
                 v-if="parsedBrief.problem"
-                class="p-8 bg-rose-50/50 rounded-3xl border border-rose-100 flex gap-6"
+                class="p-6 md:p-8 bg-rose-50/50 rounded-3xl border border-rose-100 flex flex-col md:flex-row gap-4 md:gap-6"
               >
                 <div
                   class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0"
@@ -256,9 +265,9 @@
         <!-- SECTION 3: THE PROPOSED SOLUTION (Proposal Exclusive) -->
         <div
           v-if="isProposal"
-          class="bg-white rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-16 space-y-16 print:shadow-none print:border-none print:rounded-none print:pt-24 print:page-break-before"
+          class="bg-white rounded-[24px] md:rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-6 md:p-16 space-y-8 md:space-y-16 print:shadow-none print:border-none print:rounded-none print:pt-24 print:page-break-before"
         >
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-16">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16">
             <div class="md:col-span-4 space-y-4">
               <div class="flex items-center gap-3">
                 <div
@@ -267,7 +276,7 @@
                   <Target :size="20" />
                 </div>
                 <h3
-                  class="text-xs font-black text-[#1B2559] uppercase tracking-[0.3em]"
+                  class="text-[10px] font-black text-[#1B2559] uppercase tracking-[0.3em]"
                 >
                   02. Pendekatan Strategis
                 </h3>
@@ -277,12 +286,16 @@
                 sekadar peluncuran sekali jalan.
               </p>
             </div>
-            <div class="md:col-span-8 space-y-12">
-              <div class="space-y-4">
-                <h4 class="text-3xl font-black text-[#1B2559] tracking-tighter">
+            <div class="md:col-span-8 space-y-8 md:space-y-12">
+              <div class="space-y-3 md:space-y-4">
+                <h4
+                  class="text-2xl md:text-3xl font-black text-[#1B2559] tracking-tighter"
+                >
                   Solusi Inti Terpersonalisasi
                 </h4>
-                <p class="text-base text-slate-500 leading-relaxed font-medium">
+                <p
+                  class="text-sm md:text-base text-slate-500 leading-relaxed font-medium"
+                >
                   {{
                     parsedBrief.solution ||
                     "Strategi kami adalah membangun pondasi yang kokoh menggunakan 'Enterprise-Grade Framework'. Kami fokus pada kecepatan akses (Core Web Vitals), keamanan data, dan antarmuka yang intuitif bagi admin maupun end-user."
@@ -292,11 +305,13 @@
 
               <!-- Packages Cards In-Narrative -->
               <div
-                class="p-8 bg-indigo-50 border border-indigo-100 rounded-[32px] space-y-8"
+                class="p-6 md:p-8 bg-indigo-50 border border-indigo-100 rounded-[24px] md:rounded-[32px] space-y-6 md:space-y-8"
               >
-                <div class="flex items-start gap-6">
+                <div
+                  class="flex flex-col md:flex-row items-start gap-4 md:gap-6"
+                >
                   <div
-                    class="w-16 h-16 rounded-2xl bg-white text-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/10"
+                    class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white text-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/10 shrink-0"
                   >
                     <component :is="foundationIcon" :size="32" />
                   </div>
@@ -306,7 +321,7 @@
                     >
                       Architecture Core
                     </p>
-                    <h5 class="text-xl font-black text-[#1B2559]">
+                    <h5 class="text-lg md:text-xl font-black text-[#1B2559]">
                       {{ order.project_type }}
                     </h5>
                     <p class="text-xs text-slate-400 font-bold mt-1 max-w-sm">
@@ -317,7 +332,7 @@
 
                 <div v-if="selectedFeatures.length" class="space-y-4">
                   <p
-                    class="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] flex items-center gap-4"
+                    class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] flex items-center gap-4"
                   >
                     Modul Kecerdasan
                     <span class="flex-1 h-px bg-indigo-100"></span>
@@ -326,28 +341,28 @@
                     <div
                       v-for="f in selectedFeatures"
                       :key="f.id"
-                      class="flex items-center justify-between p-4 bg-white/60 rounded-2xl border border-indigo-50/50 group hover:bg-white hover:border-indigo-100 transition-all"
+                      class="flex flex-col p-4 bg-white/60 rounded-2xl border border-indigo-50/50 group hover:bg-white hover:border-indigo-100 transition-all shadow-sm"
                     >
-                      <div class="flex items-center gap-4">
-                        <div
-                          class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0"
-                        >
-                          <CheckCircle :size="16" />
-                        </div>
-                        <div>
-                          <p class="text-[11px] font-black text-[#1B2559]">
-                            {{ f.name }}
-                          </p>
-                          <p class="text-[9px] text-slate-400 font-bold">
-                            {{ f.desc }}
-                          </p>
-                        </div>
+                      <div class="flex items-center gap-2 mb-2">
+                        <CheckCircle :size="16" class="text-emerald-500" />
+                        <span class="text-sm font-black text-[#1B2559]">{{
+                          f.name
+                        }}</span>
                       </div>
                       <p
-                        class="text-[10px] font-black text-indigo-500 bg-indigo-50 px-3 py-1.5 rounded-xl shrink-0"
+                        class="text-[11px] text-slate-400 font-bold pl-6 mb-3 leading-relaxed"
                       >
-                        {{ formatPrice(f.price) }}
+                        {{
+                          f.desc ||
+                          "Optimasi performa tinggi dan integrasi sistem cerdas."
+                        }}
                       </p>
+                      <div class="pl-6">
+                        <span
+                          class="text-xs font-black text-indigo-500 bg-indigo-50 px-3 py-1 rounded-lg"
+                          >{{ formatPrice(f.price) }}</span
+                        >
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -358,12 +373,12 @@
 
         <!-- SECTION 4: INVESTMENT & TERMS (Invoice Look-alike but as Section) -->
         <div
-          class="bg-white rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-16 space-y-16 print:shadow-none print:border-none print:rounded-none print:pt-24 print:page-break-before"
+          class="bg-white rounded-[24px] md:rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-6 md:p-16 space-y-8 md:space-y-16 print:shadow-none print:border-none print:rounded-none print:pt-24 print:page-break-before"
         >
           <div
-            class="flex flex-col md:flex-row justify-between items-start gap-12"
+            class="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12"
           >
-            <div class="max-w-md space-y-6">
+            <div class="max-w-md space-y-6 w-full">
               <div class="flex items-center gap-3">
                 <div
                   class="w-10 h-10 rounded-xl bg-slate-100 text-[#1B2559] flex items-center justify-center"
@@ -371,7 +386,7 @@
                   <DollarSign :size="20" />
                 </div>
                 <h3
-                  class="text-xs font-black text-[#1B2559] uppercase tracking-[0.3em]"
+                  class="text-[10px] font-black text-[#1B2559] uppercase tracking-[0.3em]"
                 >
                   {{
                     isProposal
@@ -402,18 +417,18 @@
                   </div>
                   <div class="space-y-2 pl-3">
                     <div
-                      class="flex items-start gap-2 text-[10px] text-slate-500 font-bold"
+                      class="flex items-start gap-2 text-xs text-slate-500 font-bold"
                     >
-                      <Check :size="10" class="mt-0.5 text-emerald-500" />
+                      <Check :size="12" class="mt-0.5 text-emerald-500" />
                       <span
                         >FREE: 3x Minor Revisions (Typo, Icons, Color
                         adjustments, small wording).</span
                       >
                     </div>
                     <div
-                      class="flex items-start gap-2 text-[10px] text-slate-500 font-bold"
+                      class="flex items-start gap-2 text-xs text-slate-500 font-bold"
                     >
-                      <Check :size="10" class="mt-0.5 text-rose-500" />
+                      <Check :size="12" class="mt-0.5 text-rose-500" />
                       <span
                         >PAID: Major overhauls, design restructuring, or new
                         logic modules after approval.</span
@@ -424,7 +439,7 @@
 
                 <div v-for="(term, idx) in terms" :key="idx" class="space-y-2">
                   <p
-                    class="text-[9px] font-black text-indigo-500 uppercase tracking-widest"
+                    class="text-[10px] font-black text-indigo-500 uppercase tracking-widest"
                   >
                     {{ term.title }}
                   </p>
@@ -435,89 +450,113 @@
 
                 <!-- Payment Info -->
                 <div
-                  class="mt-8 p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100"
+                  class="mt-8 p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100 flex items-center justify-between"
                 >
-                  <p
-                    class="text-[9px] font-black text-[#1B2559] uppercase tracking-[0.2em] mb-3"
-                  >
-                    Official Payment Gateway
-                  </p>
                   <div class="flex items-center gap-4">
                     <div
-                      class="w-12 h-8 bg-white border border-slate-200 rounded flex items-center justify-center font-black text-[#0066AE] text-[10px]"
+                      class="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-2 border border-slate-100 shadow-sm"
                     >
-                      BCA
+                      <img
+                        src="/logo-agency.png"
+                        class="w-full h-full object-contain"
+                      />
                     </div>
                     <div>
-                      <p class="text-[10px] font-black text-[#1B2559]">
-                        KJ-PRO DIGITAL TECH
-                      </p>
                       <p
-                        class="text-xs font-black text-indigo-600 tracking-wider"
+                        class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"
                       >
-                        8020-441-291
+                        Authorized Signature
+                      </p>
+                      <p class="text-xs font-black text-[#1B2559]">
+                        KANG JESSY ECOSYSTEM
                       </p>
                     </div>
+                  </div>
+                  <div class="text-right hidden sm:block">
+                    <p
+                      class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"
+                    >
+                      Bank Transfer
+                    </p>
+                    <p class="text-xs font-black text-[#1B2559]">
+                      {{ paymentInfo.bank_name || "BCA" }}
+                      {{ paymentInfo.account_number || "8020-441-291" }}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
             <div class="flex-1 w-full max-w-sm space-y-6">
-              <div class="p-8 bg-slate-50 rounded-[32px] space-y-4">
-                <div
-                  class="flex justify-between font-black text-slate-500 uppercase"
-                  :class="isProposal ? 'text-[10px]' : 'text-xs'"
+              <div
+                class="p-6 md:p-8 bg-slate-50 rounded-[32px] space-y-5 border border-slate-100"
+              >
+                <p
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]"
                 >
-                  <span>Sistem Inti Utama</span>
-                  <span>{{ formatPrice(foundationPrice) }}</span>
-                </div>
-                <div class="space-y-2">
+                  Rincian Budget
+                </p>
+                <div class="flex flex-col gap-5">
                   <div
-                    class="flex justify-between font-black text-slate-500 uppercase"
-                    :class="isProposal ? 'text-[10px]' : 'text-xs'"
+                    class="flex justify-between items-center text-sm font-black text-slate-600 uppercase"
                   >
-                    <span>Modul Tambahan</span>
-                    <span>{{ formatPrice(featuresTotal) }}</span>
+                    <span>Sistem Inti Utama</span>
+                    <span>{{ formatPrice(foundationPrice) }}</span>
                   </div>
-                  <!-- Details for modules -->
-                  <div
-                    v-if="selectedFeatures.length"
-                    class="pl-4 space-y-1 border-l border-slate-200"
-                  >
+                  <div class="space-y-3">
                     <div
-                      v-for="f in selectedFeatures"
-                      :key="f.id"
-                      class="flex justify-between font-bold text-slate-400 uppercase"
-                      :class="isProposal ? 'text-[8px] italic' : 'text-[10px]'"
+                      class="flex justify-between items-center text-sm font-black text-slate-600 uppercase"
                     >
-                      <span>• {{ f.name }}</span>
-                      <span>{{ formatPrice(f.price) }}</span>
+                      <span>Modul Tambahan</span>
+                      <span>{{ formatPrice(featuresTotal) }}</span>
+                    </div>
+                    <!-- Details for modules -->
+                    <div
+                      v-if="selectedFeatures.length"
+                      class="pl-4 space-y-2 border-l-2 border-slate-200 ml-1 py-1"
+                    >
+                      <div
+                        v-for="f in selectedFeatures"
+                        :key="f.id"
+                        class="flex justify-between font-bold text-slate-500 text-xs"
+                      >
+                        <span>• {{ f.name }}</span>
+                        <span class="text-slate-400">{{
+                          formatPrice(f.price)
+                        }}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  v-if="voucherDiscount > 0"
-                  class="flex justify-between text-[10px] font-black text-rose-500 uppercase"
-                >
-                  <span class="flex items-center gap-2">
-                    <Tag :size="12" /> Kupon: {{ order.voucher }}
-                  </span>
-                  <span>- {{ formatPrice(voucherDiscount) }}</span>
-                </div>
+                  <div
+                    v-if="voucherDiscount > 0"
+                    class="flex justify-between text-[10px] font-black text-rose-500 uppercase pt-2"
+                  >
+                    <span class="flex items-center gap-2">
+                      <Tag :size="12" /> Kupon: {{ order.voucher }}
+                    </span>
+                    <span>- {{ formatPrice(voucherDiscount) }}</span>
+                  </div>
 
-                <div class="pt-6 border-t border-slate-200">
-                  <p
-                    class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-2"
+                  <div
+                    class="pt-8 mt-2 border-t border-slate-200 flex flex-col items-start gap-1"
                   >
-                    {{ isProposal ? "Estimasi Investasi" : "Total Tagihan" }}
-                  </p>
-                  <p
-                    class="font-black text-[#1B2559] tracking-tighter"
-                    :class="isProposal ? 'text-5xl' : 'text-3xl'"
-                  >
-                    {{ formatPrice(finalDisplayTotal) }}
-                  </p>
+                    <p
+                      class="text-[12px] font-black text-slate-400 uppercase tracking-widest"
+                    >
+                      Total Investasi
+                    </p>
+                    <p
+                      class="font-black text-[#1B2559] tracking-tighter"
+                      :class="
+                        isProposal ? 'text-[24px] md:text-[42px]' : 'text-3xl'
+                      "
+                    >
+                      {{ formatPrice(finalDisplayTotal) }}
+                    </p>
+                    <p class="text-[10px] font-bold text-slate-400 italic">
+                      Berlaku selama 14 Hari
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -550,6 +589,139 @@
                       {{ formatPrice(balanceRemaining) }}
                     </p>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4.5: SCOPE & TERMS (Combined into one section) -->
+        <div
+          v-if="order.deliverables?.length || order.terms"
+          class="bg-white rounded-[24px] md:rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-6 md:p-16 space-y-8 md:space-y-16 print:shadow-none print:border-none print:rounded-none"
+        >
+          <div
+            class="flex flex-col lg:flex-row justify-between items-stretch gap-8 md:gap-12"
+          >
+            <!-- Deliverables Column -->
+            <div
+              v-if="order.deliverables?.length"
+              class="flex-1 w-full space-y-6"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm"
+                >
+                  <Check :size="20" />
+                </div>
+                <h3
+                  class="text-xs font-black text-slate-700 uppercase tracking-[0.2em]"
+                >
+                  Scope & Deliverables
+                </h3>
+              </div>
+              <ul class="grid grid-cols-1 gap-3 mb-0">
+                <li
+                  v-for="(item, i) in order.deliverables"
+                  :key="i"
+                  class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-100 rounded-2xl group hover:bg-white transition-all shadow-sm"
+                >
+                  <div
+                    class="w-6 h-6 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0"
+                  >
+                    <CheckCircle :size="12" />
+                  </div>
+                  <span class="text-sm font-bold text-slate-600">
+                    {{ item }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Terms Column -->
+            <div
+              v-if="
+                order.terms ||
+                order.terms_payment ||
+                order.terms_copyright ||
+                order.terms_revision
+              "
+              class="flex-1 w-full max-w-md space-y-6"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shadow-sm"
+                >
+                  <FileText :size="20" class="text-indigo-600" />
+                </div>
+                <h3
+                  class="text-xs font-black text-indigo-900 uppercase tracking-[0.2em]"
+                >
+                  Terms & Agreement
+                </h3>
+              </div>
+              <div
+                class="p-6 md:p-8 bg-indigo-50/30 rounded-[32px] border border-indigo-100/50 space-y-6"
+              >
+                <!-- Payment & Warranty -->
+                <div v-if="order.terms_payment" class="space-y-2">
+                  <p
+                    class="text-xl font-black text-indigo-950 uppercase tracking-wider"
+                  >
+                    PEMBAYARAN & GARANSI :
+                  </p>
+                  <div
+                    class="prose prose-sm prose-indigo font-medium text-slate-500 whitespace-pre-line leading-loose text-xs"
+                  >
+                    {{ order.terms_payment }}
+                  </div>
+                </div>
+
+                <!-- Copyright & License -->
+                <div
+                  v-if="order.terms_copyright"
+                  class="space-y-2 pt-4 border-t border-indigo-100/50"
+                >
+                  <p
+                    class="text-xl font-black text-indigo-950 uppercase tracking-wider"
+                  >
+                    HAK CIPTA & LISENSI :
+                  </p>
+                  <div
+                    class="prose prose-sm prose-indigo font-medium text-slate-500 whitespace-pre-line leading-loose text-xs"
+                  >
+                    {{ order.terms_copyright }}
+                  </div>
+                </div>
+
+                <!-- Revision Limits -->
+                <div
+                  v-if="order.terms_revision"
+                  class="space-y-2 pt-4 border-t border-indigo-100/50"
+                >
+                  <p
+                    class="text-xl font-black text-indigo-950 uppercase tracking-wider"
+                  >
+                    BATASAN REVISI :
+                  </p>
+                  <div
+                    class="prose prose-sm prose-indigo font-medium text-slate-500 whitespace-pre-line leading-loose text-xs"
+                  >
+                    {{ order.terms_revision }}
+                  </div>
+                </div>
+
+                <!-- Fallback for legacy terms -->
+                <div
+                  v-if="
+                    !order.terms_payment &&
+                    !order.terms_copyright &&
+                    !order.terms_revision &&
+                    order.terms
+                  "
+                  class="prose prose-sm prose-indigo font-medium text-slate-500 whitespace-pre-line leading-loose text-xs"
+                >
+                  {{ order.terms }}
                 </div>
               </div>
             </div>
@@ -661,8 +833,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, watch, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import {
   ArrowLeft,
   Printer,
@@ -677,8 +849,10 @@ import {
   AlertTriangle,
   CheckCircle,
   Tag,
+  FileText,
 } from "lucide-vue-next";
 import { clientsService } from "../services/clientsService";
+import { proposalService } from "../services/proposalService";
 import { couponsService, type Coupon } from "../services/couponsService";
 import { projectTypes } from "../data/order/projects";
 import { availableFeatures } from "../data/order/features";
@@ -686,14 +860,46 @@ import type { Client } from "../types";
 import { BaseButton } from "@kangjessy/ui";
 
 const route = useRoute();
+const router = useRouter(); // Init router
 const id = computed(() => route.params.id as string);
 const order = ref<Client | null>(null);
 const loading = ref(true);
 const activeVouchers = ref<Coupon[]>([]);
 
-const isProposal = computed(() => {
-  return order.value?.status !== "Deal";
+const paymentInfo = ref({
+  bank_name: "BCA",
+  account_number: "8020-441-291",
+  account_holder: "KJ-PRO DIGITAL TECH",
 });
+
+onMounted(() => {
+  const saved = localStorage.getItem("kgj_payment_settings");
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (data.bank_name) {
+        paymentInfo.value = {
+          bank_name: data.bank_name,
+          account_number: data.account_number,
+          account_holder: data.account_holder,
+        };
+      }
+    } catch (e) {
+      console.error("Failed to load payment settings", e);
+    }
+  }
+});
+
+// Robust check: based on URL context, not status
+const isProposal = computed(() => route.path.includes("/proposals/"));
+
+const handleEdit = () => {
+  if (isProposal.value) {
+    router.push({ path: "/proposals/generator", query: { id: id.value } });
+  } else {
+    router.push(`/orders/${id.value}/edit`);
+  }
+};
 
 // Logic to split the BRIEF into different narrative parts
 // We expect specific markers like [BG], [PROB], [SOL] in the brief field
@@ -738,14 +944,53 @@ watch(
     }, 5000);
 
     try {
-      const [data, vouchers] = await Promise.all([
-        clientsService.getById(String(newId)),
-        couponsService.getAll(),
-      ]);
+      const isProposalView = route.path.includes("/proposals/");
+
+      // Parallel fetch coupons (always needed)
+      const [vouchers] = await Promise.all([couponsService.getAll()]);
+      activeVouchers.value = vouchers;
+
+      let data: any = null;
+
+      if (isProposalView) {
+        // Fetch from Proposal Service
+        const proposal = await proposalService.getById(String(newId));
+        if (proposal) {
+          // Adapt Proposal to Client interface
+          data = {
+            id: proposal.id,
+            name: proposal.client_name,
+            company: proposal.company,
+            email: proposal.email || "",
+            phone: proposal.phone || "",
+            project_name: proposal.project_name,
+            project_type: proposal.project_type,
+            // Convert string[] to string for compatibility with existing logic
+            features: Array.isArray(proposal.features)
+              ? proposal.features.join(",")
+              : proposal.features,
+            status: proposal.status === "approved" ? "Deal" : "Lead",
+            // Construct brief from narrative parts
+            brief: `[BG] ${proposal.background || ""} [PROB] ${proposal.problem || ""} [SOL] ${proposal.solution || ""}`,
+            voucher: proposal.voucher_code,
+            total_amount: proposal.final_total,
+            created_at: proposal.created_at || new Date().toISOString(),
+            // Ensure type is treated as Client for TS
+            type: "proposal_generated",
+            deliverables: proposal.deliverables,
+            terms: proposal.terms,
+            terms_payment: proposal.terms_payment,
+            terms_copyright: proposal.terms_copyright,
+            terms_revision: proposal.terms_revision,
+          };
+        }
+      } else {
+        // Fetch from Clients Service (Orders)
+        data = await clientsService.getById(String(newId));
+      }
 
       if (data) {
         order.value = data;
-        activeVouchers.value = vouchers;
       } else {
         console.error("No record found for ID:", newId);
       }

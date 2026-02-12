@@ -11,7 +11,7 @@
   >
     <span
       v-if="loading"
-      class="animate-spin mr-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full inline-block"
+      class="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full inline-block"
     ></span>
     <slot></slot>
   </component>
@@ -59,7 +59,7 @@ const componentTag = computed(() => {
 
 const buttonClasses = computed(() => {
   const base =
-    "inline-flex items-center justify-center font-bold tracking-tight transition-all duration-300 rounded-2xl cursor-pointer focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]";
+    "inline-flex items-center justify-center gap-2 font-bold tracking-tight transition-all duration-300 rounded-2xl cursor-pointer focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]";
 
   const variants = {
     primary:

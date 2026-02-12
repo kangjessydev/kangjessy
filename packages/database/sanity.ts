@@ -27,6 +27,7 @@ export const sanityWriteClient = createClient({
   useCdn: false,
   token: writeToken,
   apiVersion: '2023-05-03',
+  ignoreBrowserTokenWarning: true,
 });
 
 const builder = imageUrlBuilder(sanityClient);

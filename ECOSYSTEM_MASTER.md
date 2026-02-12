@@ -61,6 +61,7 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 - **Visual DNA**: Border-based, rounded-[32px], no shadow excess.
 - **Core Component: `BentoTable.vue`**: Tabel premium yang auto-switch ke card-view di mobile.
 - **Micro-interactions**: Hover effects (scale, border highlight) alih-alih shadow.
+- **No Native Alerts**: Dilarang menggunakan `alert()`, `confirm()`, atau `prompt()`. Gunakan komponen UI kustom (`ConfirmModal`, `Toast`, dll) untuk pengalaman pengguna yang lebih premium.
 
 ---
 
@@ -123,7 +124,9 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 - **One-Click Repurposer**: Tombol "Viralize" untuk mengubah Blog Sanity menjadi Threads (X), Script TikTok, atau Newsletter.
 - **Internal Snippet Manager**: Katalog kode internal di `kangjessy-docs` untuk mempercepat development project baru.
 - **Affiliate & Subscription**: Sistem komisi partner dan paket maintenance (MaaS) bulanan otomatis.
-- **Centralized Media Manager**: Menggunakan Sanity sebagai "Cloud Drive" pusat untuk seluruh branding asset ekosistem.
+- **Centralized Media Manager (Multi-format)**: Menggunakan Sanity sebagai "Cloud Drive" pusat untuk seluruh branding asset ekosistem. Support PDF, Video, & ZIP.
+- **Smart Service-Level Discount System**: Diskon general (Flat/%) per Service Category. Sistem otomatis memilih diskon TERBESAR antara Service vs Project Type (Best Deal Logic).
+- **Contextual Import/Backup**: Tombol Import/Export langsung di Blog, Portfolio, & Blueprint (tanpa harus ke Settings). Backup spesifik per modul.
 
 ---
 
@@ -142,6 +145,7 @@ Berdasarkan audit terbaru, berikut adalah area yang telah tersinkronisasi dan di
 | **AI Lead Scoring**    | 🟢 SYNCED | Tombol 🧠 di Leads Admin untuk analisa kualitas prospek otomatis menggunakan Gemini 1.5 Flash.                                  |
 | **Client Experience**  | 🟢 SYNCED | `/portal` (Agency) sebagai Dashboard mandiri klien untuk tracking progress, cetak invoice, & konfirmasi bayar.                  |
 | **The Blueprint**      | 🟢 SYNCED | Agency UI (`RoadmapView`) kini mengambil data live dari `blueprint_stages` via `blueprintService`. Legacy config telah dihapus. |
+| **Proposal System**    | 🟢 SYNCED | Sistem Generator & Viewer mendukung pemisahan Terms (Payment, Copyright, Revision) dan UI Premium yang tersinkronisasi.         |
 
 ---
 
@@ -156,6 +160,7 @@ Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosis
 - **Premium Aesthetics**: Memastikan penggunaan `rounded-[32px]!` pada `AdminCard` dan `Table Headers` untuk tampilan Bento UI 2.0 yang "alive" dan premium.
 - **Content Management**: Table/Grid Switcher pada `Portfolio.vue` dan `Blog.vue` kini mendukung lokalisasi dan seleksi bulk yang lebih bersih.
 - **CRM Intelligence**: Penambahan tabel `client_interactions` dan halaman Detail Klien untuk mencatat Log Meeting, LTV, dan WA Automator.
+- **Proposal Refinement**: Pemisahan "Terms & Agreement" menjadi 3 pilar (Pembayaran, Hak Cipta, Revisi). Optimasi font investasi (downsize 4-6px), pembaharuan icon deliverables (`CheckCircle`), dan penajaman tipografi sub-header terms agar lebih otoritatif.
 
 ---
 

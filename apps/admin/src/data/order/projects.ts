@@ -10,6 +10,7 @@ export interface ProjectType {
   originalPrice?: number;
   desc: string;
   features?: string[];
+  deliverables?: string[];
   includedFeatureIds?: string[];
   detailedFeatures?: { title: string; icon?: string; items: string[] }[];
   maxPages?: string;
@@ -38,6 +39,14 @@ export const projectTypes: ProjectType[] = [
       "Basic Admin Dashboard",
       "Standard Mobile Responsive",
       "Documentation & SOP Foundation"
+    ],
+    deliverables: [
+      "1x Domain (.com/.id) Free 1 Tahun",
+      "Cloud Server High-Performance (Shared)",
+      "Akses Admin Panel (Full Control)",
+      "Video Tutorial Penggunaan Web",
+      "Garansi Bug & Error 30 Hari",
+      "Backup Mingguan Otomatis"
     ],
     detailedFeatures: [
       {
@@ -112,6 +121,14 @@ export const projectTypes: ProjectType[] = [
       "Custom UI/UX Design",
       "WhatsApp & CTA Integration"
     ],
+    deliverables: [
+      "Single Page High-Conversion Design",
+      "Copywriting Penjualan (Sales Copy)",
+      "Setup Facebook Pixel / Google Tag",
+      "Integrasi Tombol WhatsApp Rotator",
+      "Domain & Hosting High Speed 1 Tahun",
+      "Garansi Kecepatan < 2 Detik"
+    ],
     includedFeatureIds: ['speed-tuning-99', 'analytics-heatmap'],
     category: "Web High-Conv",
     isFeatured: true,
@@ -134,6 +151,14 @@ export const projectTypes: ProjectType[] = [
       "Easy CMS Dashboard Engine",
       "Professional Copywriting Ready",
       "Dynamic Services & Portfolio List"
+    ],
+    deliverables: [
+      "Desain Eksklusif (Figma Prototype)",
+      "Halaman: Home, About, Service, Contact",
+      "Setup Email Bisnis (nama@domain.com)",
+      "Google Business Profile Setup",
+      "Training Admin via Zoom (1 Jam)",
+      "Maintenance Teknis 3 Bulan"
     ],
     detailedFeatures: [
       {
@@ -464,6 +489,14 @@ export const projectTypes: ProjectType[] = [
     desc: "Sistem absensi, database karyawan, dan penggajian otomatis.",
     features: [
       "Employee Database", "GPS Attendance", "Payroll Calculation", "Leave Management", "Performance Review"
+    ],
+    deliverables: [
+      "Sistem Web-Based (Bisa Diakses dari HP Exec)",
+      "Database Karyawan Terpusat (Secure)",
+      "Mesin Hitung Gaji Otomatis (PPH21/BPJS)",
+      "Mobile App Karyawan (PWA)",
+      "Training HR Admin & Finance (2 Sesi)",
+      "Support Prioritas 6 Bulan"
     ],
     category: "Business System",
   },

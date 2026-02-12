@@ -34,15 +34,7 @@ export const navigationConfig: MenuGroup[] = [
       { path: "/projects", label: "Manajemen Proyek", icon: Zap },
       { path: "/orders", label: "Pesanan", icon: ShoppingCart },
       { path: "/leads", label: "Inbox Leads", icon: Users },
-      {
-        path: "/proposals",
-        label: "Proposals CMS",
-        icon: FileText,
-        children: [
-          { path: "/proposals", label: "All Proposals" },
-          { path: "/proposals/generator", label: "Live Generator" },
-        ],
-      },
+      { path: "/proposals", label: "Proposals", icon: FileText },
     ],
   },
   {

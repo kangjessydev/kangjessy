@@ -8,7 +8,7 @@
       leave-to-class="opacity-0"
     >
       <div
-        v-if="modelValue"
+        v-if="modelValue || isOpen"
         @click="handleBackdropClick"
         class="fixed inset-0 bg-black/80 backdrop-blur-md z-[10000]"
         :class="backdropClass"
@@ -16,9 +16,9 @@
     </Transition>
 
     <!-- Bottom Sheet / Side Drawer Panel -->
-    <Transition :name="isDesktop ? 'drawer' : 'sheet'">
+    <Transition :name="isDesktop ? 'modal' : 'sheet'">
       <div
-        v-if="modelValue"
+        v-if="modelValue || isOpen"
         ref="sheetRef"
         @touchstart="handleTouchStart"
         @touchmove="handleTouchMove"
@@ -31,7 +31,7 @@
             'h-[75vh]': !localFullHeight,
             'h-[97vh] border-t-0 rounded-t-none': localFullHeight,
           },
-          'lg:bottom-0 lg:top-0 lg:right-0 lg:left-auto lg:w-[500px] lg:h-screen lg:border-t-0 lg:border-l-2 lg:border-accent-primary/20 lg:rounded-l-[40px] lg:rounded-t-none lg:max-h-none',
+          'lg:inset-auto lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-full lg:max-w-md lg:h-auto lg:max-h-[90vh] lg:rounded-[32px] lg:border-[1px] lg:border-border-color lg:shadow-2xl !lg:transform',
         ]"
       >
         <!-- Drag Handle (Mobile Only) -->
@@ -77,7 +77,7 @@
         <!-- Content Area -->
         <div
           ref="contentRef"
-          class="overflow-y-auto overflow-x-hidden flex-1 custom-scrollbar pb-20"
+          class="overflow-y-auto overflow-x-hidden flex-1 custom-scrollbar pb-20 lg:pb-0"
           :class="contentClass"
         >
           <slot></slot>
@@ -276,6 +276,21 @@ watch(
 .sheet-enter-from,
 .sheet-leave-to {
   transform: translateY(100%);
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-to,
+.modal-leave-from {
+  opacity: 1;
 }
 
 .drawer-enter-active {

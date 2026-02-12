@@ -13,6 +13,11 @@ export interface Proposal {
   problem?: string
   solution?: string
   features?: string[]
+  deliverables?: string[]
+  terms?: string
+  terms_payment?: string
+  terms_copyright?: string
+  terms_revision?: string
   selected_timeline?: string
   voucher_code?: string
   base_price?: number
@@ -177,6 +182,11 @@ export const proposalService = {
       problem: proposalData.problem,
       solution: proposalData.solution,
       features: proposalData.features,
+      deliverables: proposalData.deliverables,
+      terms: proposalData.terms,
+      terms_payment: proposalData.terms_payment,
+      terms_copyright: proposalData.terms_copyright,
+      terms_revision: proposalData.terms_revision,
       selected_timeline: proposalData.selected_timeline || 'Standard',
       voucher_code: proposalData.voucher_code,
       base_price: proposalData.base_price || 0,

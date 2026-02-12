@@ -31,6 +31,11 @@ export interface Client {
   external_link?: string
   lead_id?: string | null
   projects?: any[]
+  deliverables?: string[]
+  terms?: string
+  terms_payment?: string
+  terms_copyright?: string
+  terms_revision?: string
 }
 
 export interface Profile {

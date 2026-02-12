@@ -1148,7 +1148,8 @@ import AdminCard from "../components/ui/AdminCard.vue";
 import AdminSelect from "../components/ui/AdminSelect.vue";
 import BaseInput from "../components/ui/BaseInput.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
-import { BaseButton, ButtonSecondary } from "@kangjessy/ui";
+import { BaseButton } from "@kangjessy/ui";
+import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
 import Toast from "../components/ui/Toast.vue";
 import WhatsAppModal from "../components/ui/WhatsAppModal.vue";
 import LeadEditModal from "../components/ui/LeadEditModal.vue";
@@ -1172,6 +1173,30 @@ const menuPosition = ref({ x: 0, y: 0 });
 
 const closeMenu = () => {
   activeMenuLead.value = null;
+};
+
+const openMenu = (event: MouseEvent, lead: Client) => {
+  // If clicking the same lead, toggle close
+  if (activeMenuLead.value && activeMenuLead.value.id === lead.id) {
+    closeMenu();
+    return;
+  }
+
+  const target = event.currentTarget as HTMLElement;
+  const rect = target.getBoundingClientRect();
+
+  // Calculate position: Align right edge of menu to right edge of button, place below button
+  // Menu width is roughly 192px (w-48 = 12rem = 192px)
+  const menuWidth = 192;
+  let x = rect.right - menuWidth;
+  let y = rect.bottom + 8; // slighly below
+
+  // Boundary check (rudimentary)
+  if (x < 10) x = 10;
+  if (y + 150 > window.innerHeight) y = rect.top - 160; // Flip up if too low
+
+  menuPosition.value = { x, y };
+  activeMenuLead.value = lead;
 };
 
 // AI Scoring Logic
@@ -1206,10 +1231,6 @@ const scoreLead = async (lead: Client) => {
   } finally {
     scoringLeads.value = scoringLeads.value.filter((id) => id !== lead.id);
   }
-};
-
-const closeMenu = () => {
-  activeMenuLead.value = null;
 };
 
 const isAllSelected = computed(() => {

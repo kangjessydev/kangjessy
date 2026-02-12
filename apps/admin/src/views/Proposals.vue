@@ -1,7 +1,7 @@
 <template>
   <div class="page-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <PageHeader
-      title="CMS Proposal"
+      title="Proposal Penawaran"
       subtitle="Kelola dan pantau seluruh proposal solusi digital"
     >
       <div class="flex gap-2">
@@ -72,21 +72,6 @@
         </div>
 
         <div class="flex gap-3">
-          <button
-            @click="isSelectionMode = !isSelectionMode"
-            class="px-5 h-12 rounded-2xl border-2 flex items-center justify-center transition-all active:scale-95 gap-2"
-            :class="
-              isSelectionMode
-                ? 'bg-[#702DFF] border-[#702DFF] text-white'
-                : 'bg-slate-50 border-transparent text-slate-400 hover:text-[#702DFF]'
-            "
-          >
-            <CheckSquare :size="16" />
-            <span class="text-[10px] font-black uppercase tracking-widest">{{
-              isSelectionMode ? "Mode AKTIF" : "Seleksi"
-            }}</span>
-          </button>
-
           <div class="relative">
             <select
               v-model="typeFilter"
@@ -135,17 +120,6 @@
           class="w-full bg-white border-2 border-slate-100 rounded-2xl py-3.5 pl-11 pr-4 text-xs font-bold text-[#1B2559] shadow-sm outline-none"
         />
       </div>
-      <button
-        @click="isSelectionMode = !isSelectionMode"
-        class="w-14 h-auto rounded-2xl border-2 flex items-center justify-center transition-all shadow-sm active:scale-90"
-        :class="
-          isSelectionMode
-            ? 'bg-[#702DFF] border-[#702DFF] text-white'
-            : 'bg-white border-slate-100 text-[#702DFF]'
-        "
-      >
-        <CheckSquare :size="20" />
-      </button>
     </div>
 
     <!-- Table View -->
@@ -160,167 +134,319 @@
       </p>
     </div>
 
-    <AdminCard
-      v-else
-      no-padding
-      class="overflow-hidden rounded-[32px]! border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-12"
-    >
-      <div v-if="filteredProposals.length === 0" class="p-20 text-center">
+    <template v-else>
+      <!-- Mobile Card View -->
+      <div class="lg:hidden space-y-4 mb-8">
         <div
-          class="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-4"
+          v-if="paginatedProposals.length === 0"
+          class="p-10 text-center bg-white rounded-[32px] border border-slate-100"
         >
-          <Search :size="32" class="text-slate-200" />
+          <div
+            class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-3"
+          >
+            <Search :size="20" class="text-slate-300" />
+          </div>
+          <h3 class="text-[#1B2559] font-black text-sm">
+            Proposal tidak ditemukan
+          </h3>
         </div>
-        <h3 class="text-[#1B2559] font-black text-lg">
-          Proposal tidak ditemukan
-        </h3>
-        <p class="text-slate-400 text-sm mt-1">
-          Coba sesuaikan filter Anda atau buat proposal baru.
-        </p>
-      </div>
-      <div v-else class="overflow-x-auto">
-        <table class="table-main">
-          <thead>
-            <tr>
-              <th v-if="isSelectionMode" class="pl-8! w-12 text-center">
-                <div class="flex items-center justify-center">
-                  <input
-                    type="checkbox"
-                    :checked="isAllSelected"
-                    @change="toggleSelectAll"
-                    class="w-4 h-4 rounded border-2 border-slate-200 text-[#702DFF] focus:ring-[#702DFF] cursor-pointer"
-                  />
-                </div>
-              </th>
-              <th :class="{ 'pl-8!': !isSelectionMode }">Identitas Proposal</th>
-              <th>Kategori</th>
-              <th>Tipe Asal</th>
-              <th>Status</th>
-              <th class="text-right pr-8!">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="prop in filteredProposals"
-              :key="prop.id"
-              class="table-row-hover group"
-              :class="{ 'bg-indigo-50/30': selectedIds.includes(prop.id) }"
-            >
-              <td v-if="isSelectionMode" class="!pl-8 w-12 text-center">
-                <div class="flex items-center justify-center">
-                  <input
-                    type="checkbox"
-                    v-model="selectedIds"
-                    :value="prop.id"
-                    class="w-4 h-4 rounded border-2 border-slate-200 text-[#702DFF] focus:ring-[#702DFF] cursor-pointer"
-                  />
-                </div>
-              </td>
-              <td :class="{ '!pl-8': !isSelectionMode }">
-                <div class="flex flex-col">
-                  <p
-                    class="font-black text-[#1B2559] text-sm tracking-tight group-hover:text-[#702DFF] transition-colors mb-1"
-                  >
-                    {{ prop.project_name || "Unnamed Project" }}
-                  </p>
-                  <div class="flex items-center gap-2">
-                    <span
-                      class="text-[9px] font-black text-slate-400 uppercase tracking-widest italic"
-                      >{{ prop.client_name }}</span
-                    >
-                    <span class="text-slate-200">•</span>
-                    <span class="text-[9px] font-bold text-slate-300"
-                      >#{{
-                        prop.id ? prop.id.substring(0, 8).toUpperCase() : "NEW"
-                      }}</span
-                    >
-                  </div>
-                </div>
-              </td>
-              <td>
+
+        <div
+          v-for="prop in paginatedProposals"
+          :key="prop.id"
+          class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-sm space-y-4 active:scale-[0.99] transition-transform relative overflow-hidden"
+          :class="{
+            'ring-2 ring-[#702DFF] bg-indigo-50/10': selectedIds.includes(
+              prop.id,
+            ),
+          }"
+        >
+          <!-- Selection Overlay/Checkbox -->
+          <div
+            class="absolute top-0 left-0 w-1.5 h-full bg-slate-100"
+            :class="{ 'bg-[#702DFF]': selectedIds.includes(prop.id) }"
+          ></div>
+
+          <div class="flex justify-between items-start pl-2">
+            <div class="flex gap-3">
+              <div class="pt-1">
+                <input
+                  type="checkbox"
+                  :value="prop.id"
+                  v-model="selectedIds"
+                  class="w-5 h-5 rounded border-2 border-slate-200 text-[#702DFF] focus:ring-[#702DFF]"
+                />
+              </div>
+              <div>
                 <span
-                  class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[9px] font-black rounded-lg uppercase tracking-widest border border-indigo-100/50"
+                  class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border mb-2 inline-block"
+                  :class="getStatusClass(prop.status)"
                 >
-                  {{ prop.project_type || "General" }}
+                  {{ prop.status || "New" }}
                 </span>
-              </td>
-              <td>
-                <div class="flex items-center gap-2">
-                  <div
-                    class="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
-                    :class="
-                      prop.origin_type === 'from_lead'
-                        ? 'bg-indigo-50 text-indigo-500'
-                        : 'bg-amber-50 text-amber-500'
-                    "
-                  >
-                    <Users v-if="prop.origin_type === 'from_lead'" :size="14" />
-                    <Zap v-else :size="14" />
-                  </div>
-                  <div>
-                    <p
-                      class="text-[10px] font-black text-[#1B2559] uppercase tracking-tighter"
-                    >
-                      {{
-                        prop.origin_type === "from_lead"
-                          ? "Lead-Linked"
-                          : "Independent"
-                      }}
-                    </p>
-                    <p
-                      class="text-[8px] font-bold text-slate-400 uppercase tracking-widest opacity-60"
-                    >
-                      {{ prop.lead_id ? "Database Match" : "manual" }}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="flex flex-col items-start gap-1">
-                  <span
-                    class="px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest"
-                    :class="getStatusClass(prop.status)"
-                  >
-                    {{ prop.status || "New" }}
-                  </span>
-                  <span
-                    v-if="prop.status === 'approved'"
-                    class="text-[8px] font-black text-emerald-500 flex items-center gap-1"
-                  >
-                    <CheckCircle :size="10" /> CONVERTED
-                  </span>
-                </div>
-              </td>
-              <td class="!pr-8 text-right">
-                <div class="flex items-center justify-end gap-1 transition-all">
-                  <button
-                    @click="$router.push(`/proposals/${prop.id}`)"
-                    class="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-[#1B2559] hover:text-white transition-all"
-                    title="View Proposal"
-                  >
-                    <Eye :size="16" />
-                  </button>
-                  <button
-                    @click="$router.push(`/proposals/generator?id=${prop.id}`)"
-                    class="p-2 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-[#702DFF] hover:text-white transition-all"
-                    title="Edit Data"
-                  >
-                    <Edit2 :size="16" />
-                  </button>
-                  <button
-                    @click="handleDelete(prop.id)"
-                    class="p-2 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
-                    title="Delete"
-                  >
-                    <Trash2 :size="16" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <h3 class="font-black text-[#1B2559] text-sm leading-tight">
+                  {{ prop.project_name || "Unnamed Project" }}
+                </h3>
+                <p class="text-[10px] font-bold text-slate-400 mt-1">
+                  {{ prop.client_name }}
+                </p>
+              </div>
+            </div>
+            <button
+              @click="handleDelete(prop.id)"
+              class="p-2 -mr-2 -mt-2 text-slate-300 hover:text-rose-500 transition-colors"
+            >
+              <Trash2 :size="16" />
+            </button>
+          </div>
+
+          <div
+            class="flex items-center gap-3 pt-3 border-t border-slate-50 pl-2"
+          >
+            <div class="flex-1">
+              <p
+                class="text-[9px] font-black text-slate-400 uppercase tracking-widest"
+              >
+                Tipe
+              </p>
+              <p class="text-[10px] font-bold text-[#1B2559]">
+                {{ prop.project_type || "General" }}
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button
+                @click="$router.push(`/proposals/generator?id=${prop.id}`)"
+                class="px-3 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-colors"
+              >
+                Edit
+              </button>
+              <button
+                @click="$router.push(`/proposals/${prop.id}`)"
+                class="px-3 py-2 bg-[#1B2559] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#702DFF] transition-colors"
+              >
+                View
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </AdminCard>
+
+      <!-- Desktop Table View -->
+      <AdminCard
+        no-padding
+        class="hidden lg:block overflow-hidden rounded-[32px]! border border-slate-100/50 shadow-xl shadow-slate-200/20 mb-8"
+      >
+        <div v-if="paginatedProposals.length === 0" class="p-20 text-center">
+          <div
+            class="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-4"
+          >
+            <Search :size="32" class="text-slate-200" />
+          </div>
+          <h3 class="text-[#1B2559] font-black text-lg">
+            Proposal tidak ditemukan
+          </h3>
+          <p class="text-slate-400 text-sm mt-1">
+            Coba sesuaikan filter Anda atau buat proposal baru.
+          </p>
+        </div>
+        <div v-else class="overflow-x-auto">
+          <table class="table-main">
+            <thead>
+              <tr>
+                <th class="pl-8! w-12 text-center">
+                  <div class="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      :checked="isAllCurrentPageSelected"
+                      @change="toggleSelectAll"
+                      class="w-4 h-4 rounded border-2 border-slate-200 text-[#702DFF] focus:ring-[#702DFF] cursor-pointer"
+                    />
+                  </div>
+                </th>
+                <th>Identitas Proposal</th>
+                <th>Kategori</th>
+                <th>Tipe Asal</th>
+                <th>Status</th>
+                <th class="text-right pr-8!">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="prop in paginatedProposals"
+                :key="prop.id"
+                class="table-row-hover group"
+                :class="{ 'bg-indigo-50/30': selectedIds.includes(prop.id) }"
+              >
+                <td class="!pl-8 w-12 text-center">
+                  <div class="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      v-model="selectedIds"
+                      :value="prop.id"
+                      class="w-4 h-4 rounded border-2 border-slate-200 text-[#702DFF] focus:ring-[#702DFF] cursor-pointer"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div class="flex flex-col">
+                    <p
+                      class="font-black text-[#1B2559] text-sm tracking-tight group-hover:text-[#702DFF] transition-colors mb-1"
+                    >
+                      {{ prop.project_name || "Unnamed Project" }}
+                    </p>
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="text-[9px] font-black text-slate-400 uppercase tracking-widest italic"
+                        >{{ prop.client_name }}</span
+                      >
+                      <span class="text-slate-200">•</span>
+                      <span class="text-[9px] font-bold text-slate-300"
+                        >#{{
+                          prop.id
+                            ? prop.id.substring(0, 8).toUpperCase()
+                            : "NEW"
+                        }}</span
+                      >
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span
+                    class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[9px] font-black rounded-lg uppercase tracking-widest border border-indigo-100/50"
+                  >
+                    {{ prop.project_type || "General" }}
+                  </span>
+                </td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+                      :class="
+                        prop.origin_type === 'from_lead'
+                          ? 'bg-indigo-50 text-indigo-500'
+                          : 'bg-amber-50 text-amber-500'
+                      "
+                    >
+                      <Users
+                        v-if="prop.origin_type === 'from_lead'"
+                        :size="14"
+                      />
+                      <Zap v-else :size="14" />
+                    </div>
+                    <div>
+                      <p
+                        class="text-[10px] font-black text-[#1B2559] uppercase tracking-tighter"
+                      >
+                        {{
+                          prop.origin_type === "from_lead"
+                            ? "Lead-Linked"
+                            : "Independent"
+                        }}
+                      </p>
+                      <p
+                        class="text-[8px] font-bold text-slate-400 uppercase tracking-widest opacity-60"
+                      >
+                        {{ prop.lead_id ? "Database Match" : "manual" }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="flex flex-col items-start gap-1">
+                    <span
+                      class="px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest"
+                      :class="getStatusClass(prop.status)"
+                    >
+                      {{ prop.status || "New" }}
+                    </span>
+                    <span
+                      v-if="prop.status === 'approved'"
+                      class="text-[8px] font-black text-emerald-500 flex items-center gap-1"
+                    >
+                      <CheckCircle :size="10" /> CONVERTED
+                    </span>
+                  </div>
+                </td>
+                <td class="!pr-8 text-right">
+                  <div
+                    class="flex items-center justify-end gap-1 transition-all"
+                  >
+                    <button
+                      @click="$router.push(`/proposals/${prop.id}`)"
+                      class="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-[#1B2559] hover:text-white transition-all"
+                      title="View Proposal"
+                    >
+                      <Eye :size="16" />
+                    </button>
+                    <button
+                      @click="
+                        $router.push(`/proposals/generator?id=${prop.id}`)
+                      "
+                      class="p-2 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-[#702DFF] hover:text-white transition-all"
+                      title="Edit Data"
+                    >
+                      <Edit2 :size="16" />
+                    </button>
+                    <button
+                      @click="handleDelete(prop.id)"
+                      class="p-2 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
+                      title="Delete"
+                    >
+                      <Trash2 :size="16" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </AdminCard>
+
+      <!-- Pagination Controls -->
+      <div
+        v-if="totalPages > 1"
+        class="flex flex-col sm:flex-row gap-4 items-center justify-between mb-12"
+      >
+        <p
+          class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center sm:text-left"
+        >
+          Showing {{ (currentPage - 1) * itemsPerPage + 1 }} -
+          {{ Math.min(currentPage * itemsPerPage, filteredProposals.length) }}
+          of {{ filteredProposals.length }}
+        </p>
+        <div class="flex gap-2">
+          <button
+            @click="currentPage--"
+            :disabled="currentPage === 1"
+            class="px-4 py-2 rounded-xl bg-white border border-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest disabled:opacity-50 hover:bg-slate-50 transition-colors"
+          >
+            Previous
+          </button>
+          <div class="flex items-center gap-1">
+            <button
+              v-for="page in displayedPages"
+              :key="page"
+              @click="currentPage = page"
+              class="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black transition-colors"
+              :class="
+                currentPage === page
+                  ? 'bg-[#702DFF] text-white shadow-lg shadow-indigo-500/20'
+                  : 'bg-white text-slate-500 hover:bg-slate-50'
+              "
+            >
+              {{ page }}
+            </button>
+          </div>
+          <button
+            @click="currentPage++"
+            :disabled="currentPage === totalPages"
+            class="px-4 py-2 rounded-xl bg-white border border-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest disabled:opacity-50 hover:bg-slate-50 transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </template>
 
     <!-- Bulk Action Bar -->
     <transition
@@ -333,14 +459,14 @@
     >
       <div
         v-if="selectedIds.length > 0"
-        class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] w-[90%] max-w-2xl px-4"
+        class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] w-[90%] max-w-sm px-4"
       >
         <div
-          class="bg-[#1B2559] rounded-[32px] p-4 shadow-2xl shadow-indigo-900/40 flex items-center justify-between border border-white/10 backdrop-blur-xl"
+          class="bg-[#1B2559] rounded-[24px] p-3 shadow-2xl shadow-indigo-900/40 flex items-center justify-between border border-white/10 backdrop-blur-xl"
         >
-          <div class="flex items-center gap-4 pl-4 text-left">
+          <div class="flex items-center gap-3 pl-2 text-left">
             <div
-              class="w-10 h-10 rounded-2xl bg-[#702DFF] flex items-center justify-center text-white shadow-lg shadow-[#702DFF]/20 transition-all active:scale-90"
+              class="w-10 h-10 rounded-xl bg-[#702DFF] flex items-center justify-center text-white shadow-lg shadow-[#702DFF]/20 transition-all active:scale-90"
             >
               <CheckSquare :size="20" />
             </div>
@@ -348,35 +474,28 @@
               <p class="text-white font-black text-sm tracking-tight">
                 {{ selectedIds.length }} Selected
               </p>
-              <p
-                class="text-slate-400 text-[10px] uppercase font-black tracking-widest"
-              >
-                Manage proposals bulkly
-              </p>
             </div>
           </div>
 
           <div class="flex items-center gap-2">
             <button
-              @click="
-                selectedIds = [];
-                isSelectionMode = false;
-              "
-              class="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors"
+              @click="selectedIds = []"
+              class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+              title="Cancel Selection"
             >
-              Cancel
+              <X :size="18" />
             </button>
             <button
               @click="handleBulkDelete"
-              :disabled="isBulkDeleting"
-              class="px-8 py-3 bg-rose-500 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-rose-600 shadow-lg shadow-rose-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
+              :disabled="isDeleting"
+              class="w-10 h-10 flex items-center justify-center bg-rose-500 rounded-xl text-white hover:bg-rose-600 shadow-lg shadow-rose-500/20 transition-all disabled:opacity-50"
+              title="Delete Selected"
             >
-              <Trash2 :size="14" v-if="!isBulkDeleting" />
               <div
-                v-else
-                class="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"
+                v-if="isDeleting"
+                class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
               ></div>
-              Delete
+              <Trash2 v-else :size="18" />
             </button>
           </div>
         </div>
@@ -386,13 +505,21 @@
     <!-- Modals & Toasts -->
     <ConfirmModal
       :is-open="isConfirmDeleteOpen"
-      title="Mass Destruction Protocol"
-      :message="`Are you sure you want to permanently delete ${selectedIds.length} selected proposals? This action bypasses all protocols and cannot be undone.`"
-      confirm-text="Confirm Permanent Delete"
+      :title="
+        deleteMode === 'bulk' ? 'Mass Destruction Protocol' : 'Hapus Proposal?'
+      "
+      :message="
+        deleteMode === 'bulk'
+          ? `Are you sure you want to permanently delete ${selectedIds.length} selected proposals? This action bypasses all protocols and cannot be undone.`
+          : 'Proposal ini akan dihapus permanen dari sistem. Lanjutkan?'
+      "
+      :confirm-text="
+        deleteMode === 'bulk' ? 'Confirm Permanent Delete' : 'Ya, Hapus'
+      "
       variant="danger"
-      :loading="isBulkDeleting"
+      :loading="isDeleting"
       @close="isConfirmDeleteOpen = false"
-      @confirm="confirmBulkDelete"
+      @confirm="confirmDelete"
     />
 
     <Toast
@@ -404,7 +531,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import {
   FileText,
   Plus,
@@ -419,6 +546,7 @@ import {
   Trash2,
   CheckCircle,
   CheckSquare,
+  X,
 } from "lucide-vue-next";
 import proposalService, { type Proposal } from "../services/proposalService";
 import { useErrorHandler } from "../composables/useErrorHandler";
@@ -433,75 +561,23 @@ import Toast from "../components/ui/Toast.vue";
 
 const proposals = ref<Proposal[]>([]);
 const selectedIds = ref<string[]>([]);
-const isBulkDeleting = ref(false);
+const isDeleting = ref(false);
 const isConfirmDeleteOpen = ref(false);
-const isSelectionMode = ref(false);
 const searchQuery = ref("");
 const statusFilter = ref("all");
 const typeFilter = ref("all");
 
+// Pagination
+const currentPage = ref(1);
+const itemsPerPage = 10;
+
+// Delete state
+const deleteMode = ref<"single" | "bulk">("bulk");
+const itemToDelete = ref<string | null>(null);
+
 // Composables
 const { handleError } = useErrorHandler();
 const { isLoading, withLoading } = useLoading("proposals");
-
-const isAllSelected = computed(() => {
-  return (
-    filteredProposals.value.length > 0 &&
-    selectedIds.value.length === filteredProposals.value.length
-  );
-});
-
-function toggleSelectAll() {
-  if (isAllSelected.value) {
-    selectedIds.value = [];
-  } else {
-    selectedIds.value = filteredProposals.value.map((p) => p.id);
-  }
-}
-
-const toast = ref({
-  show: false,
-  message: "",
-  variant: "success" as "success" | "error",
-});
-
-function showToast(message: string, variant: "success" | "error" = "success") {
-  toast.value = { show: true, message, variant };
-  setTimeout(() => (toast.value.show = false), 3000);
-}
-
-async function handleBulkDelete() {
-  isConfirmDeleteOpen.value = true;
-}
-
-async function confirmBulkDelete() {
-  isBulkDeleting.value = true;
-  try {
-    for (const id of selectedIds.value) {
-      await proposalService.delete(id);
-    }
-    showToast(`${selectedIds.value.length} proposals deleted`, "success");
-    selectedIds.value = [];
-    isSelectionMode.value = false;
-    await fetchProposals();
-  } catch (e: any) {
-    showToast(e.message || "Failed to delete proposals", "error");
-  } finally {
-    isBulkDeleting.value = false;
-    isConfirmDeleteOpen.value = false;
-  }
-}
-
-async function handleDelete(id: string) {
-  if (!confirm("Are you sure you want to delete this proposal?")) return;
-  try {
-    await proposalService.delete(id);
-    proposals.value = proposals.value.filter((p) => p.id !== id);
-    showToast("Proposal deleted", "success");
-  } catch (err: any) {
-    showToast(err.message || "Delete failed", "error");
-  }
-}
 
 const filteredProposals = computed(() => {
   return proposals.value.filter((p) => {
@@ -534,6 +610,57 @@ const convertedCount = computed(
   () => proposals.value.filter((p) => p.status === "approved").length,
 );
 
+const totalPages = computed(() =>
+  Math.ceil(filteredProposals.value.length / itemsPerPage),
+);
+
+const paginatedProposals = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredProposals.value.slice(start, end);
+});
+
+const displayedPages = computed(() => {
+  const total = totalPages.value;
+  const current = currentPage.value;
+  let pages = [];
+  if (total <= 5) {
+    for (let i = 1; i <= total; i++) pages.push(i);
+  } else {
+    if (current <= 3) pages = [1, 2, 3, 4, total];
+    else if (current >= total - 2)
+      pages = [1, total - 3, total - 2, total - 1, total];
+    else pages = [1, current - 1, current, current + 1, total];
+  }
+  return pages;
+});
+
+// Reset page on filter change
+watch([searchQuery, statusFilter, typeFilter], () => {
+  currentPage.value = 1;
+  selectedIds.value = [];
+});
+
+const isAllCurrentPageSelected = computed(() => {
+  return (
+    paginatedProposals.value.length > 0 &&
+    paginatedProposals.value.every((p) => selectedIds.value.includes(p.id))
+  );
+});
+
+function toggleSelectAll() {
+  if (isAllCurrentPageSelected.value) {
+    // Deselect current page items
+    selectedIds.value = selectedIds.value.filter(
+      (id) => !paginatedProposals.value.find((p) => p.id === id),
+    );
+  } else {
+    // Select all current page items
+    const newIds = paginatedProposals.value.map((p) => p.id);
+    selectedIds.value = [...new Set([...selectedIds.value, ...newIds])];
+  }
+}
+
 function getStatusClass(status: string | undefined) {
   const s = status || "Lead";
   switch (s) {
@@ -545,6 +672,56 @@ function getStatusClass(status: string | undefined) {
       return "bg-amber-50 text-amber-600 border border-amber-100";
     default:
       return "bg-slate-50 text-slate-400 border border-slate-100";
+  }
+}
+
+const toast = ref({
+  show: false,
+  message: "",
+  variant: "success" as "success" | "error",
+});
+
+function showToast(message: string, variant: "success" | "error" = "success") {
+  toast.value = { show: true, message, variant };
+  setTimeout(() => (toast.value.show = false), 3000);
+}
+
+async function handleBulkDelete() {
+  deleteMode.value = "bulk";
+  isConfirmDeleteOpen.value = true;
+}
+
+async function handleDelete(id: string) {
+  // Reset selectedIds to avoid confusion if bulk mode was active
+  // selectedIds.value = [];
+  // actually, keep selection, just delete one item.
+  deleteMode.value = "single";
+  itemToDelete.value = id;
+  isConfirmDeleteOpen.value = true;
+}
+
+async function confirmDelete() {
+  isDeleting.value = true;
+  try {
+    if (deleteMode.value === "bulk") {
+      for (const id of selectedIds.value) {
+        await proposalService.delete(id);
+      }
+      showToast(`${selectedIds.value.length} proposals deleted`, "success");
+      selectedIds.value = [];
+    } else {
+      if (itemToDelete.value) {
+        await proposalService.delete(itemToDelete.value);
+        showToast("Proposal deleted", "success");
+      }
+    }
+    await fetchProposals();
+  } catch (e: any) {
+    showToast(e.message || "Failed to delete proposals", "error");
+  } finally {
+    isDeleting.value = false;
+    isConfirmDeleteOpen.value = false;
+    itemToDelete.value = null;
   }
 }
 

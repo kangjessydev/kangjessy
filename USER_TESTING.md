@@ -62,3 +62,27 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
 - [ ] **Payment Confirmation**:
   - _Action_: Klik "Confirm Paying" di dalam Billing Summary.
   - _Expected Output_: Modal WhatsApp terbuka dengan template pesan tagihan yang akurat.
+
+## 📝 8. Verifikasi Sistem Proposal (Fixed)
+
+- [x] **Bento Grid UI**:
+  - _Action_: Buka Proposal Generator. Pastikan "Tipe Proyek" dan "Fitur Tambahan" berbentuk Grid (bukan Dropdown).
+  - _Expected Output_: Tampilan grid rapi, ada search bar, dan bisa dipilih.
+- [x] **Feature Reset Logic**:
+  - _Action_: Pilih Tipe Proyek A, pilih beberapa fitur. Lalu ganti ke Tipe Proyek B (beda kategori/service).
+  - _Expected Output_: Fitur yang tidak relevan dengan Tipe Proyek B harus otomatis ter-reset/hilang.
+- [x] **Live Preview**:
+  - _Action_: Ketik sesuatu di "Scope & Deliverables" atau "Terms".
+  - _Expected Output_: Preview di sebelah kanan langsung update secara real-time.
+- [x] **Save & Sync**:
+  - _Action_: Klik tombol "Save Proposal". Cek di halaman list Proposal.
+  - _Expected Output_: Proposal baru muncul dengan data yang lengkap (termasuk deliverables & terms).
+- [x] **Edit Redirection**:
+  - _Action_: Buka detail proposal, klik "Ubah Data".
+  - _Expected Output_: Masuk kembali ke Proposal Generator dengan data yang sudah terisi.
+- [x] **Split Terms Verification**:
+  - _Action_: Masukkan data ke 3 kolom terms (Pembayaran, Hak Cipta, Revisi). Cek di halaman Detail Proposal.
+  - _Expected Output_: Teks judul terms muncul besar, tebal (font-black), dan icon FileText terlihat jelas.
+- [x] **Financial Summary Scaling**:
+  - _Action_: Cek nominal harga di Total Investasi.
+  - _Expected Output_: Ukuran font seimbang (tidak terlalu besar dibanding label/teks lainnya).

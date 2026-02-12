@@ -18,6 +18,7 @@ export interface Proposal {
   terms_payment?: string
   terms_copyright?: string
   terms_revision?: string
+  payment_accounts?: any[]
   selected_timeline?: string
   voucher_code?: string
   base_price?: number

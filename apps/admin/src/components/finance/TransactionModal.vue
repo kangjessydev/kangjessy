@@ -195,10 +195,17 @@
                       >Payment Method</label
                     >
                     <select
-                      v-model="formData.source"
+                      v-model="formData.payment_method"
                       class="select-field !text-xs !py-3"
                     >
                       <option value="Manual">Manual Transfer</option>
+                      <option
+                        v-for="bank in activeBanks"
+                        :key="bank.bank_name"
+                        :value="bank.bank_name"
+                      >
+                        Bank {{ bank.bank_name }}
+                      </option>
                       <option value="Midtrans">Midtrans</option>
                       <option value="Stripe">Stripe</option>
                       <option value="Cash">Cash</option>
@@ -316,6 +323,7 @@ import Toast from "../ui/Toast.vue";
 import { clientsService } from "../../services/clientsService";
 import { projectsService } from "../../services/projectsService";
 import { transactionsService } from "../../services/transactionsService";
+import { usePaymentSettings } from "../../composables/usePaymentSettings";
 import type { Client, Project } from "../../types";
 
 const props = defineProps<{ isOpen: boolean }>();
@@ -335,8 +343,10 @@ const formData = ref({
   date: new Date().toISOString().split("T")[0],
   client_id: null as string | null,
   project_id: null as string | null,
-  source: "Manual",
+  payment_method: "Manual",
 });
+
+const { activeBanks } = usePaymentSettings();
 
 const toast = ref({
   show: false,
@@ -424,7 +434,7 @@ const handleSubmit = async () => {
       date: new Date().toISOString().split("T")[0],
       client_id: null,
       project_id: null,
-      source: "Manual",
+      payment_method: "Manual",
     };
     emit("saved");
     closeModal();

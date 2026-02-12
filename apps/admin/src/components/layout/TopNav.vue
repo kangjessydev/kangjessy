@@ -146,19 +146,19 @@
             <p
               class="text-xs font-bold text-[#1B2559] leading-tight group-hover:text-[#702DFF] transition-colors"
             >
-              Admin User
+              {{ profile.name }}
             </p>
             <p
               class="text-[9px] text-slate-400 font-bold uppercase tracking-wider"
             >
-              Simpli.
+              {{ profile.role }}
             </p>
           </div>
           <div
             class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1B2559] to-[#702DFF] p-[2px] cursor-pointer shadow-md shadow-indigo-500/10 group-hover:shadow-indigo-500/20 transition-all"
           >
             <img
-              src="https://ui-avatars.com/api/?name=Admin+User&background=fff&color=1B2559"
+              :src="profileImage"
               alt="Profile"
               class="w-full h-full rounded-full object-cover border-2 border-white"
             />
@@ -186,9 +186,11 @@
             <div
               class="px-5 py-4 border-b border-slate-50 mb-1 bg-gradient-to-r from-slate-50/50 to-white"
             >
-              <p class="text-sm font-black text-[#1B2559]">Admin User</p>
+              <p class="text-sm font-black text-[#1B2559]">
+                {{ profile.name }}
+              </p>
               <p class="text-[10px] font-medium text-slate-400 truncate">
-                admin@kangjessy.com
+                {{ profile.email }}
               </p>
             </div>
 
@@ -256,8 +258,20 @@ import {
 } from "lucide-vue-next";
 import { clientsService } from "../../services/clientsService";
 import { useSidebar } from "../../composables/useSidebar";
+import { useProfile } from "../../composables/useProfile";
+import { useBranding } from "../../composables/useBranding";
 import ThemeToggle from "../ui/ThemeToggle.vue";
 import { auth } from "@kangjessy/database";
+
+const { profile } = useProfile();
+const { branding } = useBranding();
+
+const profileImage = computed(() => {
+  return (
+    profile.value.avatar ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.value.name)}&background=1B2559&color=fff&size=100`
+  );
+});
 
 const route = useRoute();
 const router = useRouter();

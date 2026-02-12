@@ -594,7 +594,7 @@
                   Author
                 </p>
                 <p class="text-xs font-bold text-[#1B2559]">
-                  Kang Jessy (Admin)
+                  {{ profile.name }}
                 </p>
               </div>
             </div>
@@ -859,6 +859,9 @@ import AdminTextarea from "../components/ui/AdminTextarea.vue";
 import BaseInput from "../components/ui/BaseInput.vue";
 import Toast from "../components/ui/Toast.vue";
 import MediaPickerModal from "../components/media/MediaPickerModal.vue";
+import { useProfile } from "../composables/useProfile";
+
+const { profile } = useProfile();
 
 const route = useRoute();
 const router = useRouter();

@@ -64,8 +64,8 @@
                   :class="isProposal ? 'p-3 md:p-4' : 'p-3'"
                 >
                   <img
-                    src="/logo-agency.png"
-                    alt="Kang Jessy Logo"
+                    :src="branding.logo"
+                    alt="Agency Logo"
                     class="object-contain"
                     :class="
                       isProposal ? 'w-10 h-10 md:w-12 md:h-12' : 'w-8 h-8'
@@ -77,7 +77,13 @@
                   <h1
                     class="text-xl md:text-2xl font-black tracking-tighter uppercase"
                   >
-                    Kang <span class="text-indigo-400">Jessy</span>
+                    {{ branding.name.split(" ")[0] }}
+                    <span
+                      v-if="branding.name.split(' ').length > 1"
+                      class="text-indigo-400"
+                    >
+                      {{ branding.name.split(" ").slice(1).join(" ") }}
+                    </span>
                   </h1>
                   <p
                     class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest"
@@ -89,7 +95,13 @@
                   v-else
                   class="text-2xl md:text-3xl font-black tracking-tighter uppercase"
                 >
-                  Kang <span class="text-indigo-400">Jessy</span>
+                  {{ branding.name.split(" ")[0] }}
+                  <span
+                    v-if="branding.name.split(' ').length > 1"
+                    class="text-indigo-400"
+                  >
+                    {{ branding.name.split(" ").slice(1).join(" ") }}
+                  </span>
                 </h1>
               </div>
 
@@ -180,7 +192,7 @@
             >
               {{
                 isProposal
-                  ? "ARSITEKTUR SOLUSI KANG JESSY"
+                  ? `ARSITEKTUR SOLUSI ${branding.name}`
                   : "DOKUMEN TAGIHAN RESMI"
               }}
             </p>
@@ -446,43 +458,6 @@
                   <p class="text-xs text-slate-500 font-bold leading-relaxed">
                     {{ term.content }}
                   </p>
-                </div>
-
-                <!-- Payment Info -->
-                <div
-                  class="mt-8 p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100 flex items-center justify-between"
-                >
-                  <div class="flex items-center gap-4">
-                    <div
-                      class="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-2 border border-slate-100 shadow-sm"
-                    >
-                      <img
-                        src="/logo-agency.png"
-                        class="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div>
-                      <p
-                        class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"
-                      >
-                        Authorized Signature
-                      </p>
-                      <p class="text-xs font-black text-[#1B2559]">
-                        KANG JESSY ECOSYSTEM
-                      </p>
-                    </div>
-                  </div>
-                  <div class="text-right hidden sm:block">
-                    <p
-                      class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"
-                    >
-                      Bank Transfer
-                    </p>
-                    <p class="text-xs font-black text-[#1B2559]">
-                      {{ paymentInfo.bank_name || "BCA" }}
-                      {{ paymentInfo.account_number || "8020-441-291" }}
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -761,35 +736,86 @@
             </p>
           </div>
 
-          <div class="text-center md:text-right space-y-4">
-            <p
-              class="text-[9px] font-black text-slate-300 uppercase tracking-widest"
+          <!-- New Separated Payment Section -->
+          <div class="col-span-full mt-10 space-y-12">
+            <div
+              class="p-10 bg-indigo-50/50 rounded-[48px] border border-indigo-100/50"
             >
-              Tanda Tangan Tervalidasi
-            </p>
-            <div class="relative inline-block">
-              <div class="absolute -top-6 -left-6 opacity-10">
-                <Zap :size="100" />
-              </div>
-              <div
-                class="p-8 bg-slate-50 border-2 border-dashed border-indigo-100 rounded-[40px] shadow-inner"
-              >
-                <p class="text-[14px] font-black text-indigo-500 italic px-10">
-                  SISTEM KANG JESSY
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6"
+                >
+                  <DollarSign :size="24" />
+                </div>
+                <p
+                  class="text-[12px] font-black text-indigo-400 uppercase tracking-[0.4em] mb-10"
+                >
+                  Instruksi Pembayaran Transfer Bank
                 </p>
+
+                <div class="flex flex-col gap-5 w-full max-w-2xl mx-auto">
+                  <div
+                    v-for="(acc, index) in displayPaymentAccounts"
+                    :key="index"
+                    class="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm flex items-center gap-8 transition-all hover:shadow-md"
+                  >
+                    <div
+                      class="w-20 h-20 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center p-3 shrink-0"
+                    >
+                      <img
+                        v-if="getBankLogo(acc.bank_name, acc.bank_logo)"
+                        :src="getBankLogo(acc.bank_name, acc.bank_logo)"
+                        class="w-full h-full object-contain"
+                      />
+                      <div v-else class="text-[10px] font-black text-slate-300">
+                        BANK
+                      </div>
+                    </div>
+                    <div class="text-left flex-1 min-w-0">
+                      <p
+                        class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1"
+                      >
+                        {{ acc.bank_name }}
+                      </p>
+                      <p
+                        class="text-2xl font-black text-[#1B2559] tracking-tighter"
+                      >
+                        {{ acc.account_number }}
+                      </p>
+                      <p
+                        class="text-[9px] font-bold text-slate-400 uppercase mt-0.5"
+                      >
+                        Atas Nama: {{ acc.account_holder || branding.name }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div>
-              <p class="text-sm font-black text-[#1B2559]">
-                Identitas Sistem: AUT-{{
-                  String(route.params.id).slice(0, 8).toUpperCase()
-                }}
-              </p>
+
+            <!-- Signature Section (Separated) -->
+            <div class="text-center pt-6 pb-12">
               <p
-                class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1"
+                class="text-[9px] font-black text-slate-300 uppercase tracking-[0.4em] mb-6"
               >
-                {{ formatDate(new Date().toISOString()) }}
+                Tanda Tangan Elektronik Tervalidasi
               </p>
+              <div class="flex flex-col items-center">
+                <p class="text-2xl font-black text-indigo-500 italic mb-3">
+                  {{ branding.name }}
+                </p>
+                <div
+                  class="bg-indigo-50 px-5 py-1.5 rounded-full border border-indigo-100"
+                >
+                  <p
+                    class="text-[9px] font-black text-indigo-400 uppercase tracking-widest"
+                  >
+                    ID VALIDASI: AUT-{{
+                      String(route.params.id).slice(0, 8).toUpperCase()
+                    }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -799,7 +825,7 @@
           <p
             class="text-[9px] font-black text-slate-300 uppercase tracking-widest"
           >
-            www.kangjessy.com • Kang Jessy Digital Solutions Hub
+            www.kangjessy.com • {{ branding.name }} Digital Solutions Hub
           </p>
         </div>
       </div>
@@ -858,6 +884,8 @@ import { projectTypes } from "../data/order/projects";
 import { availableFeatures } from "../data/order/features";
 import type { Client } from "../types";
 import { BaseButton } from "@kangjessy/ui";
+import { useBranding } from "../composables/useBranding";
+import { usePaymentSettings } from "../composables/usePaymentSettings";
 
 const route = useRoute();
 const router = useRouter(); // Init router
@@ -866,28 +894,22 @@ const order = ref<Client | null>(null);
 const loading = ref(true);
 const activeVouchers = ref<Coupon[]>([]);
 
-const paymentInfo = ref({
-  bank_name: "BCA",
-  account_number: "8020-441-291",
-  account_holder: "KJ-PRO DIGITAL TECH",
+const { branding } = useBranding();
+const { activeBanks: paymentAccounts, getBankLogo } = usePaymentSettings();
+
+const displayPaymentAccounts = computed(() => {
+  // payment_accounts might not be in Client type but added dynamically
+  if (
+    order.value?.payment_accounts &&
+    order.value.payment_accounts.length > 0
+  ) {
+    return order.value.payment_accounts;
+  }
+  return paymentAccounts.value;
 });
 
 onMounted(() => {
-  const saved = localStorage.getItem("kgj_payment_settings");
-  if (saved) {
-    try {
-      const data = JSON.parse(saved);
-      if (data.bank_name) {
-        paymentInfo.value = {
-          bank_name: data.bank_name,
-          account_number: data.account_number,
-          account_holder: data.account_holder,
-        };
-      }
-    } catch (e) {
-      console.error("Failed to load payment settings", e);
-    }
-  }
+  // Composables handle their own loading from localStorage
 });
 
 // Robust check: based on URL context, not status
@@ -982,6 +1004,7 @@ watch(
             terms_payment: proposal.terms_payment,
             terms_copyright: proposal.terms_copyright,
             terms_revision: proposal.terms_revision,
+            payment_accounts: proposal.payment_accounts,
           };
         }
       } else {

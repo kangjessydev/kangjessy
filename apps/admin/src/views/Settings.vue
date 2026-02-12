@@ -161,6 +161,58 @@
               </div>
             </div>
           </AdminCard>
+
+          <!-- Agency Branding -->
+          <AdminCard
+            title="Agency Branding"
+            subtitle="Sesuaikan identitas agensi Bapak yang muncul di Proposal & Invoice"
+            class="mt-8"
+          >
+            <div class="flex items-center gap-8 py-2">
+              <div class="relative group cursor-pointer shrink-0">
+                <div
+                  class="w-20 h-20 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-[#702DFF]/30"
+                >
+                  <img
+                    v-if="branding.logo"
+                    :src="branding.logo"
+                    class="w-full h-full object-contain p-2"
+                  />
+                  <Image v-else :size="24" class="text-slate-300" />
+                </div>
+                <div
+                  @click="openMediaPicker('branding')"
+                  class="absolute inset-0 bg-[#702DFF]/80 backdrop-blur-[2px] rounded-3xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all"
+                >
+                  <Upload :size="18" class="text-white" />
+                </div>
+              </div>
+
+              <div class="flex-1 space-y-4">
+                <div>
+                  <label
+                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                    >Nama Agensi</label
+                  >
+                  <BaseInput
+                    v-model="branding.name"
+                    placeholder="e.g. KANG JESSY ECOSYSTEM"
+                  />
+                </div>
+                <div class="flex justify-end pt-2">
+                  <BaseButton
+                    variant="primary"
+                    size="sm"
+                    @click="handleSaveBranding"
+                    :loading="saving"
+                  >
+                    <Save :size="14" />
+                    Simpan Identitas
+                  </BaseButton>
+                </div>
+              </div>
+            </div>
+          </AdminCard>
         </div>
       </div>
 
@@ -170,77 +222,181 @@
         key="payment"
         class="space-y-8 animate-fade-in-up"
       >
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <AdminCard
-            title="Primary Bank Account"
-            subtitle="Rekening utama penerimaan pembayaran"
-          >
-            <div class="space-y-6">
-              <div>
-                <label
-                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
-                  >Nama Bank</label
-                >
-                <BaseInput v-model="payment.bank_name" placeholder="e.g. BCA" />
-              </div>
-              <div>
-                <label
-                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
-                  >Nomor Rekening</label
-                >
-                <BaseInput
-                  v-model="payment.account_number"
-                  placeholder="e.g. 1234567890"
-                />
-              </div>
-              <div>
-                <label
-                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
-                  >Atas Nama</label
-                >
-                <BaseInput
-                  v-model="payment.account_holder"
-                  placeholder="e.g. PT Kang Jessy"
-                />
-              </div>
-            </div>
-          </AdminCard>
-
-          <AdminCard
-            title="Preview Tampilan"
-            subtitle="Tampilan di Proposal & Invoice"
-          >
-            <div
-              class="p-8 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center min-h-[300px]"
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div class="lg:col-span-7 space-y-6">
+            <AdminCard
+              title="Metode Pembayaran"
+              subtitle="Kelola daftar rekening bank tujuan pembayaran"
             >
-              <div
-                class="w-full max-w-sm p-6 bg-white rounded-3xl border border-indigo-100 shadow-sm"
-              >
-                <p
-                  class="text-[9px] font-black text-[#1B2559] uppercase tracking-[0.2em] mb-3"
+              <template #action>
+                <BaseButton variant="secondary" size="sm" @click="addAccount">
+                  <Plus :size="14" /> Tambah Rekening
+                </BaseButton>
+              </template>
+
+              <div class="space-y-6">
+                <div
+                  v-for="(acc, index) in bankAccounts"
+                  :key="index"
+                  class="p-6 bg-slate-50 border border-slate-100 rounded-3xl space-y-4 relative group"
                 >
-                  Official Payment Gateway
-                </p>
-                <div class="flex items-center gap-4">
-                  <div
-                    class="w-12 h-8 bg-emerald-50 border border-emerald-100 rounded flex items-center justify-center font-black text-emerald-600 text-[10px]"
+                  <button
+                    v-if="bankAccounts.length > 1"
+                    @click="removeAccount(index)"
+                    class="absolute top-4 right-4 p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all opacity-0 group-hover:opacity-100"
                   >
-                    {{ payment.bank_name || "BANK" }}
-                  </div>
-                  <div>
-                    <p
-                      class="text-[10px] font-black text-[#1B2559] uppercase tracking-widest"
-                    >
-                      {{ payment.account_number || "000-000-000" }}
-                    </p>
-                    <p class="text-[9px] font-bold text-slate-400">
-                      a.n. {{ payment.account_holder || "Nama Pemilik" }}
-                    </p>
+                    <Trash2 :size="16" />
+                  </button>
+
+                  <div class="flex items-center gap-6">
+                    <div class="relative group cursor-pointer">
+                      <div
+                        class="w-16 h-16 rounded-2xl bg-white border-2 border-slate-100 shadow-sm flex items-center justify-center overflow-hidden transition-all group-hover:border-[#702DFF]/30 group-hover:shadow-indigo-500/10"
+                      >
+                        <img
+                          v-if="getBankLogo(acc.bank_name, acc.bank_logo)"
+                          :src="getBankLogo(acc.bank_name, acc.bank_logo)"
+                          class="w-full h-full object-contain p-2"
+                        />
+                        <div
+                          v-else
+                          class="flex flex-col items-center gap-1 text-slate-300"
+                        >
+                          <Image :size="20" />
+                          <span class="text-[8px] font-black uppercase"
+                            >Logo</span
+                          >
+                        </div>
+                      </div>
+                      <!-- Hover Overlay -->
+                      <div
+                        @click="openMediaPicker('bank', index)"
+                        class="absolute inset-0 bg-[#702DFF]/80 backdrop-blur-[2px] rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all"
+                      >
+                        <Upload :size="16" class="text-white" />
+                      </div>
+                    </div>
+
+                    <div class="flex-1 space-y-3">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label
+                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                            >Nama Bank</label
+                          >
+                          <BaseInput
+                            v-model="acc.bank_name"
+                            placeholder="e.g. BCA"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                            >Nomor Rekening</label
+                          >
+                          <BaseInput
+                            v-model="acc.account_number"
+                            placeholder="e.g. 1234567890"
+                          />
+                        </div>
+                      </div>
+                      <div class="flex items-center justify-between gap-4">
+                        <div class="flex-1">
+                          <label
+                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                            >Atas Nama</label
+                          >
+                          <BaseInput
+                            v-model="acc.account_holder"
+                            placeholder="e.g. PT Kang Jessy"
+                          />
+                        </div>
+                        <div class="pt-6">
+                          <button
+                            @click="acc.is_active = !acc.is_active"
+                            class="flex items-center gap-2 px-3 py-2 rounded-xl transition-all border"
+                            :class="
+                              acc.is_active
+                                ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
+                                : 'bg-slate-50 border-slate-100 text-slate-400 opacity-50'
+                            "
+                          >
+                            <div
+                              class="w-2 h-2 rounded-full"
+                              :class="
+                                acc.is_active
+                                  ? 'bg-emerald-500'
+                                  : 'bg-slate-300'
+                              "
+                            ></div>
+                            <span
+                              class="text-[9px] font-black uppercase tracking-widest"
+                            >
+                              {{ acc.is_active ? "Aktif" : "Non-aktif" }}
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </AdminCard>
+            </AdminCard>
+          </div>
+
+          <div class="lg:col-span-5 space-y-6">
+            <AdminCard
+              title="Preview Tampilan"
+              subtitle="Tampilan di Proposal & Invoice"
+            >
+              <div
+                class="p-8 bg-slate-50 border border-slate-100 rounded-3xl flex flex-col gap-4 min-h-[300px]"
+              >
+                <div
+                  v-for="(acc, idx) in bankAccounts.filter((a) => a.is_active)"
+                  :key="idx"
+                  class="w-full p-4 bg-white rounded-2xl border border-indigo-100 shadow-sm"
+                >
+                  <p
+                    class="text-[8px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-2"
+                  >
+                    Official Account {{ idx + 1 }}
+                  </p>
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-10 h-10 bg-white border border-slate-100 rounded-xl flex items-center justify-center p-1.5 shadow-sm overflow-hidden"
+                    >
+                      <img
+                        v-if="getBankLogo(acc.bank_name, acc.bank_logo)"
+                        :src="getBankLogo(acc.bank_name, acc.bank_logo)"
+                        class="w-full h-full object-contain"
+                      />
+                      <div
+                        v-else
+                        class="w-full h-full bg-indigo-50 flex items-center justify-center font-black text-indigo-600 text-[8px]"
+                      >
+                        {{
+                          acc.bank_name?.substring(0, 3).toUpperCase() || "BNK"
+                        }}
+                      </div>
+                    </div>
+                    <div>
+                      <p
+                        class="text-[10px] font-black text-[#1B2559] uppercase tracking-widest leading-none mb-1"
+                      >
+                        {{ acc.account_number || "000-000-000" }}
+                      </p>
+                      <p
+                        class="text-[9px] font-bold text-slate-400 leading-none"
+                      >
+                        a.n. {{ acc.account_holder || "Nama Pemilik" }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AdminCard>
+          </div>
         </div>
         <div class="flex justify-end border-t border-slate-100 pt-6">
           <BaseButton
@@ -571,6 +727,12 @@
       </div>
     </transition>
 
+    <MediaPickerModal
+      :is-open="isPickerOpen"
+      @close="isPickerOpen = false"
+      @select="handleMediaSelect"
+    />
+
     <!-- Toast -->
     <Toast
       v-if="toast.show"
@@ -582,7 +744,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, markRaw } from "vue";
+import { ref, onMounted, markRaw, computed } from "vue";
 import {
   Save,
   Camera,
@@ -594,13 +756,16 @@ import {
   Database,
   FileJson,
   Archive,
-  Settings,
+  Settings as SettingsIcon,
   Shield,
   HardDrive,
   Key,
   FileText,
   Link as LinkIcon,
   CreditCard,
+  Plus,
+  Trash2,
+  Image,
 } from "lucide-vue-next";
 import AdminCard from "../components/ui/AdminCard.vue";
 import AdminSelect from "../components/ui/AdminSelect.vue";
@@ -608,9 +773,13 @@ import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
 import BaseInput from "../components/ui/BaseInput.vue";
 import Toast from "../components/ui/Toast.vue";
+import MediaPickerModal from "../components/media/MediaPickerModal.vue";
 import ExportButton from "../components/ui/ExportButton.vue";
 import ImportButton from "../components/ui/ImportButton.vue";
 import { useExport } from "../composables/useExport";
+import { useBranding } from "../composables/useBranding";
+import { usePaymentSettings } from "../composables/usePaymentSettings";
+import { useProfile } from "../composables/useProfile";
 import { blogService } from "../services/blogService";
 import { portfolioService } from "../services/portfolioService";
 import { clientsService } from "../services/clientsService";
@@ -618,7 +787,7 @@ import { docsService, type DocLink } from "../services/docsService";
 
 // Tabs Configuration
 const tabs = [
-  { id: "general", label: "General", icon: markRaw(Settings) },
+  { id: "general", label: "General", icon: markRaw(SettingsIcon) },
   { id: "payment", label: "Payment Methods", icon: markRaw(CreditCard) },
   { id: "documents", label: "Dokumen", icon: markRaw(FileText) },
   { id: "security", label: "Security", icon: markRaw(Shield) },
@@ -627,8 +796,12 @@ const tabs = [
 
 const activeTab = ref("general");
 
-const profileImage =
-  "https://ui-avatars.com/api/?name=Kang+Jessy&background=702DFF&color=fff&size=200";
+const profileImage = computed(() => {
+  return (
+    profile.value.avatar ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.value.name)}&background=702DFF&color=fff&size=200`
+  );
+});
 
 const saving = ref(false);
 const toast = ref({
@@ -637,25 +810,61 @@ const toast = ref({
   variant: "success" as "success" | "error",
 });
 
-const profile = ref({
-  name: "Kang Jessy",
-  email: "admin@kangjessy.com",
-});
+// Media Picker State
+const isPickerOpen = ref(false);
+const pickerContext = ref<{ type: "bank" | "branding"; index?: number } | null>(
+  null,
+);
+
+const openMediaPicker = (type: "bank" | "branding", index?: number) => {
+  pickerContext.value = { type, index };
+  isPickerOpen.value = true;
+};
+
+const handleMediaSelect = (media: any) => {
+  const ctx = pickerContext.value;
+  if (!ctx) return;
+
+  if (ctx.type === "bank" && ctx.index !== undefined) {
+    bankAccounts.value[ctx.index].bank_logo = media.url;
+  } else if (ctx.type === "branding") {
+    branding.value.logo = media.url;
+  }
+  isPickerOpen.value = false;
+  pickerContext.value = null;
+};
+
+const { branding, saveBranding } = useBranding();
+const {
+  bankAccounts,
+  saveBankAccounts,
+  addAccount,
+  removeAccount,
+  getBankLogo,
+} = usePaymentSettings();
+const { profile, saveProfile } = useProfile();
 
 const toggles = ref({
   notifications: true,
   wa: false,
 });
 
-const payment = ref({
-  bank_name: "",
-  account_number: "",
-  account_holder: "",
-});
+const handleSaveBranding = async () => {
+  saving.value = true;
+  saveBranding(branding.value);
+  setTimeout(() => {
+    saving.value = false;
+    toast.value = {
+      show: true,
+      message: "Identitas Agensi tersimpan!",
+      variant: "success",
+    };
+  }, 800);
+};
 
 const handleSavePayment = async () => {
   saving.value = true;
-  localStorage.setItem("kgj_payment_settings", JSON.stringify(payment.value));
+  saveBankAccounts(bankAccounts.value);
   setTimeout(() => {
     saving.value = false;
     toast.value = {
@@ -783,14 +992,6 @@ const loadDocs = async () => {
 onMounted(() => {
   loadExportData();
   loadDocs();
-  const savedPayment = localStorage.getItem("kgj_payment_settings");
-  if (savedPayment) {
-    try {
-      payment.value = JSON.parse(savedPayment);
-    } catch (e) {
-      console.error(e);
-    }
-  }
 });
 
 const handleSaveDocs = async () => {
@@ -813,13 +1014,28 @@ const handleSaveDocs = async () => {
   }
 };
 
-const handleSave = async () => {
+const handleSaveProfile = async () => {
   saving.value = true;
+  saveProfile(profile.value);
   setTimeout(() => {
     saving.value = false;
     toast.value = {
       show: true,
-      message: "Settings saved successfully!",
+      message: "Profil Admin diperbarui!",
+      variant: "success",
+    };
+  }, 800);
+};
+
+const handleSave = async () => {
+  saving.value = true;
+  saveProfile(profile.value);
+  saveBranding(branding.value);
+  setTimeout(() => {
+    saving.value = false;
+    toast.value = {
+      show: true,
+      message: "Seluruh pengaturan umum berhasil disimpan!",
       variant: "success",
     };
   }, 1000);

@@ -6,15 +6,16 @@ Gunakan file ini untuk mencatat temuan bug, glitch, atau ketidaksesuaian selama 
 
 _Bug yang membuat fitur utama tidak bisa digunakan._
 
-| ID      | Temuan                                                | Dampak                           | Status   |
-| :------ | :---------------------------------------------------- | :------------------------------- | :------- |
-| PRO-001 | Gagal Sinkronisasi Proposal (ID: ...aede6)            | Proposal tidak bisa dibuka       | ✅ FIXED |
-| PRO-004 | Data Terms tidak tersinkronisasi di halaman View      | Terms muncul kosong saat di-view | ✅ FIXED |
-| PRO-002 | UI Pilih Project Type sulit (Dropdown)                | UX buruk, ganti ke Bento Grid    | 🆕 NEW   |
-| PRO-003 | Fitur Tambahan tidak reset saat ganti Tipe Proyek     | Data fitur jadi tidak valid      | 🆕 NEW   |
-| SET-001 | Info Bank/Payment masih Hardcoded                     | Tidak bisa ganti info pembayaran | 🆕 NEW   |
-| MED-001 | Galeri Media: Upload Sukses tapi Gambar Tidak Muncul  | Aset tidak tersimpan/terupdate   | 🆕 NEW   |
-| PTF-001 | Portfolio: Bidang & Tech Stack **TIDAK BISA DI-EDIT** | Data terkunci, tidak bisa update | 🆕 NEW   |
+| ID      | Temuan                                                | Dampak                                               | Status   |
+| :------ | :---------------------------------------------------- | :--------------------------------------------------- | :------- |
+| PRO-001 | Gagal Sinkronisasi Proposal (ID: ...aede6)            | Proposal tidak bisa dibuka                           | ✅ FIXED |
+| PRO-004 | Data Terms tidak tersinkronisasi di halaman View      | Terms muncul kosong saat di-view                     | ✅ FIXED |
+| PRO-002 | UI Pilih Project Type sulit (Dropdown)                | UX buruk, ganti ke Bento Grid                        | ✅ FIXED |
+| PRO-003 | Fitur Tambahan tidak reset saat ganti Tipe Proyek     | Data fitur jadi tidak valid                          | ✅ FIXED |
+| SET-001 | Info Bank/Payment masih LocalStorage                  | Data hilang saat buka di device berbeda              | ✅ FIXED |
+| MED-001 | Galeri Media: Upload Sukses tapi Gambar Tidak Muncul  | Aset tidak tersimpan/terupdate                       | 🆕 NEW   |
+| PTF-001 | Portfolio: Bidang & Tech Stack **TIDAK BISA DI-EDIT** | Data terkunci, tidak bisa update                     | 🆕 NEW   |
+| GLO-001 | Pengaturan Global (Branding/Payment) belum Sync DB    | Data Admin hanya tersimpan di Localhost/LocalStorage | ✅ FIXED |
 
 ## 🟡 MEDIUM (Glitch / UI Issue)
 

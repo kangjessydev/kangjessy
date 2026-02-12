@@ -36,6 +36,7 @@ export interface Client {
   terms_payment?: string
   terms_copyright?: string
   terms_revision?: string
+  payment_accounts?: any[]
 }
 
 export interface Profile {

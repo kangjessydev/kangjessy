@@ -15,13 +15,19 @@
             class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center p-2 shadow-lg"
           >
             <img
-              src="/logo-agency.png"
+              :src="branding.logo"
               alt="Logo"
               class="w-full h-full object-contain"
             />
           </div>
           <h1 class="text-lg md:text-xl font-black tracking-tighter uppercase">
-            Kang <span class="text-indigo-400">Jessy</span>
+            {{ branding.name.split(" ")[0] }}
+            <span
+              v-if="branding.name.split(' ').length > 1"
+              class="text-indigo-400"
+            >
+              {{ branding.name.split(" ").slice(1).join(" ") }}
+            </span>
           </h1>
         </div>
         <p
@@ -181,8 +187,8 @@
           >
             <ul class="space-y-3 mb-0">
               <li
-                v-for="(d, i) in formData.deliverables.filter(
-                  (x) => x && x.trim(),
+                v-for="(item, i) in formData.deliverables.filter(
+                  (val) => val && val.trim(),
                 )"
                 :key="i"
                 class="flex items-start gap-3"
@@ -192,7 +198,7 @@
                 ></div>
                 <span
                   class="text-xs font-bold text-slate-600 leading-relaxed"
-                  >{{ d }}</span
+                  >{{ item }}</span
                 >
               </li>
             </ul>
@@ -355,37 +361,73 @@
           </div>
         </div>
 
-        <!-- Payment Info Preview -->
+        <!-- Payment Instructions -->
         <div
-          class="p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100 flex items-center justify-between"
+          class="p-8 bg-indigo-50/50 rounded-[32px] border border-indigo-100/50"
         >
-          <div class="flex items-center gap-4">
+          <div class="flex flex-col items-center text-center">
             <div
-              class="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-2 border border-slate-100 shadow-sm"
+              class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4"
             >
-              <img
-                src="/logo-agency.png"
-                class="w-full h-full object-contain"
-              />
+              <DollarSign :size="20" />
             </div>
-            <div>
-              <p
-                class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"
+            <p
+              class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em] mb-6"
+            >
+              Instruksi Pembayaran Transfer Bank
+            </p>
+
+            <div class="flex flex-col gap-3 w-full max-w-lg">
+              <div
+                v-for="(acc, index) in displayPaymentAccounts"
+                :key="index"
+                class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6 transition-all hover:shadow-md"
               >
-                Authorized Signature
-              </p>
-              <p class="text-xs font-black text-[#1B2559]">
-                KANG JESSY ECOSYSTEM
-              </p>
+                <div
+                  class="w-14 h-14 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center p-2 shrink-0"
+                >
+                  <img
+                    v-if="getBankLogo(acc.bank_name, acc.bank_logo)"
+                    :src="getBankLogo(acc.bank_name, acc.bank_logo)"
+                    class="w-full h-full object-contain"
+                  />
+                  <div v-else class="text-[10px] font-black text-slate-300">
+                    BANK
+                  </div>
+                </div>
+                <div class="text-left flex-1 min-w-0">
+                  <p
+                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                  >
+                    {{ acc.bank_name }}
+                  </p>
+                  <p class="text-xl font-black text-[#1B2559] tracking-tight">
+                    {{ acc.account_number }}
+                  </p>
+                  <p class="text-[9px] font-bold text-slate-400 uppercase">
+                    a.n {{ acc.account_holder || branding.name }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="text-right">
-            <p
-              class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"
-            >
-              Bank Transfer
+        </div>
+
+        <div class="text-center pt-10">
+          <p
+            class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-6"
+          >
+            Tanda Tangan Elektronik Tervalidasi
+          </p>
+          <div class="flex flex-col items-center">
+            <p class="text-xl font-black text-indigo-500 italic mb-1">
+              {{ branding.name }}
             </p>
-            <p class="text-xs font-black text-[#1B2559]">BCA 8020-441-291</p>
+            <p
+              class="text-[9px] font-bold text-indigo-300 uppercase tracking-widest"
+            >
+              Digital Authenticated System
+            </p>
           </div>
         </div>
       </div>
@@ -394,6 +436,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, computed } from "vue";
 import {
   Info,
   AlertTriangle,
@@ -401,7 +444,10 @@ import {
   Check,
   FileText,
   CheckCircle,
+  DollarSign,
 } from "lucide-vue-next";
+import { useBranding } from "../../composables/useBranding";
+import { usePaymentSettings } from "../../composables/usePaymentSettings";
 
 const props = defineProps<{
   formData: any;
@@ -411,6 +457,23 @@ const props = defineProps<{
   finalTotal: number;
   isMobile?: boolean;
 }>();
+
+const { branding } = useBranding();
+const { activeBanks: globalActiveBanks, getBankLogo } = usePaymentSettings();
+
+const displayPaymentAccounts = computed(() => {
+  if (
+    props.formData.payment_accounts &&
+    props.formData.payment_accounts.length > 0
+  ) {
+    return props.formData.payment_accounts;
+  }
+  return globalActiveBanks.value;
+});
+
+onMounted(() => {
+  // Composables handle their own loading from localStorage
+});
 
 const formatPrice = (v: number) => "Rp " + (v || 0).toLocaleString("id-ID");
 </script>

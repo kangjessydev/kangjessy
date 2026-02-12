@@ -86,3 +86,18 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
 - [x] **Financial Summary Scaling**:
   - _Action_: Cek nominal harga di Total Investasi.
   - _Expected Output_: Ukuran font seimbang (tidak terlalu besar dibanding label/teks lainnya).
+
+## 💳 9. Verifikasi Pengaturan Global (Branding & Payment)
+
+- [x] **Branding Identity**:
+  - _Action_: Buka Settings > General. Ubah "Nama Agensi" dan Upload Logo baru. Simpan.
+  - _Expected Output_: Refresh halaman, logo & nama baru tetap ada. Buka Proposal Generator, pastikan header preview menggunakan identitas baru.
+- [x] **Multiple Payment Methods**:
+  - _Action_: Di Settings > Payment, tambah 2 rekening bank berbeda. Tandai keduanya sebagai "Aktif". Simpan.
+  - _Expected Output_: Buka Proposal Detail atau Invoice. Pastikan keduannya muncul di bagian "Bank Transfer".
+- [x] **Bank Logo Auto-Detection**:
+  - _Action_: Ketik "BCA" di nama bank.
+  - _Expected Output_: Logo BCA otomatis muncul di preview (menggunakan deteksi otomatis dari composable).
+- [x] **Payment Status Toggle**:
+  - _Action_: Ubah salah satu rekening menjadi "Non-aktif".
+  - _Expected Output_: Rekening tersebut harus hilang dari Preview Proposal & Invoice.

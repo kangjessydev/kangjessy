@@ -529,6 +529,72 @@
                 ></textarea>
               </div>
 
+              <div class="space-y-4 pt-6 border-t border-slate-100">
+                <div class="flex items-center justify-between">
+                  <label
+                    class="text-xs font-black text-indigo-900 uppercase tracking-wider ml-1"
+                  >
+                    04. Rekening Pembayaran
+                  </label>
+                  <p
+                    class="text-[9px] font-black text-slate-400 uppercase tracking-widest"
+                  >
+                    Pilih yang akan muncul di proposal
+                  </p>
+                </div>
+
+                <div
+                  v-if="activeBanks.length === 0"
+                  class="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-center gap-3"
+                >
+                  <AlertTriangle :size="16" class="text-amber-500" />
+                  <p class="text-[10px] font-bold text-amber-700">
+                    Belum ada rekening aktif di Pengaturan.
+                  </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <label
+                    v-for="bank in activeBanks"
+                    :key="bank.account_number"
+                    class="flex items-center gap-3 p-3 rounded-2xl border transition-all cursor-pointer group"
+                    :class="
+                      isBankSelected(bank)
+                        ? 'bg-indigo-50 border-indigo-200 shadow-sm'
+                        : 'bg-white border-slate-100 hover:border-slate-200'
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      :checked="isBankSelected(bank)"
+                      @change="toggleBank(bank)"
+                      class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <div class="flex items-center gap-2 overflow-hidden">
+                      <div
+                        class="w-6 h-6 rounded bg-white border border-slate-100 flex items-center justify-center p-0.5 shrink-0"
+                      >
+                        <img
+                          v-if="getBankLogo(bank.bank_name)"
+                          :src="getBankLogo(bank.bank_name)"
+                          class="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div class="min-w-0">
+                        <p
+                          class="text-[10px] font-black text-[#1B2559] truncate"
+                        >
+                          {{ bank.bank_name }}
+                        </p>
+                        <p class="text-[9px] font-bold text-slate-400 truncate">
+                          {{ bank.account_number }}
+                        </p>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
               <div class="flex gap-2 justify-end">
                 <button
                   @click="fillDefaultTerms"
@@ -691,6 +757,7 @@ import { BaseButton } from "@kangjessy/ui";
 import Toast from "../components/ui/Toast.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 import ProposalDetailPreview from "../components/proposals/ProposalDetailPreview.vue";
+import { usePaymentSettings } from "../composables/usePaymentSettings";
 
 const router = useRouter();
 const route = useRoute();
@@ -719,6 +786,7 @@ const formData = ref({
   terms_payment: "",
   terms_copyright: "",
   terms_revision: "",
+  payment_accounts: [] as any[],
 });
 
 const narrative = ref({
@@ -807,7 +875,11 @@ const loadProposal = async (id: string) => {
       terms_payment: data.terms_payment || "",
       terms_copyright: data.terms_copyright || "",
       terms_revision: data.terms_revision || "",
+      payment_accounts: data.payment_accounts || [],
     };
+
+    // If loading existing with no selection, or just loaded
+    // Ensure we don't overwrite if it already has data
   } catch (e) {
     console.error("Load failed", e);
   } finally {
@@ -815,8 +887,11 @@ const loadProposal = async (id: string) => {
   }
 };
 
+const { activeBanks, getBankLogo, initPaymentSettings } = usePaymentSettings(); // Moved up for onMounted access
+
 onMounted(async () => {
   try {
+    await initPaymentSettings(); // Initialize payment settings first
     const [coupons, allProposals, inboxLeads] = await Promise.all([
       couponsService.getAll(),
       proposalService.getAll(),
@@ -825,10 +900,36 @@ onMounted(async () => {
     activeVouchers.value = coupons;
     availableLeads.value = inboxLeads;
     activeProposals.value = allProposals;
+
+    // Set default payment accounts if new
+    if (!editingId.value && formData.value.payment_accounts.length === 0) {
+      formData.value.payment_accounts = [...activeBanks.value];
+    }
   } catch (e) {
     console.error("Init failed", e);
   }
 });
+
+const isBankSelected = (bank: any) => {
+  return formData.value.payment_accounts.some(
+    (acc: any) =>
+      acc.account_number === bank.account_number &&
+      acc.bank_name === bank.bank_name,
+  );
+};
+
+const toggleBank = (bank: any) => {
+  const index = formData.value.payment_accounts.findIndex(
+    (acc: any) =>
+      acc.account_number === bank.account_number &&
+      acc.bank_name === bank.bank_name,
+  );
+  if (index > -1) {
+    formData.value.payment_accounts.splice(index, 1);
+  } else {
+    formData.value.payment_accounts.push({ ...bank });
+  }
+};
 
 watch(
   () => [route.query.id, route.query.leadId],
@@ -981,6 +1082,7 @@ const handleSave = async () => {
       terms_payment: formData.value.terms_payment,
       terms_copyright: formData.value.terms_copyright,
       terms_revision: formData.value.terms_revision,
+      payment_accounts: formData.value.payment_accounts,
     };
 
     if (!payload.project_name) {
@@ -1035,7 +1137,10 @@ const resetForm = () => {
     terms_payment: "",
     terms_copyright: "",
     terms_revision: "",
+    payment_accounts: [] as any[],
   };
+  // Re-fill with active ones if reset
+  formData.value.payment_accounts = [...activeBanks.value];
   narrative.value = { bg: "", prob: "", sol: "" };
   selectedFeatureIds.value = [];
   showResetConfirm.value = false;

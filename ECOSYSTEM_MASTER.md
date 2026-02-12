@@ -146,6 +146,7 @@ Berdasarkan audit terbaru, berikut adalah area yang telah tersinkronisasi dan di
 | **Client Experience**  | 🟢 SYNCED | `/portal` (Agency) sebagai Dashboard mandiri klien untuk tracking progress, cetak invoice, & konfirmasi bayar.                  |
 | **The Blueprint**      | 🟢 SYNCED | Agency UI (`RoadmapView`) kini mengambil data live dari `blueprint_stages` via `blueprintService`. Legacy config telah dihapus. |
 | **Proposal System**    | 🟢 SYNCED | Sistem Generator & Viewer mendukung pemisahan Terms (Payment, Copyright, Revision) dan UI Premium yang tersinkronisasi.         |
+| **Global Settings**    | 🟢 SYNCED | `useBranding`, `usePaymentSettings`, & `useProfile` kini tersinkronisasi otomatis dengan tabel `system_settings` di Supabase.   |
 
 ---
 
@@ -298,6 +299,18 @@ Agar Admin bisa mengontrol flow di atas, struktur database harus mengakomodasi:
 
 ---
 
+### Global State & Identity Architecture
+
+Untuk menjaga identitas agensi yang konsisten di seluruh modul, sistem menggunakan composable khusus yang memisahkan logika data dari UI:
+
+1. **`useBranding`**: Mengelola logo dan nama agensi untuk Proposal, Invoice, dan Portal.
+2. **`usePaymentSettings`**: Mengelola daftar rekening bank aktif. Mendukung multiple bank accounts.
+3. **`useProfile`**: Mengelola identitas personal Admin (Super Admin).
+
+> **Current Status**: Data kini tersimpan di tabel `system_settings` Supabase secara persisten, memungkinkan akses multi-device dan sinkronisasi data real-time untuk Proposal/Invoice Klien.
+
+---
+
 ## 🏁 KONKLUSI AUDIT
 
-Seluruh infrastruktur dasar (Pricing, Client Detail, AI Leads, & Client Portal) telah **SYNCED**. Fokus selanjutnya adalah pengisian konten riil dan pengujian stabilitas oleh USER melalui `USER_TESTING.md`.
+Seluruh infrastruktur dasar (Pricing, Client Detail, AI Leads, & Client Portal) telah **SYNCED**. Fokus selanjutnya adalah perbaikan sinkronisasi Global Settings dan pengisian konten riil oleh USER melalui `USER_TESTING.md`.

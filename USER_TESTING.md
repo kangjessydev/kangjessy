@@ -96,8 +96,15 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
   - _Action_: Di Settings > Payment, tambah 2 rekening bank berbeda. Tandai keduanya sebagai "Aktif". Simpan.
   - _Expected Output_: Buka Proposal Detail atau Invoice. Pastikan keduannya muncul di bagian "Bank Transfer".
 - [x] **Bank Logo Auto-Detection**:
-  - _Action_: Ketik "BCA" di nama bank.
-  - _Expected Output_: Logo BCA otomatis muncul di preview (menggunakan deteksi otomatis dari composable).
+  - _Action_: Di Settings > Payment, masukkan bank "BCA". Simpan. Buka Proposal.
+  - _Expected Output_: Ikon bank BCA muncul secara otomatis di samping nomor rekening.
 - [x] **Payment Status Toggle**:
   - _Action_: Ubah salah satu rekening menjadi "Non-aktif".
   - _Expected Output_: Rekening tersebut harus hilang dari Preview Proposal & Invoice.
+
+## 🖼️ 10. Verifikasi Media Library (Fixed MED-001)
+
+- [x] **Universal Sync**: Buat folder di Media Library utama, lalu buka Media Picker di Blog/Portfolio. Folder baru harus muncul lintas komponen.
+- [x] **Persistent Folders**: Refresh halaman setelah membuat folder. Pastikan folder tidak hilang (disimpan di Sanity).
+- [x] **Robust Upload**: Upload beberapa gambar sekaligus. Cek progres & pastikan semuanya muncul di grid dengan URL yang valid.
+- [x] **Alt Text Persistence**: Ubah Alt Text gambar melalui Media Library, lalu cek di Picker apakah perubahan tersinkron.

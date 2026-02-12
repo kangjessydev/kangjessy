@@ -327,70 +327,77 @@ const mediaItems = ref<MediaItem[]>([]);
 
 // -- Lifecycle --
 onMounted(async () => {
-  await fetchMedia();
-  // Sync folders with Media.vue
+  // Initial hardcoded folders (same as Media.vue)
   folders.value = [
-    {
-      id: "blog",
-      name: "Blog",
-      parentId: null,
-      createdAt: new Date().toISOString(),
-    },
+    { id: "blog", name: "Blog", parentId: null, createdAt: "2026-01-01" },
     {
       id: "blog-covers",
       name: "Covers",
       parentId: "blog",
-      createdAt: new Date().toISOString(),
+      createdAt: "2026-01-01",
     },
     {
       id: "blog-content",
       name: "Content Images",
       parentId: "blog",
-      createdAt: new Date().toISOString(),
+      createdAt: "2026-01-01",
     },
     {
       id: "portfolio",
       name: "Portfolio",
       parentId: null,
-      createdAt: new Date().toISOString(),
+      createdAt: "2026-01-01",
     },
     {
       id: "portfolio-thumbnails",
       name: "Thumbnails",
       parentId: "portfolio",
-      createdAt: new Date().toISOString(),
+      createdAt: "2026-01-01",
     },
     {
       id: "portfolio-galleries",
       name: "Galleries",
       parentId: "portfolio",
-      createdAt: new Date().toISOString(),
+      createdAt: "2026-01-01",
     },
     {
       id: "products",
       name: "Products",
       parentId: null,
-      createdAt: new Date().toISOString(),
+      createdAt: "2026-01-01",
     },
     {
       id: "branding",
       name: "Branding",
       parentId: null,
-      createdAt: new Date().toISOString(),
+      createdAt: "2026-01-01",
     },
-    {
-      id: "misc",
-      name: "Misc",
-      parentId: null,
-      createdAt: new Date().toISOString(),
-    },
+    { id: "misc", name: "Misc", parentId: null, createdAt: "2026-01-01" },
   ];
+  await fetchMedia();
 });
 
 // -- Methods --
 const fetchMedia = async () => {
   loading.value = true;
   try {
+    // 1. Fetch Remote Folders
+    const folderQuery = `*[_type == "mediaFolder"] | order(name asc){
+      "id": _id,
+      name,
+      parentId,
+      "createdAt": _createdAt
+    }`;
+    const remoteFolders = await (sanityClient as any).fetch(folderQuery);
+
+    // Merge
+    const defaultIds = new Set(folders.value.map((f) => f.id));
+    const uniqueRemote = remoteFolders.filter(
+      (rf: any) => !defaultIds.has(rf.id),
+    );
+    folders.value = [...folders.value, ...uniqueRemote];
+
+    // 2. Fetch Media
     const query = `*[_type == "media"] | order(_createdAt desc){
             "id": _id,
             name,
@@ -402,7 +409,11 @@ const fetchMedia = async () => {
             type,
             "createdAt": _createdAt
         }`;
-    mediaItems.value = await sanityClient.fetch(query);
+    const data = await (sanityClient as any).fetch(query);
+    mediaItems.value = data.map((item: any) => ({
+      ...item,
+      url: item.url || "",
+    }));
   } catch (e) {
     console.error("Fetch media failed", e);
   } finally {
@@ -457,14 +468,14 @@ const saveAltText = async () => {
 
   savingAlt.value = true;
   try {
-    await sanityWriteClient
+    await (sanityWriteClient as any)
       .patch(selectedMedia.value.id)
       .set({ alt: selectedMedia.value.alt || "" })
       .commit();
-    showToast("Alt text updated");
+    showToast("Alt text tervalidasi");
   } catch (e) {
     console.error("Failed to save alt text", e);
-    showToast("Failed to update alt text", "error");
+    showToast("Gagal update teks alt", "error");
   } finally {
     savingAlt.value = false;
   }
@@ -488,30 +499,28 @@ const handleUpload = async (event: Event) => {
 
   loading.value = true;
   try {
-    // 1. Validate Dimensions (Strict block for < 1200px)
+    // 1. Validate
     const validation = await validateImage(file);
     if (!validation.valid) {
-      showToast(validation.error || "Invalid image", "error");
+      showToast(validation.error || "Resolusi gambar terlalu rendah", "error");
       loading.value = false;
       input.value = "";
       return;
     }
 
-    // 2. Optimize (Convert to WebP & Compress)
+    // 2. Optimize
     const optimizedFile = await optimizeImage(file);
-    console.log("Starting upload:", optimizedFile.name);
 
-    // 3. Upload Asset to Sanity
-    const asset = await sanityWriteClient.assets.upload(
+    // 3. Upload Asset
+    const asset = await (sanityWriteClient as any).assets.upload(
       "image",
       optimizedFile,
-      {
-        filename: optimizedFile.name,
-      },
+      { filename: optimizedFile.name },
     );
-    console.log("Asset uploaded:", asset._id);
 
-    // 4. Create 'media' Document
+    if (!asset || !asset._id) throw new Error("Cloud synchronization failed");
+
+    // 4. Create Document
     const doc = {
       _type: "media",
       name: optimizedFile.name,
@@ -527,15 +536,14 @@ const handleUpload = async (event: Event) => {
       type: optimizedFile.type,
     };
 
-    const createdDoc = await sanityWriteClient.create(doc);
-    console.log("Media document created:", createdDoc._id);
+    const createdDoc = await (sanityWriteClient as any).create(doc);
 
-    // 5. Optimistic Update
+    // 5. Successful Update
     const newItem: MediaItem = {
       id: createdDoc._id,
       assetId: asset._id,
       name: optimizedFile.name,
-      url: asset.url,
+      url: asset.url || "",
       folderId: selectedFolderId.value,
       size: optimizedFile.size,
       type: optimizedFile.type,
@@ -544,14 +552,10 @@ const handleUpload = async (event: Event) => {
 
     mediaItems.value.unshift(newItem);
     selectMedia(newItem);
-    showToast("Image uploaded successfully");
-    console.log("Optimistic update applied");
-  } catch (error) {
+    showToast("Aset berhasil diupload & disinkronkan");
+  } catch (error: any) {
     console.error("Upload failed", error);
-    showToast(
-      `Upload failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      "error",
-    );
+    showToast(`Upload gagal: ${error.message}`, "error");
   } finally {
     loading.value = false;
     input.value = "";

@@ -13,7 +13,7 @@ _Bug yang membuat fitur utama tidak bisa digunakan._
 | PRO-002 | UI Pilih Project Type sulit (Dropdown)                | UX buruk, ganti ke Bento Grid                        | ✅ FIXED |
 | PRO-003 | Fitur Tambahan tidak reset saat ganti Tipe Proyek     | Data fitur jadi tidak valid                          | ✅ FIXED |
 | SET-001 | Info Bank/Payment masih LocalStorage                  | Data hilang saat buka di device berbeda              | ✅ FIXED |
-| MED-001 | Galeri Media: Upload Sukses tapi Gambar Tidak Muncul  | Aset tidak tersimpan/terupdate                       | 🆕 NEW   |
+| MED-001 | Galeri Media: Upload Sukses tapi Gambar Tidak Muncul  | Aset tidak tersimpan/terupdate                       | ✅ FIXED |
 | PTF-001 | Portfolio: Bidang & Tech Stack **TIDAK BISA DI-EDIT** | Data terkunci, tidak bisa update                     | 🆕 NEW   |
 | GLO-001 | Pengaturan Global (Branding/Payment) belum Sync DB    | Data Admin hanya tersimpan di Localhost/LocalStorage | ✅ FIXED |
 

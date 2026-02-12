@@ -878,23 +878,45 @@ const getFolderPath = (folderId: string): string => {
   return parts.join(" / ");
 };
 
-const fetchMedia = async () => {
+const fetchMediaData = async () => {
   loading.value = true;
   try {
-    const query = `*[_type == "media"] | order(_createdAt desc){
-            "id": _id,
-            name,
-            alt,
-            "url": image.asset->url,
-            "assetId": image.asset._ref,
-            size,
-            folderId,
-            "createdAt": _createdAt
-        }`;
-    mediaItems.value = await (sanityClient as any).fetch(query);
+    // 1. Fetch Folders
+    const folderQuery = `*[_type == "mediaFolder"] | order(name asc){
+      "id": _id,
+      name,
+      parentId,
+      "createdAt": _createdAt
+    }`;
+    const remoteFolders = await (sanityClient as any).fetch(folderQuery);
+
+    // Merge remote folders with hardcoded defaults (avoiding duplicates)
+    const defaultIds = new Set(folders.value.map((f) => f.id));
+    const uniqueRemote = remoteFolders.filter(
+      (rf: any) => !defaultIds.has(rf.id),
+    );
+    folders.value = [...folders.value, ...uniqueRemote];
+
+    // 2. Fetch Media
+    const mediaQuery = `*[_type == "media"] | order(_createdAt desc){
+      "id": _id,
+      name,
+      alt,
+      "url": image.asset->url,
+      "assetId": image.asset._ref,
+      size,
+      folderId,
+      "createdAt": _createdAt,
+      type
+    }`;
+    const fetchedItems = await (sanityClient as any).fetch(mediaQuery);
+    mediaItems.value = fetchedItems.map((item: any) => ({
+      ...item,
+      url: item.url || "", // Force empty string instead of null
+    }));
   } catch (e) {
     console.error("Fetch failed", e);
-    showToast("Failed to load media", "error");
+    showToast("Failed to sync media repository", "error");
   } finally {
     loading.value = false;
   }
@@ -915,26 +937,26 @@ const handleFileUpload = async (e: Event) => {
   loading.value = true;
   try {
     for (const file of Array.from(files)) {
-      // 1. Validate (Strict block for < 1200px)
+      // 1. Validate
       const validation = await validateImage(file);
       if (!validation.valid) {
-        showToast(validation.error || "Invalid image", "error");
-        continue; // Skip this specific file
+        showToast(validation.error || "Image quality too low", "error");
+        continue;
       }
 
-      // 2. Optimize (Convert to WebP & Compression)
+      // 2. Optimize
       const optimizedFile = await optimizeImage(file);
 
-      // 3. Upload Optimized Asset
+      // 3. Upload Asset
       const asset = await (sanityWriteClient as any).assets.upload(
         "image",
         optimizedFile,
-        {
-          filename: optimizedFile.name,
-        },
+        { filename: optimizedFile.name },
       );
 
-      // 4. Create Document
+      if (!asset || !asset._id) throw new Error("Cloud upload failed");
+
+      // 4. Create Media Document
       const doc = {
         _type: "media",
         name: optimizedFile.name,
@@ -949,81 +971,124 @@ const handleFileUpload = async (e: Event) => {
         size: optimizedFile.size,
         type: optimizedFile.type,
       };
+
       const createdDoc = await (sanityWriteClient as any).create(doc);
 
-      // 5. Optimistic Update
-      mediaItems.value.unshift({
+      // 5. Reactive Update (Success)
+      const newItem: MediaItem = {
         id: createdDoc._id,
+        assetId: asset._id,
         name: optimizedFile.name,
-        url: asset.url,
+        url: asset.url || "", // Use asset.url directly from upload response
         size: optimizedFile.size,
         folderId: selectedFolderId.value,
         createdAt: new Date().toISOString(),
-      });
+        type: optimizedFile.type,
+      };
+
+      mediaItems.value.unshift(newItem);
     }
-    showToast("Processing complete!", "success");
+    showToast("Galleri Media disinkronkan!", "success");
   } catch (err: any) {
-    console.error(err);
-    showToast("Upload failed: " + err.message, "error");
+    console.error("Upload Error:", err);
+    showToast("Gagal mengupload aset: " + err.message, "error");
   } finally {
     loading.value = false;
     if (fileInput.value) fileInput.value.value = "";
   }
 };
 
-const createFolder = () => {
+const createFolder = async () => {
   if (!newFolderName.value.trim()) return;
 
-  const newFolder: MediaFolder = {
-    id: "folder-" + Date.now(),
-    name: newFolderName.value.trim(),
-    parentId: newFolderParent.value || selectedFolderId.value,
-    createdAt: new Date().toISOString(),
-  };
-  folders.value.push(newFolder);
-  showNewFolderModal.value = false;
-  newFolderName.value = "";
-  newFolderParent.value = null;
-  showToast("Folder created!", "success");
+  const name = newFolderName.value.trim();
+  const parentId = newFolderParent.value || selectedFolderId.value;
+
+  try {
+    // Persist to Sanity
+    const doc = {
+      _type: "mediaFolder",
+      name: name,
+      parentId: parentId,
+    };
+
+    const created = await (sanityWriteClient as any).create(doc);
+
+    const newFolder: MediaFolder = {
+      id: created._id,
+      name: name,
+      parentId: parentId,
+      createdAt: created._createdAt || new Date().toISOString(),
+    };
+
+    folders.value.push(newFolder);
+    showNewFolderModal.value = false;
+    newFolderName.value = "";
+    newFolderParent.value = null;
+    showToast("Folder berhasil dibuat!", "success");
+  } catch (e: any) {
+    showToast("Gagal membuat folder: " + e.message, "error");
+  }
 };
 
-const handleDeleteFolder = (folderId: string) => {
+const handleDeleteFolder = async (folderId: string) => {
+  if (!confirm("Hapus folder ini? File di dalamnya akan dipindah ke Root."))
+    return;
+
   const descendantIds = getDescendantFolderIds(folderId);
   descendantIds.push(folderId);
 
-  // Move files to root
-  mediaItems.value.forEach((m) => {
-    if (descendantIds.includes(m.folderId || "")) {
+  try {
+    // 1. Move files in Sanity (optional but good for consistency)
+    const affectedMedia = mediaItems.value.filter((m) =>
+      descendantIds.includes(m.folderId || ""),
+    );
+    for (const m of affectedMedia) {
+      await (sanityWriteClient as any)
+        .patch(m.id)
+        .set({ folderId: null })
+        .commit();
       m.folderId = null;
     }
-  });
 
-  // Remove folders
-  folders.value = folders.value.filter((f) => !descendantIds.includes(f.id));
+    // 2. Delete folders in Sanity
+    for (const fid of descendantIds) {
+      // Only delete if it's a remote folder (standard IDs don't start with 'blog' etc)
+      if (
+        !["blog", "portfolio", "products", "branding", "misc"].includes(fid)
+      ) {
+        await (sanityWriteClient as any).delete(fid);
+      }
+    }
 
-  if (
-    selectedFolderId.value &&
-    descendantIds.includes(selectedFolderId.value)
-  ) {
-    selectedFolderId.value = null;
+    // 3. Update local state
+    folders.value = folders.value.filter((f) => !descendantIds.includes(f.id));
+    if (
+      selectedFolderId.value &&
+      descendantIds.includes(selectedFolderId.value)
+    ) {
+      selectedFolderId.value = null;
+    }
+
+    showToast("Folder berhasil dihapus", "success");
+  } catch (e: any) {
+    showToast("Gagal menghapus folder: " + e.message, "error");
   }
-
-  showToast("Folder deleted", "success");
 };
 
 const handleDeleteMedia = async (mediaId: string) => {
-  if (!confirm("Delete this file permanently?")) return;
+  if (!confirm("Hapus file ini secara permanen?")) return;
 
   // Optimistic update
   const previousItems = [...mediaItems.value];
   mediaItems.value = mediaItems.value.filter((m) => m.id !== mediaId);
-  showToast("File deleted", "success");
 
   try {
     await (sanityWriteClient as any).delete(mediaId);
+    showToast("Aset berhasil dihapus", "success");
   } catch (e) {
     console.error("Delete failed", e);
-    showToast("Failed to delete from server", "error");
+    showToast("Gagal menghapus dari server", "error");
     mediaItems.value = previousItems; // Revert
   }
 };
@@ -1045,29 +1110,18 @@ const moveFile = async () => {
   const item = mediaItems.value.find((m) => m.id === targetId);
   if (item) {
     item.folderId = newFolderId;
-    showToast("Moving file...", "success");
   }
 
   showMoveModal.value = false;
   moveTarget.value = null;
 
   try {
-    console.log(`Saving move: ${targetId} -> ${newFolderId}`);
-    // Explicitly handle null vs string
     const update = newFolderId ? { folderId: newFolderId } : { folderId: null };
-
     await (sanityWriteClient as any).patch(targetId).set(update).commit();
-
-    console.log("Move saved successfully");
-    showToast("File moved successfully", "success");
+    showToast("File berhasil dipindah", "success");
   } catch (e) {
     console.error("Move failed", e);
-    showToast(
-      "Failed to save move action: " +
-        (e instanceof Error ? e.message : "Unknown"),
-      "error",
-    );
-    // Revert local state
+    showToast("Gagal memindah file", "error");
     if (item) item.folderId = previousFolderId;
   }
 };
@@ -1080,21 +1134,26 @@ const saveAltText = async (item: MediaItem) => {
       .patch(item.id)
       .set({ alt: item.alt || "" })
       .commit();
-    showToast("Alt text saved", "success");
+    showToast("Teks Alt berhasil disimpan", "success");
   } catch (e) {
     console.error("Failed to save alt text", e);
-    showToast("Failed to save", "error");
+    showToast("Gagal menyimpan perubahan", "error");
   } finally {
     savingAlt.value = false;
   }
 };
 
 const copyUrl = (url: string) => {
+  if (!url) {
+    showToast("URL tidak tersedia", "error");
+    return;
+  }
   navigator.clipboard.writeText(url);
-  showToast("URL copied to clipboard!", "success");
+  showToast("URL berhasil disalin!", "success");
 };
 
 const formatBytes = (bytes: number): string => {
+  if (!bytes) return "0 B";
   if (bytes < 1024) return bytes + " B";
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
   if (bytes < 1024 * 1024 * 1024)
@@ -1103,6 +1162,7 @@ const formatBytes = (bytes: number): string => {
 };
 
 const formatDate = (date: string): string => {
+  if (!date) return "-";
   return new Date(date).toLocaleDateString("id-ID", {
     day: "numeric",
     month: "short",
@@ -1110,11 +1170,17 @@ const formatDate = (date: string): string => {
   });
 };
 
-const showToast = (message: string, variant: "success" | "error") => {
+const showToast = (
+  message: string,
+  variant: "success" | "error" = "success",
+) => {
   toast.value = { show: true, message, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
 };
 
 onMounted(async () => {
-  fetchMedia();
+  fetchMediaData();
 });
 </script>

@@ -180,7 +180,7 @@ const router = createRouter({
         {
           path: 'services/style-vibes',
           name: 'service-style-vibes',
-          component: () => import('../views/services/GenericPricingList.vue')
+          component: () => import('../views/services/StyleVibes.vue')
         },
         {
           path: 'services/style-vibes/new',

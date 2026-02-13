@@ -184,6 +184,13 @@
       @confirm="handleDelete"
       @cancel="showDeleteDialog = false"
     />
+
+    <Toast
+      v-if="toast.show"
+      :message="toast.message"
+      :variant="toast.variant"
+      @close="toast.show = false"
+    />
   </div>
 </template>
 
@@ -196,7 +203,6 @@ import {
   Database,
   Edit3,
   Trash2,
-  DollarSign,
   Zap,
   Globe,
   Cpu,
@@ -216,8 +222,10 @@ import {
 } from "lucide-vue-next";
 import * as LucideIcons from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
-// Assuming you have a ConfirmDialog component, if not I'll mock it or use window.confirm for now
+import PageHeader from "../../components/ui/PageHeader.vue";
+import AdminCard from "../../components/ui/AdminCard.vue";
 import ConfirmDialog from "../../components/ui/ConfirmDialog.vue";
+import Toast from "../../components/ui/Toast.vue";
 import {
   pricingService,
   type PricingItem,
@@ -316,8 +324,21 @@ const formatCurrency = (val: number) => {
   );
 };
 
+const toast = ref({
+  show: false,
+  message: "",
+  variant: "success" as "success" | "error",
+});
+
+const showToast = (
+  message: string,
+  variant: "success" | "error" = "success",
+) => {
+  toast.value = { show: true, message, variant };
+};
+
 const getIconComponent = (name: any) => {
-  if (!name) return LucideIcons.HelpCircle;
+  if (!name) return LucideIcons.CircleHelp;
   const iconMap: any = {
     Zap,
     Globe,
@@ -337,7 +358,7 @@ const getIconComponent = (name: any) => {
     Database,
     Layers,
   };
-  return iconMap[name] || (LucideIcons as any)[name] || LucideIcons.HelpCircle;
+  return iconMap[name] || (LucideIcons as any)[name] || LucideIcons.CircleHelp;
 };
 
 const confirmDelete = (id: string) => {
@@ -354,7 +375,7 @@ const handleDelete = async () => {
     showDeleteDialog.value = false;
   } catch (err) {
     console.error("Delete failed", err);
-    alert("Gagal menghapus data");
+    showToast("Gagal menghapus data", "error");
   }
 };
 

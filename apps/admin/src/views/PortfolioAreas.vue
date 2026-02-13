@@ -226,6 +226,9 @@ const showToast = (
   variant: "success" | "error" = "success",
 ) => {
   toast.value = { show: true, message, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 5000);
 };
 
 const saveArea = async () => {

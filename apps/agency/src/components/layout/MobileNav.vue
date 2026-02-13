@@ -197,8 +197,11 @@ import {
 } from "lucide-vue-next";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import { siteConfig } from "../../data/config/siteConfig";
+import { useSiteSettings } from "../../composables/useSiteSettings";
 import { activeSheet } from "@kangjessy/ui";
 import { menuItems } from "../../data/config/menuConfig";
+
+const { settings } = useSiteSettings();
 
 const route = useRoute();
 const popup = usePopupManager();
@@ -236,7 +239,7 @@ const chatLinks = [
     action: () => {
       popup.openModal(Popups.CHAT_WA, {
         category: "Mobile Nav",
-        initialMessage: siteConfig.whatsapp.defaultMessage,
+        initialMessage: settings.value.whatsappMsg,
       });
       isChatMenuOpen.value = false;
     },

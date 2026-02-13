@@ -106,12 +106,11 @@
       </div>
 
       <!-- Marketing Analysis Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12 items-start">
         <!-- Project Distribution -->
         <AdminCard
           title="Minat Pasar"
           subtitle="Kategori proyek yang paling diminati"
-          class="h-full"
         >
           <div class="space-y-5 mt-4">
             <div
@@ -146,7 +145,6 @@
         <AdminCard
           title="Funnel Konversi"
           subtitle="Efisiensi pemrosesan leads"
-          class="h-full"
         >
           <div class="mt-4 flex flex-col gap-2">
             <div
@@ -198,7 +196,7 @@
         <AdminCard
           title="Wawasan Pemasaran"
           subtitle="Kinerja Pertumbuhan & Kualitas"
-          class="h-full bg-[#0F172A] border-none!"
+          class="bg-[#0F172A] border-none!"
         >
           <div class="space-y-6 mt-4">
             <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
@@ -1225,9 +1223,7 @@ const scoreLead = async (lead: Client) => {
     // For now we keep it in memory for session
   } catch (err) {
     console.error("Scoring error:", err);
-    toast.message = "Gagal memproses skor AI. Pastikan API Key valid.";
-    toast.variant = "danger";
-    toast.show = true;
+    showToast("Gagal memproses skor AI. Pastikan API Key valid.", "error");
   } finally {
     scoringLeads.value = scoringLeads.value.filter((id) => id !== lead.id);
   }

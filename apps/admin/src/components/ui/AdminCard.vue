@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bento-card bg-white border border-slate-100 rounded-[32px] shadow-sm flex flex-col transition-all duration-300 hover:shadow-md h-full"
+    class="bento-card bg-white border border-slate-100 rounded-[32px] shadow-sm flex flex-col transition-all duration-300 hover:shadow-md"
     :class="[
       { 'hover:border-indigo-100': hoverEffect },
       { 'h-full': stretch },

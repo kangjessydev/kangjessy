@@ -3,7 +3,7 @@
     <!-- Action Header with Breadcrumbs -->
     <div
       class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sticky top-0 z-40 bg-[#FAFCFE]/80 backdrop-blur-md py-4 border-b border-transparent transition-all"
-      :class="{ '!border-slate-200 shadow-sm': isScrolled }"
+      :class="{ 'border-slate-200! shadow-sm': isScrolled }"
       id="editor-action-header"
     >
       <div class="flex flex-col gap-1">
@@ -33,7 +33,7 @@
           variant="secondary"
           @click="handleSave(false)"
           :loading="saving"
-          class="flex-1 sm:flex-none !border-indigo-100 !text-[#702DFF] hover:!bg-indigo-50"
+          class="flex-1 sm:flex-none border-indigo-100! text-[#702DFF]! hover:bg-indigo-50!"
         >
           <Save :size="18" />
           Save
@@ -58,7 +58,7 @@
       @close="toast.show = false"
     />
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
       <!-- Main Content Area -->
       <div class="lg:col-span-3 space-y-6" id="main-editor-column">
         <!-- Title & Slug (Outside Card as requested) -->

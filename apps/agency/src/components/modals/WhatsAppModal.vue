@@ -84,6 +84,9 @@ import { ref, computed, watch } from "vue";
 import { MessageCircle } from "lucide-vue-next";
 import { BottomSheet } from "@kangjessy/ui";
 import { siteConfig } from "../../data/config/siteConfig";
+import { useSiteSettings } from "../../composables/useSiteSettings";
+
+const { settings } = useSiteSettings();
 
 const props = withDefaults(
   defineProps<{
@@ -123,8 +126,7 @@ watch(
   () => props.isOpen,
   (val) => {
     if (val) {
-      form.value.message =
-        props.initialMessage || siteConfig.whatsapp.defaultMessage;
+      form.value.message = props.initialMessage || settings.value.whatsappMsg;
     }
   },
 );
@@ -138,7 +140,7 @@ const handleSend = async () => {
 
   // 2. Open WhatsApp
   const finalMessage = `Halo KangJessy! Saya ${form.value.name}.\n\n${form.value.message}`;
-  const waUrl = `https://wa.me/${siteConfig.whatsapp.number}?text=${encodeURIComponent(finalMessage)}`;
+  const waUrl = `https://wa.me/${settings.value.whatsapp}?text=${encodeURIComponent(finalMessage)}`;
 
   window.open(waUrl, "_blank");
 

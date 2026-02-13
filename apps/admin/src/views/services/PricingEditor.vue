@@ -58,7 +58,7 @@
           variant="secondary"
           @click="saveItem(false)"
           :loading="saving"
-          class="!bg-white !border-slate-100/50 !shadow-sm !rounded-xl"
+          class="bg-white! border-slate-100/50! shadow-sm! rounded-xl!"
         >
           Simpan
         </BaseButton>
@@ -81,14 +81,17 @@
       </p>
     </div>
 
-    <div v-else class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
+    <div
+      v-else
+      class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10 items-start"
+    >
       <!-- Main Form Area -->
       <div class="lg:col-span-8 space-y-8">
         <AdminCard
           title="A. Definisi Dasar"
           subtitle="Konfigurasi identitas dan slug"
           :stretch="false"
-          class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+          class="rounded-[40px]! border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
             <BaseInput
@@ -96,7 +99,7 @@
               :label="pageDisplay.itemLabel + ' Name'"
               :placeholder="'E.g. ' + pageDisplay.exampleName"
               :icon="TypeIcon"
-              class="!rounded-2xl"
+              class="rounded-2xl!"
               @input="handleNameInput"
             />
 
@@ -187,7 +190,7 @@
           title="B. Metadata & Relasi"
           subtitle="Hubungkan dengan kategori layanan utama"
           :stretch="false"
-          class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+          class="rounded-[40px]! border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
             <AdminSelect
@@ -209,7 +212,7 @@
               label="Badge / Label Khusus"
               placeholder="Misal: Best Value, Promo"
               :icon="Zap"
-              class="!rounded-2xl"
+              class="rounded-2xl!"
             />
           </div>
         </AdminCard>
@@ -226,7 +229,7 @@
               : 'Tentukan multiplier kecepatan'
           "
           :stretch="false"
-          class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+          class="rounded-[40px]! border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
             <BaseInput
@@ -236,7 +239,7 @@
               placeholder="0"
               type="number"
               prefix="Rp."
-              class="!rounded-2xl"
+              class="rounded-2xl!"
             />
 
             <BaseInput
@@ -247,7 +250,7 @@
               type="number"
               step="0.05"
               :icon="Zap"
-              class="!rounded-2xl"
+              class="rounded-2xl!"
             />
           </div>
         </AdminCard>
@@ -257,7 +260,7 @@
           title="D. Representasi Visual"
           subtitle="Thumbnail dan aset tampilan gaya"
           :stretch="false"
-          class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+          class="rounded-[40px]! border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
         >
           <div class="space-y-6 mt-4">
             <div
@@ -277,7 +280,7 @@
               <BaseButton
                 variant="secondary"
                 @click="isMediaPickerOpen = true"
-                class="!bg-white !shadow-sm !rounded-xl !py-2.5"
+                class="bg-white! shadow-sm! rounded-xl! py-2.5!"
               >
                 <ImageIcon :size="16" class="mr-2" />
                 Open Media Library
@@ -341,7 +344,7 @@
                 label="Direct URL Fallback"
                 placeholder="Or paste direct image URL here..."
                 :icon="ImageIcon"
-                class="!rounded-2xl"
+                class="rounded-2xl!"
               />
             </div>
           </div>
@@ -351,7 +354,7 @@
           title="E. Pencarian & Indeks"
           subtitle="Organisasi sistem"
           :stretch="false"
-          class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+          class="rounded-[40px]! border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
             <BaseInput
@@ -360,16 +363,17 @@
               placeholder="0"
               type="number"
               :icon="ArrowUp10"
-              class="!rounded-2xl"
+              class="rounded-2xl!"
             />
           </div>
+        </AdminCard>
         <!-- Feature Settings -->
         <AdminCard
           v-if="pageDisplay.category === 'additional_feature'"
           title="F. Konfigurasi Fitur"
           subtitle="Relasi dan harga coret"
           :stretch="false"
-          class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+          class="rounded-[40px]! border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
             <!-- Original Price -->
@@ -379,7 +383,7 @@
               placeholder="0"
               type="number"
               prefix="Rp."
-              class="!rounded-2xl"
+              class="rounded-2xl!"
             />
 
             <!-- Relevant Services Checkboxes -->
@@ -434,7 +438,7 @@
             title="Status & Visibilitas"
             subtitle="Atur ketersediaan di website"
             :stretch="false"
-            class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+            class="rounded-[40px]! border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
           >
             <div class="space-y-6 mt-4">
               <div
@@ -818,7 +822,7 @@ const availableIcons = [
 ];
 
 const getIconComponent = (name: any) => {
-  if (!name) return LucideIcons.HelpCircle;
+  if (!name) return LucideIcons.CircleHelp;
   const iconMap: any = {
     Zap,
     Globe,
@@ -838,7 +842,7 @@ const getIconComponent = (name: any) => {
     Database,
     Layers,
   };
-  return iconMap[name] || (LucideIcons as any)[name] || LucideIcons.HelpCircle;
+  return iconMap[name] || (LucideIcons as any)[name] || LucideIcons.CircleHelp;
 };
 
 onMounted(loadItem);

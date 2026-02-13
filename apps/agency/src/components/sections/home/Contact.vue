@@ -9,10 +9,10 @@
             align="left"
           >
             <template #title>
-              Tanya
+              {{ settings.name.split(" ")[0] }}
               <span
                 class="bg-linear-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent"
-                >Kang Jessy</span
+                >{{ settings.name.split(" ").slice(1).join(" ") }}</span
               >
             </template>
           </SectionHeader>
@@ -87,6 +87,9 @@ import WhatsAppModal from "../../modals/WhatsAppModal.vue";
 import EmailModal from "../../modals/EmailModal.vue";
 import { Mail, Phone, MapPin } from "lucide-vue-next";
 import { siteConfig } from "../../../data/config/siteConfig";
+import { useSiteSettings } from "../../../composables/useSiteSettings";
+
+const { settings } = useSiteSettings();
 
 const isWAModalOpen = ref(false);
 const isEmailModalOpen = ref(false);
@@ -95,19 +98,19 @@ const contactItems = [
   {
     icon: Mail,
     label: "Email",
-    value: siteConfig.socials.email,
+    value: settings.value.email,
     action: () => (isEmailModalOpen.value = true),
   },
   {
     icon: Phone,
     label: "WhatsApp",
-    value: siteConfig.whatsapp.number,
+    value: settings.value.whatsapp,
     action: () => (isWAModalOpen.value = true),
   },
   {
     icon: MapPin,
     label: "Location",
-    value: "Bandung / Bekasi, ID",
+    value: settings.value.location,
     action: null as any,
   },
 ];

@@ -42,7 +42,7 @@
       <div
         v-if="activeTab === 'general'"
         key="general"
-        class="grid grid-cols-1 lg:grid-cols-12 gap-8"
+        class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
       >
         <!-- Admin Core Info -->
         <div class="lg:col-span-4 space-y-8">
@@ -199,17 +199,148 @@
                     placeholder="e.g. KANG JESSY ECOSYSTEM"
                   />
                 </div>
-                <div class="flex justify-end pt-2">
-                  <BaseButton
-                    variant="primary"
-                    size="sm"
-                    @click="handleSaveBranding"
-                    :loading="saving"
+              </div>
+            </div>
+          </AdminCard>
+
+          <!-- Contact Info -->
+          <AdminCard
+            title="Info Kontak"
+            subtitle="Nomor WhatsApp, Email, dan Alamat Agensi"
+            class="mt-8"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Nomor WhatsApp</label
+                >
+                <BaseInput
+                  v-model="contact.whatsapp"
+                  placeholder="e.g. 6288218705xxx"
+                >
+                  <template #icon>
+                    <MessageCircle :size="16" class="text-emerald-500" />
+                  </template>
+                </BaseInput>
+              </div>
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Email Support</label
+                >
+                <BaseInput
+                  v-model="contact.email"
+                  type="email"
+                  placeholder="admin@agency.com"
+                >
+                  <template #icon>
+                    <Mail :size="16" class="text-rose-500" />
+                  </template>
+                </BaseInput>
+              </div>
+              <div class="md:col-span-2">
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Pesan WA Default</label
+                >
+                <textarea
+                  v-model="contact.whatsappMsg"
+                  rows="2"
+                  class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#702DFF]/10 focus:border-[#702DFF] transition-all"
+                  placeholder="Halo KangJessy..."
+                ></textarea>
+              </div>
+              <div class="md:col-span-2">
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Lokasi / Alamat</label
+                >
+                <BaseInput
+                  v-model="contact.location"
+                  placeholder="e.g. Bandung, Indonesia"
+                >
+                  <template #icon>
+                    <MapPin :size="16" class="text-indigo-500" />
+                  </template>
+                </BaseInput>
+              </div>
+            </div>
+          </AdminCard>
+
+          <!-- Social Media Links -->
+          <AdminCard
+            title="Sosial Media"
+            subtitle="Kelola link Instagram, LinkedIn, YouTube, dll"
+            class="mt-8"
+          >
+            <template #action>
+              <BaseButton variant="secondary" size="sm" @click="addSocial">
+                <Plus :size="14" /> Tambah Sosmed
+              </BaseButton>
+            </template>
+
+            <div class="space-y-4 py-2">
+              <div
+                v-for="(social, index) in contact.socials"
+                :key="index"
+                class="flex flex-col md:flex-row gap-4 p-4 bg-slate-50 border border-slate-100 rounded-3xl relative group"
+              >
+                <button
+                  @click="removeSocial(index)"
+                  class="absolute top-4 right-4 p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all opacity-0 group-hover:opacity-100 z-10"
+                >
+                  <Trash2 :size="14" />
+                </button>
+
+                <div class="w-full md:w-32">
+                  <label
+                    class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1"
+                    >Platform</label
                   >
-                    <Save :size="14" />
-                    Simpan Identitas
-                  </BaseButton>
+                  <select
+                    v-model="social.icon"
+                    class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#702DFF]/10 focus:border-[#702DFF] appearance-none cursor-pointer"
+                  >
+                    <option value="Instagram">Instagram</option>
+                    <option value="Linkedin">LinkedIn</option>
+                    <option value="Github">GitHub</option>
+                    <option value="Youtube">YouTube</option>
+                    <option value="Hash">Thread</option>
+                    <option value="Twitter">Twitter / X</option>
+                    <option value="Globe">Website</option>
+                  </select>
                 </div>
+
+                <div class="flex-1">
+                  <label
+                    class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1"
+                    >Nama Tampilan</label
+                  >
+                  <BaseInput
+                    v-model="social.name"
+                    placeholder="e.g. Instagram"
+                  />
+                </div>
+
+                <div class="flex-2">
+                  <label
+                    class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1"
+                    >URL Profile</label
+                  >
+                  <BaseInput
+                    v-model="social.url"
+                    placeholder="https://instagram.com/..."
+                  />
+                </div>
+              </div>
+
+              <div
+                v-if="contact.socials.length === 0"
+                class="py-12 flex flex-col items-center justify-center text-slate-400"
+              >
+                <Hash :size="48" class="opacity-10 mb-4" />
+                <p class="text-xs font-medium">Belu ada link sosial media.</p>
               </div>
             </div>
           </AdminCard>
@@ -222,7 +353,7 @@
         key="payment"
         class="space-y-8 animate-fade-in-up"
       >
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div class="lg:col-span-7 space-y-6">
             <AdminCard
               title="Metode Pembayaran"
@@ -415,7 +546,7 @@
         key="documents"
         class="space-y-8 animate-fade-in-up"
       >
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <AdminCard
             title="Proposal Links"
             subtitle="Link GDrive Proposal sesuai tipe proyek"
@@ -766,6 +897,14 @@ import {
   Plus,
   Trash2,
   Image,
+  Hash,
+  Linkedin,
+  Github,
+  Youtube,
+  Instagram,
+  MapPin,
+  Mail,
+  MessageCircle,
 } from "lucide-vue-next";
 import AdminCard from "../components/ui/AdminCard.vue";
 import AdminSelect from "../components/ui/AdminSelect.vue";
@@ -780,6 +919,7 @@ import { useExport } from "../composables/useExport";
 import { useBranding } from "../composables/useBranding";
 import { usePaymentSettings } from "../composables/usePaymentSettings";
 import { useProfile } from "../composables/useProfile";
+import { useContact } from "../composables/useContact";
 import { blogService } from "../services/blogService";
 import { portfolioService } from "../services/portfolioService";
 import { clientsService } from "../services/clientsService";
@@ -842,7 +982,9 @@ const {
   removeAccount,
   getBankLogo,
 } = usePaymentSettings();
-const { profile, saveProfile } = useProfile();
+const { contact, saveContact, addSocial, removeSocial, initContact } =
+  useContact();
+const { profile, saveProfile, initProfile } = useProfile();
 
 const toggles = ref({
   notifications: true,
@@ -992,6 +1134,7 @@ const loadDocs = async () => {
 onMounted(() => {
   loadExportData();
   loadDocs();
+  initContact();
 });
 
 const handleSaveDocs = async () => {
@@ -1029,16 +1172,24 @@ const handleSaveProfile = async () => {
 
 const handleSave = async () => {
   saving.value = true;
-  saveProfile(profile.value);
-  saveBranding(branding.value);
-  setTimeout(() => {
-    saving.value = false;
+  try {
+    await saveProfile(profile.value);
+    await saveBranding(branding.value);
+    await saveContact(contact.value);
     toast.value = {
       show: true,
       message: "Seluruh pengaturan umum berhasil disimpan!",
       variant: "success",
     };
-  }, 1000);
+  } catch (e) {
+    toast.value = {
+      show: true,
+      message: "Gagal menyimpan beberapa pengaturan.",
+      variant: "error",
+    };
+  } finally {
+    saving.value = false;
+  }
 };
 </script>
 

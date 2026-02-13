@@ -71,7 +71,7 @@
       @close="toast.show = false"
     />
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
       <!-- Main Content Area -->
       <div class="lg:col-span-3 space-y-6">
         <!-- Title & Slug -->

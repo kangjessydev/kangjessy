@@ -59,7 +59,9 @@
     </div>
 
     <!-- Stats Summary Section -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
+    <div
+      class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10 items-start"
+    >
       <BentoStat
         title="Saldo Kas (Cash)"
         :value="stats.netCashflow"
@@ -258,7 +260,7 @@
       v-else-if="activeTab === 'commitments'"
       class="animate-fade-in space-y-8"
     >
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <!-- Receivables (Piutang) -->
         <AdminCard title="Daftar Piutang (Uang Masuk Tertunda)" no-padding>
           <div class="overflow-x-auto">
@@ -362,7 +364,7 @@
       v-else-if="activeTab === 'intelligence'"
       class="animate-fade-in space-y-8"
     >
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <AdminCard title="90-Day Cashflow Momentum" class="lg:col-span-8">
           <div class="h-80 flex items-end justify-between px-4 pb-4">
             <div

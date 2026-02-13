@@ -45,7 +45,7 @@
             variant="secondary"
             :loading="saving && !isClosing"
             @click="handleSave(false)"
-            class="!border-none !shadow-none !px-4 hover:!bg-slate-50"
+            class="border-none! shadow-none! px-4! hover:bg-slate-50!"
           >
             <Save :size="16" />
             <span class="hidden sm:inline">Simpan</span>
@@ -55,7 +55,7 @@
             variant="primary"
             :loading="saving && isClosing"
             @click="handleSave(true)"
-            class="!rounded-xl !px-6 shadow-indigo-200"
+            class="rounded-xl! px-6! shadow-indigo-200"
           >
             {{ isEdit ? "Simpan & Close" : "Start Project" }}
           </BaseButton>
@@ -65,7 +65,7 @@
 
     <div
       v-if="loading"
-      class="card p-24 text-center bg-white/50 backdrop-blur-md !rounded-[40px] border-slate-100 shadow-xl"
+      class="card p-24 text-center bg-white/50 backdrop-blur-md rounded-[40px]! border-slate-100 shadow-xl"
     >
       <div
         class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-50 border-t-[#702DFF]"
@@ -84,7 +84,7 @@
           <!-- Project Context -->
           <AdminCard
             title="Project Foundation"
-            class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl !rounded-[40px] border-none"
+            class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl rounded-[40px]! border-none"
             :stretch="false"
           >
             <div class="space-y-6">
@@ -104,7 +104,7 @@
                 <select
                   v-model="formData.order_id"
                   @change="onOrderSelect"
-                  class="select-field group-hover:border-indigo-100 transition-all !text-[11px] !font-black !py-3"
+                  class="select-field group-hover:border-indigo-100 transition-all text-[11px]! font-black! py-3!"
                 >
                   <option :value="undefined">
                     No Linked Order (Internal/Friend)
@@ -160,7 +160,7 @@
           <AdminCard
             title="Deliverables & Assets"
             :stretch="false"
-            class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl !rounded-[40px] border-none"
+            class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl rounded-[40px]! border-none"
           >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1.5">
@@ -211,7 +211,7 @@
           <AdminCard
             title="Production Roadmap"
             :stretch="false"
-            class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl !rounded-[40px] border-none overflow-hidden pb-8"
+            class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl rounded-[40px]! border-none overflow-hidden pb-8"
           >
             <template #header-action>
               <div class="flex items-center gap-4">
@@ -268,7 +268,7 @@
                   v-model="newPhaseName"
                   type="text"
                   placeholder="Add new Task List (e.g. BRIEF, DESIGN, DEV)..."
-                  class="input-field !py-3 flex-1 !bg-white"
+                  class="input-field py-3! flex-1 bg-white!"
                   @keyup.enter="addPhase"
                 />
                 <BaseButton
@@ -521,7 +521,7 @@
           <AdminCard
             title="Lifecycle & Meta"
             :stretch="false"
-            class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl !rounded-[40px] border-none"
+            class="shadow-2xl shadow-indigo-500/5 bg-white/70 backdrop-blur-xl rounded-[40px]! border-none"
           >
             <div class="space-y-6">
               <AdminSelect v-model="formData.status" label="Status Pengerjaan">
@@ -688,6 +688,7 @@ import {
 } from "../data/projectTemplates";
 import { timelineOptions } from "../data/order/options";
 import type { Project, Task } from "../types";
+import PageHeader from "../components/ui/PageHeader.vue";
 import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
 import BaseInput from "../components/ui/BaseInput.vue";

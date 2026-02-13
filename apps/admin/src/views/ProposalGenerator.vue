@@ -64,7 +64,7 @@
 
     <!-- Main Content -->
     <div
-      class="p-4 lg:p-8 grid grid-cols-1 xl:grid-cols-2 gap-8 max-w-[1800px] mx-auto"
+      class="p-4 lg:p-8 grid grid-cols-1 xl:grid-cols-2 gap-8 max-w-[1800px] mx-auto items-start"
     >
       <!-- Input Sidebar -->
       <div
@@ -460,7 +460,7 @@
               </div>
 
               <div
-                v-for="(item, idx) in formData.deliverables"
+                v-for="(_, idx) in formData.deliverables"
                 :key="idx"
                 class="flex gap-2"
               >
@@ -733,9 +733,6 @@ import {
   User,
   FileEdit,
   Zap,
-  Target,
-  Info,
-  Check,
   AlertTriangle,
   Eye,
   Trash2,

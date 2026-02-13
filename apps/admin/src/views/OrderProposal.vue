@@ -213,7 +213,9 @@
           v-if="isProposal"
           class="bg-white rounded-[24px] md:rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-6 md:p-16 space-y-8 md:space-y-16 print:shadow-none print:border-none print:rounded-none print:pt-24 print:page-break-before"
         >
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16">
+          <div
+            class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-start"
+          >
             <div class="md:col-span-4 space-y-4">
               <div class="flex items-center gap-3">
                 <div
@@ -279,7 +281,9 @@
           v-if="isProposal"
           class="bg-white rounded-[24px] md:rounded-[40px] shadow-xl overflow-hidden border border-slate-100 p-6 md:p-16 space-y-8 md:space-y-16 print:shadow-none print:border-none print:rounded-none print:pt-24 print:page-break-before"
         >
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16">
+          <div
+            class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-start"
+          >
             <div class="md:col-span-4 space-y-4">
               <div class="flex items-center gap-3">
                 <div

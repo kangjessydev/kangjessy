@@ -10,9 +10,12 @@
       </main>
       <Footer />
       <MobileNav />
-      <FloatingAction class="hidden md:flex"
-        @open-wa="popup.openModal(Popups.CHAT_WA)" @open-ai="popup.openModal(Popups.CHAT_AI)"
-        @open-email="popup.openModal(Popups.CHAT_EMAIL)" />
+      <FloatingAction
+        class="hidden md:flex"
+        @open-wa="popup.openModal(Popups.CHAT_WA)"
+        @open-ai="popup.openModal(Popups.CHAT_AI)"
+        @open-email="popup.openModal(Popups.CHAT_EMAIL)"
+      />
     </template>
 
     <!-- Client Portal Layout (No Nav/Footer) -->
@@ -23,12 +26,21 @@
     </template>
 
     <!-- Global Modals -->
-    <WhatsAppModal :isOpen="popup.activeModals[Popups.CHAT_WA]" v-bind="popup.getModalProps(Popups.CHAT_WA)"
-      @close="popup.closeModal(Popups.CHAT_WA)" />
-    <EmailModal :isOpen="popup.activeModals[Popups.CHAT_EMAIL]" v-bind="popup.getModalProps(Popups.CHAT_EMAIL)"
-      @close="popup.closeModal(Popups.CHAT_EMAIL)" />
-    <AIChatModal :isOpen="popup.activeModals[Popups.CHAT_AI]" v-bind="popup.getModalProps(Popups.CHAT_AI)"
-      @close="popup.closeModal(Popups.CHAT_AI)" />
+    <WhatsAppModal
+      :isOpen="popup.activeModals[Popups.CHAT_WA]"
+      v-bind="popup.getModalProps(Popups.CHAT_WA)"
+      @close="popup.closeModal(Popups.CHAT_WA)"
+    />
+    <EmailModal
+      :isOpen="popup.activeModals[Popups.CHAT_EMAIL]"
+      v-bind="popup.getModalProps(Popups.CHAT_EMAIL)"
+      @close="popup.closeModal(Popups.CHAT_EMAIL)"
+    />
+    <AIChatModal
+      :isOpen="popup.activeModals[Popups.CHAT_AI]"
+      v-bind="popup.getModalProps(Popups.CHAT_AI)"
+      @close="popup.closeModal(Popups.CHAT_AI)"
+    />
 
     <ToastContainer />
     <SpeedInsights />
@@ -36,34 +48,45 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, defineAsyncComponent } from 'vue'
-import { SpeedInsights } from "@vercel/speed-insights/vue"
-import { useRoute } from 'vue-router'
-import Navbar from './components/layout/Navbar.vue'
-import Footer from './components/layout/Footer.vue'
-import MobileNav from './components/layout/MobileNav.vue'
-import ScrollProgress from './components/ui/ScrollProgress.vue'
-import FloatingAction from './components/layout/FloatingAction.vue'
+import { onMounted, computed, defineAsyncComponent } from "vue";
+import { SpeedInsights } from "@vercel/speed-insights/vue";
+import { useRoute } from "vue-router";
+import Navbar from "./components/layout/Navbar.vue";
+import Footer from "./components/layout/Footer.vue";
+import MobileNav from "./components/layout/MobileNav.vue";
+import ScrollProgress from "./components/ui/ScrollProgress.vue";
+import FloatingAction from "./components/layout/FloatingAction.vue";
 
-const WhatsAppModal = defineAsyncComponent(() => import('./components/modals/WhatsAppModal.vue'))
-const EmailModal = defineAsyncComponent(() => import('./components/modals/EmailModal.vue'))
-const AIChatModal = defineAsyncComponent(() => import('./components/modals/AIChatModal.vue'))
+const WhatsAppModal = defineAsyncComponent(
+  () => import("./components/modals/WhatsAppModal.vue"),
+);
+const EmailModal = defineAsyncComponent(
+  () => import("./components/modals/EmailModal.vue"),
+);
+const AIChatModal = defineAsyncComponent(
+  () => import("./components/modals/AIChatModal.vue"),
+);
 
-import ToastContainer from './components/ui/ToastContainer.vue'
-import { usePopupManager, Popups } from './composables/usePopupManager'
-import { useGlobalTheme } from './composables/useTheme'
+import ToastContainer from "./components/ui/ToastContainer.vue";
+import { usePopupManager, Popups } from "./composables/usePopupManager";
+import { useGlobalTheme } from "./composables/useTheme";
+import { useSiteSettings } from "./composables/useSiteSettings";
 
-const route = useRoute()
-const popup = usePopupManager()
-const { initTheme } = useGlobalTheme()
+const route = useRoute();
+const popup = usePopupManager();
+const { initTheme } = useGlobalTheme();
+const { fetchSettings } = useSiteSettings();
 
 const isClientPortalRoute = computed(() => {
-  return route.path.includes('/portal') || String(route.name) === 'client-portal'
-})
+  return (
+    route.path.includes("/portal") || String(route.name) === "client-portal"
+  );
+});
 
 onMounted(() => {
-  initTheme()
-})
+  initTheme();
+  fetchSettings();
+});
 </script>
 
 <style>

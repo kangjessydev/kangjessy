@@ -117,7 +117,7 @@
 
     <div
       v-if="loading"
-      class="card p-24 text-center !rounded-[32px] border-none shadow-xl"
+      class="card p-24 text-center rounded-[32px]! border-none shadow-xl"
     >
       <div
         class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-50 border-t-[#702DFF]"
@@ -130,7 +130,7 @@
     </div>
 
     <template v-else>
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <!-- MAIN FORM AREA -->
         <div class="lg:col-span-8 space-y-8">
           <!-- STEP 1: CONFIGURATION -->
@@ -429,7 +429,7 @@
               title="A. Client Connection"
               subtitle="Identify the stakeholder for this project"
               :stretch="false"
-              class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+              class="rounded!-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
             >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <BaseInput
@@ -437,7 +437,7 @@
                   label="Contact Identity"
                   placeholder="Full Name"
                   :icon="User"
-                  class="!rounded-2xl"
+                  class="rounded!-2xl"
                 />
                 <BaseInput
                   v-model="formData.email"
@@ -445,21 +445,21 @@
                   type="email"
                   placeholder="client@brand.com"
                   :icon="Mail"
-                  class="!rounded-2xl"
+                  class="rounded!-2xl"
                 />
                 <BaseInput
                   v-model="formData.phone"
                   label="WhatsApp Line"
                   placeholder="+62..."
                   :icon="Phone"
-                  class="!rounded-2xl"
+                  class="rounded!-2xl"
                 />
                 <BaseInput
                   v-model="formData.company"
                   label="Entity Name"
                   placeholder="Business / Organization"
                   :icon="Briefcase"
-                  class="!rounded-2xl"
+                  class="rounded!-2xl"
                 />
               </div>
             </AdminCard>
@@ -468,7 +468,7 @@
               title="B. Requirement Specs"
               subtitle="Technical discovery and project blueprints"
               :stretch="false"
-              class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
+              class="rounded!-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl"
             >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <BaseInput
@@ -476,14 +476,14 @@
                   label="Internal Project Title"
                   placeholder="Acme Redesign 2024"
                   :icon="Layout"
-                  class="!rounded-2xl"
+                  class="rounded!-2xl"
                 />
                 <BaseInput
                   v-model="formData.dream_domain"
                   label="Target Digital URL"
                   placeholder="example.com"
                   :icon="Globe"
-                  class="!rounded-2xl"
+                  class="rounded!-2xl"
                 />
                 <AdminTextarea
                   v-model="formData.brief"
@@ -498,7 +498,7 @@
               title="C. Financial & Stage Ledger"
               subtitle="Accounting logic and production timeline"
               :stretch="false"
-              class="!rounded-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl mb-12 lg:mb-0"
+              class="rounded!-[40px] border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl mb-12 lg:mb-0"
             >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div class="space-y-6">
@@ -542,7 +542,7 @@
                       label="Paid Weight"
                       prefix="Rp"
                       placeholder="0"
-                      class="!text-emerald-700"
+                      class="text!-emerald-700"
                     />
                   </div>
 
@@ -712,7 +712,7 @@
               <div class="mt-8">
                 <BaseButton
                   variant="primary"
-                  class="w-full !py-6 !rounded-3xl !bg-[#7029FF] hover:!bg-[#5D1FDB] !text-[12px] shadow-2xl shadow-indigo-500/20"
+                  class="w-full py!-6 rounded!-3xl bg!-[#7029FF] hover:bg!-[#5D1FDB] text!-[12px] shadow-2xl shadow-indigo-500/20"
                   @click="handleSave"
                   :loading="saving"
                   :disabled="loading"
@@ -726,7 +726,7 @@
             <AdminCard
               title="Sales Intelligence"
               :stretch="false"
-              class="!rounded-[32px] border-none shadow-xl shadow-slate-200/5"
+              class="rounded!-[32px] border-none shadow-xl shadow-slate-200/5"
             >
               <div class="space-y-6 pb-2">
                 <div class="space-y-2">
@@ -1215,7 +1215,7 @@
             <div class="mt-8">
               <BaseButton
                 variant="primary"
-                class="w-full !py-5 !rounded-3xl"
+                class="w-full py!-5 rounded!-3xl"
                 @click="isCatalogueOpen = false"
                 >CONFIRM SELECTION</BaseButton
               >

@@ -35,7 +35,7 @@
       <BentoStat v-for="stat in statItems" :key="stat.title" v-bind="stat" />
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-start">
       <!-- Performance Analytics (Actual Monthly Revenue) -->
       <AdminCard
         title="Kinerja Pendapatan"

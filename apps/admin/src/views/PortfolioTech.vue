@@ -10,7 +10,7 @@
       </BaseButton>
     </PageHeader>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
       <!-- Tech List -->
       <AdminCard
         title="All Technologies"

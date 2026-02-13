@@ -22,7 +22,7 @@
             @click="closeMenu"
           >
             <img
-              src="/logo-128.png"
+              src="/logo.png"
               alt="KangJessy Logo"
               class="w-8 h-8 rounded-lg object-contain"
               width="32"
@@ -549,7 +549,7 @@
               {{ group.title }}
             </h4>
             <div class="grid grid-cols-3 gap-3">
-              <template v-for="item in group.items">
+              <template v-for="item in group.items" :key="item.text">
                 <!-- Option 1: External Link -->
                 <a
                   v-if="
@@ -696,7 +696,7 @@
         >
           <div class="flex flex-wrap justify-center gap-3">
             <a
-              v-for="social in siteConfig.socialLinks"
+              v-for="social in settings.socialLinks"
               :key="'mob-soc-' + social.name"
               :href="social.url"
               target="_blank"
@@ -746,11 +746,13 @@ import { BaseButton, BottomSheet, activeSheet } from "@kangjessy/ui";
 import { useGlobalTheme } from "../../composables/useTheme";
 import { menuItems, mobileMenuGroups } from "../../data/config/menuConfig";
 import { siteConfig } from "../../data/config/siteConfig";
+import { useSiteSettings } from "../../composables/useSiteSettings";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 const popup = usePopupManager();
+const { settings } = useSiteSettings();
 
 const getSocialIcon = (iconName: string) => {
   const icons: Record<string, any> = {
@@ -759,6 +761,9 @@ const getSocialIcon = (iconName: string) => {
     Youtube: Youtube,
     Instagram: Instagram,
     Thread: Hash,
+    Hash: Hash,
+    Twitter: Hash,
+    Globe: Globe,
   };
   return icons[iconName] || ExternalLink;
 };

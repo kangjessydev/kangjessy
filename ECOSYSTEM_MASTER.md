@@ -110,6 +110,23 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
    - **Email**: Gunakan Resend (Free Tier) untuk invoice profesional.
    - **WhatsApp**: Gunakan _Smart Click-to-Chat_ (User melakukan send manual) untuk 0 biaya.
 
+### 🚀 Active Backlog & Enhancements (NEW Tasks)
+
+Berikut adalah daftar tugas pengembangan baru hasil audit kode yang akan dikerjakan bertahap:
+
+1.  **System Settings Upgrade** (Target: Next):
+    - Tambahkan field **Contact Info** (WA, Email, Sosmed, Lokasi) ke Settings Admin agar tidak hardcode di Agency.
+    - Tambahkan field **Marketing Stats** (Projects, Bugfix, Exp) ke Settings Admin.
+2.  **Pricing Content Polish**:
+    - Tambahkan field **Delivery Time** & **Revisions** ke `PricingEditor.vue` (Metadata).
+    - Tambahkan editor **FAQ** ke `PricingEditor.vue` (Metadata Service).
+3.  **Cross-Module Relations** (Rencana):
+    - Implementasi relasi **Service ↔ Portfolio** agar "Studi Kasus Relevan" muncul otomatis.
+4.  **Content Management** (Rencana):
+    - Pindahkan **Landing Page Campaigns** & **Testimonials** dari hardcode ke Admin UI.
+5.  **Navigation Flex** (Future/Discussion):
+    - Diskusi strategi pengelolaan Menu Navbar/Mobile via Admin.
+
 ### Innovation Lab (FUTURE)
 
 - **Enterprise Notification Infrastructure**:

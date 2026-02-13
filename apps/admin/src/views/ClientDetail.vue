@@ -31,7 +31,10 @@
       </p>
     </div>
 
-    <div v-else-if="client" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div
+      v-else-if="client"
+      class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+    >
       <!-- Kolom Kiri: Profil & Insights -->
       <div class="lg:col-span-4 space-y-6">
         <!-- Card Profil Utama -->

@@ -16,7 +16,7 @@
             class="flex items-center gap-3 text-[1.5rem] font-extrabold text-text-primary mb-6 justify-center lg:justify-start"
           >
             <img
-              src="/logo-128.png"
+              src="/logo.png"
               alt="KangJessy Logo"
               class="w-10 h-10 rounded-xl object-contain"
               width="40"
@@ -39,7 +39,7 @@
           </p>
           <div class="flex gap-3 justify-center lg:justify-start">
             <a
-              v-for="social in siteConfig.socialLinks"
+              v-for="social in settings.socialLinks"
               :key="social.name"
               :href="social.url"
               target="_blank"
@@ -223,12 +223,12 @@
           </p>
           <div class="flex flex-col gap-4">
             <a
-              :href="`mailto:${siteConfig.socials.email}`"
+              :href="`mailto:${settings.email}`"
               class="flex items-center gap-2.5 text-text-secondary font-semibold text-[0.95rem] group w-fit transition-all hover:text-accent-primary"
             >
               <MailIcon :size="16" class="text-accent-primary" />
               <span class="relative">
-                {{ siteConfig.socials.email }}
+                {{ settings.email }}
                 <span
                   class="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-primary transition-all duration-300 group-hover:w-full"
                 ></span>
@@ -283,6 +283,7 @@ import {
   ExternalLink,
 } from "lucide-vue-next";
 import { siteConfig } from "../../data/config/siteConfig";
+import { useSiteSettings } from "../../composables/useSiteSettings";
 import {
   pricingService,
   type ServiceData,
@@ -290,6 +291,7 @@ import {
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 
 const popup = usePopupManager();
+const { settings } = useSiteSettings();
 const currentYear = computed(() => new Date().getFullYear());
 const servicesData = ref<ServiceData[]>([]);
 
@@ -304,6 +306,9 @@ const getSocialIcon = (iconName: string) => {
     Youtube: Youtube,
     Instagram: Instagram,
     Thread: Hash,
+    Hash: Hash,
+    Twitter: Hash,
+    Globe: ExternalLink,
   };
   return icons[iconName] || ExternalLink;
 };

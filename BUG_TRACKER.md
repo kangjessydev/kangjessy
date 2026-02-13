@@ -19,7 +19,7 @@ _Bug yang membuat fitur utama tidak bisa digunakan._
 | PTF-001 | Portfolio: Bidang & Tech Stack **TIDAK BISA DI-EDIT**                         | Data terkunci, tidak bisa update                                                    | ✅ FIXED |
 | GLO-001 | Pengaturan Global (Branding/Payment) belum Sync DB                            | Data Admin hanya tersimpan di Localhost/LocalStorage                                | ✅ FIXED |
 | AUD-001 | `GenericPricingList.vue`: Missing import `PageHeader` & `AdminCard`           | Halaman Master Data (fitur, project types, deadlines, services) broken/error render | ✅ FIXED |
-| AUD-002 | `Orders.vue` & `Projects.vue`: `removeEventListener` pakai anonymous function | Memory leak — listener numpuk, tidak pernah ter-remove                              | 🆕 NEW   |
+| AUD-002 | `Orders.vue` & `Projects.vue`: `removeEventListener` pakai anonymous function | Memory leak — listener numpuk, tidak pernah ter-remove                              | ✅ FIXED |
 
 ## 🟡 MEDIUM (Glitch / UI Issue)
 
@@ -37,8 +37,8 @@ _Masalah visual atau fungsionalitas yang tidak menghalangi alur utama._
 | AUD-003 | `GenericPricingList.vue`: Route `/services/style-vibes` salah match category | Style Vibes menampilkan data `service_type` bukan `style_vibe` | ✅ FIXED |
 | AUD-004 | `Leads.vue`: Toast variant `"danger"` invalid (harus `"error"`)              | Toast AI scoring error tanpa styling yang benar                | ✅ FIXED |
 | AUD-005 | `GenericPricingList.vue`: Masih pakai native `alert()` saat gagal delete     | UX inkonsisten vs seluruh projek yg pakai Toast                | ✅ FIXED |
-| AUD-006 | `Media.vue`, `Leads.vue`, `ClientDetail.vue`: Masih pakai native `confirm()` | UX inkonsisten, seharusnya pakai `ConfirmModal`                | 🆕 NEW   |
-| AUD-007 | `Leads.vue`: `scoreLead()` fetch ke `/api/score-lead` yang tidak exist       | AI scoring selalu gagal, endpoint tidak pernah di-setup        | 🆕 NEW   |
+| AUD-006 | `Media.vue`, `Leads.vue`, `ClientDetail.vue`: Masih pakai native `confirm()` | UX inkonsisten, seharusnya pakai `ConfirmModal`                | ✅ FIXED |
+| AUD-007 | `Leads.vue`: `scoreLead()` fetch ke `/api/score-lead` yang tidak exist       | AI scoring selalu gagal, endpoint tidak pernah di-setup        | ✅ FIXED |
 
 ## 🔵 LOW / SUGGESTION (Peningkatan)
 

@@ -1172,13 +1172,17 @@ function toggleSelection(id: string) {
   }
 }
 
+const closeMenuOnClick = () => {
+  openMenuId.value = null;
+};
+
 onMounted(() => {
   fetchOrders();
-  window.addEventListener("click", () => (openMenuId.value = null));
+  window.addEventListener("click", closeMenuOnClick);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("click", () => (openMenuId.value = null));
+  window.removeEventListener("click", closeMenuOnClick);
 });
 
 async function fetchOrders() {

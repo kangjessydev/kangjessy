@@ -822,13 +822,17 @@ async function fetchProjects() {
   }
 }
 
+const closeMenuOnClick = () => {
+  openMenuId.value = null;
+};
+
 onMounted(() => {
   fetchProjects();
-  window.addEventListener("click", () => (openMenuId.value = null));
+  window.addEventListener("click", closeMenuOnClick);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("click", () => (openMenuId.value = null));
+  window.removeEventListener("click", closeMenuOnClick);
 });
 
 function triggerDelete(project: any) {

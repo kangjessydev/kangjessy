@@ -983,6 +983,18 @@
       @confirm="confirmBulkDelete"
     />
 
+    <!-- Single Delete Confirmation Modal -->
+    <ConfirmModal
+      :is-open="singleDeleteConfirmOpen"
+      variant="danger"
+      title="Hapus Lead?"
+      :message="`Hapus lead dari &quot;${singleDeleteTarget?.name || ''}&quot;? Action ini tidak bisa dibatalkan.`"
+      confirm-text="Hapus"
+      cancel-text="Batal"
+      @close="singleDeleteConfirmOpen = false"
+      @confirm="executeSingleDelete"
+    />
+
     <!-- Bulk Action Bar -->
     <transition name="fade-up">
       <div
@@ -1161,6 +1173,8 @@ const leads = ref<Client[]>([]);
 const selectedIds = ref<string[]>([]);
 const isBulkDeleting = ref(false);
 const isConfirmDeleteOpen = ref(false);
+const singleDeleteTarget = ref<Client | null>(null);
+const singleDeleteConfirmOpen = ref(false);
 const isSelectionMode = ref(false);
 const activeTab = ref<"inbox" | "insights">("inbox");
 // const openMenuId = ref<string | null>(null); // Removed in favor of Teleport menu
@@ -1204,6 +1218,18 @@ const aiScores = ref<Record<string, any>>({});
 const scoreLead = async (lead: Client) => {
   if (scoringLeads.value.includes(lead.id)) return;
 
+  // Detect local dev: Vite dev server doesn't serve Vercel serverless functions
+  const isLocalDev =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1";
+  if (isLocalDev) {
+    showToast(
+      "AI Scoring hanya tersedia di production (Vercel). Jalankan 'vercel dev' untuk testing lokal.",
+      "error",
+    );
+    return;
+  }
+
   scoringLeads.value.push(lead.id);
   try {
     const response = await fetch("/api/score-lead", {
@@ -1214,16 +1240,23 @@ const scoreLead = async (lead: Client) => {
       body: JSON.stringify({ lead }),
     });
 
-    if (!response.ok) throw new Error("Failed to fetch AI score");
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || `Server error (${response.status})`);
+    }
 
     const result = await response.json();
     aiScores.value[lead.id] = result;
-
-    // Optional: Auto-save back to Supabase if preferred
-    // For now we keep it in memory for session
-  } catch (err) {
+    showToast(
+      `Lead "${lead.name}" berhasil di-scoring: ${result.label}`,
+      "success",
+    );
+  } catch (err: any) {
     console.error("Scoring error:", err);
-    showToast("Gagal memproses skor AI. Pastikan API Key valid.", "error");
+    const msg = err.message?.includes("API Key")
+      ? "GEMINI_API_KEY belum dikonfigurasi di Vercel Environment."
+      : err.message || "Gagal memproses skor AI.";
+    showToast(msg, "error");
   } finally {
     scoringLeads.value = scoringLeads.value.filter((id) => id !== lead.id);
   }
@@ -1591,16 +1624,22 @@ function convertToOrder(lead: Client) {
 }
 
 async function confirmSingleDelete(lead: Client) {
-  if (
-    confirm(`Hapus lead dari "${lead.name}"? Action ini tidak bisa dibatalkan.`)
-  ) {
-    try {
-      await clientsService.delete(lead.id);
-      leads.value = leads.value.filter((l) => l.id !== lead.id);
-      showToast("Lead berhasil dihapus");
-    } catch (e: any) {
-      showToast(e.message || "Gagal menghapus lead", "error");
-    }
+  singleDeleteTarget.value = lead;
+  singleDeleteConfirmOpen.value = true;
+}
+
+async function executeSingleDelete() {
+  const lead = singleDeleteTarget.value;
+  singleDeleteConfirmOpen.value = false;
+  if (!lead) return;
+  try {
+    await clientsService.delete(lead.id);
+    leads.value = leads.value.filter((l) => l.id !== lead.id);
+    showToast("Lead berhasil dihapus");
+  } catch (e: any) {
+    showToast(e.message || "Gagal menghapus lead", "error");
+  } finally {
+    singleDeleteTarget.value = null;
   }
 }
 

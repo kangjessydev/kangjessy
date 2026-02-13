@@ -518,6 +518,17 @@
       :variant="toast.variant"
       @close="toast.show = false"
     />
+
+    <ConfirmModal
+      :is-open="deleteConfirm.isOpen"
+      title="Hapus Catatan?"
+      message="Catatan interaksi ini akan dihapus secara permanen. Lanjutkan?"
+      variant="danger"
+      confirm-text="Hapus"
+      cancel-text="Batal"
+      @close="deleteConfirm.isOpen = false"
+      @confirm="executeDeleteInteraction"
+    />
   </div>
 </template>
 
@@ -558,6 +569,7 @@ import {
   BaseButton,
   Toast,
 } from "@kangjessy/ui";
+import ConfirmModal from "../components/ui/ConfirmModal.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -575,6 +587,10 @@ const toast = ref({
   show: false,
   message: "",
   variant: "success" as "success" | "error",
+});
+const deleteConfirm = ref({
+  isOpen: false,
+  targetId: null as string | null,
 });
 
 const newInteraction = ref({
@@ -651,7 +667,13 @@ async function saveInteraction() {
 }
 
 async function deleteInteraction(id: string) {
-  if (!confirm("Hapus catatan ini?")) return;
+  deleteConfirm.value = { isOpen: true, targetId: id };
+}
+
+async function executeDeleteInteraction() {
+  const id = deleteConfirm.value.targetId;
+  deleteConfirm.value.isOpen = false;
+  if (!id) return;
   try {
     await interactionsService.delete(id);
     interactions.value = interactions.value.filter((i) => i.id !== id);

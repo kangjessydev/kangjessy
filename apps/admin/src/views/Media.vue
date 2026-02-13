@@ -806,6 +806,18 @@
       @close="toast.show = false"
     />
 
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      :is-open="deleteConfirm.isOpen"
+      :title="deleteConfirm.title"
+      :message="deleteConfirm.message"
+      variant="danger"
+      confirm-text="Hapus"
+      cancel-text="Batal"
+      @close="deleteConfirm.isOpen = false"
+      @confirm="executeDelete"
+    />
+
     <!-- Mobile Folder Drawer (Show/Hide Sidebar) -->
     <Transition name="fade">
       <div
@@ -933,6 +945,7 @@ import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
 import AdminCard from "../components/ui/AdminCard.vue";
 import Toast from "../components/ui/Toast.vue";
+import ConfirmModal from "../components/ui/ConfirmModal.vue";
 import FolderItem from "../components/media/FolderItem.vue";
 import { sanityClient, sanityWriteClient } from "@kangjessy/database";
 import type { MediaFolder, MediaItem } from "../types";
@@ -964,6 +977,15 @@ const newFolderParent = ref<string | null>(null);
 const showMoveModal = ref(false);
 const moveTarget = ref<MediaItem | null>(null);
 const moveDestination = ref<string | null>(null);
+
+// Delete confirmation
+const deleteConfirm = ref({
+  isOpen: false,
+  title: "",
+  message: "",
+  type: "" as "folder" | "file",
+  targetId: "",
+});
 
 // Initial folder structure
 const folders = ref<MediaFolder[]>([
@@ -1322,9 +1344,16 @@ const createFolder = async () => {
 };
 
 const handleDeleteFolder = async (folderId: string) => {
-  if (!confirm("Hapus folder ini? File di dalamnya akan dipindah ke Root."))
-    return;
+  deleteConfirm.value = {
+    isOpen: true,
+    title: "Hapus Folder?",
+    message: "Hapus folder ini? File di dalamnya akan dipindah ke Root.",
+    type: "folder",
+    targetId: folderId,
+  };
+};
 
+const executeFolderDelete = async (folderId: string) => {
   const descendantIds = getDescendantFolderIds(folderId);
   descendantIds.push(folderId);
 
@@ -1367,8 +1396,16 @@ const handleDeleteFolder = async (folderId: string) => {
 };
 
 const handleDeleteMedia = async (mediaId: string) => {
-  if (!confirm("Hapus file ini secara permanen?")) return;
+  deleteConfirm.value = {
+    isOpen: true,
+    title: "Hapus File?",
+    message: "Hapus file ini secara permanen?",
+    type: "file",
+    targetId: mediaId,
+  };
+};
 
+const executeMediaDelete = async (mediaId: string) => {
   // Optimistic update
   const previousItems = [...mediaItems.value];
   mediaItems.value = mediaItems.value.filter((m) => m.id !== mediaId);
@@ -1468,6 +1505,16 @@ const showToast = (
   setTimeout(() => {
     toast.value.show = false;
   }, 3000);
+};
+
+const executeDelete = async () => {
+  const { type, targetId } = deleteConfirm.value;
+  deleteConfirm.value.isOpen = false;
+  if (type === "folder") {
+    await executeFolderDelete(targetId);
+  } else {
+    await executeMediaDelete(targetId);
+  }
 };
 
 onMounted(async () => {

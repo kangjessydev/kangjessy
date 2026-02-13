@@ -533,6 +533,9 @@ const getIconComponent = (name: string) => {
 
 const showToast = (message: string, variant: "success" | "error") => {
   toast.value = { show: true, message, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
 };
 
 onMounted(fetchData);

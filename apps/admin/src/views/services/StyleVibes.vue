@@ -2,10 +2,10 @@
   <div class="page-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
     <!-- Background Decor -->
     <div
-      class="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-indigo-100/30 blur-[120px] rounded-full opacity-50"
+      class="absolute top-0 right-0 z-10- w-[500px] h-[500px] bg-indigo-100/30 blur-[120px] rounded-full opacity-50"
     ></div>
     <div
-      class="absolute bottom-0 left-0 -z-10 w-[400px] h-[400px] bg-blue-50/40 blur-[100px] rounded-full opacity-40"
+      class="absolute bottom-0 left-0 z-10- w-[400px] h-[400px] bg-blue-50/40 blur-[100px] rounded-full opacity-40"
     ></div>
 
     <PageHeader :title="pageDisplay.title" :subtitle="pageDisplay.subtitle">
@@ -14,7 +14,7 @@
           variant="secondary"
           @click="loadData"
           :loading="loading"
-          class="!bg-white shadow-sm"
+          class="bg-white! shadow-sm"
         >
           <RotateCw :size="18" :class="{ 'animate-spin': loading }" />
           Segarkan
@@ -42,7 +42,7 @@
       v-else
       no-padding
       overflow-visible
-      class="!rounded-[40px] border border-slate-100/50 shadow-2xl shadow-indigo-500/5 mb-12 bg-white/70 backdrop-blur-xl animate-fade-in-up"
+      class="rounded-[40px]! border border-slate-100/50 shadow-2xl shadow-indigo-500/5 mb-12 bg-white/70 backdrop-blur-xl animate-fade-in-up"
     >
       <div class="overflow-x-auto no-scrollbar">
         <table class="w-full">
@@ -170,7 +170,7 @@
               >
                 <div
                   v-if="item.image_url"
-                  class="relative group/img aspect-[4/3] w-24 rounded-2xl overflow-hidden bg-slate-100 border-2 border-white shadow-xl shadow-slate-200/50 transition-transform duration-500 hover:scale-110 hover:z-10"
+                  class="relative group/img aspect-4/3 w-24 rounded-2xl overflow-hidden bg-slate-100 border-2 border-white shadow-xl shadow-slate-200/50 transition-transform duration-500 hover:scale-110 hover:z-10"
                 >
                   <img
                     :src="item.image_url"
@@ -179,7 +179,7 @@
                 </div>
                 <div
                   v-else
-                  class="w-24 aspect-[4/3] rounded-2xl bg-slate-50/50 border-2 border-dashed border-slate-100 flex flex-col items-center justify-center text-slate-200 gap-1.5 opacity-60"
+                  class="w-24 aspect-4/3 rounded-2xl bg-slate-50/50 border-2 border-dashed border-slate-100 flex flex-col items-center justify-center text-slate-200 gap-1.5 opacity-60"
                 >
                   <ImageIcon :size="20" stroke-width="1.5" />
                   <span class="text-[8px] font-black uppercase"
@@ -450,6 +450,9 @@ const executeDelete = async () => {
 
 const showToast = (msg: string, variant: "success" | "error") => {
   toast.value = { show: true, message: msg, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
 };
 
 const moveItem = async (index: number, direction: number) => {

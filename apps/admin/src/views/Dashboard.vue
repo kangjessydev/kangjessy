@@ -317,6 +317,7 @@ import AdminCard from "../components/ui/AdminCard.vue";
 import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
 import ErrorAlert from "../components/ui/ErrorAlert.vue";
+import type { Client } from "../types";
 import { useErrorHandler } from "../composables/useErrorHandler";
 import { useLoading } from "../composables/useLoading";
 
@@ -330,9 +331,9 @@ const statsData = ref({
   totalRevenue: 0,
   growth: 0,
 });
-const recentProjects = ref<any[]>([]);
-const monthlyData = ref<any[]>([]);
-const allRecords = ref<any[]>([]);
+const recentProjects = ref<Client[]>([]);
+const monthlyData = ref<{ month: string; revenue: number }[]>([]);
+const allRecords = ref<Client[]>([]);
 
 const monthLabels = [
   "Jan",

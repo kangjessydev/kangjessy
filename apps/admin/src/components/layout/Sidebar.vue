@@ -20,11 +20,10 @@
           class="w-10 h-10 bg-linear-to-br from-[#1B2559] to-[#702DFF] rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 text-white font-black text-lg transition-all duration-300 overflow-hidden"
         >
           <img
-            v-if="branding.logo"
-            :src="branding.logo"
+            src="/logo-agency.png"
             class="w-full h-full object-contain p-1.5"
+            alt="Logo"
           />
-          <span v-else>{{ branding.name.substring(0, 2).toUpperCase() }}</span>
         </div>
         <div
           v-if="!effectiveCollapsed"
@@ -33,13 +32,8 @@
           <h1
             class="text-sm font-black text-[#1B2559] leading-tight uppercase tracking-tight"
           >
-            {{ branding.name.split(" ")[0] }}
-            <span
-              v-if="branding.name.split(' ').length > 1"
-              class="text-indigo-400"
-            >
-              {{ branding.name.split(" ").slice(1).join(" ") }}
-            </span>
+            KANG
+            <span class="text-indigo-400">JESSY</span>
           </h1>
           <p
             class="text-[8px] text-slate-400 font-bold uppercase tracking-[0.2em]"
@@ -93,13 +87,11 @@
 import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useSidebar } from "../../composables/useSidebar";
-import { useBranding } from "../../composables/useBranding";
 import { navigationConfig } from "../../config/navigation";
 import SidebarItem from "./SidebarItem.vue";
 
 const route = useRoute();
 const { isCollapsed, isMobileOpen, closeMobileSidebar } = useSidebar();
-const { branding } = useBranding();
 
 // State for expanding menus
 const expandedItems = ref<string[]>([]);

@@ -9,10 +9,11 @@ interface ExportOptions {
   includeMetadata?: boolean
 }
 
-const isExporting = ref(false)
-const exportProgress = ref(0)
-
 export const useExport = () => {
+  const isExporting = ref(false)
+  const exportProgress = ref(0)
+
+
   /**
    * Convert data to JSON string
    */

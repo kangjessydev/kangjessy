@@ -924,6 +924,8 @@ import { blogService } from "../services/blogService";
 import { portfolioService } from "../services/portfolioService";
 import { clientsService } from "../services/clientsService";
 import { docsService, type DocLink } from "../services/docsService";
+import type { BlogPost, Client } from "../types";
+import type { PortfolioItem } from "../services/portfolioService";
 
 // Tabs Configuration
 const tabs = [
@@ -1021,9 +1023,9 @@ const handleSavePayment = async () => {
 const { exportFullBackup, isExporting } = useExport();
 
 // Data for export
-const blogPosts = ref<any[]>([]);
-const portfolioProjects = ref<any[]>([]);
-const clients = ref<any[]>([]);
+const blogPosts = ref<BlogPost[]>([]);
+const portfolioProjects = ref<PortfolioItem[]>([]);
+const clients = ref<Client[]>([]);
 
 const loadExportData = async () => {
   try {

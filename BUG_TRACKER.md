@@ -46,11 +46,12 @@ _Saran perbaikan untuk UX yang lebih baik._
 
 | ID      | Deskripsi                                                                                  | Kategori      | Status   |
 | :------ | :----------------------------------------------------------------------------------------- | :------------ | :------- |
-| AUD-008 | `ordersService.ts` jadi dead code — tidak pernah dipakai, Orders pakai `clientsService`    | Dead Code     | 🆕 NEW   |
+| AUD-008 | `ordersService.ts` jadi dead code — tidak pernah dipakai, Orders pakai `clientsService`    | Dead Code     | ✅ FIXED |
 | AUD-009 | `GenericPricingList.vue`: Import `DollarSign` tidak dipakai di template                    | Unused Import | ✅ FIXED |
-| AUD-010 | `useExport.ts` & `useImport.ts`: Global ref di luar function — state shared antar komponen | Code Smell    | 🆕 NEW   |
+| AUD-010 | `useExport.ts` & `useImport.ts`: Global ref di luar function — state shared antar komponen | Code Smell    | ✅ FIXED |
 | AUD-011 | `PortfolioAreas.vue`: Toast tidak auto-close (missing `setTimeout`)                        | UX            | ✅ FIXED |
-| AUD-012 | `Projects.vue`: Pakai `ref<any[]>` padahal sudah ada type `Project[]`                      | Type Safety   | 🆕 NEW   |
+| AUD-012 | `Projects.vue`: Pakai `ref<any[]>` padahal sudah ada type `Project[]`                      | Type Safety   | ✅ FIXED |
+| AUD-013 | `StyleVibes.vue`: Tailwind v4 syntax warnings (modifiers at end, aspect ratio)             | Code Quality  | ✅ FIXED |
 
 ---
 

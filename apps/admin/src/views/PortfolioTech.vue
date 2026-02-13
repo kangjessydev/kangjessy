@@ -170,8 +170,9 @@ import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
 import Toast from "../components/ui/Toast.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
+import type { Technology } from "../types";
 
-const technologies = ref<any[]>([]);
+const technologies = ref<Technology[]>([]);
 const loading = ref(true);
 const modal = ref({
   show: false,
@@ -206,6 +207,9 @@ const showToast = (
   variant: "success" | "error" = "success",
 ) => {
   toast.value = { show: true, message, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
 };
 
 const updateSlug = () => {

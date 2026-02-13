@@ -1552,6 +1552,9 @@ const filteredLeads = computed(() => {
 // Actions
 function showToast(message: string, variant: "success" | "error" = "success") {
   toast.value = { show: true, message, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
 }
 
 function getStatusClass(status: string | undefined) {

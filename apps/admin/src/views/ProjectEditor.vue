@@ -708,8 +708,8 @@ const pageTitle = computed(() =>
 
 const loading = ref(false);
 const saving = ref(false);
-const availableOrders = ref<any[]>([]);
-const tasks = ref<any[]>([]);
+const availableOrders = ref<Client[]>([]);
+const tasks = ref<Task[]>([]);
 const localPhases = ref<string[]>([]);
 const phaseIconsCache = reactive<Record<string, string>>({});
 const collapsedPhases = reactive<Record<string, boolean>>({});
@@ -788,17 +788,12 @@ function ensurePortalToken() {
   }
 }
 
-const showToast = (
-  message: string,
-  variant: "success" | "error" = "success",
-) => {
+function showToast(message: string, variant: "success" | "error" = "success") {
   toast.value = { show: true, message, variant };
-  if (variant === "success") {
-    setTimeout(() => {
-      toast.value.show = false;
-    }, 3000);
-  }
-};
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
+}
 
 async function fetchAvailableOrders() {
   try {

@@ -2,10 +2,10 @@
   <div class="page-container max-w-7xl mx-auto pb-24 px-4 sm:px-6 relative">
     <!-- Background Decor -->
     <div
-      class="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-indigo-100/30 blur-[120px] rounded-full opacity-50"
+      class="absolute top-0 right-0 z-10- w-[500px] h-[500px] bg-indigo-100/30 blur-[120px] rounded-full opacity-50"
     ></div>
     <div
-      class="absolute bottom-0 left-0 -z-10 w-[400px] h-[400px] bg-blue-50/40 blur-[100px] rounded-full opacity-40"
+      class="absolute bottom-0 left-0 z-10- w-[400px] h-[400px] bg-blue-50/40 blur-[100px] rounded-full opacity-40"
     ></div>
 
     <!-- Header -->

@@ -183,8 +183,9 @@ import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
 import Toast from "../components/ui/Toast.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
+import type { PortfolioArea } from "../types";
 
-const areas = ref<any[]>([]);
+const areas = ref<PortfolioArea[]>([]);
 const loading = ref(true);
 const modal = ref({
   show: false,
@@ -228,7 +229,7 @@ const showToast = (
   toast.value = { show: true, message, variant };
   setTimeout(() => {
     toast.value.show = false;
-  }, 5000);
+  }, 3000);
 };
 
 const saveArea = async () => {

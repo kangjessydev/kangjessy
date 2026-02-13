@@ -748,6 +748,7 @@ import {
 } from "../services/proposalService";
 import { clientsService } from "../services/clientsService";
 import { couponsService, type Coupon } from "../services/couponsService";
+import type { Client } from "../types";
 import { projectTypes } from "../data/order/projects";
 import { availableFeatures } from "../data/order/features";
 import { BaseButton } from "@kangjessy/ui";
@@ -807,7 +808,7 @@ const showToast = (msg: string, variant: "success" | "error" = "success") => {
 
 const selectedFeatureIds = ref<string[]>([]);
 const activeVouchers = ref<Coupon[]>([]);
-const availableLeads = ref<any[]>([]);
+const availableLeads = ref<Client[]>([]);
 
 const autoPopulateDeliverables = () => {
   const type = projectTypes.find((t) => t.name === formData.value.project_type);

@@ -259,12 +259,10 @@ import {
 import { clientsService } from "../../services/clientsService";
 import { useSidebar } from "../../composables/useSidebar";
 import { useProfile } from "../../composables/useProfile";
-import { useBranding } from "../../composables/useBranding";
 import ThemeToggle from "../ui/ThemeToggle.vue";
 import { auth } from "@kangjessy/database";
 
 const { profile } = useProfile();
-const { branding } = useBranding();
 
 const profileImage = computed(() => {
   return (
@@ -324,7 +322,13 @@ const currentTitle = computed(() => {
   }
 });
 
-const notifications = ref<any[]>([
+interface Notification {
+  title: string;
+  time: string;
+  icon: any;
+}
+
+const notifications = ref<Notification[]>([
   {
     title: "New order received from Andi",
     time: "2 mins ago",
@@ -344,8 +348,19 @@ const handleScroll = () => {
   scrolled.value = window.scrollY > 10;
 };
 
+const closeDropdown = (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  if (showNotifications.value && !target.closest(".relative")) {
+    showNotifications.value = false;
+  }
+  if (showProfileMenu.value && !target.closest(".profile-menu-container")) {
+    showProfileMenu.value = false;
+  }
+};
+
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
+  window.addEventListener("click", closeDropdown);
 
   subscription = clientsService.subscribeToClients((payload) => {
     if (payload.eventType === "INSERT") {
@@ -357,21 +372,11 @@ onMounted(() => {
       });
     }
   });
-
-  const closeDropdown = (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (showNotifications.value && !target.closest(".relative")) {
-      showNotifications.value = false;
-    }
-    if (showProfileMenu.value && !target.closest(".profile-menu-container")) {
-      showProfileMenu.value = false;
-    }
-  };
-  window.addEventListener("click", closeDropdown);
 });
 
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
+  window.removeEventListener("click", closeDropdown);
   if (subscription) subscription.unsubscribe();
 });
 </script>

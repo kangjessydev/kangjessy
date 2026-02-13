@@ -1281,6 +1281,9 @@ watch(
 
 function showToast(m: string, v: "success" | "error" = "success") {
   toast.value = { show: true, message: m, variant: v };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
 }
 const formatPrice = (p: any) =>
   new Intl.NumberFormat("id-ID", {

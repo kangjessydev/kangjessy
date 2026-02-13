@@ -4,25 +4,25 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
 
 ## 📱 1. Verifikasi Lokalisasi (Bahasa Indonesia)
 
-- [ ] **Dashboard**: Cek apakah judul "Pusat Intelijen", statistik KPI, dan label "Pipa Penjualan" sudah benar.
-- [ ] **Pesanan (Orders)**: Pastikan tabel "Pesanan Klien" dan filter (Semua Status, dll) sudah dalam Bahasa Indonesia.
-- [ ] **Leads**: Cek tab "Inbox" vs "Wawasan Pemasaran", serta tombol "Seleksi".
-- [ ] **Finance**: Verifikasi "Selaraskan Buku Besar", "Buku Kas", dan "Hutang & Piutang".
-- [ ] **Proposal & Voucher**: Pastikan judul halaman dan header tabel sudah diterjemahkan.
+- [x] **Dashboard**: Cek apakah judul "Pusat Intelijen", statistik KPI, dan label "Pipa Penjualan" sudah benar.
+- [x] **Pesanan (Orders)**: Pastikan tabel "Pesanan Klien" dan filter (Semua Status, dll) sudah dalam Bahasa Indonesia.
+- [x] **Leads**: Cek tab "Inbox" vs "Wawasan Pemasaran", serta tombol "Seleksi".
+- [x] **Finance**: Verifikasi "Selaraskan Buku Besar", "Buku Kas", dan "Hutang & Piutang".
+- [x] **Proposal & Voucher**: Pastikan judul halaman dan header tabel sudah diterjemahkan.
 
 ## 🎨 2. Uji Konsistensi UI (Bento 2.0)
 
-- [ ] **Rounding**: Pastikan seluruh `AdminCard` dan `PageHeader` memiliki sudut membulat lebar (`rounded-[32px]!`).
-- [ ] **Border Consistency**: Pastikan tidak ada bayangan (_shadow_) berlebih, fokus pada border 1px yang bersih.
-- [ ] **Table Selection**: Masuk ke mode seleksi (Selection Mode) di Orders/Leads/Portfolio dan pastikan checkbox muncul dengan benar.
+- [x] **Rounding**: Pastikan seluruh `AdminCard` dan `PageHeader` memiliki sudut membulat lebar (`rounded-[32px]!`).
+- [x] **Border Consistency**: Pastikan tidak ada bayangan (_shadow_) berlebih, fokus pada border 1px yang bersih.
+- [x] **Table Selection**: Masuk ke mode seleksi (Selection Mode) di Orders/Leads/Portfolio dan pastikan checkbox muncul dengan benar.
 
 ## ⚙️ 3. Cek Fungsionalitas (Regression Test)
 
-- [ ] **Filter & Search**: Coba ketik di kolom pencarian pada setiap view dan pastikan data terfilter.
-- [ ] **Status Update**: Coba ubah status salah satu Order atau Lead (e.g. dari "New" ke "Follow Up") dan pastikan toast berhasil muncul.
-- [ ] **Table/Grid Switcher**: Pada view Portfolio dan Blog, coba pindah antara mode Tabel dan Grid.
-- [ ] **New Feature (CRM Intel)**: Klik ikon 'User' di tabel Leads, pastikan masuk ke halaman Detail Klien. Coba tambahkan catatan manual dan lihat apakah LTV muncul.
-- [ ] **AI Lead Scoring**: Klik ikon 🧠 pada Lead baru. Tunggu proses analisa Gemini. Cek apakah Badge (Hot/Warm/Cold) muncul dan tooltip menunjukkan analisa yang masuk akal.
+- [x] **Filter & Search**: Coba ketik di kolom pencarian pada setiap view dan pastikan data terfilter.
+- [x] **Status Update**: Coba ubah status salah satu Order atau Lead (e.g. dari "New" ke "Follow Up") dan pastikan toast berhasil muncul.
+- [x] **Table/Grid Switcher**: Pada view Portfolio dan Blog, coba pindah antara mode Tabel dan Grid.
+- [x] **New Feature (CRM Intel)**: Klik ikon 'User' di tabel Leads, pastikan masuk ke halaman Detail Klien. Coba tambahkan catatan manual dan lihat apakah LTV muncul.
+- [x] **AI Lead Scoring**: Klik ikon 🧠 pada Lead baru. Tunggu proses analisa Gemini. Cek apakah Badge (Hot/Warm/Cold) muncul dan tooltip menunjukkan analisa yang masuk akal.
 
 ## 📱 4. Responsiveness (Mobile Check)
 
@@ -118,8 +118,8 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
 
 ## 🐛 11. Verifikasi Perbaikan Bug (Regression)
 
-- [ ] **BP-001 (Blueprint)**: Pastikan tabel di halaman Blueprint sudah memiliki styling Bento yang standard (tidak flat).
-- [ ] **BP-002 (Blueprint)**: Buka modal Edit Stage. Coba klik di area gelap (backdrop). Pastikan modal tertutup otomatis.
-- [ ] **BP-003 (Blueprint)**: Coba hapus step dan ubah urutan (Arrow Up/Down). Pastikan data di database terupdate.
-- [ ] **PTF-002 (Portfolio)**: Hapus salah satu Bidang atau Tech Stack. Pastikan tidak ada alert browser (native), gunakan Modal Konfirmasi Bento.
-- [ ] **PTF-003 (Portfolio)**: Buka modal "Add Area/Stack". Pastikan desain modal sudah konsisten dengan standard sistem (Bento Style).
+- [x] **BP-001 (Blueprint)**: Pastikan tabel di halaman Blueprint sudah memiliki styling Bento yang standard (tidak flat).
+- [x] **BP-002 (Blueprint)**: Buka modal Edit Stage. Coba klik di area gelap (backdrop). Pastikan modal tertutup otomatis.
+- [x] **BP-003 (Blueprint)**: Coba hapus step dan ubah urutan (Arrow Up/Down). Pastikan data di database terupdate.
+- [x] **PTF-002 (Portfolio)**: Hapus salah satu Bidang atau Tech Stack. Pastikan tidak ada alert browser (native), gunakan Modal Konfirmasi Bento.
+- [x] **PTF-003 (Portfolio)**: Buka modal "Add Area/Stack". Pastikan desain modal sudah konsisten dengan standard sistem (Bento Style).

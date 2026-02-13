@@ -781,7 +781,7 @@ import Toast from "../components/ui/Toast.vue";
 import SkeletonTable from "../components/ui/SkeletonTable.vue";
 
 const router = useRouter();
-const projects = ref<any[]>([]);
+const projects = ref<Project[]>([]);
 const loading = ref(true);
 const searchQuery = ref("");
 const statusFilter = ref("all");
@@ -914,6 +914,9 @@ const showToast = (
   variant: "success" | "error" = "success",
 ) => {
   toast.value = { show: true, message, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
 };
 
 const formatDate = (date: string) => {

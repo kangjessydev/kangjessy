@@ -18,10 +18,11 @@ export interface ImportPreview {
   }
 }
 
-const isImporting = ref(false)
-const importProgress = ref(0)
-
 export const useImport = () => {
+  const isImporting = ref(false)
+  const importProgress = ref(0)
+
+
   /**
    * Simple CSV Parser
    */

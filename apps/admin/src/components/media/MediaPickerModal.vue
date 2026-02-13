@@ -86,7 +86,7 @@
                     class="px-6 py-3 border-b border-slate-100 flex items-center justify-between gap-4"
                   >
                     <!-- Search -->
-                    <div class="relative flex-1 max-w-md">
+                    <div class="relative flex-1 max-w-sm">
                       <Search
                         :size="16"
                         class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -99,15 +99,47 @@
                       />
                     </div>
 
+                    <!-- Filter Chips -->
+                    <div
+                      class="flex gap-1 bg-slate-100 p-1 rounded-xl shrink-0"
+                    >
+                      <button
+                        v-for="option in [
+                          { label: 'All', value: 'all', icon: Database },
+                          { label: 'Images', value: 'images', icon: Image },
+                          { label: 'Videos', value: 'videos', icon: Video },
+                          { label: 'Docs', value: 'documents', icon: FileText },
+                        ]"
+                        :key="option.value"
+                        @click="filterType = option.value"
+                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all"
+                        :class="
+                          filterType === option.value
+                            ? 'bg-white text-[#702DFF] shadow-sm'
+                            : 'text-slate-400 hover:text-slate-600'
+                        "
+                      >
+                        <component :is="option.icon" :size="12" />
+                        <span class="hidden lg:inline">{{ option.label }}</span>
+                      </button>
+                    </div>
+
                     <!-- Upload Action -->
-                    <label class="btn btn-primary cursor-pointer gap-2">
-                      <Upload :size="16" />
-                      <span class="hidden sm:inline">Upload New</span>
+                    <label
+                      class="btn btn-primary cursor-pointer gap-2"
+                      :class="{ 'opacity-50 cursor-not-allowed': loading }"
+                    >
+                      <Loader2 v-if="loading" :size="16" class="animate-spin" />
+                      <Upload v-else :size="16" />
+                      <span class="hidden sm:inline">{{
+                        loading ? "Uploading..." : "Upload New"
+                      }}</span>
                       <input
                         type="file"
                         class="hidden"
                         @change="handleUpload"
-                        accept="image/*"
+                        accept="image/*,video/*,audio/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain"
+                        :disabled="loading"
                       />
                     </label>
                   </div>
@@ -140,10 +172,22 @@
                             : 'border-transparent bg-white'
                         "
                       >
-                        <img
-                          :src="item.url"
-                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
+                        <div v-if="isImage(item.type)" class="w-full h-full">
+                          <img
+                            :src="item.url"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                        </div>
+                        <div
+                          v-else
+                          class="w-full h-full flex flex-col items-center justify-center bg-slate-50 text-slate-400"
+                        >
+                          <component :is="getFileIcon(item.type)" :size="32" />
+                          <span
+                            class="text-[8px] mt-1 font-black uppercase tracking-widest"
+                            >{{ item.type?.split("/").pop() || "FILE" }}</span
+                          >
+                        </div>
 
                         <!-- Selected Checkmark -->
                         <div
@@ -172,8 +216,13 @@
                       v-else
                       class="h-full flex flex-col items-center justify-center text-slate-400"
                     >
-                      <Image :size="48" class="mb-4 opacity-50" />
-                      <p class="font-bold">No media found</p>
+                      <div class="flex items-center gap-3 mb-4 opacity-50">
+                        <File :size="32" />
+                        <Video :size="40" />
+                        <Music :size="32" />
+                      </div>
+                      <p class="font-bold">No media assets found</p>
+                      <p class="text-xs">Upload images, videos, or documents</p>
                     </div>
                   </div>
                 </div>
@@ -190,12 +239,27 @@
                   </h4>
 
                   <div
-                    class="aspect-video rounded-xl overflow-hidden bg-slate-50 border border-slate-100 mb-4"
+                    class="aspect-video rounded-xl overflow-hidden bg-slate-50 border border-slate-100 mb-4 flex items-center justify-center"
                   >
                     <img
+                      v-if="isImage(selectedMedia.type)"
                       :src="selectedMedia.url"
                       class="w-full h-full object-contain"
                     />
+                    <div
+                      v-else
+                      class="flex flex-col items-center text-slate-300"
+                    >
+                      <component
+                        :is="getFileIcon(selectedMedia.type)"
+                        :size="48"
+                      />
+                      <p
+                        class="text-[10px] mt-2 font-black uppercase tracking-widest"
+                      >
+                        {{ selectedMedia.type?.split("/").pop() || "FILE" }}
+                      </p>
+                    </div>
                   </div>
 
                   <div class="space-y-4 flex-1">
@@ -285,6 +349,11 @@ import {
   Image,
   Loader2,
   Check,
+  Video,
+  FileText,
+  Music,
+  File,
+  Database,
 } from "lucide-vue-next";
 import FolderItem from "./FolderItem.vue";
 import Toast from "../ui/Toast.vue";
@@ -301,6 +370,7 @@ const emit = defineEmits(["close", "select"]);
 const selectedFolderId = ref<string | null>(null);
 const selectedMedia = ref<MediaItem | null>(null);
 const searchQuery = ref("");
+const filterType = ref<"all" | "images" | "videos" | "documents">("all");
 const loading = ref(false);
 const savingAlt = ref(false);
 
@@ -402,8 +472,8 @@ const fetchMedia = async () => {
             "id": _id,
             name,
             alt,
-            "url": image.asset->url,
-            "assetId": image.asset._ref,
+            "url": coalesce(image.asset->url, file.asset->url),
+            "assetId": coalesce(image.asset._ref, file.asset._ref),
             folderId,
             size,
             type,
@@ -434,8 +504,42 @@ const filteredMedia = computed(() => {
     const q = searchQuery.value.toLowerCase();
     items = items.filter((i) => i.name.toLowerCase().includes(q));
   }
+
+  // Type filter
+  if (filterType.value !== "all") {
+    items = items.filter((m) => {
+      if (filterType.value === "images") return isImage(m.type);
+      if (filterType.value === "videos") return m.type?.startsWith("video/");
+      if (filterType.value === "documents") {
+        return (
+          m.type?.includes("pdf") ||
+          m.type?.includes("msword") ||
+          m.type?.includes("officedocument") ||
+          m.type?.includes("text/")
+        );
+      }
+      return true;
+    });
+  }
+
   return items;
 });
+
+const isImage = (type?: string) => type?.startsWith("image/");
+
+const getFileIcon = (type?: string) => {
+  if (!type) return File;
+  if (type.startsWith("video/")) return Video;
+  if (type.startsWith("audio/")) return Music;
+  if (type.includes("pdf")) return FileText;
+  if (
+    type.includes("msword") ||
+    type.includes("officedocument") ||
+    type.includes("text/")
+  )
+    return FileText;
+  return File;
+};
 
 const selectFolder = (id: string | null) => {
   selectedFolderId.value = id;
@@ -499,60 +603,70 @@ const handleUpload = async (event: Event) => {
 
   loading.value = true;
   try {
-    // 1. Validate
-    const validation = await validateImage(file);
-    if (!validation.valid) {
-      showToast(validation.error || "Resolusi gambar terlalu rendah", "error");
-      loading.value = false;
-      input.value = "";
-      return;
+    const isImageFile = file.type.startsWith("image/");
+    let asset;
+
+    if (isImageFile) {
+      // 1. Validate
+      const validation = await validateImage(file);
+      if (!validation.valid) {
+        showToast(
+          validation.error || "Resolusi gambar terlalu rendah",
+          "error",
+        );
+        loading.value = false;
+        input.value = "";
+        return;
+      }
+
+      // 2. Optimize
+      const optimizedFile = await optimizeImage(file);
+
+      // 3. Upload Asset
+      asset = await (sanityWriteClient as any).assets.upload(
+        "image",
+        optimizedFile,
+        { filename: optimizedFile.name },
+      );
+    } else {
+      // Handle other files
+      asset = await (sanityWriteClient as any).assets.upload("file", file, {
+        filename: file.name,
+      });
     }
-
-    // 2. Optimize
-    const optimizedFile = await optimizeImage(file);
-
-    // 3. Upload Asset
-    const asset = await (sanityWriteClient as any).assets.upload(
-      "image",
-      optimizedFile,
-      { filename: optimizedFile.name },
-    );
 
     if (!asset || !asset._id) throw new Error("Cloud synchronization failed");
 
     // 4. Create Document
-    const doc = {
+    const doc: any = {
       _type: "media",
-      name: optimizedFile.name,
-      image: {
-        _type: "image",
-        asset: {
-          _type: "reference",
-          _ref: asset._id,
-        },
-      },
+      name: file.name,
       folderId: selectedFolderId.value,
-      size: optimizedFile.size,
-      type: optimizedFile.type,
+      size: file.size,
+      type: file.type,
     };
+
+    if (isImageFile) {
+      doc.image = {
+        _type: "image",
+        asset: { _type: "reference", _ref: asset._id },
+      };
+    } else {
+      doc.file = {
+        _type: "file",
+        asset: { _type: "reference", _ref: asset._id },
+      };
+    }
 
     const createdDoc = await (sanityWriteClient as any).create(doc);
 
     // 5. Successful Update
-    const newItem: MediaItem = {
-      id: createdDoc._id,
-      assetId: asset._id,
-      name: optimizedFile.name,
-      url: asset.url || "",
-      folderId: selectedFolderId.value,
-      size: optimizedFile.size,
-      type: optimizedFile.type,
-      createdAt: new Date().toISOString(),
-    };
-
-    mediaItems.value.unshift(newItem);
-    selectMedia(newItem);
+    await fetchMedia(); // Refresh to ensure correct URL and sync
     showToast("Aset berhasil diupload & disinkronkan");
+
+    // Optional: Select the newly uploaded item
+    const newItem = mediaItems.value.find((m) => m.id === createdDoc._id);
+    if (newItem) selectMedia(newItem);
   } catch (error: any) {
     console.error("Upload failed", error);
     showToast(`Upload gagal: ${error.message}`, "error");

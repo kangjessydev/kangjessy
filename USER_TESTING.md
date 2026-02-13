@@ -108,3 +108,18 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
 - [x] **Persistent Folders**: Refresh halaman setelah membuat folder. Pastikan folder tidak hilang (disimpan di Sanity).
 - [x] **Robust Upload**: Upload beberapa gambar sekaligus. Cek progres & pastikan semuanya muncul di grid dengan URL yang valid.
 - [x] **Alt Text Persistence**: Ubah Alt Text gambar melalui Media Library, lalu cek di Picker apakah perubahan tersinkron.
+- [x] **File Type Filtering (New)**: Gunakan tab filter (All, Images, Videos, Docs). Pastikan hanya file dengan tipe yang relevan yang muncul.
+- [x] **View Mode Switcher (New)**: Ganti antara tampilan Kotak (Grid) dan Daftar (List). Pastikan informasi (Nama, Ukuran, Tanggal) terbaca dengan jelas.
+- [x] **Move File Logic (New)**: Klik ikon folder pada file, pilih folder tujuan. Pastikan file berpindah dan tidak lagi muncul di folder asal.
+- [x] **Search Accuracy (New)**: Ketik nama file sebagian. Pastikan filter pencarian bekerja secara instan di folder manapun.
+- [x] **Storage Indicator**: Perhatikan bar penggunaan penyimpanan di sidebar. Pastikan total ukuran file (Bytes) terhitung dengan benar.
+- [x] **Mobile Drawer (New)**: Buka Media Library di HP. Gunakan tombol "Library Explorer" untuk pindah folder via Sidebar/Drawer khusus mobile.
+- [x] **High Fidelity Blur Fix**: Pastikan overlay aksi di mobile tidak membuat gambar di belakangnya menjadi buram (Sharp Overlay).
+
+## 🐛 11. Verifikasi Perbaikan Bug (Regression)
+
+- [ ] **BP-001 (Blueprint)**: Pastikan tabel di halaman Blueprint sudah memiliki styling Bento yang standard (tidak flat).
+- [ ] **BP-002 (Blueprint)**: Buka modal Edit Stage. Coba klik di area gelap (backdrop). Pastikan modal tertutup otomatis.
+- [ ] **BP-003 (Blueprint)**: Coba hapus step dan ubah urutan (Arrow Up/Down). Pastikan data di database terupdate.
+- [ ] **PTF-002 (Portfolio)**: Hapus salah satu Bidang atau Tech Stack. Pastikan tidak ada alert browser (native), gunakan Modal Konfirmasi Bento.
+- [ ] **PTF-003 (Portfolio)**: Buka modal "Add Area/Stack". Pastikan desain modal sudah konsisten dengan standard sistem (Bento Style).

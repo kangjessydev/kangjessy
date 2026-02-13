@@ -9,16 +9,17 @@
           <FolderPlus :size="18" />
           New Folder
         </BaseButton>
-        <BaseButton variant="primary" @click="triggerInput">
-          <Upload :size="18" />
-          Upload Files
+        <BaseButton variant="primary" @click="triggerInput" :disabled="loading">
+          <Loader2 v-if="loading" :size="18" class="animate-spin" />
+          <Upload v-else :size="18" />
+          {{ loading ? "Uploading..." : "Upload Files" }}
         </BaseButton>
         <input
           type="file"
           ref="fileInput"
           class="hidden"
           multiple
-          accept="image/*"
+          accept="image/*,video/*,audio/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain"
           @change="handleFileUpload"
         />
       </div>
@@ -87,37 +88,61 @@
 
       <!-- Main Content Area -->
       <div class="flex-1">
-        <!-- Breadcrumb -->
-        <div class="flex items-center gap-2 mb-6 text-[11px] font-bold">
-          <button
-            @click="selectFolder(null)"
-            class="text-slate-400 hover:text-[#702DFF] transition-colors"
-          >
-            All Files
-          </button>
-          <div
-            v-for="(crumb, idx) in breadcrumbs"
-            :key="crumb.id"
-            class="flex items-center gap-2"
-          >
-            <ChevronRight :size="12" class="text-slate-300" />
+        <!-- Breadcrumb & Mobile Folder Toggle -->
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6"
+        >
+          <div class="flex items-center gap-2 text-[11px] font-bold">
             <button
-              @click="selectFolder(crumb.id)"
-              :class="
-                idx === breadcrumbs.length - 1
-                  ? 'text-[#702DFF]'
-                  : 'text-slate-400 hover:text-[#702DFF]'
-              "
-              class="transition-colors"
+              @click="selectFolder(null)"
+              class="text-slate-400 hover:text-[#702DFF] transition-colors"
             >
-              {{ crumb.name }}
+              All Files
+            </button>
+            <div
+              v-for="(crumb, idx) in breadcrumbs"
+              :key="crumb.id"
+              class="flex items-center gap-2"
+            >
+              <ChevronRight :size="12" class="text-slate-300" />
+              <button
+                @click="selectFolder(crumb.id)"
+                :class="
+                  idx === breadcrumbs.length - 1
+                    ? 'text-[#702DFF]'
+                    : 'text-slate-400 hover:text-[#702DFF]'
+                "
+                class="transition-colors truncate max-w-[100px]"
+              >
+                {{ crumb.name }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Mobile Folder Toggle (Bento Style) -->
+          <div v-if="isTablet" class="lg:hidden">
+            <button
+              @click="showMobileFolderDrawer = true"
+              class="flex items-center justify-between w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-[#1B2559] hover:bg-slate-100 transition-all active:scale-[0.98]"
+            >
+              <div class="flex items-center gap-3">
+                <Folder :size="16" class="text-amber-400" />
+                <span>{{
+                  selectedFolderId
+                    ? getFolderPath(selectedFolderId).split("/").pop()
+                    : "Root Directory"
+                }}</span>
+              </div>
+              <ChevronRight :size="14" class="text-slate-300" />
             </button>
           </div>
         </div>
 
         <!-- View Toggle & Search -->
-        <div class="flex items-center justify-between mb-6">
-          <div class="relative flex-1 max-w-xs">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
+        >
+          <div class="relative flex-1 md:max-w-xs">
             <Search
               :size="16"
               class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"
@@ -129,29 +154,59 @@
               placeholder="Search files..."
             />
           </div>
-          <div class="flex gap-2 bg-slate-100 p-1 rounded-xl">
-            <button
-              @click="viewMode = 'grid'"
-              class="p-2 rounded-lg transition-all"
-              :class="
-                viewMode === 'grid'
-                  ? 'bg-white text-[#702DFF] shadow-sm'
-                  : 'text-slate-400 hover:text-slate-600'
-              "
+          <div
+            class="flex items-center gap-3 overflow-x-auto pb-1 md:pb-0 scrollbar-hide"
+          >
+            <!-- Filter Type -->
+            <div class="flex gap-1 bg-slate-100 p-1 rounded-xl shrink-0">
+              <button
+                v-for="option in [
+                  { label: 'All', value: 'all', icon: Database },
+                  { label: 'Images', value: 'images', icon: ImageIcon },
+                  { label: 'Videos', value: 'videos', icon: Video },
+                  { label: 'Docs', value: 'documents', icon: FileText },
+                ]"
+                :key="option.value"
+                @click="setFilterType(option.value)"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap"
+                :class="
+                  filterType === option.value
+                    ? 'bg-white text-[#702DFF] shadow-sm'
+                    : 'text-slate-400 hover:text-slate-600'
+                "
+              >
+                <component :is="option.icon" :size="12" />
+                {{ option.label }}
+              </button>
+            </div>
+
+            <!-- View Toggle -->
+            <div
+              class="hidden sm:flex gap-1 bg-slate-100 p-1 rounded-xl shrink-0"
             >
-              <Grid3x3 :size="18" />
-            </button>
-            <button
-              @click="viewMode = 'list'"
-              class="p-2 rounded-lg transition-all"
-              :class="
-                viewMode === 'list'
-                  ? 'bg-white text-[#702DFF] shadow-sm'
-                  : 'text-slate-400 hover:text-slate-600'
-              "
-            >
-              <List :size="18" />
-            </button>
+              <button
+                @click="viewMode = 'grid'"
+                class="p-2 rounded-lg transition-all"
+                :class="
+                  viewMode === 'grid'
+                    ? 'bg-white text-[#702DFF] shadow-sm'
+                    : 'text-slate-400 hover:text-slate-600'
+                "
+              >
+                <Grid3x3 :size="18" />
+              </button>
+              <button
+                @click="viewMode = 'list'"
+                class="p-2 rounded-lg transition-all"
+                :class="
+                  viewMode === 'list'
+                    ? 'bg-white text-[#702DFF] shadow-sm'
+                    : 'text-slate-400 hover:text-slate-600'
+                "
+              >
+                <List :size="18" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -194,24 +249,29 @@
             Files
           </h3>
 
-          <!-- Grid View -->
           <div
             v-if="viewMode === 'grid'"
-            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4"
           >
             <!-- Upload Placeholder -->
             <div
-              @click="triggerInput"
-              class="aspect-square rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#702DFF] hover:bg-indigo-50/30 transition-all group"
+              @click="!loading && triggerInput()"
+              class="aspect-square rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#702DFF] hover:bg-indigo-50/30 transition-all group shrink-0"
+              :class="{ 'opacity-50 cursor-not-allowed': loading }"
             >
               <div
-                class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-100 group-hover:text-[#702DFF] transition-all"
+                class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-100 group-hover:text-[#702DFF] transition-all"
               >
-                <Plus :size="20" />
+                <Loader2
+                  v-if="loading"
+                  :size="18"
+                  class="animate-spin text-[#702DFF]"
+                />
+                <Plus v-else :size="18" />
               </div>
               <span
-                class="text-[9px] font-black text-slate-400 uppercase tracking-widest"
-                >Upload</span
+                class="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest"
+                >{{ loading ? "Uploading" : "Upload" }}</span
               >
             </div>
 
@@ -227,45 +287,89 @@
                   : ''
               "
             >
-              <img
-                :src="item.url"
-                :alt="item.name"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-
-              <!-- Overlay -->
+              <div v-if="isImage(item.type)" class="w-full h-full">
+                <img
+                  :src="item.url"
+                  :alt="item.name"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+              </div>
               <div
-                class="absolute inset-0 bg-[#1B2559]/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-[2px]"
+                v-else
+                class="w-full h-full flex flex-col items-center justify-center bg-slate-50 text-slate-400 group-hover:bg-indigo-50/50 transition-colors"
+              >
+                <component
+                  :is="getFileIcon(item.type)"
+                  :size="isMobile ? 32 : 48"
+                  class="mb-2 transition-transform group-hover:scale-110"
+                />
+                <span
+                  class="text-[7px] md:text-[8px] font-black uppercase tracking-widest"
+                  >{{ item.type?.split("/").pop() || "FILE" }}</span
+                >
+              </div>
+
+              <!-- Overlay / Actions -->
+              <div
+                class="absolute inset-0 transition-opacity flex flex-col items-center justify-center gap-2"
+                :class="
+                  isMobile
+                    ? 'opacity-100 bg-transparent justify-end p-2'
+                    : 'opacity-0 bg-[#1B2559]/70 group-hover:opacity-100 backdrop-blur-[2px]'
+                "
               >
                 <p
+                  v-if="!isMobile"
                   class="text-[9px] font-black text-white uppercase tracking-widest px-3 text-center truncate w-full"
                 >
                   {{ item.name }}
                 </p>
-                <div class="flex gap-2">
+                <div
+                  class="flex gap-1.5 md:gap-2"
+                  :class="
+                    isMobile
+                      ? 'bg-white/90 backdrop-blur-md p-1.5 rounded-xl shadow-lg border border-white/20'
+                      : ''
+                  "
+                >
                   <button
                     @click.stop="copyUrl(item.url)"
-                    class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white text-white hover:text-[#1B2559] flex items-center justify-center transition-all"
+                    class="w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center transition-all"
+                    :class="
+                      isMobile
+                        ? 'bg-indigo-50 text-[#1B2559]'
+                        : 'bg-white/10 hover:bg-white text-white hover:text-[#1B2559]'
+                    "
                     title="Copy URL"
                   >
                     <Copy :size="14" />
                   </button>
                   <button
                     @click.stop="openMoveModal(item)"
-                    class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white text-white hover:text-[#1B2559] flex items-center justify-center transition-all"
+                    class="w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center transition-all"
+                    :class="
+                      isMobile
+                        ? 'bg-indigo-50 text-[#1B2559]'
+                        : 'bg-white/10 hover:bg-white text-white hover:text-[#1B2559]'
+                    "
                     title="Move"
                   >
                     <FolderInput :size="14" />
                   </button>
                   <button
                     @click.stop="handleDeleteMedia(item.id)"
-                    class="w-8 h-8 rounded-lg bg-white/10 hover:bg-rose-500 text-white flex items-center justify-center transition-all"
+                    class="w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center transition-all"
+                    :class="
+                      isMobile
+                        ? 'bg-rose-50 text-rose-500'
+                        : 'bg-white/10 hover:bg-rose-500 text-white'
+                    "
                     title="Delete"
                   >
                     <Trash2 :size="14" />
                   </button>
                 </div>
-                <p class="text-[8px] text-white/60 mt-1">
+                <p v-if="!isMobile" class="text-[8px] text-white/60 mt-1">
                   {{ formatBytes(item.size) }}
                 </p>
               </div>
@@ -297,11 +401,18 @@
                   <td class="py-3 px-4">
                     <div class="flex items-center gap-3">
                       <div
-                        class="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0"
+                        class="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0 flex items-center justify-center"
                       >
                         <img
+                          v-if="isImage(item.type)"
                           :src="item.url"
                           class="w-full h-full object-cover"
+                        />
+                        <component
+                          v-else
+                          :is="getFileIcon(item.type)"
+                          :size="20"
+                          class="text-slate-400"
                         />
                       </div>
                       <span
@@ -472,12 +583,28 @@
           >
             <!-- Left: Image Preview -->
             <div
-              class="w-full md:w-3/5 bg-slate-900 flex items-center justify-center relative group p-8"
+              class="w-full md:w-3/5 bg-slate-900 flex items-center justify-center relative group p-8 min-h-[300px]"
             >
               <img
+                v-if="isImage(selectedFile.type)"
                 :src="selectedFile.url"
                 class="max-w-full max-h-full object-contain shadow-2xl rounded-lg"
               />
+              <div
+                v-else
+                class="flex flex-col items-center justify-center text-white gap-4"
+              >
+                <div
+                  class="w-32 h-32 rounded-3xl bg-white/10 flex items-center justify-center backdrop-blur-md"
+                >
+                  <component :is="getFileIcon(selectedFile.type)" :size="64" />
+                </div>
+                <p
+                  class="text-sm font-bold opacity-60 uppercase tracking-widest"
+                >
+                  {{ selectedFile.type }}
+                </p>
+              </div>
 
               <!-- Overlay Actions -->
               <div class="absolute top-4 right-4 flex gap-2">
@@ -678,11 +805,107 @@
       :variant="toast.variant"
       @close="toast.show = false"
     />
+
+    <!-- Mobile Folder Drawer (Show/Hide Sidebar) -->
+    <Transition name="fade">
+      <div
+        v-if="showMobileFolderDrawer"
+        @click="showMobileFolderDrawer = false"
+        class="fixed inset-0 z-50 bg-[#1B2559]/40 backdrop-blur-sm lg:hidden"
+      ></div>
+    </Transition>
+
+    <Transition name="slide-left">
+      <div
+        v-if="showMobileFolderDrawer"
+        class="fixed inset-y-0 left-0 z-50 w-full max-w-[300px] bg-white shadow-2xl lg:hidden flex flex-col pt-safe"
+      >
+        <div
+          class="p-6 border-b border-slate-50 flex items-center justify-between"
+        >
+          <div>
+            <h3
+              class="text-sm font-black text-[#1B2559] uppercase tracking-widest"
+            >
+              Library Explorer
+            </h3>
+            <p class="text-[10px] text-slate-400 font-bold mt-1">
+              Manage your categories
+            </p>
+          </div>
+          <button
+            @click="showMobileFolderDrawer = false"
+            class="btn-ghost w-10 h-10"
+          >
+            <X :size="20" />
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+          <div class="space-y-4">
+            <!-- Root Option -->
+            <button
+              @click="
+                selectFolder(null);
+                showMobileFolderDrawer = false;
+              "
+              class="w-full flex items-center gap-3 p-3 rounded-2xl transition-all"
+              :class="
+                !selectedFolderId
+                  ? 'bg-indigo-50 text-[#702DFF]'
+                  : 'hover:bg-slate-50 text-slate-600'
+              "
+            >
+              <Database
+                :size="18"
+                :class="!selectedFolderId ? 'text-[#702DFF]' : 'text-slate-400'"
+              />
+              <span class="text-xs font-black uppercase tracking-widest"
+                >All Repository</span
+              >
+            </button>
+
+            <!-- Folder Tree -->
+            <div class="pt-2 border-t border-slate-50">
+              <FolderItem
+                v-for="folder in rootFolders"
+                :key="folder.id"
+                :folder="folder"
+                :all-folders="allFolders"
+                :selected-id="selectedFolderId"
+                :level="0"
+                @select="
+                  selectFolder($event);
+                  showMobileFolderDrawer = false;
+                "
+                @delete="handleDeleteFolder"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="p-6 bg-slate-50/50 border-t border-slate-50">
+          <BaseButton
+            variant="primary"
+            class="w-full"
+            @click="
+              showNewFolderModal = true;
+              showMobileFolderDrawer = false;
+            "
+          >
+            <FolderPlus :size="18" />
+            New Category
+          </BaseButton>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, provide } from "vue";
+import { useBreakpoints, breakpointsTailwind } from "@vueuse/core";
 import {
   Upload,
   Plus,
@@ -700,6 +923,11 @@ import {
   X,
   Info,
   ExternalLink,
+  Loader2,
+  Video,
+  FileText,
+  Music,
+  File,
 } from "lucide-vue-next";
 import PageHeader from "../components/ui/PageHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
@@ -709,6 +937,10 @@ import FolderItem from "../components/media/FolderItem.vue";
 import { sanityClient, sanityWriteClient } from "@kangjessy/database";
 import type { MediaFolder, MediaItem } from "../types";
 
+const breakpoints = useBreakpoints(breakpointsTailwind);
+const isMobile = breakpoints.smaller("md");
+const isTablet = breakpoints.smaller("lg");
+
 const fileInput = ref<HTMLInputElement | null>(null);
 const loading = ref(false);
 const viewMode = ref<"grid" | "list">("grid");
@@ -716,6 +948,8 @@ const searchQuery = ref("");
 const selectedFolderId = ref<string | null>(null);
 const selectedFile = ref<MediaItem | null>(null);
 const savingAlt = ref(false);
+const showMobileFolderDrawer = ref(false);
+const filterType = ref<"all" | "images" | "videos" | "documents">("all");
 const toast = ref({
   show: false,
   message: "",
@@ -793,6 +1027,8 @@ const folders = ref<MediaFolder[]>([
   { id: "misc", name: "Misc", parentId: null, createdAt: "2026-01-01" },
 ]);
 
+provide("folders", folders);
+
 // Sample media items
 // Media Items (Fetched from Sanity)
 const mediaItems = ref<MediaItem[]>([]);
@@ -846,8 +1082,41 @@ const filteredMedia = computed(() => {
     items = items.filter((m) => m.name.toLowerCase().includes(query));
   }
 
+  // Type filter
+  if (filterType.value !== "all") {
+    items = items.filter((m) => {
+      if (filterType.value === "images") return isImage(m.type);
+      if (filterType.value === "videos") return m.type?.startsWith("video/");
+      if (filterType.value === "documents") {
+        return (
+          m.type?.includes("pdf") ||
+          m.type?.includes("msword") ||
+          m.type?.includes("officedocument") ||
+          m.type?.includes("text/")
+        );
+      }
+      return true;
+    });
+  }
+
   return items;
 });
+
+const isImage = (type?: string) => type?.startsWith("image/");
+
+const getFileIcon = (type?: string) => {
+  if (!type) return File;
+  if (type.startsWith("video/")) return Video;
+  if (type.startsWith("audio/")) return Music;
+  if (type.includes("pdf")) return FileText;
+  if (
+    type.includes("msword") ||
+    type.includes("officedocument") ||
+    type.includes("text/")
+  )
+    return FileText;
+  return File;
+};
 
 // Methods
 const getDescendantFolderIds = (parentId: string): string[] => {
@@ -902,8 +1171,8 @@ const fetchMediaData = async () => {
       "id": _id,
       name,
       alt,
-      "url": image.asset->url,
-      "assetId": image.asset._ref,
+      "url": coalesce(image.asset->url, file.asset->url),
+      "assetId": coalesce(image.asset._ref, file.asset._ref),
       size,
       folderId,
       "createdAt": _createdAt,
@@ -926,6 +1195,15 @@ const selectFolder = (folderId: string | null) => {
   selectedFolderId.value = folderId;
 };
 
+const onFolderSelect = (event: Event) => {
+  const target = event.target as HTMLSelectElement;
+  selectFolder(target.value || null);
+};
+
+const setFilterType = (type: string) => {
+  filterType.value = type as any;
+};
+
 const triggerInput = () => fileInput.value?.click();
 
 import { validateImage, optimizeImage } from "../utils/imageOptimizer";
@@ -935,63 +1213,75 @@ const handleFileUpload = async (e: Event) => {
   if (!files || files.length === 0) return;
 
   loading.value = true;
+  let successCount = 0;
+  let failCount = 0;
+  let lastError = "";
+
   try {
     for (const file of Array.from(files)) {
-      // 1. Validate
-      const validation = await validateImage(file);
-      if (!validation.valid) {
-        showToast(validation.error || "Image quality too low", "error");
-        continue;
+      const isImageFile = file.type.startsWith("image/");
+      let asset;
+
+      try {
+        if (isImageFile) {
+          const validation = await validateImage(file);
+          if (!validation.valid) {
+            lastError = validation.error || "Image quality too low";
+            showToast(lastError, "error");
+            failCount++;
+            continue;
+          }
+          const optimizedFile = await optimizeImage(file);
+          asset = await (sanityWriteClient as any).assets.upload(
+            "image",
+            optimizedFile,
+            { filename: optimizedFile.name },
+          );
+        } else {
+          asset = await (sanityWriteClient as any).assets.upload("file", file, {
+            filename: file.name,
+          });
+        }
+
+        if (!asset || !asset._id) throw new Error("Cloud upload failed");
+
+        const doc: any = {
+          _type: "media",
+          name: file.name,
+          folderId: selectedFolderId.value,
+          size: file.size,
+          type: file.type,
+        };
+
+        if (isImageFile) {
+          doc.image = {
+            _type: "image",
+            asset: { _type: "reference", _ref: asset._id },
+          };
+        } else {
+          doc.file = {
+            _type: "file",
+            asset: { _type: "reference", _ref: asset._id },
+          };
+        }
+
+        await (sanityWriteClient as any).create(doc);
+        successCount++;
+      } catch (err) {
+        console.error("Single file upload failed:", err);
+        failCount++;
       }
-
-      // 2. Optimize
-      const optimizedFile = await optimizeImage(file);
-
-      // 3. Upload Asset
-      const asset = await (sanityWriteClient as any).assets.upload(
-        "image",
-        optimizedFile,
-        { filename: optimizedFile.name },
-      );
-
-      if (!asset || !asset._id) throw new Error("Cloud upload failed");
-
-      // 4. Create Media Document
-      const doc = {
-        _type: "media",
-        name: optimizedFile.name,
-        image: {
-          _type: "image",
-          asset: {
-            _type: "reference",
-            _ref: asset._id,
-          },
-        },
-        folderId: selectedFolderId.value,
-        size: optimizedFile.size,
-        type: optimizedFile.type,
-      };
-
-      const createdDoc = await (sanityWriteClient as any).create(doc);
-
-      // 5. Reactive Update (Success)
-      const newItem: MediaItem = {
-        id: createdDoc._id,
-        assetId: asset._id,
-        name: optimizedFile.name,
-        url: asset.url || "", // Use asset.url directly from upload response
-        size: optimizedFile.size,
-        folderId: selectedFolderId.value,
-        createdAt: new Date().toISOString(),
-        type: optimizedFile.type,
-      };
-
-      mediaItems.value.unshift(newItem);
     }
-    showToast("Galleri Media disinkronkan!", "success");
+
+    if (successCount > 0) {
+      showToast(`${successCount} aset berhasil diupload!`, "success");
+      await fetchMediaData();
+    } else if (failCount > 0) {
+      showToast("Gagal mengupload beberapa aset.", "error");
+    }
   } catch (err: any) {
-    console.error("Upload Error:", err);
-    showToast("Gagal mengupload aset: " + err.message, "error");
+    console.error("Global Upload Error:", err);
+    showToast("Gagal mengupload: " + (err.message || "Error server"), "error");
   } finally {
     loading.value = false;
     if (fileInput.value) fileInput.value.value = "";
@@ -1184,3 +1474,83 @@ onMounted(async () => {
   fetchMediaData();
 });
 </script>
+
+<style scoped>
+@reference "../style.css";
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Base Bento Styles */
+.card {
+  @apply bg-white rounded-[32px] border border-slate-100 shadow-sm transition-all;
+}
+
+.input-field {
+  @apply w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559] transition-all bg-white;
+}
+
+.select-field {
+  @apply w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559] transition-all bg-white cursor-pointer;
+}
+
+.btn-ghost {
+  @apply flex items-center justify-center rounded-xl transition-all text-slate-400 hover:bg-slate-50 hover:text-[#702DFF];
+}
+
+/* Custom Table for Bento */
+.table-main {
+  @apply w-full;
+}
+
+.table-main thead tr {
+  @apply bg-slate-50/50 border-b border-slate-100;
+}
+
+.table-main th {
+  @apply py-3 px-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest;
+}
+
+.table-main tbody tr {
+  @apply border-t border-slate-50 hover:bg-slate-50/50 transition-colors;
+}
+
+.table-main td {
+  @apply py-3 px-4;
+}
+
+/* Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  @apply transition-opacity duration-300;
+}
+.fade-enter-from,
+.fade-leave-to {
+  @apply opacity-0;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active {
+  @apply transition-transform duration-300 ease-out;
+}
+.slide-left-enter-from,
+.slide-left-leave-to {
+  @apply -translate-x-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-slate-100 rounded-full;
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+</style>

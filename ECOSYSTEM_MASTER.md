@@ -106,9 +106,7 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 
 ### High Priority (ACTIVE)
 
-1. **Pricing & Feature Database**:
-   - Migrasi konstanta harga di `orderConfig` ke tabel database agar bisa dikontrol via Admin.
-2. **Email/WA Templates (Lean Strategy)**:
+1. **Email/WA Templates (Lean Strategy)**:
    - **Email**: Gunakan Resend (Free Tier) untuk invoice profesional.
    - **WhatsApp**: Gunakan _Smart Click-to-Chat_ (User melakukan send manual) untuk 0 biaya.
 
@@ -124,7 +122,6 @@ Kita menggunakan sistem **Core + Upgraders** untuk fleksibilitas budget klien.
 - **One-Click Repurposer**: Tombol "Viralize" untuk mengubah Blog Sanity menjadi Threads (X), Script TikTok, atau Newsletter.
 - **Internal Snippet Manager**: Katalog kode internal di `kangjessy-docs` untuk mempercepat development project baru.
 - **Affiliate & Subscription**: Sistem komisi partner dan paket maintenance (MaaS) bulanan otomatis.
-- **Centralized Media Manager (Multi-format)**: Menggunakan Sanity sebagai "Cloud Drive" pusat untuk seluruh branding asset ekosistem. Support PDF, Video, & ZIP.
 - **Smart Service-Level Discount System**: Diskon general (Flat/%) per Service Category. Sistem otomatis memilih diskon TERBESAR antara Service vs Project Type (Best Deal Logic).
 - **Contextual Import/Backup**: Tombol Import/Export langsung di Blog, Portfolio, & Blueprint (tanpa harus ke Settings). Backup spesifik per modul.
 
@@ -147,6 +144,7 @@ Berdasarkan audit terbaru, berikut adalah area yang telah tersinkronisasi dan di
 | **The Blueprint**      | 🟢 SYNCED | Agency UI (`RoadmapView`) kini mengambil data live dari `blueprint_stages` via `blueprintService`. Legacy config telah dihapus. |
 | **Proposal System**    | 🟢 SYNCED | Sistem Generator & Viewer mendukung pemisahan Terms (Payment, Copyright, Revision) dan UI Premium yang tersinkronisasi.         |
 | **Global Settings**    | 🟢 SYNCED | `useBranding`, `usePaymentSettings`, & `useProfile` kini tersinkronisasi otomatis dengan tabel `system_settings` di Supabase.   |
+| **Media Library**      | 🟢 SYNCED | Pengelola media multi-format (Cloud Drive) dengan sistem folder, filter tipe file, dan integrasi Sanity CMS.                    |
 
 ---
 
@@ -162,6 +160,7 @@ Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosis
 - **Content Management**: Table/Grid Switcher pada `Portfolio.vue` dan `Blog.vue` kini mendukung lokalisasi dan seleksi bulk yang lebih bersih.
 - **CRM Intelligence**: Penambahan tabel `client_interactions` dan halaman Detail Klien untuk mencatat Log Meeting, LTV, dan WA Automator.
 - **Proposal Refinement**: Pemisahan "Terms & Agreement" menjadi 3 pilar (Pembayaran, Hak Cipta, Revisi). Optimasi font investasi (downsize 4-6px), pembaharuan icon deliverables (`CheckCircle`), dan penajaman tipografi sub-header terms agar lebih otoritatif.
+- **Media Library 2.0**: Implementasi sistem folder rekursif, filter berdasarkan tipe file (Images, Videos, Docs), pencarian aset real-time, dan manajemen Alt Text untuk optimasi SEO gambar. Penambahan **Mobile Drawer Navigation** dan **Touch-Friendly Grid Actions** untuk pengalaman pengelolaan aset yang mulus di smartphone. Terintegrasi langsung dengan Sanity Write Client.
 
 ---
 
@@ -313,4 +312,4 @@ Untuk menjaga identitas agensi yang konsisten di seluruh modul, sistem menggunak
 
 ## 🏁 KONKLUSI AUDIT
 
-Seluruh infrastruktur dasar (Pricing, Client Detail, AI Leads, & Client Portal) telah **SYNCED**. Fokus selanjutnya adalah perbaikan sinkronisasi Global Settings dan pengisian konten riil oleh USER melalui `USER_TESTING.md`.
+Seluruh infrastruktur dasar (Pricing, Client Detail, AI Leads, Client Portal, & Global Settings) telah **SYNCED**. Fokus selanjutnya adalah perbaikan UI/UX pada modul Portofolio dan Blueprint serta pengisian konten riil oleh USER melalui `USER_TESTING.md`.

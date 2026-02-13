@@ -11,7 +11,7 @@ export interface OptimizationOptions {
   quality?: number;
 }
 
-export const MIN_WIDTH = 1200;
+export const MIN_WIDTH = 400;
 
 /**
  * Validates image dimensions before upload.

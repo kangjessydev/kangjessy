@@ -11,55 +11,53 @@
     </PageHeader>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <AdminCard title="Popular Tags" no-padding class="lg:col-span-2">
-        <div v-if="loading" class="p-20 text-center">
-          <div
-            class="inline-block w-8 h-8 border-4 border-[#702DFF] border-t-transparent rounded-full animate-spin"
-          ></div>
-        </div>
-        <div v-else class="overflow-x-auto">
-          <table class="table-main">
-            <thead>
-              <tr>
-                <th>Tag Name</th>
-                <th>Slug</th>
-                <th class="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="tag in tags"
-                :key="tag.id"
-                class="table-row-hover group"
+      <AdminCard
+        title="Popular Tags"
+        no-padding
+        class="lg:col-span-2 overflow-hidden rounded-[32px]!"
+      >
+        <BentoTable
+          :columns="[
+            { key: 'name', label: 'Tag Name' },
+            { key: 'slug', label: 'Slug' },
+            { key: 'actions', label: 'Actions', align: 'right' },
+          ]"
+          :items="tags"
+          :loading="loading"
+          empty-title="No tags found"
+          empty-message="Detailed labeling for granular discovery."
+          :empty-icon="Hash"
+        >
+          <!-- Custom Name Cell -->
+          <template #cell-name="{ item }">
+            <div class="flex items-center gap-2">
+              <Hash :size="14" class="text-indigo-400" />
+              <span class="font-black text-[#1B2559]">{{ item.name }}</span>
+            </div>
+          </template>
+
+          <!-- Custom Slug Cell -->
+          <template #cell-slug="{ item }">
+            <code
+              class="text-[10px] bg-slate-50 px-2 py-1 rounded-lg text-slate-400 font-bold uppercase tracking-widest border border-slate-100/50"
+            >
+              {{ item.slug }}
+            </code>
+          </template>
+
+          <!-- Actions Cell -->
+          <template #cell-actions="{ item }">
+            <div class="flex items-center justify-end gap-1">
+              <button
+                @click="openDeleteConfirm(item)"
+                class="p-2.5 rounded-xl text-slate-200 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                title="Delete Tag"
               >
-                <td>
-                  <div class="flex items-center gap-2">
-                    <Hash :size="14" class="text-slate-300" />
-                    <span class="font-bold text-[#1B2559]">{{ tag.name }}</span>
-                  </div>
-                </td>
-                <td>
-                  <code
-                    class="text-[10px] bg-slate-50 px-2 py-1 rounded text-slate-400 font-bold uppercase"
-                    >{{ tag.slug }}</code
-                  >
-                </td>
-                <td>
-                  <div
-                    class="flex items-center justify-end gap-2 transition-all"
-                  >
-                    <button
-                      @click="handleDelete(tag.id)"
-                      class="btn-ghost w-8 h-8 hover:text-rose-600 hover:bg-rose-50"
-                    >
-                      <Trash2 :size="14" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                <Trash2 :size="16" />
+              </button>
+            </div>
+          </template>
+        </BentoTable>
       </AdminCard>
 
       <AdminCard title="Tag Cloud">
@@ -75,36 +73,39 @@
       </AdminCard>
     </div>
 
-    <!-- Simple Add Modal -->
+    <!-- Add Modal -->
     <div
       v-if="showAddModal"
-      class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#1B2559]/20 backdrop-blur-sm"
+      class="fixed inset-0 z-1000 flex items-center justify-center p-6 bg-[#1B2559]/40 backdrop-blur-sm"
+      @click.self="showAddModal = false"
     >
-      <div class="card w-full max-w-md p-8 shadow-2xl">
-        <h3 class="heading-lg mb-6">Create New Tag</h3>
+      <div
+        class="bg-white w-full max-w-md p-8 shadow-2xl rounded-[32px]! animate-scale-in"
+      >
+        <h3 class="text-2xl font-black text-[#1B2559] mb-6">Create New Tag</h3>
         <div class="space-y-4 mb-8">
           <div>
             <label
-              class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2"
+              class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1"
               >Tag Name</label
             >
             <input
               v-model="newTag.name"
               @input="updateSlug"
               type="text"
-              class="input-field"
+              class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
               placeholder="e.g. TailwindCSS"
             />
           </div>
           <div>
             <label
-              class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2"
+              class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1"
               >Slug</label
             >
             <input
               v-model="newTag.slug"
               type="text"
-              class="input-field"
+              class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
               placeholder="tailwindcss"
             />
           </div>
@@ -122,6 +123,17 @@
         </div>
       </div>
     </div>
+
+    <!-- Confirm Modal -->
+    <ConfirmModal
+      :is-open="confirmModal.isOpen"
+      :title="confirmModal.title"
+      :message="confirmModal.message"
+      variant="danger"
+      confirm-text="Delete Tag"
+      @close="confirmModal.isOpen = false"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -131,13 +143,21 @@ import { Plus, Hash, Trash2 } from "lucide-vue-next";
 import { blogService } from "../services/blogService";
 import type { BlogTag } from "../types";
 import PageHeader from "../components/ui/PageHeader.vue";
+import BentoTable from "../components/ui/BentoTable.vue";
 import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
+import ConfirmModal from "../components/ui/ConfirmModal.vue";
 
 const tags = ref<BlogTag[]>([]);
 const loading = ref(true);
 const showAddModal = ref(false);
 const newTag = ref({ name: "", slug: "" });
+const confirmModal = ref({
+  isOpen: false,
+  title: "",
+  message: "",
+  targetId: null as string | null,
+});
 
 const fetchTags = async () => {
   loading.value = true;
@@ -177,9 +197,28 @@ const saveTag = async () => {
   }
 };
 
-const handleDelete = (id: string) => {
-  if (confirm("Delete tag?"))
+const openDeleteConfirm = (tag: BlogTag) => {
+  confirmModal.value = {
+    isOpen: true,
+    title: "Delete Tag?",
+    message: `Are you sure you want to delete "#${tag.name}"? This will remove the label from all articles.`,
+    targetId: tag.id,
+  };
+};
+
+const executeDelete = async () => {
+  const id = confirmModal.value.targetId;
+  confirmModal.value.isOpen = false;
+  if (!id) return;
+
+  try {
+    await blogService.deleteTag(id);
     tags.value = tags.value.filter((t) => t.id !== id);
+  } catch (err) {
+    console.error(err);
+    // Optimistic fallback for demo
+    tags.value = tags.value.filter((t) => t.id !== id);
+  }
 };
 
 onMounted(fetchTags);

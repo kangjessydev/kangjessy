@@ -254,6 +254,15 @@ export const blogService = {
     return { id: result._id, name: result.title, slug: result.slug.current } as any
   },
 
+  async updateCategory(id: string, category: Partial<BlogCategory>) {
+    const patch = {
+      title: category.name,
+      slug: { _type: 'slug', current: category.slug }
+    }
+    const result = await sanityWriteClient.patch(id).set(patch).commit()
+    return { id: result._id, name: result.title, slug: result.slug.current } as any
+  },
+
   async deleteCategory(id: string) {
     await sanityWriteClient.delete(id)
   },
@@ -276,6 +285,15 @@ export const blogService = {
       slug: { _type: 'slug', current: tag.slug }
     }
     const result = await sanityWriteClient.create(doc)
+    return { id: result._id, name: result.title, slug: result.slug.current } as any
+  },
+
+  async updateTag(id: string, tag: Partial<BlogTag>) {
+    const patch = {
+      title: tag.name,
+      slug: { _type: 'slug', current: tag.slug }
+    }
+    const result = await sanityWriteClient.patch(id).set(patch).commit()
     return { id: result._id, name: result.title, slug: result.slug.current } as any
   },
 

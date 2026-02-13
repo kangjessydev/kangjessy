@@ -232,6 +232,15 @@ export const portfolioService = {
     return { id: result._id, name: result.title, slug: result.slug.current }
   },
 
+  async updateArea(id: string, area: { name: string, slug: string }) {
+    const patch = {
+      title: area.name,
+      slug: { _type: 'slug', current: area.slug }
+    }
+    const result = await sanityWriteClient.patch(id).set(patch).commit()
+    return { id: result._id, name: result.title, slug: result.slug.current }
+  },
+
   async deleteArea(id: string) {
     await sanityWriteClient.delete(id)
   },
@@ -258,6 +267,15 @@ export const portfolioService = {
       slug: { _type: 'slug', current: tech.slug }
     }
     const result = await sanityWriteClient.create(doc)
+    return { id: result._id, name: result.title, slug: result.slug.current }
+  },
+
+  async updateTechnology(id: string, tech: { name: string, slug: string }) {
+    const patch = {
+      title: tech.name,
+      slug: { _type: 'slug', current: tech.slug }
+    }
+    const result = await sanityWriteClient.patch(id).set(patch).commit()
     return { id: result._id, name: result.title, slug: result.slug.current }
   },
 

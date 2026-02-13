@@ -4,7 +4,7 @@
       title="Blog Categories"
       subtitle="Organize your articles into meaningful topics"
     >
-      <BaseButton variant="primary" @click="showAddModal = true">
+      <BaseButton variant="primary" @click="openAddModal">
         <Plus :size="18" />
         Add Category
       </BaseButton>
@@ -12,55 +12,69 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Categories List -->
-      <AdminCard title="All Categories" no-padding class="lg:col-span-2">
-        <div v-if="loading" class="p-20 text-center">
-          <div
-            class="inline-block w-8 h-8 border-4 border-[#702DFF] border-t-transparent rounded-full animate-spin"
-          ></div>
-        </div>
-        <div v-else class="overflow-x-auto">
-          <table class="table-main">
-            <thead>
-              <tr>
-                <th>Category Name</th>
-                <th>Slug</th>
-                <th>Posts</th>
-                <th class="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="cat in categories"
-                :key="cat.id"
-                class="table-row-hover group"
+      <AdminCard
+        title="All Categories"
+        no-padding
+        class="lg:col-span-2 overflow-hidden rounded-[32px]!"
+      >
+        <BentoTable
+          :columns="[
+            { key: 'name', label: 'Category Name' },
+            { key: 'slug', label: 'Slug' },
+            { key: 'posts', label: 'Posts' },
+            { key: 'actions', label: 'Actions', align: 'right' },
+          ]"
+          :items="categories"
+          :loading="loading"
+          empty-title="No categories found"
+          empty-message="Organize your articles into meaningful topics."
+          :empty-icon="Search"
+        >
+          <!-- Custom Name Cell -->
+          <template #cell-name="{ item }">
+            <span class="font-black text-[#1B2559] leading-tight">{{
+              item.name
+            }}</span>
+          </template>
+
+          <!-- Custom Slug Cell -->
+          <template #cell-slug="{ item }">
+            <code
+              class="text-[10px] bg-slate-50/50 px-2 py-1 rounded-lg text-slate-400 font-bold uppercase tracking-widest border border-slate-100/50"
+            >
+              {{ item.slug }}
+            </code>
+          </template>
+
+          <!-- Custom Posts Cell -->
+          <template #cell-posts>
+            <span
+              class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest border border-indigo-100/50"
+            >
+              12 Posts
+            </span>
+          </template>
+
+          <!-- Actions Cell -->
+          <template #cell-actions="{ item }">
+            <div class="flex items-center justify-end gap-1">
+              <button
+                @click="handleEdit(item)"
+                class="p-2.5 rounded-xl text-slate-400 hover:text-indigo-600 hover:bg-slate-50 transition-all"
+                title="Edit Category"
               >
-                <td class="font-bold text-[#1B2559]">{{ cat.name }}</td>
-                <td>
-                  <code
-                    class="text-[10px] bg-slate-50 px-2 py-1 rounded text-slate-400 font-bold uppercase"
-                    >{{ cat.slug }}</code
-                  >
-                </td>
-                <td><span class="badge-chip badge-gray">12 Posts</span></td>
-                <td>
-                  <div
-                    class="flex items-center justify-end gap-2 transition-all"
-                  >
-                    <button @click="handleEdit(cat)" class="btn-ghost w-8 h-8">
-                      <Edit2 :size="14" />
-                    </button>
-                    <button
-                      @click="handleDelete(cat.id)"
-                      class="btn-ghost w-8 h-8 hover:text-rose-600 hover:bg-rose-50"
-                    >
-                      <Trash2 :size="14" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                <Edit2 :size="16" />
+              </button>
+              <button
+                @click="openDeleteConfirm(item)"
+                class="p-2.5 rounded-xl text-slate-200 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                title="Delete Category"
+              >
+                <Trash2 :size="16" />
+              </button>
+            </div>
+          </template>
+        </BentoTable>
       </AdminCard>
 
       <!-- Quick Tips -->
@@ -99,33 +113,38 @@
     <!-- Simple Add Modal Placeholder -->
     <div
       v-if="showAddModal"
-      class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#1B2559]/20 backdrop-blur-sm"
+      class="fixed inset-0 z-1000 flex items-center justify-center p-6 bg-[#1B2559]/40 backdrop-blur-sm"
+      @click.self="showAddModal = false"
     >
-      <div class="card w-full max-w-md p-8 shadow-2xl">
-        <h3 class="heading-lg mb-6">New Category</h3>
+      <div
+        class="bg-white w-full max-w-md p-8 shadow-2xl rounded-[32px]! animate-scale-in"
+      >
+        <h3 class="text-2xl font-black text-[#1B2559] mb-6">
+          {{ isEditing ? "Edit Category" : "New Category" }}
+        </h3>
         <div class="space-y-4 mb-8">
           <div>
             <label
-              class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2"
+              class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1"
               >Category Name</label
             >
             <input
               v-model="newCat.name"
               @input="updateSlug"
               type="text"
-              class="input-field"
+              class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
               placeholder="e.g. Digital Marketing"
             />
           </div>
           <div>
             <label
-              class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2"
+              class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1"
               >Slug</label
             >
             <input
               v-model="newCat.slug"
               type="text"
-              class="input-field"
+              class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
               placeholder="digital-marketing"
             />
           </div>
@@ -143,6 +162,17 @@
         </div>
       </div>
     </div>
+
+    <!-- Confirm Modal -->
+    <ConfirmModal
+      :is-open="confirmModal.isOpen"
+      :title="confirmModal.title"
+      :message="confirmModal.message"
+      variant="danger"
+      confirm-text="Delete Category"
+      @close="confirmModal.isOpen = false"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -152,13 +182,23 @@ import { Plus, Edit2, Trash2, Info, Search } from "lucide-vue-next";
 import { blogService } from "../services/blogService";
 import type { BlogCategory } from "../types";
 import PageHeader from "../components/ui/PageHeader.vue";
+import BentoTable from "../components/ui/BentoTable.vue";
 import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
+import ConfirmModal from "../components/ui/ConfirmModal.vue";
 
 const categories = ref<BlogCategory[]>([]);
 const loading = ref(true);
 const showAddModal = ref(false);
+const isEditing = ref(false);
+const currentId = ref<string | null>(null);
 const newCat = ref({ name: "", slug: "" });
+const confirmModal = ref({
+  isOpen: false,
+  title: "",
+  message: "",
+  targetId: null as string | null,
+});
 
 const fetchCategories = async () => {
   loading.value = true;
@@ -186,23 +226,68 @@ const updateSlug = () => {
 const saveCategory = async () => {
   if (!newCat.value.name) return;
   try {
-    const saved = await blogService.createCategory(newCat.value);
-    categories.value.unshift(saved);
+    if (isEditing.value && currentId.value) {
+      const updated = await blogService.updateCategory(
+        currentId.value,
+        newCat.value,
+      );
+      const index = categories.value.findIndex((c) => c.id === currentId.value);
+      if (index !== -1) categories.value[index] = updated;
+    } else {
+      const saved = await blogService.createCategory(newCat.value);
+      categories.value.unshift(saved);
+    }
     showAddModal.value = false;
     newCat.value = { name: "", slug: "" };
   } catch (err) {
-    alert("Failed to save to database, showing as success for demo.");
-    categories.value.unshift({ id: Date.now().toString(), ...newCat.value });
+    // Fallback for demo
+    if (isEditing.value && currentId.value) {
+      const index = categories.value.findIndex((c) => c.id === currentId.value);
+      if (index !== -1)
+        categories.value[index] = { id: currentId.value, ...newCat.value };
+    } else {
+      categories.value.unshift({ id: Date.now().toString(), ...newCat.value });
+    }
     showAddModal.value = false;
     newCat.value = { name: "", slug: "" };
   }
 };
 
-const handleEdit = (c: any) => console.log("Edit", c);
-const handleDelete = async (id: string) => {
-  if (confirm("Delete category?")) {
+const handleEdit = (c: any) => {
+  isEditing.value = true;
+  currentId.value = c.id;
+  newCat.value = { name: c.name, slug: c.slug };
+  showAddModal.value = true;
+};
+
+const openDeleteConfirm = (cat: BlogCategory) => {
+  confirmModal.value = {
+    isOpen: true,
+    title: "Delete Category?",
+    message: `Are you sure you want to delete "${cat.name}"? Articles in this category might become uncategorized.`,
+    targetId: cat.id,
+  };
+};
+
+const executeDelete = async () => {
+  const id = confirmModal.value.targetId;
+  confirmModal.value.isOpen = false;
+  if (!id) return;
+
+  try {
+    await blogService.deleteCategory(id);
+    categories.value = categories.value.filter((c) => c.id !== id);
+  } catch (err) {
+    console.error(err);
     categories.value = categories.value.filter((c) => c.id !== id);
   }
+};
+
+const openAddModal = () => {
+  isEditing.value = false;
+  currentId.value = null;
+  newCat.value = { name: "", slug: "" };
+  showAddModal.value = true;
 };
 
 onMounted(fetchCategories);

@@ -29,144 +29,117 @@
     </div>
 
     <!-- Table -->
-    <div v-if="loading" class="p-20 text-center">
-      <div
-        class="inline-block w-8 h-8 border-4 border-[#702DFF] border-t-transparent rounded-full animate-spin"
-      ></div>
-    </div>
-
-    <div v-else class="card overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr class="bg-slate-50/80 border-b border-slate-100">
-              <th
-                class="text-left py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest"
-              >
-                Stage Identity
-              </th>
-              <th
-                class="text-left py-4 px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest"
-              >
-                Icon
-              </th>
-              <th
-                class="text-left py-4 px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest"
-              >
-                Steps Count
-              </th>
-              <th
-                class="text-left py-4 px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest"
-              >
-                Order
-              </th>
-              <th
-                class="text-right py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(stage, index) in stages"
-              :key="stage.id"
-              class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors group"
+    <BentoTable
+      :columns="[
+        { key: 'identity', label: 'Stage Identity' },
+        { key: 'icon', label: 'Icon' },
+        { key: 'steps', label: 'Steps Count' },
+        { key: 'order', label: 'Order' },
+        { key: 'actions', label: 'Actions', align: 'right' },
+      ]"
+      :items="stages"
+      :loading="loading"
+      loading-text="Menyusun Roadmap..."
+      empty-title="Roadmap Kosong"
+      empty-message="Belum ada tahapan yang dibuat."
+      :empty-icon="Layers"
+    >
+      <!-- Custom Identity Cell -->
+      <template #cell-identity="{ item }">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-[#702DFF] font-black text-xs shrink-0 border border-indigo-100 shadow-sm"
+          >
+            {{ item.id.substring(0, 2).toUpperCase() }}
+          </div>
+          <div class="min-w-0">
+            <h3
+              class="text-sm font-black text-[#1B2559] group-hover:text-[#702DFF] transition-colors cursor-pointer truncate"
+              @click="goToSteps(item.id)"
             >
-              <td class="py-4 px-6">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-[#702DFF] font-black text-xs"
-                  >
-                    {{ stage.id.substring(0, 2).toUpperCase() }}
-                  </div>
-                  <div>
-                    <h3
-                      class="text-sm font-black text-[#1B2559] group-hover:text-[#702DFF] transition-colors cursor-pointer"
-                      @click="goToSteps(stage.id)"
-                    >
-                      {{ stage.name }}
-                    </h3>
-                    <p
-                      class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"
-                    >
-                      {{ stage.subtitle }}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td class="py-4 px-4">
-                <div
-                  class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400"
-                >
-                  <component
-                    :is="getIconComponent(stage.icon || 'Layers')"
-                    :size="16"
-                  />
-                </div>
-              </td>
-              <td class="py-4 px-4">
-                <span class="text-xs font-bold text-slate-500"
-                  >{{ stage.steps?.length || 0 }} Steps</span
-                >
-              </td>
-              <td class="py-4 px-4">
-                <div class="flex items-center gap-2">
-                  <div class="flex flex-col gap-0.5">
-                    <button
-                      @click="moveStage(index, -1)"
-                      :disabled="index === 0"
-                      class="p-1 hover:bg-indigo-50 hover:text-[#702DFF] rounded transition-all disabled:opacity-20"
-                      title="Move Up"
-                    >
-                      <ChevronUp :size="14" />
-                    </button>
-                    <button
-                      @click="moveStage(index, 1)"
-                      :disabled="index === stages.length - 1"
-                      class="p-1 hover:bg-indigo-50 hover:text-[#702DFF] rounded transition-all disabled:opacity-20"
-                      title="Move Down"
-                    >
-                      <ChevronDown :size="14" />
-                    </button>
-                  </div>
-                </div>
-              </td>
-              <td class="py-4 px-6 text-right">
-                <div class="flex items-center justify-end gap-1">
-                  <button
-                    @click="goToSteps(stage.id)"
-                    class="btn-ghost w-8 h-8"
-                    title="Manage Steps"
-                  >
-                    <List :size="14" />
-                  </button>
-                  <button
-                    @click="openStageModal(stage)"
-                    class="btn-ghost w-8 h-8"
-                    title="Edit Stage"
-                  >
-                    <Edit2 :size="14" />
-                  </button>
-                  <button
-                    @click="handleDelete(stage)"
-                    class="btn-ghost w-8 h-8 hover:text-rose-600 hover:bg-rose-50"
-                    title="Delete"
-                  >
-                    <Trash2 :size="14" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+              {{ item.name }}
+            </h3>
+            <p
+              class="text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate"
+            >
+              {{ item.subtitle }}
+            </p>
+          </div>
+        </div>
+      </template>
+
+      <!-- Custom Icon Cell -->
+      <template #cell-icon="{ item }">
+        <div
+          class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400"
+        >
+          <component :is="getIconComponent(item.icon || 'Layers')" :size="18" />
+        </div>
+      </template>
+
+      <!-- Steps count cell -->
+      <template #cell-steps="{ item }">
+        <span
+          class="text-xs font-black text-slate-500 uppercase tracking-widest"
+          >{{ item.steps?.length || 0 }} Steps</span
+        >
+      </template>
+
+      <!-- Order cell -->
+      <template #cell-order="{ index }">
+        <div class="flex items-center gap-1">
+          <button
+            @click="moveStage(index, -1)"
+            :disabled="index === 0"
+            class="p-1.5 hover:bg-indigo-50 hover:text-[#702DFF] rounded-lg transition-all disabled:opacity-20"
+            title="Move Up"
+          >
+            <ChevronUp :size="16" />
+          </button>
+          <button
+            @click="moveStage(index, 1)"
+            :disabled="index === stages.length - 1"
+            class="p-1.5 hover:bg-indigo-50 hover:text-[#702DFF] rounded-lg transition-all disabled:opacity-20"
+            title="Move Down"
+          >
+            <ChevronDown :size="16" />
+          </button>
+        </div>
+      </template>
+
+      <!-- Actions Cell -->
+      <template #cell-actions="{ item }">
+        <div class="flex items-center justify-end gap-1">
+          <button
+            @click="goToSteps(item.id)"
+            class="p-2.5 rounded-xl text-slate-400 hover:text-[#702DFF] hover:bg-indigo-50 transition-all"
+            title="Manage Steps"
+          >
+            <List :size="16" />
+          </button>
+          <button
+            @click="openStageModal(item)"
+            class="p-2.5 rounded-xl text-slate-400 hover:text-indigo-600 hover:bg-slate-50 transition-all"
+            title="Edit Stage"
+          >
+            <Edit2 :size="16" />
+          </button>
+          <button
+            @click="handleDelete(item)"
+            class="p-2.5 rounded-xl text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition-all"
+            title="Delete"
+          >
+            <Trash2 :size="16" />
+          </button>
+        </div>
+      </template>
+    </BentoTable>
 
     <!-- Stage Modal -->
     <div
       v-if="modal.show"
-      class="fixed inset-0 bg-[#1B2559]/40 backdrop-blur-sm z-[1000] flex items-center justify-center p-4"
+      class="fixed inset-0 bg-[#1B2559]/40 backdrop-blur-sm z-1000 flex items-center justify-center p-4"
+      @click.self="modal.show = false"
     >
       <div
         class="bg-white rounded-3xl w-full max-w-lg shadow-2xl p-8 border border-white/20"
@@ -176,45 +149,35 @@
         </h2>
 
         <form @submit.prevent="saveStage" class="space-y-4">
-          <div>
-            <label
-              class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"
-              >Stage ID (Slug)</label
-            >
-            <input
-              v-model="modal.data.id"
-              type="text"
-              class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
-              placeholder="visionary"
-              :disabled="modal.isEdit"
-            />
-          </div>
-          <div>
-            <label
-              class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"
-              >Stage Name</label
-            >
-            <input
-              v-model="modal.data.name"
-              type="text"
-              class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
-              placeholder="The Visionary"
-            />
-          </div>
-          <div>
-            <label
-              class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"
-              >Subtitle</label
-            >
-            <input
-              v-model="modal.data.subtitle"
-              type="text"
-              class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
-              placeholder="Tahap Memulai & Identitas"
-            />
-          </div>
-          <div class="grid grid-cols-1 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
+              <label
+                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"
+                >Stage ID (Slug)</label
+              >
+              <input
+                v-model="modal.data.id"
+                type="text"
+                class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
+                placeholder="visionary"
+                :disabled="modal.isEdit"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"
+                >Stage Name</label
+              >
+              <input
+                v-model="modal.data.name"
+                type="text"
+                class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
+                placeholder="The Visionary"
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-1">
               <label
                 class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"
                 >Icon</label
@@ -231,7 +194,7 @@
                     class="text-[#702DFF]"
                   />
                   <span class="text-sm font-bold text-[#1B2559] truncate">{{
-                    modal.data.icon || "Select Icon"
+                    modal.data.icon || "Select"
                   }}</span>
                 </div>
                 <ChevronDown
@@ -239,6 +202,18 @@
                   class="text-slate-300 group-hover:text-[#702DFF]"
                 />
               </button>
+            </div>
+            <div class="md:col-span-1">
+              <label
+                class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"
+                >Subtitle</label
+              >
+              <input
+                v-model="modal.data.subtitle"
+                type="text"
+                class="w-full px-4 py-3 rounded-xl border border-slate-100 focus:border-[#702DFF] outline-none text-sm font-bold text-[#1B2559]"
+                placeholder="Tahap Memulai"
+              />
             </div>
           </div>
           <div class="col-span-2">
@@ -276,7 +251,7 @@
     <!-- Icon Picker Modal -->
     <div
       v-if="isIconPickerOpen"
-      class="fixed inset-0 bg-[#1B2559]/40 backdrop-blur-sm z-[2000] flex items-center justify-center p-4"
+      class="fixed inset-0 bg-[#1B2559]/40 backdrop-blur-sm z-2000 flex items-center justify-center p-4"
       @click="isIconPickerOpen = false"
     >
       <div
@@ -358,8 +333,9 @@ import {
   type RoadmapStage,
 } from "../services/blueprintService";
 import PageHeader from "../components/ui/PageHeader.vue";
+import BentoTable from "../components/ui/BentoTable.vue";
 import { BaseButton } from "@kangjessy/ui";
-import StatsCard from "../components/ui/StatsCard.vue";
+import BentoStat from "../components/ui/BentoStat.vue";
 import Toast from "../components/ui/Toast.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 

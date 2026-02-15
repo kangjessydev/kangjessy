@@ -39,7 +39,8 @@ export const projectsData: Project[] = [
     content: "Membangun identitas digital Hijiru yang kuat. Meliputi pengembangan plugin kustom untuk aplikasi tasbih online, integrasi sistem toko ebook, dan fitur preview eksklusif. Optimasi difokuskan pada UI/UX yang nyaman, loading cepat, dan struktur SEO yang solid.",
     client: "Hijiru",
     date: "Mar 2025",
-    liveUrl: "#",
+    liveUrl: "",
+    demoUrl: "https://demo.kangjessy.com/hijiru",
     githubUrl: "#",
     pivot: {
       title: "Technical Pivot",

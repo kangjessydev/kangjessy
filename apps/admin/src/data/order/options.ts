@@ -8,22 +8,22 @@ export interface TimelineOption {
 
 export const timelineOptions: TimelineOption[] = [
   {
-    id: "standard",
+    id: "normal",
     label: "Normal Speed",
     multiplier: 1,
-    desc: "Pengerjaan standar (10-14 hari kerja) dengan antrean reguler.",
+    desc: "Pengerjaan standar tanpa biaya tambahan.",
   },
   {
-    id: "priority",
+    id: "standard",
     label: "Priority Speed",
-    multiplier: 1.25,
-    desc: "Pengerjaan lebih cepat (7-10 hari kerja) dengan prioritas antrean menengah.",
+    multiplier: 1.1,
+    desc: "Pengerjaan lebih cepat dengan prioritas antrean reguler.",
   },
   {
     id: "express",
     label: "Express Speed",
-    multiplier: 1.5,
-    desc: "Pengerjaan maraton (3-5 hari kerja). Tim didekasikan penuh untuk rilis cepat.",
+    multiplier: 1.35,
+    desc: "Pengerjaan maraton. Tim didekasikan penuh untuk rilis cepat.",
   },
 ];
 

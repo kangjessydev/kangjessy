@@ -23,22 +23,19 @@ export const projectsService = {
     return data
   },
 
-  async create(project: Partial<Project>) {
-    // Whitelist only fields that exist in Supabase schema
-    const allowedFields = [
-      'client_id', 'name', 'description', 'status', 'progress', 
-      'price', 'deadline', 'preview_url', 'start_date', 
-      'paid_amount', 'payment_status', 'figma_url', 'github_url', 
-      'drive_url', 'brief', 'visual_style', 'timeline_notes'
-    ];
+  async getByClientId(clientId: string) {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*, client:clients(name, email, phone)')
+      .eq('client_id', clientId)
+      .order('created_at', { ascending: false })
     
-    // Filter payload
-    const projectData: any = {};
-    for (const key of allowedFields) {
-      if ((project as any)[key] !== undefined) {
-        projectData[key] = (project as any)[key];
-      }
-    }
+    if (error) throw error
+    return data
+  },
+
+  async create(project: Partial<Project>) {
+    const projectData = this.filterAllowedFields(project);
 
     const { data, error } = await supabase
       .from('projects')
@@ -60,15 +57,34 @@ export const projectsService = {
   },
 
   async update(id: string, project: Partial<Project>) {
+    const projectData = this.filterAllowedFields(project);
+
     const { data, error } = await supabase
       .from('projects')
-      .update(project)
+      .update(projectData)
       .eq('id', id)
       .select()
       .single()
     
     if (error) throw error
     return data
+  },
+
+  filterAllowedFields(project: Partial<Project>) {
+    const allowedFields = [
+      'client_id', 'name', 'description', 'status', 'progress', 
+      'price', 'deadline', 'preview_url', 'prod_preview_url', 'start_date', 
+      'paid_amount', 'payment_status', 'figma_url', 'github_url', 
+      'drive_url', 'brief', 'visual_style', 'timeline_notes', 'client_portal_token'
+    ];
+    
+    const projectData: any = {};
+    for (const key of allowedFields) {
+      if ((project as any)[key] !== undefined) {
+        projectData[key] = (project as any)[key];
+      }
+    }
+    return projectData;
   },
 
   async delete(id: string) {

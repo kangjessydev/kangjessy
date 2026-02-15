@@ -143,14 +143,16 @@ import {
 import { BaseButton } from "@kangjessy/ui";
 import WhatsAppModal from "../modals/WhatsAppModal.vue";
 import { siteConfig } from "../../data/config/siteConfig";
+import { useSiteSettings } from "../../composables/useSiteSettings";
 
 const isWAModalOpen = ref(false);
+const { settings } = useSiteSettings();
+
 const stats = ref<Record<string, number>>({
   projects: 0,
   bugfix: 0,
   experience: 0,
 });
-const targetStats = siteConfig.heroStats;
 const typewriterSessionId = ref(0);
 const codeContainerRef = ref<HTMLElement | null>(null);
 
@@ -236,6 +238,7 @@ const animateStatValue = (key: string, target: number, duration: number) => {
 };
 
 const triggerStatsAnimation = () => {
+  const targetStats = settings.value.marketingStats;
   Object.keys(targetStats).forEach((key) => {
     const val = targetStats[key as keyof typeof targetStats];
     animateStatValue(key, val, 2000);

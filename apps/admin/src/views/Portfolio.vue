@@ -265,8 +265,8 @@
                       class="w-14 h-14 rounded-[24px] overflow-hidden bg-slate-100 border border-slate-100 shadow-sm shrink-0"
                     >
                       <img
-                        v-if="project.mainImage"
-                        :src="project.mainImage"
+                        v-if="project.image"
+                        :src="project.image"
                         class="w-full h-full object-cover transition-transform group-hover:scale-110 duration-700"
                       />
                       <div
@@ -415,8 +415,8 @@
                 @click="handleEdit(project)"
               >
                 <img
-                  v-if="project.mainImage"
-                  :src="project.mainImage"
+                  v-if="project.image"
+                  :src="project.image"
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div
@@ -469,7 +469,7 @@
                     </span>
                     <span
                       class="text-[9px] font-bold text-slate-300 uppercase tracking-widest"
-                      >{{ project.year || "2024" }}</span
+                      >{{ (project as any)['year'] || "2024" }}</span
                     >
                   </div>
                   <h4
@@ -695,7 +695,12 @@ const hasFilters = computed(
 );
 
 const uniqueAreas = computed(() => {
-  const areas = projects.value.map((p) => p.category).filter(Boolean);
+  const areas = projects.value
+    .map((p) => {
+      if (!p.category) return null;
+      return typeof p.category === "string" ? p.category : p.category.name;
+    })
+    .filter(Boolean) as string[];
   return [...new Set(areas)].sort();
 });
 
@@ -706,9 +711,12 @@ const filteredProjects = computed(() => {
     const q = searchQuery.value.toLowerCase();
     result = result.filter(
       (p) =>
-        p.title.toLowerCase().includes(q) ||
-        (p.client && p.client.toLowerCase().includes(q)) ||
-        (p.category && p.category.toLowerCase().includes(q)),
+      (p.title && p.title.toLowerCase().includes(q)) ||
+      (p.client && p.client.toLowerCase().includes(q)) ||
+      (p.category &&
+        (typeof p.category === "string" ? p.category : p.category.name)
+          .toLowerCase()
+          .includes(q)),
     );
   }
 

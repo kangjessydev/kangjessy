@@ -114,18 +114,30 @@
                 </div>
               </td>
               <td>
-                <div class="flex flex-wrap gap-1.5">
+                <div class="flex flex-wrap gap-1.5 min-h-[40px] content-start">
                   <span
-                    v-if="item.metadata?.multiplier"
+                    v-if="item.multiplier > 1 || pageConfig.category === 'project_deadline'"
                     class="px-2 py-0.5 rounded-lg bg-indigo-50 text-[#702DFF] text-[8px] font-black uppercase tracking-widest border border-indigo-100/50"
                   >
-                    {{ item.metadata.multiplier }}x Impact
+                    {{ item.multiplier }}x Impact
+                  </span>
+                  <span
+                    v-if="item.metadata?.service_id"
+                    class="px-2 py-0.5 rounded-lg bg-amber-50 text-amber-600 text-[8px] font-black uppercase tracking-widest border border-amber-100"
+                  >
+                    Svc: {{ item.metadata.service_id }}
+                  </span>
+                  <span
+                    v-if="item.metadata?.relevantTo && item.metadata.relevantTo.length"
+                    class="px-2 py-0.5 rounded-lg bg-blue-50 text-blue-600 text-[8px] font-black uppercase tracking-widest border border-blue-100"
+                  >
+                    {{ item.metadata.relevantTo.length }} Relasi
                   </span>
                   <span
                     v-if="item.metadata?.originalPrice"
                     class="px-2 py-0.5 rounded-lg bg-slate-50 text-slate-400 text-[8px] font-black uppercase tracking-widest border border-slate-100"
                   >
-                    Val: {{ formatCurrency(item.metadata.originalPrice) }}
+                    Orig: {{ formatCurrency(item.metadata.originalPrice) }}
                   </span>
                 </div>
               </td>

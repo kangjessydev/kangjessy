@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { siteConfig as staticConfig } from '../data/config/siteConfig'
 import { systemSettingsService } from '../services/systemSettingsService'
 
@@ -10,16 +10,26 @@ export interface SiteSettings {
   email: string
   location: string
   socialLinks: { name: string, url: string, icon: string }[]
+  marketingStats: {
+    projects: number
+    bugfix: number
+    experience: number
+  }
 }
 
 const siteSettings = ref<SiteSettings>({
   name: staticConfig.name,
-  logo: '/logo-128.png', // Default logo
+  logo: '/logo.png', // Default logo
   whatsapp: staticConfig.whatsapp.number,
   whatsappMsg: staticConfig.whatsapp.defaultMessage,
   email: staticConfig.socials.email,
   location: 'Bandung, Indonesia',
-  socialLinks: staticConfig.socialLinks
+  socialLinks: staticConfig.socialLinks,
+  marketingStats: {
+    projects: staticConfig.heroStats.projects,
+    bugfix: staticConfig.heroStats.bugfix,
+    experience: staticConfig.heroStats.experience
+  }
 })
 
 export const useSiteSettings = () => {
@@ -44,6 +54,14 @@ export const useSiteSettings = () => {
       if (branding) {
         siteSettings.value.name = branding.name || siteSettings.value.name
         siteSettings.value.logo = branding.logo || siteSettings.value.logo
+      }
+
+      // Fetch Marketing Stats
+      const marketingStats = await systemSettingsService.getByKey('marketing_stats')
+      if (marketingStats) {
+        siteSettings.value.marketingStats.projects = marketingStats.projects || siteSettings.value.marketingStats.projects
+        siteSettings.value.marketingStats.bugfix = marketingStats.bugfix || siteSettings.value.marketingStats.bugfix
+        siteSettings.value.marketingStats.experience = marketingStats.experience || siteSettings.value.marketingStats.experience
       }
 
       isLoaded.value = true

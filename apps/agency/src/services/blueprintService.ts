@@ -1,5 +1,6 @@
 import { supabase } from '@kangjessy/database';
-import type { RoadmapStep, RoadmapStage } from '@kangjessy/config';
+import type { RoadmapStage } from '@kangjessy/config';
+export type { RoadmapStage };
 
 export const blueprintService = {
     async getAllStages() {

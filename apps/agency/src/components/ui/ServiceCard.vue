@@ -258,7 +258,7 @@ export default defineComponent({
       }).format(val);
     };
 
-    const getButtonVariant = (service: Service) => {
+    const getButtonVariant = (service: ServiceData) => {
       if (service.status === "coming-soon") return "secondary";
       if (service.isFeatured) return "primary";
       return "outline";

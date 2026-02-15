@@ -1,0 +1,45 @@
+
+> kangjessy-admin@0.0.0 build
+> vue-tsc -b && vite build
+
+src/components/media/MediaPickerModal.vue(114,33): error TS2322: Type 'string' is not assignable to type '"all" | "images" | "videos" | "documents"'.
+src/components/proposals/ProposalDetailPreview.vue(191,20): error TS7006: Parameter 'val' implicitly has an 'any' type.
+src/config/navigation.ts(14,3): error TS6133: 'Type' is declared but its value is never read.
+src/views/Blueprint.vue(19,9): error TS2322: Type '"indigo"' is not assignable to type 'BentoVariant | undefined'.
+src/views/BlueprintSteps.vue(84,32): error TS6133: 'item' is declared but its value is never read.
+src/views/ClientDetail.vue(549,3): error TS6133: 'MoreHorizontal' is declared but its value is never read.
+src/views/ClientDetail.vue(552,3): error TS6133: 'CheckCircle' is declared but its value is never read.
+src/views/ClientDetail.vue(556,3): error TS6133: 'Briefcase' is declared but its value is never read.
+src/views/ClientDetail.vue(557,3): error TS6133: 'Calendar' is declared but its value is never read.
+src/views/ClientDetail.vue(564,1): error TS6133: 'PageHeader' is declared but its value is never read.
+src/views/ClientDetail.vue(567,3): error TS2305: Module '"@kangjessy/ui"' has no exported member 'ButtonPrimary'.
+src/views/ClientDetail.vue(568,3): error TS2305: Module '"@kangjessy/ui"' has no exported member 'ButtonSecondary'.
+src/views/ClientDetail.vue(568,3): error TS6133: 'ButtonSecondary' is declared but its value is never read.
+src/views/ClientDetail.vue(569,3): error TS6133: 'BaseButton' is declared but its value is never read.
+src/views/ClientDetail.vue(570,3): error TS2305: Module '"@kangjessy/ui"' has no exported member 'Toast'.
+src/views/ClientDetail.vue(621,25): error TS2339: Property 'getByClientId' does not exist on type '{ getAll(): Promise<any[]>; getById(id: string): Promise<any>; create(project: Partial<Project>): Promise<any>; update(id: string, project: Partial<...>): Promise<...>; delete(id: string): Promise<...>; }'.
+src/views/ClientDetail.vue(646,16): error TS2532: Object is possibly 'undefined'.
+src/views/Dashboard.vue(198,42): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/views/Dashboard.vue(272,38): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/views/Dashboard.vue(510,7): error TS2322: Type '{ month: string | undefined; revenue: number; }[]' is not assignable to type '{ month: string; revenue: number; }[] | { month: string; revenue: number; }[]'.
+  Type '{ month: string | undefined; revenue: number; }[]' is not assignable to type '{ month: string; revenue: number; }[]'.
+    Type '{ month: string | undefined; revenue: number; }' is not assignable to type '{ month: string; revenue: number; }'.
+      Types of property 'month' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string'.
+          Type 'undefined' is not assignable to type 'string'.
+src/views/Finance.vue(466,3): error TS6133: 'Edit2' is declared but its value is never read.
+src/views/Leads.vue(1134,3): error TS6133: 'ChevronDown' is declared but its value is never read.
+src/views/Leads.vue(1161,1): error TS6133: 'BaseButton' is declared but its value is never read.
+src/views/Media.vue(1220,7): error TS6133: 'onFolderSelect' is declared but its value is never read.
+src/views/Portfolio.vue(472,35): error TS2339: Property 'year' does not exist on type '{ id: string; title: string; slug: string; excerpt?: string | undefined; mainImage?: string | undefined; mainImageRef?: string | undefined; gallery?: string[] | undefined; content?: any; client?: string | undefined; ... 17 more ...; faqs?: { ...; }[] | undefined; }'.
+src/views/Projects.vue(757,3): error TS6133: 'ChevronDown' is declared but its value is never read.
+src/views/Settings.vue(901,3): error TS6133: 'Linkedin' is declared but its value is never read.
+src/views/Settings.vue(902,3): error TS6133: 'Github' is declared but its value is never read.
+src/views/Settings.vue(903,3): error TS6133: 'Youtube' is declared but its value is never read.
+src/views/Settings.vue(904,3): error TS6133: 'Instagram' is declared but its value is never read.
+src/views/Settings.vue(971,5): error TS2532: Object is possibly 'undefined'.
+src/views/Settings.vue(989,31): error TS6133: 'initProfile' is declared but its value is never read.
+src/views/Settings.vue(996,7): error TS6133: 'handleSaveBranding' is declared but its value is never read.
+src/views/Settings.vue(1162,7): error TS6133: 'handleSaveProfile' is declared but its value is never read.

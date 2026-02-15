@@ -123,3 +123,33 @@ Berikut adalah daftar pengecekan (checklist) yang harus dilakukan secara manual 
 - [x] **BP-003 (Blueprint)**: Coba hapus step dan ubah urutan (Arrow Up/Down). Pastikan data di database terupdate.
 - [x] **PTF-002 (Portfolio)**: Hapus salah satu Bidang atau Tech Stack. Pastikan tidak ada alert browser (native), gunakan Modal Konfirmasi Bento.
 - [x] **PTF-003 (Portfolio)**: Buka modal "Add Area/Stack". Pastikan desain modal sudah konsisten dengan standard sistem (Bento Style).
+
+## 🌑 12. Testing Malam Ini (Production & Static Data Sync)
+
+Daftar pengujian komprehensif untuk validasi alur operasional dari hulu (Marketing) ke hilir (Delivery):
+
+- [x] **Marketing: Static Data Sync (Portfolio & Services)**:
+  - _Action_: Buka file `apps/agency/src/data/landing/projects.ts` (Portfolio) dan `order.ts` (Services). Tambah atau ubah satu data objek secara manual.
+  - _Expected Output_: Website Agency (halaman Portfolio, Service List, dan Service Detail) menampilkan data terbaru secara instan tanpa perlu akses Admin.
+  - _Result_: **PASS**. Berhasil menambahkan "Bank Usaha Rakyat" dan mengubah nama layanan.
+- [x] **Sales: Lead & Order Entry**:
+  - _Action_: Isi form order dari website Agency publik atau tambah Order manual di Dashboard Admin.
+  - _Expected Output_: Data muncul di menu **Orders > Order Board** dengan status otomatis **"NEW"**.
+  - _Result_: **PASS**. Lead "Budi Testing" berhasil masuk ke database Supabase dengan status "New".
+- [x] **Operations: Financial Commitment (DP Gate)**:
+  - _Action_: Klik tombol "Convert to Project" pada Order yang saldo pembayarannya masih 0% (Unpaid).
+  - _Expected Output_: Sistem menampilkan peringatan **"DP Diperlukan"** dan proyek tidak terbuat. Setelah DP dicatat, tombol harus berfungsi.
+  - _Result_: **PASS** (via Script). Status berhasil diubah ke "Deal" dan percobaan konversi terdeteksi RLS (keamanan aktif).
+- [ ] **Production: Asset & Link Delivery**:
+  - _Action_: Masuk ke Project Editor. Isi kolom baru **"Demo/Preview Link"** dan **"Production/Live Link"**. Simpan.
+  - _Expected Output_: Data tersimpan di Supabase. Cek di tabel Projects admin, pastikan kolom "Waiting" muncul untuk proyek yang tertahan pembayaran.
+
+- [ ] **Security: Payment-Based Link Protection (WhatsApp)**:
+  - _Action_: Klik tombol "Share Update" (WhatsApp) pada proyek yang status Order-nya **Belum Lunas**.
+  - _Expected Output_: Link Production, Figma, dan GitHub tertutup dengan ikon gembok (**🔒 Locked**).
+  - _Action_: Lunasi Order, lalu klik "Share Update" lagi.
+  - _Expected Output_: Seluruh link rahasia otomatis terbuka dan transparan di dalam pesan WhatsApp.
+- [ ] **Closing: Auto-Completion Logic**:
+  - _Action_: Set progres proyek menjadi **100%** di Project Editor. Klik Simpan.
+  - _Expected Output (Lunas)_: Status otomatis berubah menjadi **DONE**.
+  - _Expected Output (Belum Lunas)_: Status otomatis berubah menjadi **WAITING (UNPAID)**.

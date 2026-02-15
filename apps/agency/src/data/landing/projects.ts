@@ -490,4 +490,50 @@ export const projectsData: Project[] = [
     githubUrl: "#",
     relatedServices: ["web-app"]
   },
+  {
+    id: 17,
+    slug: "bank-usaha-rakyat-test",
+    title: "Bank Usaha Rakyat - Mobile Banking Hub",
+    category: "Financial System",
+    tags: ["Mobile First", "Security", "Nuxt.js", "TailwindCSS"],
+    icon: "ShieldCheck",
+    color: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
+    description: "Transformasi layanan perbankan konvensional menuju ekosistem digital yang modern dan inklusif.",
+    content: `
+      <h2>Visi Digitalisasi Ruang Finansial</h2>
+      <p>Proyek ini merupakan langkah strategis Bank Usaha Rakyat untuk menjangkau nasabah milenial dan pelaku UMKM dengan antarmuka yang lebih segar dan fungsional. Kami membangun ulang sistem interaksi nasabah agar lebih intuitif namun tetap menjaga standar keamanan perbankan tingkat tinggi.</p>
+      
+      <blockquote>
+        "Masa depan perbankan bukan lagi soal gedung fisik, tapi soal seberapa mudah akses keuangan ada di genggaman tangan nasabah."
+      </blockquote>
+
+      <h2>Fitur Unggulan</h2>
+      <ul>
+        <li><strong>Real-time Ledger:</strong> Pantau arus kas secara instan dengan grafik performa saldo.</li>
+        <li><strong>Secure Vault:</strong> Enkripsi end-to-end untuk setiap transaksi dan data sensitif nasabah.</li>
+        <li><strong>UMKM Growth Tools:</strong> Dashboard khusus untuk memantau kredit usaha secara transparan.</li>
+      </ul>
+    `,
+    client: "Bank Usaha Rakyat",
+    date: "Feb 2024",
+    liveUrl: "#",
+    githubUrl: "#",
+    steps: [
+      { title: "User Persona Research", desc: "Melakukan riset terhadap 500+ nasabah rural dan urban untuk menentukan pola penggunaan aplikasi." },
+      { title: "Security Prototyping", desc: "Membangun sistem autentikasi berlapis termasuk Biometric dan OTP Sync." },
+      { title: "Deployment & Scaling", desc: "Peluncuran tahap pertama dengan infrastruktur serverless untuk menangani lonjakan trafik." }
+    ],
+    metrics: [
+      { label: "DOWNLOADS", value: "50K+", icon: "TrendingUp" },
+      { label: "SECURITY RATING", value: "A+", icon: "ShieldCheck" },
+      { label: "USER RATING", value: "4.8/5", icon: "Check" }
+    ],
+    technologies: ["Nuxt 3", "Tailwind CSS", "Supabase Auth", "Directus CMS", "Framer Motion"],
+    gallery: [
+      "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop"
+    ],
+    relatedServices: ["web-app", "business-system"]
+  }
 ];
+

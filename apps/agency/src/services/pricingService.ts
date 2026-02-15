@@ -1,21 +1,27 @@
-import { supabase } from '@kangjessy/database';
-import { 
-  Languages, 
-  Zap, 
-  BarChart3, 
-  Wallet, 
-  MessageSquare, 
-  ShieldCheck, 
-  Database, 
-  Search, 
-  Cpu, 
-  Layout, 
-  ScanLine, 
-  History, 
-  Repeat, 
-  Server, 
-  Settings2, 
-  Headphones, 
+import {
+  projectTypes as hardcodedProjectTypes,
+  availableFeatures as hardcodedFeatures,
+  timelineOptions as hardcodedTimelines,
+  styleOptions as hardcodedStyles,
+  serviceCategories as hardcodedServices
+} from '../data/landing/order';
+import {
+  Languages,
+  Zap,
+  BarChart3,
+  Wallet,
+  MessageSquare,
+  ShieldCheck,
+  Database,
+  Search,
+  Cpu,
+  Layout,
+  ScanLine,
+  History,
+  Repeat,
+  Server,
+  Settings2,
+  Headphones,
   Users,
   Monitor,
   ShoppingBag,
@@ -71,7 +77,7 @@ export interface ServiceData {
   order: number;
   badge?: string;
   isFeatured?: boolean;
-  icon: string;
+  icon: any;
   title: string;
   tagline: string;
   price: number;
@@ -93,142 +99,54 @@ const iconMap: Record<string, any> = {
   Monitor, ShoppingBag, Hotel, Building2, BookOpen, MessageCircle, UserCheck, ShoppingCart, Check, Palette, Lock, Globe, Rocket
 };
 
-const mapFeature = (row: any): Feature => {
-  const meta = row.metadata || {};
-  return {
-    id: row.slug,
-    name: row.name,
-    price: Number(row.base_price),
-    // originalPrice: Tidak ada di DB seed saat ini, bisa ditambah nanti
-    desc: row.description,
-    icon: iconMap[row.icon] || Zap, // Map string to component with fallback
-    relevantTo: meta.relevantTo || [],
-    deliveryTime: meta.deliveryTime,
-    serviceName: meta.serviceName
-  };
-};
-
-const mapProject = (row: any): ProjectType => {
-  const meta = row.metadata || {};
-  return {
-    id: row.slug,
-    serviceId: meta.serviceId || "",
-    name: row.name,
-    basePrice: Number(row.base_price),
-    originalPrice: meta.originalPrice ? Number(meta.originalPrice) : undefined,
-    desc: row.description,
-    icon: iconMap[row.icon] || Layout, // Map icon
-    maxPages: meta.maxPages,
-    revisions: meta.revisions,
-    deliveryTime: meta.deliveryTime,
-    features: meta.features || [], // Legacy string array support
-    includedFeatureIds: meta.includedFeatureIds || [],
-    detailedFeatures: meta.detailedFeatures || [],
-    category: meta.category || "The Core", // Default category
-    isFeatured: meta.isFeatured || false,
-    isMicro: meta.isMicro || false,
-    badge: meta.badge,
-    workflow: meta.workflow // Optional override
-  };
-};
-
 export const pricingService = {
   async getAllFeatures(): Promise<Feature[]> {
-    const { data, error } = await supabase
-      .from("pricing_master")
-      .select("*")
-      .eq("category", "additional_feature")
-      .order("sort_order");
-
-    if (error) {
-      console.error("Error fetching features:", error);
-      return [];
-    }
-
-    return (data || []).map(mapFeature);
-  },
-
-  async getAllProjectTypes(): Promise<ProjectType[]> {
-    const { data, error } = await supabase
-      .from("pricing_master")
-      .select("*")
-      .eq("category", "project_type") // This was correct
-      .order("sort_order");
-
-    if (error) {
-      console.error("Error fetching project types:", error);
-      return [];
-    }
-    return (data || []).map(mapProject);
-  },
-
-  async getAllServices(): Promise<ServiceData[]> {
-    const { data, error } = await supabase
-      .from("pricing_master")
-      .select("*")
-      .eq("category", "service_type")
-      .order("sort_order");
-
-    if (error) {
-       console.error("Error fetching services:", error);
-       return [];
-    }
-
-    return (data || []).map((row) => ({
-      id: row.slug,
-      status: row.is_active ? 'active' : 'coming-soon',
-      order: row.sort_order,
-      badge: row.metadata?.badge,
-      isFeatured: row.metadata?.isFeatured,
-      icon: row.icon,
-      title: row.name,
-      tagline: row.metadata?.tagline || row.description,
-      price: Number(row.base_price),
-      originalPrice: row.metadata?.originalPrice ? Number(row.metadata.originalPrice) : undefined,
-      deliveryTime: row.metadata?.deliveryTime,
-      revisions: row.metadata?.revisions,
-      overview: row.description, // using description as overview
-      included: row.metadata?.included || [],
-      detailedFeatures: row.metadata?.detailedFeatures || [],
-      process: row.metadata?.workflow || [], // mapping workflow to process as well
-      technologies: row.metadata?.technologies || [],
-      packageFeatures: row.metadata?.packageFeatures || [],
-      faq: row.metadata?.faq || [],
-      workflow: row.metadata?.workflow || []
+    return hardcodedFeatures.map(f => ({
+      ...f,
+      icon: iconMap[f.id] || Zap
     }));
   },
 
+  async getAllProjectTypes(): Promise<ProjectType[]> {
+    return hardcodedProjectTypes.map(p => ({
+      ...p,
+      icon: iconMap[p.id] || Layout
+    }));
+  },
+
+  async getAllServices(): Promise<ServiceData[]> {
+    return hardcodedServices.map(s => ({
+      id: s.id,
+      status: s.status as any,
+      order: s.order,
+      badge: s.badge,
+      isFeatured: s.isFeatured,
+      icon: iconMap[s.icon] || Globe,
+      title: s.title,
+      tagline: s.tagline,
+      price: s.price,
+      originalPrice: s.originalPrice,
+      deliveryTime: s.deliveryTime,
+      revisions: s.revisions,
+      overview: s.overview,
+      included: s.included,
+      detailedFeatures: s.detailedFeatures,
+      process: s.process,
+      technologies: s.technologies,
+      packageFeatures: s.packageFeatures,
+      faq: s.faq,
+      workflow: s.workflow,
+    } as ServiceData));
+  },
+
   async getAllStyles(): Promise<any[]> {
-    const { data, error } = await supabase
-      .from("pricing_master")
-      .select("*")
-      .eq("category", "style_vibe")
-      .order("sort_order");
-
-    if (error) return [];
-
-    return (data || []).map((row) => ({
-      id: row.slug,
-      name: row.name,
-      desc: row.description,
-      image: row.image_url
+    return hardcodedStyles.map(s => ({
+      ...s,
+      image: `/images/styles/${s.id}.jpg` // Fallback path
     }));
   },
 
   async getAllTimelines(): Promise<any[]> {
-    const { data, error } = await supabase
-      .from("pricing_master")
-      .select("*")
-      .eq("category", "project_deadline")
-      .order("sort_order");
-
-    if (error) return [];
-
-    return (data || []).map((row) => ({
-      id: row.slug,
-      label: row.name,
-      desc: row.description,
-      multiplier: Number(row.multiplier) || 1
-    }));
+    return hardcodedTimelines;
   }
 };

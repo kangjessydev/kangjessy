@@ -282,7 +282,6 @@ import {
   Hash,
   ExternalLink,
 } from "lucide-vue-next";
-import { siteConfig } from "../../data/config/siteConfig";
 import { useSiteSettings } from "../../composables/useSiteSettings";
 import {
   pricingService,

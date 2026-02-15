@@ -4,27 +4,28 @@ export interface PortfolioItem {
   id: string
   title: string
   slug: string
-  excerpt?: string
-  mainImage?: string
-  mainImageRef?: string
+  excerpt?: string // Maps to 'description' in Sanity
+  image?: string // Maps to 'image' in Sanity
+  imageRef?: string // for image asset reference
   gallery?: string[] 
-  content?: any // mapped to description
-  client?: string
-  category?: string // Renamed from category in UI to 'Area'
-  industry?: string
-  icon?: string // Lucide icon name or emoji
-  color?: string // Theme color/gradient
-  tags?: string[] // Highlights/Area tags
-  technologies?: string[] // Full tech stack
-  websiteUrl?: string
+  content?: any // Maps to 'content' in Sanity
+  client?: string 
+  category?: string | { id: string, name: string } // Maps to 'category' reference
+  industry?: string 
+  icon?: string 
+  color?: string
+  tags?: string[]
+  technologies?: string[] 
+  websiteUrl?: string // Maps to 'liveUrl' in Sanity
   githubUrl?: string
-  completionDate?: string
-  visibility: 'published' | 'draft' // For Sanity doc state
-  status: 'IDEA' | 'SUCCESS' // For project lifecycle
+  completionDate?: string // Maps to 'date' in Sanity
+  year?: string
+  visibility: 'published' | 'draft' 
+  status: 'IDEA' | 'SUCCESS' 
   created_at?: string
   
   // Advanced Fields
-  challenge?: string | { description: string }
+  challenge?: { title?: string; description: string; painPoints?: string[] }
   pivot?: {
     title: string
     subtitle: string
@@ -34,27 +35,27 @@ export interface PortfolioItem {
   metrics?: { icon: string; value: string; label: string; proofImage?: string }[]
   impact?: string
   faqs?: { q: string; a: string }[]
+  relatedServices?: string[]
 }
 
 export const portfolioService = {
-  // Get All Portfolios (Sanity: project)
+  // Get All Portfolios
   async getAll() {
-    const query = `*[_type == "project"] | order(completionDate desc){
+    const query = `*[_type == "project"] | order(date desc){
       "id": _id,
       title,
       "slug": slug.current,
-      excerpt,
-      "mainImage": mainImage.asset->url,
-      "client": clientName,
-      "category": coalesce(category->title, category),
-      industry,
-      icon,
-      color,
-      status,
+      "excerpt": description,
+      "image": image.asset->url,
+      "client": client,
+      "category": category->title,
+      "status": status,
       "visibility": select(defined(publishedAt) => 'published', 'draft'),
-      tags,
-      "technologies": technologies[]->title,
-      completionDate
+      "technologies": technologies,
+      "completionDate": date,
+      "year": string::split(date, "-")[1],
+      icon,
+      color
     }`
     
     try {
@@ -71,20 +72,17 @@ export const portfolioService = {
       "id": _id,
       title,
       "slug": slug.current,
-      excerpt,
-      "content": description,
-      "mainImage": mainImage.asset->url,
-      "mainImageRef": mainImage.asset._ref,
+      "excerpt": description,
+      "content": content,
+      "image": image.asset->url,
+      "imageRef": image.asset._ref,
       "gallery": gallery[].asset->url,
-      "client": clientName,
-      "category": coalesce(category->title, category),
-      industry,
-      icon,
-      color,
-      websiteUrl,
+      client,
+      "category": category->_id,
+      "websiteUrl": liveUrl,
       githubUrl,
-      completionDate,
-      "technologies": technologies[]->_id,
+      "completionDate": date,
+      technologies,
       "visibility": select(defined(publishedAt) => 'published', 'draft'),
       status,
       tags,
@@ -94,7 +92,10 @@ export const portfolioService = {
       steps,
       metrics,
       impact,
-      faqs
+      faqs,
+      icon,
+      color,
+      relatedServices
     }`
     return await sanityClient.fetch(query, { id }) as PortfolioItem
   },
@@ -104,41 +105,42 @@ export const portfolioService = {
       _type: 'project',
       title: item.title,
       slug: { _type: 'slug', current: item.slug },
-      excerpt: item.excerpt,
-      description: item.content, 
-      clientName: item.client,
-      category: item.category,
-      industry: item.industry,
-      icon: item.icon,
-      color: item.color,
-      websiteUrl: item.websiteUrl,
+      description: item.excerpt, 
+      content: item.content,
+      client: item.client,
+      date: item.completionDate,
+      liveUrl: item.websiteUrl,
       githubUrl: item.githubUrl,
-      completionDate: item.completionDate,
       publishedAt: item.visibility === 'published' ? new Date().toISOString() : null,
       status: item.status || 'SUCCESS',
+      technologies: item.technologies || [],
       tags: item.tags || [],
       challenge: item.challenge,
       pivot: item.pivot,
       steps: item.steps,
       metrics: item.metrics,
       impact: item.impact,
-      faqs: item.faqs
+      faqs: item.faqs,
+      icon: item.icon,
+      color: item.color,
+      relatedServices: item.relatedServices || []
     }
 
-    if (item.mainImageRef) {
-      doc.mainImage = {
+    if (item.category) {
+       const categoryId = typeof item.category === 'string' ? item.category : (item.category as any).id
+       if (categoryId) {
+         doc.category = {
+           _type: 'reference',
+           _ref: categoryId
+         }
+       }
+    }
+
+    if (item.imageRef) {
+      doc.image = {
         _type: 'image',
-        asset: { _type: 'reference', _ref: item.mainImageRef }
+        asset: { _type: 'reference', _ref: item.imageRef }
       }
-    }
-
-    // Technologies (Tags)
-    if (item.technologies && item.technologies.length > 0) {
-        doc.technologies = item.technologies.map(id => ({
-          _type: 'reference',
-          _ref: id,
-          _key: Math.random().toString(36).substring(2)
-        }))
     }
 
     const result = await sanityWriteClient.create(doc)
@@ -148,50 +150,50 @@ export const portfolioService = {
   async update(id: string, item: Partial<PortfolioItem>) {
     const patch: any = {
       title: item.title,
-      excerpt: item.excerpt,
-      description: item.content,
-      clientName: item.client,
-      category: item.category,
-      industry: item.industry,
-      icon: item.icon,
-      color: item.color,
-      websiteUrl: item.websiteUrl,
+      description: item.excerpt,
+      content: item.content,
+      client: item.client,
+      date: item.completionDate,
+      liveUrl: item.websiteUrl,
       githubUrl: item.githubUrl,
-      completionDate: item.completionDate,
+      technologies: item.technologies,
+      status: item.status,
+      tags: item.tags,
       challenge: item.challenge,
       pivot: item.pivot,
       steps: item.steps,
       metrics: item.metrics,
       impact: item.impact,
-      faqs: item.faqs
+      faqs: item.faqs,
+      icon: item.icon,
+      color: item.color,
+      relatedServices: item.relatedServices
     }
 
     if (item.slug) patch.slug = { _type: 'slug', current: item.slug }
     
-    if (item.mainImageRef) {
-      patch.mainImage = {
-        _type: 'image',
-        asset: { _type: 'reference', _ref: item.mainImageRef }
-      }
+    if (item.category) {
+        const categoryId = typeof item.category === 'string' ? item.category : (item.category as any).id
+        if (categoryId) {
+            patch.category = {
+                _type: 'reference',
+                _ref: categoryId
+            }
+        }
     }
 
-    // Technologies
-    if (item.technologies) {
-        patch.technologies = item.technologies.map(id => ({
-            _type: 'reference',
-            _ref: id,
-            _key: Math.random().toString(36).substring(2)
-        }))
+    if (item.imageRef) {
+      patch.image = {
+        _type: 'image',
+        asset: { _type: 'reference', _ref: item.imageRef }
+      }
     }
 
     if (item.visibility === 'published') {
          patch.publishedAt = new Date().toISOString()
     } else if (item.visibility === 'draft') {
-        patch.publishedAt = null
+         patch.publishedAt = null
     }
-
-    if (item.status) patch.status = item.status
-    if (item.tags) patch.tags = item.tags
 
     const result = await sanityWriteClient.patch(id).set(patch).commit()
     return { ...result, id: result._id }
@@ -207,9 +209,9 @@ export const portfolioService = {
     })
   },
 
-  // Areas (Categories)
+  // Categories
   async getAreas() {
-    const query = `*[_type == "portfolioArea"] | order(title asc){
+    const query = `*[_type == "category"] | order(title asc){
       "id": _id,
       "name": title,
       "slug": slug.current
@@ -223,8 +225,7 @@ export const portfolioService = {
 
   async createArea(area: { name: string, slug: string }) {
     const doc = {
-      _id: `portfolioArea-${Date.now()}`,
-      _type: 'portfolioArea',
+      _type: 'category',
       title: area.name,
       slug: { _type: 'slug', current: area.slug }
     }
@@ -245,7 +246,7 @@ export const portfolioService = {
     await sanityWriteClient.delete(id)
   },
 
-  // Technologies (Tags)
+  // Technologies (Just helpers for UI, Sanity stores them as simple strings in 'project')
   async getTechnologies() {
     const query = `*[_type == "technology"] | order(title asc){
       "id": _id,
@@ -261,7 +262,6 @@ export const portfolioService = {
 
   async createTechnology(tech: { name: string, slug: string }) {
     const doc = {
-      _id: `technology-${Date.now()}`,
       _type: 'technology',
       title: tech.name,
       slug: { _type: 'slug', current: tech.slug }
@@ -283,3 +283,4 @@ export const portfolioService = {
     await sanityWriteClient.delete(id)
   }
 }
+

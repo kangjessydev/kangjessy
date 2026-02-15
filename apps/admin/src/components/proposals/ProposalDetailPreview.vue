@@ -187,9 +187,7 @@
           >
             <ul class="space-y-3 mb-0">
               <li
-                v-for="(item, i) in formData.deliverables.filter(
-                  (val) => val && val.trim(),
-                )"
+                v-for="(item, i) in filteredDeliverables"
                 :key="i"
                 class="flex items-start gap-3"
               >
@@ -471,9 +469,15 @@ const displayPaymentAccounts = computed(() => {
   return globalActiveBanks.value;
 });
 
-onMounted(() => {
-  // Composables handle their own loading from localStorage
+const filteredDeliverables = computed(() => {
+  return (props.formData.deliverables || []).filter(
+    (val: any) => val && val.trim(),
+  );
 });
+
+onMounted(() => {
+});
+
 
 const formatPrice = (v: number) => "Rp " + (v || 0).toLocaleString("id-ID");
 </script>

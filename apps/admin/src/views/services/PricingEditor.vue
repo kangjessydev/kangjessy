@@ -214,6 +214,22 @@
               :icon="Zap"
               class="rounded-2xl!"
             />
+
+            <!-- New Fields -->
+            <BaseInput
+              v-model="form.metadata.deliveryTime"
+              label="Estimasi Waktu"
+              placeholder="e.g. 3-7 Hari Kerja"
+              :icon="Clock"
+              class="rounded-2xl!"
+            />
+            <BaseInput
+              v-model="form.metadata.revisions"
+              label="Jatah Revisi"
+              placeholder="e.g. 2x Revisi Mayor"
+              :icon="RefreshCw"
+              class="rounded-2xl!"
+            />
           </div>
         </AdminCard>
 
@@ -428,6 +444,66 @@
             </div>
           </div>
         </AdminCard>
+
+        <!-- FAQ Editor -->
+        <AdminCard
+          v-if="pageDisplay.category === 'project_type'"
+          title="G. FAQ Editor"
+          subtitle="Pertanyaan umum seputar paket ini"
+          :stretch="false"
+          class="rounded-[40px]! border-none shadow-2xl shadow-indigo-500/5 bg-white/80 backdrop-blur-xl mt-8"
+        >
+          <template #action>
+            <BaseButton
+              variant="secondary"
+              size="sm"
+              @click="addFaq"
+              class="bg-white! shadow-sm!"
+            >
+              <Plus :size="14" /> Tambah FAQ
+            </BaseButton>
+          </template>
+
+          <div class="space-y-4 mt-4">
+            <div
+              v-for="(faq, idx) in form.metadata.faqs || []"
+              :key="idx"
+              class="p-4 bg-slate-50 border border-slate-100/50 rounded-2xl relative group hover:bg-white hover:shadow-md transition-all"
+            >
+              <button
+                @click="removeFaq(Number(idx))"
+                class="absolute top-4 right-4 text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
+              >
+                <Trash2 :size="16" />
+              </button>
+              <div class="space-y-3 pr-8">
+                <BaseInput
+                  v-model="faq.question"
+                  label="Pertanyaan (Q)"
+                  placeholder="e.g. Apakah dapat source code?"
+                  class="bg-white!"
+                />
+                <AdminTextarea
+                  v-model="faq.answer"
+                  label="Jawaban (A)"
+                  placeholder="Ya, source code full menjadi hak milik Anda."
+                  :rows="2"
+                  class="bg-white!"
+                />
+              </div>
+            </div>
+
+            <div
+              v-if="!form.metadata.faqs?.length"
+              class="text-center py-8 text-slate-400"
+            >
+              <HelpCircle :size="32" class="mx-auto mb-2 opacity-20" />
+              <p class="text-[10px] uppercase font-bold tracking-widest">
+                Belum ada FAQ
+              </p>
+            </div>
+          </div>
+        </AdminCard>
       </div>
 
       <!-- Settings Sidebar -->
@@ -540,26 +616,12 @@ import {
   Check,
   X,
   Zap,
-  DollarSign,
-  Layers,
   ArrowUp10,
-  Layout,
-  Globe,
-  Cpu,
-  Rocket,
-  ShoppingCart,
-  BookOpen,
-  Activity,
-  Users,
-  PieChart,
-  Workflow,
-  Bot,
-  FileSearch,
-  TrendingUp,
-  MessageSquare,
-  Database,
-  Plus as PlusIcon,
-  Trash2 as TrashIcon,
+  Clock,
+  RefreshCw,
+  Plus,
+  Trash2,
+  HelpCircle,
 } from "lucide-vue-next";
 import * as LucideIcons from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
@@ -641,19 +703,24 @@ const pageDisplay = computed(() => {
   };
 });
 
-const form = ref<Partial<PricingItem>>({
+const form = ref<PricingItem>({
+  id: "",
   name: "",
   slug: "",
   description: "",
   image_url: "",
+  icon: "",
+  category: pageDisplay.value.category,
+  base_price: 0,
+  multiplier: 1,
   is_active: true,
   sort_order: 0,
-  category: pageDisplay.value.category,
   metadata: {
     service_id: "",
     badge: "",
     relevantTo: [],
     originalPrice: 0,
+    features: [],
   },
 });
 
@@ -690,8 +757,15 @@ const loadItem = async () => {
     } else if (pageDisplay.value.category === "additional_feature") {
       // Ensure array init
       form.value.metadata = {
-        relevantTo: [],
-        originalPrice: 0,
+          relevantTo: [],
+          originalPrice: 0,
+          ...(form.value.metadata || {}),
+      };
+    } else if (pageDisplay.value.category === "project_type") {
+      form.value.metadata = {
+        deliveryTime: "",
+        revisions: "",
+        faqs: [],
         ...(form.value.metadata || {}),
       };
     }
@@ -707,6 +781,9 @@ const loadItem = async () => {
     if (item) {
       form.value = {
         ...item,
+        description: item.description || "",
+        image_url: item.image_url || "",
+        icon: item.icon || "",
         metadata: {
           service_id: "",
           badge: "",
@@ -715,6 +792,9 @@ const loadItem = async () => {
           features: [],
           relevantTo: [],
           originalPrice: 0,
+          deliveryTime: "",
+          revisions: "",
+          faqs: [],
           ...(item.metadata || {}),
         },
       };
@@ -730,18 +810,19 @@ const loadItem = async () => {
   }
 };
 
-const addFeature = () => {
-  if (!form.value.metadata.features) form.value.metadata.features = [];
-  form.value.metadata.features.push("");
+
+
+const addFaq = () => {
+  if (!form.value.metadata.faqs) form.value.metadata.faqs = [];
+  form.value.metadata.faqs.push({ question: "", answer: "" });
 };
 
-const removeFeature = (index: number) => {
-  if (form.value.metadata.features) {
-    form.value.metadata.features.splice(index, 1);
-  }
+const removeFaq = (index: number) => {
+  form.value.metadata.faqs.splice(index, 1);
 };
 
 const toggleRelevantService = (slug: string) => {
+  if (!form.value.metadata) form.value.metadata = {};
   if (!form.value.metadata.relevantTo) form.value.metadata.relevantTo = [];
   const idx = form.value.metadata.relevantTo.indexOf(slug);
   if (idx === -1) {
@@ -823,26 +904,7 @@ const availableIcons = [
 
 const getIconComponent = (name: any) => {
   if (!name) return LucideIcons.CircleHelp;
-  const iconMap: any = {
-    Zap,
-    Globe,
-    Cpu,
-    Rocket,
-    Layout,
-    ShoppingCart,
-    BookOpen,
-    Activity,
-    Users,
-    PieChart,
-    Workflow,
-    Bot,
-    FileSearch,
-    TrendingUp,
-    MessageSquare,
-    Database,
-    Layers,
-  };
-  return iconMap[name] || (LucideIcons as any)[name] || LucideIcons.CircleHelp;
+  return (LucideIcons as any)[name] || LucideIcons.CircleHelp;
 };
 
 onMounted(loadItem);

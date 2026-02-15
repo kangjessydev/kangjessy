@@ -10,8 +10,7 @@ import {
   Image,
   Layers,
   Zap,
-  Database,
-  Type
+  Database
 } from "lucide-vue-next";
 
 export interface MenuItem {

@@ -5,9 +5,9 @@ export interface PricingItem {
     slug: string;
     category: 'style_vibe' | 'project_deadline' | 'additional_feature' | 'service_type' | 'project_type' | string;
     name: string;
-    description: string | null;
-    image_url: string | null;
-    icon: string | null;
+    description: string | undefined;
+    image_url: string | undefined;
+    icon: string | undefined;
     base_price: number;
     multiplier: number;
     is_active: boolean;

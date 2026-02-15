@@ -6,7 +6,7 @@
     >
       <div class="flex gap-3">
         <BaseButton
-          variant="secondary"
+          variant="primary"
           @click="fetchDashboardData"
           :loading="isLoading"
         >
@@ -195,7 +195,7 @@
               <td>
                 <span
                   class="badge-chip"
-                  :class="getStatusClass(p.project_status)"
+                  :class="getStatusClass(p.project_status || '')"
                 >
                   <div class="w-1.5 h-1.5 rounded-full bg-current"></div>
                   {{ p.project_status || "New" }}
@@ -269,7 +269,7 @@
             </div>
             <span
               class="badge-chip !px-2 !py-0.5"
-              :class="getStatusClass(p.project_status)"
+              :class="getStatusClass(p.project_status || '')"
             >
               {{ p.project_status || "New" }}
             </span>
@@ -500,22 +500,29 @@ const fetchDashboardData = async () => {
         0,
       );
 
-      // Calculate monthly revenue mock data based on recent deals
-      const months = new Array(12).fill(0).map((_, i) => ({
-        month: monthLabels[i],
-        revenue: deals
-          .filter((d) => new Date(d.created_at).getMonth() === i)
-          .reduce((sum, d) => sum + (d.total_amount || d.budget || 0), 0),
-      }));
-      monthlyData.value = months;
+        const months: { month: string; revenue: number }[] = [];
+        for (let i = 0; i < 12; i++) {
+          const mName = new Date(2024, i).toLocaleString("id-ID", {
+            month: "short",
+          });
+          const rev = allClients
+            .filter(
+              (d) =>
+                d.created_at && new Date(d.created_at).getMonth() === i,
+            )
+            .reduce((acc, curr) => acc + (curr.total_amount || 0), 0);
+          months.push({ month: mName, revenue: rev });
+        }
+        monthlyData.value = months;
 
-      // Recent Activity
-      recentProjects.value = [...allClients]
-        .sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-        )
-        .slice(0, 5);
+        // Recent Activity
+        recentProjects.value = [...allClients]
+          .sort(
+            (a, b) =>
+              new Date(b.created_at || 0).getTime() -
+              new Date(a.created_at || 0).getTime(),
+          )
+          .slice(0, 5);
     } catch (err) {
       handleError(err, "Dashboard Data Fetch");
     }

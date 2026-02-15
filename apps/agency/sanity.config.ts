@@ -105,6 +105,50 @@ export default defineConfig({
           },
           { name: 'liveUrl', title: 'Live Project Link', type: 'url' },
           { name: 'githubUrl', title: 'GitHub Repo Link', type: 'url' },
+          // Advanced Fields for Case Logic
+          { name: 'challenge', title: 'Challenge (Phase 01)', type: 'object', fields: [
+              { name: 'title', title: 'Title', type: 'string' },
+              { name: 'description', title: 'Description', type: 'text' },
+              { name: 'painPoints', title: 'Pain Points', type: 'array', of: [{ type: 'string' }] }
+            ] 
+          },
+          { name: 'pivot', title: 'Pivot / Investigation (Phase 01.5)', type: 'object', fields: [
+              { name: 'title', title: 'Title', type: 'string' },
+              { name: 'subtitle', title: 'Subtitle', type: 'string' },
+              { name: 'items', title: 'Investigation Items', type: 'array', of: [{ 
+                  type: 'object',
+                  fields: [
+                    { name: 'icon', title: 'Icon Name', type: 'string' },
+                    { name: 'title', title: 'Title', type: 'string' },
+                    { name: 'desc', title: 'Description', type: 'text' }
+                  ]
+                }] 
+              }
+            ]
+          },
+          { name: 'metrics', title: 'Metrics / Impact (Phase 03)', type: 'array', of: [{
+              type: 'object',
+              fields: [
+                { name: 'icon', title: 'Icon', type: 'string' },
+                { name: 'value', title: 'Value', type: 'string' },
+                { name: 'label', title: 'Label', type: 'string' },
+                { name: 'proofImage', title: 'Proof Image URL', type: 'string' }
+              ]
+            }]
+          },
+          { name: 'faqs', title: 'Project FAQs', type: 'array', of: [{
+              type: 'object',
+              fields: [
+                { name: 'q', title: 'Question', type: 'string' },
+                { name: 'a', title: 'Answer', type: 'text' }
+              ]
+            }]
+          },
+          { name: 'impact', title: 'Impact Statement / Testimonial', type: 'text' },
+          { name: 'relatedServices', title: 'Related Services (Slugs)', type: 'array', of: [{ type: 'string' }] },
+          { name: 'color', title: 'Brand Color (Gradient/Hex)', type: 'string' },
+          { name: 'icon', title: 'Project Icon', type: 'string' },
+          { name: 'tags', title: 'Tags', type: 'array', of: [{ type: 'string' }] },
         ],
       },
       {

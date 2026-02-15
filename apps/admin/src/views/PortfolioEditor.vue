@@ -158,14 +158,37 @@
               </div>
             </AdminCard>
 
-            <div class="space-y-3">
+            <div class="space-y-4">
               <label class="label-heading !pl-1"
                 >Latar Belakang Proyek (Fase 01)</label
               >
-              <TipTapEditor
-                :model-value="getChallengeText()"
-                @update:model-value="updateChallenge"
-              />
+              <div class="grid grid-cols-1 gap-4">
+                <BaseInput
+                  v-model="(project.challenge as any).title"
+                  label="Judul Challenge / Masalah Utama"
+                  placeholder="Misal: Fragmentasi Reservasi & Silo Data"
+                  :icon="HelpCircle"
+                />
+                <div class="space-y-3">
+                    <TipTapEditor
+                      :model-value="getChallengeText()"
+                      @update:model-value="updateChallenge"
+                    />
+                </div>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between px-1">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pain Points (Temuan Masalah)</p>
+                    <button @click="addPainPoint" class="text-[9px] font-black text-[#702DFF] hover:underline">+ Tambah Point</button>
+                  </div>
+                  <div class="grid grid-cols-1 gap-2">
+                    <div v-for="(_, idx) in project.challenge?.painPoints || []" :key="idx" class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-rose-50 text-rose-500 flex items-center justify-center shrink-0 text-[10px] font-bold">{{ idx + 1 }}</div>
+                      <input v-model="(project.challenge as any).painPoints[idx]" type="text" class="flex-1 bg-white border border-slate-100 rounded-lg px-3 py-1.5 text-[11px] font-medium focus:border-rose-200 outline-none" placeholder="Deskripsikan masalah spesifik..." />
+                      <button @click="removePainPoint(idx)" class="text-slate-300 hover:text-rose-500 transition-colors"><X :size="14" /></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -546,7 +569,7 @@
                     <button
                       v-for="area in filteredAreas"
                       :key="area.id"
-                      @click="selectArea(area.name)"
+                      @click="selectArea(area)"
                       class="w-full px-3 py-2 text-left text-xs font-bold rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-between group"
                     >
                       <span
@@ -649,73 +672,122 @@
           </div>
         </AdminCard>
 
-        <!-- Tech Stack (Detailed) -->
-        <AdminCard title="Teknologi Inti" :stretch="false">
-          <div class="space-y-3">
-            <div class="flex flex-wrap gap-1.5 min-h-[20px]">
-              <span
-                v-for="tag in project.technologies"
-                :key="tag"
-                class="px-2 py-1 bg-indigo-50 text-[#702DFF] text-[9px] font-black uppercase tracking-widest rounded-lg border border-indigo-100 flex items-center gap-1.5 transition-all hover:-translate-y-0.5 shadow-xs"
-              >
-                {{ getTagName(tag) }}
-                <button @click="removeTag(tag)" class="hover:text-rose-500">
-                  <X :size="10" />
-                </button>
-              </span>
-            </div>
-            <div class="relative">
-              <input
-                v-model="techInput"
-                @keyup.enter="addTechTag"
-                type="text"
-                class="input-field !py-2 !text-[10px] !pl-9"
-                placeholder="Tambah teknologi..."
-              />
-              <Code
-                :size="12"
-                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-300"
-              />
-            </div>
-            <div v-if="availableTechnologies.length > 0" class="mt-2">
-              <div
-                class="flex flex-wrap gap-1 max-h-32 overflow-y-auto custom-scrollbar"
-              >
-                <button
-                  v-for="tech in availableTechnologies.filter(
-                    (t) => !project.technologies?.includes(t.id),
-                  )"
-                  :key="tech.id"
-                  @click="addSuggestedTech(tech)"
-                  class="px-2 py-0.5 border border-slate-100 rounded-md text-[9px] font-bold text-slate-400 hover:border-indigo-200 hover:text-[#702DFF] whitespace-nowrap transition-all"
+        <!-- Tech Stack & Related Services -->
+        <AdminCard title="Teknologi & Relasi" :stretch="false">
+          <div class="space-y-6">
+            <div class="space-y-3">
+              <label class="label-heading">Teknologi Inti</label>
+              <div class="flex flex-wrap gap-1.5 min-h-[20px]">
+                <span
+                  v-for="tag in project.technologies"
+                  :key="tag"
+                  class="px-2 py-1 bg-indigo-50 text-[#702DFF] text-[9px] font-black uppercase tracking-widest rounded-lg border border-indigo-100 flex items-center gap-1.5 transition-all hover:-translate-y-0.5 shadow-xs"
                 >
-                  + {{ tech.name }}
-                </button>
+                  {{ getTagName(tag) }}
+                  <button @click="removeTag(tag)" class="hover:text-rose-500">
+                    <X :size="10" />
+                  </button>
+                </span>
+              </div>
+              <div class="relative">
+                <input
+                  v-model="techInput"
+                  @keyup.enter="addTechTag"
+                  type="text"
+                  class="input-field !py-2 !text-[10px] !pl-9"
+                  placeholder="Tambah teknologi..."
+                />
+                <Code
+                  :size="12"
+                  class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-300"
+                />
+              </div>
+              <div v-if="availableTechnologies.length > 0" class="mt-2">
+                <div
+                  class="flex flex-wrap gap-1 max-h-32 overflow-y-auto custom-scrollbar"
+                >
+                  <button
+                    v-for="tech in availableTechnologies.filter(
+                      (t) => !project.technologies?.includes(t.id),
+                    )"
+                    :key="tech.id"
+                    @click="addSuggestedTech(tech)"
+                    class="px-2 py-0.5 border border-slate-100 rounded-md text-[9px] font-bold text-slate-400 hover:border-indigo-200 hover:text-[#702DFF] whitespace-nowrap transition-all"
+                  >
+                    + {{ tech.name }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Related Services -->
+            <div class="space-y-3 pt-4 border-t border-slate-100">
+              <label class="label-heading">Layanan Terkait</label>
+              <div class="space-y-1.5">
+                <div v-for="svc in availableServices" :key="svc.slug" 
+                   @click="toggleRelatedService(svc.slug)"
+                   class="flex items-center gap-2 p-2 rounded-lg border border-transparent hover:bg-slate-50 cursor-pointer transition-colors"
+                   :class="project.relatedServices?.includes(svc.slug) ? 'bg-indigo-50/50 border-indigo-100' : ''">
+                  <div class="w-4 h-4 rounded border flex items-center justify-center shrink-0"
+                    :class="project.relatedServices?.includes(svc.slug) ? 'bg-[#7029FF] border-[#7029FF] text-white' : 'bg-white border-slate-200'">
+                    <Check v-if="project.relatedServices?.includes(svc.slug)" :size="10" stroke-width="4" />
+                  </div>
+                  <span class="text-[10px] font-bold text-slate-600">{{ svc.name }}</span>
+                </div>
               </div>
             </div>
           </div>
         </AdminCard>
 
-        <!-- Client Info -->
-        <AdminCard title="Metadata Konteks" :stretch="false">
-          <div class="space-y-4">
-            <BaseInput
-              v-model="project.client"
-              label="Nama Klien"
-              placeholder="e.g. Nur Alam Hotel"
-              :icon="User"
-            />
-            <BaseInput
-              v-model="project.industry"
-              label="Industri"
-              placeholder="e.g. Hospitality"
-              :icon="Briefcase"
-            />
-            <BaseInput
-              v-model="project.completionDate"
-              label="Tanggal Penyelesaian"
-              type="date"
-            />
+        <!-- Metadata Konteks & UI Styling -->
+        <AdminCard title="Styling & Metadata" :stretch="false">
+          <div class="space-y-6">
+            <div class="grid grid-cols-1 gap-4">
+              <AdminSelect v-model="project.icon" label="Pilih Ikon Visual">
+                <option value="Globe">Globe / Web</option>
+                <option value="ShieldCheck">Security / Shield</option>
+                <option value="ShoppingBag">E-commerce / Shop</option>
+                <option value="Hotel">Hotel / Property</option>
+                <option value="BarChart3">Analytics / Chart</option>
+                <option value="Building2">Corporate / Bank</option>
+                <option value="MessageCircle">Chat / Automation</option>
+                <option value="UserCheck">Personal / Hub</option>
+                <option value="ShoppingCart">Retail / Store</option>
+                <option value="BookOpen">Learning / LMS</option>
+                <option value="Monitor">Platform / Core</option>
+                <option value="Cpu">AI / Engine</option>
+                <option value="MapPinned">Geo / Maps</option>
+                <option value="Layers">Hybrid / Layers</option>
+                <option value="Zap">Instant / Zap</option>
+              </AdminSelect>
+              
+              <BaseInput
+                v-model="project.color"
+                label="Branding Color (Hex/Gradient)"
+                placeholder="linear-gradient(...)"
+                :icon="Palette"
+              />
+            </div>
+
+            <div class="space-y-4 pt-4 border-t border-slate-100">
+              <BaseInput
+                v-model="project.client"
+                label="Nama Klien"
+                placeholder="e.g. Nur Alam Hotel"
+                :icon="User"
+              />
+              <BaseInput
+                v-model="project.industry"
+                label="Industri"
+                placeholder="e.g. Hospitality"
+                :icon="Briefcase"
+              />
+              <BaseInput
+                v-model="project.completionDate"
+                label="Tanggal Penyelesaian"
+                type="date"
+              />
+            </div>
           </div>
         </AdminCard>
 
@@ -727,14 +799,14 @@
               @click="openMediaPicker"
             >
               <img
-                v-if="project.mainImage"
-                :src="project.mainImage"
+                v-if="project.image"
+                :src="project.image"
                 class="w-full h-full object-cover"
               />
 
               <!-- Placeholder when no image -->
               <div
-                v-if="!project.mainImage"
+                v-if="!project.image"
                 class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-white/80 to-slate-50/80 backdrop-blur-[2px]"
               >
                 <div class="relative mb-6">
@@ -789,16 +861,16 @@
 
               <!-- Click Overlay -->
               <div
-                v-if="!project.mainImage"
+                v-if="!project.image"
                 class="absolute inset-0 bg-[#702DFF] opacity-0 group-hover:opacity-[0.03] transition-opacity"
               ></div>
 
               <!-- Remove Button -->
               <button
-                v-if="project.mainImage"
+                v-if="project.image"
                 @click.stop="
-                  project.mainImage = '';
-                  project.mainImageRef = '';
+                  project.image = '';
+                  project.imageRef = '';
                 "
                 class="absolute top-4 right-4 w-10 h-10 rounded-2xl bg-white/90 backdrop-blur-md text-rose-500 shadow-xl opacity-0 group-hover:opacity-100 flex items-center justify-center z-20 hover:bg-rose-500 hover:text-white transition-all scale-90 group-hover:scale-100"
               >
@@ -829,6 +901,8 @@ import {
   User,
   Globe,
   Github,
+  HelpCircle,
+  Palette,
   Image as ImageIcon,
   X,
   Plus,
@@ -838,6 +912,7 @@ import {
   Camera,
   UploadCloud,
 } from "lucide-vue-next";
+import { pricingService, type PricingItem } from "../services/pricingService";
 import {
   portfolioService,
   type PortfolioItem,
@@ -859,18 +934,26 @@ const headerTitle = computed(() =>
   isEdit.value ? "Modify Case Study" : "Create New Case Study",
 );
 
+const showToast = (message: string, variant: "success" | "error") => {
+  toast.value = { show: true, message, variant };
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 3000);
+};
+
 const saving = ref(false);
 const isScrolled = ref(false);
-const isEditingSlug = ref(false);
 const isMediaPickerOpen = ref(false);
-const isAreaDropdownOpen = ref(false);
-const areaInput = ref("");
 const mediaPickerContext = ref<"main" | "content" | "gallery">("main");
-const editorRef = ref();
-const techInput = ref("");
 const activeTab = ref("general");
 const availableAreas = ref<PortfolioArea[]>([]);
 const availableTechnologies = ref<Technology[]>([]);
+const availableServices = ref<PricingItem[]>([]);
+const techInput = ref("");
+const isAreaDropdownOpen = ref(false);
+const areaInput = ref("");
+const isEditingSlug = ref(false);
+const editorRef = ref();
 const toast = ref({
   show: false,
   message: "",
@@ -888,28 +971,29 @@ const project = ref<PortfolioItem>({
   id: "",
   title: "",
   slug: "",
-  client: "",
-  industry: "",
-  category: "Full Stack",
-  icon: "Globe",
-  color: "linear-gradient(135deg, #6366f1 0%, #4338ca 100%)",
-  completionDate: new Date().toISOString().split("T")[0],
-  websiteUrl: "",
-  githubUrl: "",
-  content: "",
   excerpt: "",
-  mainImage: "",
-  mainImageRef: "",
+  image: "",
+  imageRef: "",
   gallery: [],
   tags: [],
   technologies: [],
   status: "SUCCESS",
   visibility: "published",
-  challenge: { description: "" },
+  challenge: { title: "", description: "", painPoints: [] },
   pivot: { title: "", subtitle: "", items: [] },
   steps: [],
   metrics: [],
   faqs: [],
+  icon: "Globe",
+  color: "linear-gradient(135deg, #6366f1 0%, #4338ca 100%)",
+  relatedServices: [],
+  client: "",
+  industry: "",
+  category: "Full Stack",
+  completionDate: new Date().toISOString().split("T")[0],
+  websiteUrl: "",
+  githubUrl: "",
+  content: "",
 });
 
 const dropdownRef = ref();
@@ -937,12 +1021,14 @@ onMounted(async () => {
   window.addEventListener("scroll", handleScroll);
   document.addEventListener("mousedown", handleClickOutside);
   try {
-    const [areas, techs] = await Promise.all([
+    const [areas, techs, services] = await Promise.all([
       portfolioService.getAreas(),
       portfolioService.getTechnologies(),
+      pricingService.getByCategory("service_type"),
     ]);
     availableAreas.value = areas;
     availableTechnologies.value = techs;
+    availableServices.value = services;
   } catch (e) {
     console.error("Failed to load portfolio meta", e);
   }
@@ -954,7 +1040,7 @@ onMounted(async () => {
         ...data,
         tags: data.tags || [],
         technologies: data.technologies || [],
-        challenge: data.challenge || { description: "" },
+        challenge: data.challenge || { title: "", description: "", painPoints: [] },
         pivot: data.pivot || { title: "", subtitle: "", items: [] },
         steps: data.steps || [],
         metrics: data.metrics || [],
@@ -965,6 +1051,7 @@ onMounted(async () => {
         icon: data.icon || "Globe",
         color:
           data.color || "linear-gradient(135deg, #6366f1 0%, #4338ca 100%)",
+        relatedServices: data.relatedServices || [],
       };
       areaInput.value =
         typeof project.value.category === "string"
@@ -1002,14 +1089,14 @@ const handleContentUpdate = (html: string) => {
 
 const filteredAreas = computed(() => {
   if (!areaInput.value) return availableAreas.value;
-  return availableAreas.value.filter((a) =>
+  return availableAreas.value.filter((a: PortfolioArea) =>
     a.name.toLowerCase().includes(areaInput.value.toLowerCase()),
   );
 });
 
-const selectArea = (name: string) => {
-  project.value.category = name;
-  areaInput.value = name;
+const selectArea = (area: PortfolioArea) => {
+  project.value.category = area.id;
+  areaInput.value = area.name;
   isAreaDropdownOpen.value = false;
 };
 
@@ -1018,10 +1105,10 @@ const handleAreaEnter = async () => {
   if (!val) return;
 
   const existing = availableAreas.value.find(
-    (a) => a.name.toLowerCase() === val.toLowerCase(),
+    (a: PortfolioArea) => a.name.toLowerCase() === val.toLowerCase(),
   );
   if (existing) {
-    selectArea(existing.name);
+    selectArea(existing);
     return;
   }
 
@@ -1032,7 +1119,8 @@ const handleAreaEnter = async () => {
     });
     const areas = await portfolioService.getAreas();
     availableAreas.value = areas;
-    selectArea(val);
+    const newArea = areas.find((a: any) => a.name.toLowerCase() === val.toLowerCase());
+    if (newArea) selectArea(newArea);
     showToast("New area created successfully", "success");
   } catch (e) {
     showToast("Failed to create area", "error");
@@ -1040,16 +1128,39 @@ const handleAreaEnter = async () => {
 };
 
 const getChallengeText = () => {
-  const c = project.value.challenge;
-  return typeof c === "string" ? c : c?.description || "";
+  return project.value.challenge?.description || "";
 };
 
 const updateChallenge = (html: string) => {
-  if (typeof project.value.challenge === "string") {
-    project.value.challenge = html;
+  if (!project.value.challenge) {
+    project.value.challenge = { title: "", description: html, painPoints: [] };
   } else {
-    project.value.challenge = { description: html };
+    project.value.challenge.description = html;
   }
+};
+
+const toggleRelatedService = (slug: string) => {
+  if (!project.value.relatedServices) project.value.relatedServices = [];
+  const idx = project.value.relatedServices.indexOf(slug);
+  if (idx === -1) {
+    project.value.relatedServices.push(slug);
+  } else {
+    project.value.relatedServices.splice(idx, 1);
+  }
+};
+
+const addPainPoint = () => {
+  if (!project.value.challenge) {
+    project.value.challenge = { title: "", description: "", painPoints: [] };
+  }
+  if (!project.value.challenge.painPoints) {
+    project.value.challenge.painPoints = [];
+  }
+  project.value.challenge.painPoints.push("");
+};
+
+const removePainPoint = (idx: number) => {
+  project.value.challenge?.painPoints?.splice(idx, 1);
 };
 
 const openMediaPicker = () => {
@@ -1069,8 +1180,8 @@ const openMediaPickerForGallery = () => {
 
 const handleMediaSelect = (media: any) => {
   if (mediaPickerContext.value === "main") {
-    project.value.mainImage = media.url;
-    project.value.mainImageRef = media.id;
+    project.value.image = media.url;
+    project.value.imageRef = media.id;
   } else if (mediaPickerContext.value === "content") {
     editorRef.value?.insertImage(media.url);
   } else if (mediaPickerContext.value === "gallery") {
@@ -1085,7 +1196,7 @@ const addTechTag = async () => {
   if (!val) return;
   techInput.value = "";
   const existing = availableTechnologies.value.find(
-    (t) => t.name.toLowerCase() === val.toLowerCase(),
+    (t: Technology) => t.name.toLowerCase() === val.toLowerCase(),
   );
   if (existing) {
     addSuggestedTech(existing);
@@ -1116,7 +1227,7 @@ const removeTag = (id: string) => {
 };
 
 const getTagName = (id: string) =>
-  availableTechnologies.value.find((t) => t.id === id)?.name || id;
+  availableTechnologies.value.find((t: Technology) => t.id === id)?.name || id;
 
 const getCategoryName = (category: string | any) => {
   if (!category) return "";
@@ -1127,29 +1238,13 @@ const handleSave = async () => {
   if (!project.value.title) return showToast("Title is required", "error");
   saving.value = true;
 
-  // Prepare payload (convert category string to reference if possible)
-  const payload = { ...project.value };
-  if (typeof payload.category === "string") {
-    const matchedArea = availableAreas.value.find(
-      (a) =>
-        a.name.toLowerCase() === (payload.category as string).toLowerCase(),
-    );
-    if (matchedArea) {
-      // @ts-ignore
-      payload.category = {
-        _type: "reference",
-        _ref: matchedArea.id,
-      };
-    }
-  }
-
   try {
     if (isEdit.value) {
-      await portfolioService.update(route.params.id as string, payload);
+      await portfolioService.update(route.params.id as string, project.value);
       showToast("Project updated successfully", "success");
     } else {
-      await portfolioService.create(payload);
-      showToast("New project !published", "success");
+      await portfolioService.create(project.value);
+      showToast("New project published", "success");
       setTimeout(() => router.push("/portfolio"), 1000);
     }
   } catch (e) {
@@ -1157,13 +1252,6 @@ const handleSave = async () => {
   } finally {
     saving.value = false;
   }
-};
-
-const showToast = (message: string, variant: "success" | "error") => {
-  toast.value = { show: true, message, variant };
-  setTimeout(() => {
-    toast.value.show = false;
-  }, 3000);
 };
 </script>
 

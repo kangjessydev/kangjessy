@@ -370,7 +370,7 @@
                       <p
                         class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5"
                       >
-                        {{ formatDate(proj.created_at) }}
+                        {{ formatDate(proj.created_at || "") }}
                       </p>
                     </td>
                     <td>
@@ -541,34 +541,23 @@ import {
   Zap,
   RotateCw,
   MessageCircle,
-  DollarSign,
   Clock,
   Layers,
   FileText,
   Send,
-  MoreHorizontal,
   Eye,
   Trash2,
-  CheckCircle,
   MessageSquare,
   Target,
   Phone,
-  Briefcase,
-  Calendar,
 } from "lucide-vue-next";
 import { clientsService } from "../services/clientsService";
 import { interactionsService } from "../services/interactionsService";
 import { projectsService } from "../services/projectsService";
 import { transactionsService } from "../services/transactionsService";
 import type { Client, Interaction, Project } from "../types";
-import PageHeader from "../components/ui/PageHeader.vue";
 import AdminCard from "../components/ui/AdminCard.vue";
-import {
-  ButtonPrimary,
-  ButtonSecondary,
-  BaseButton,
-  Toast,
-} from "@kangjessy/ui";
+import Toast from "../components/ui/Toast.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 
 const route = useRoute();
@@ -642,15 +631,18 @@ async function fetchData() {
 }
 
 const lastInteraction = computed(() => {
-  if (interactions.value.length === 0) return "Baru Saja";
+  if (interactions.value.length === 0 || !interactions.value[0]) return "Baru Saja";
   const last = interactions.value[0].created_at;
-  return formatDate(last);
+  return formatDate(last || "");
 });
 
 async function saveInteraction() {
   if (!newInteraction.value.content) return;
   saving.value = true;
   try {
+    projects.value = (await projectsService.getAll()).filter(
+      (p) => p.client_id === client.value?.id,
+    );
     const log = await interactionsService.create({
       client_id: clientId,
       type: newInteraction.value.type,

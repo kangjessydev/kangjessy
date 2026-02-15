@@ -20,6 +20,7 @@ _Bug yang membuat fitur utama tidak bisa digunakan._
 | GLO-001 | Pengaturan Global (Branding/Payment) belum Sync DB                            | Data Admin hanya tersimpan di Localhost/LocalStorage                                | ✅ FIXED |
 | AUD-001 | `GenericPricingList.vue`: Missing import `PageHeader` & `AdminCard`           | Halaman Master Data (fitur, project types, deadlines, services) broken/error render | ✅ FIXED |
 | AUD-002 | `Orders.vue` & `Projects.vue`: `removeEventListener` pakai anonymous function | Memory leak — listener numpuk, tidak pernah ter-remove                              | ✅ FIXED |
+| GLO-002 | `HeroSection.vue`: Blank Page karena missing import `useSiteSettings`         | Website blank total di halaman depan saat render HeroSection                        | ✅ FIXED |
 
 ## 🟡 MEDIUM (Glitch / UI Issue)
 

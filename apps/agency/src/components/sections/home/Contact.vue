@@ -86,7 +86,6 @@ import SectionHeader from "../../ui/SectionHeader.vue";
 import WhatsAppModal from "../../modals/WhatsAppModal.vue";
 import EmailModal from "../../modals/EmailModal.vue";
 import { Mail, Phone, MapPin } from "lucide-vue-next";
-import { siteConfig } from "../../../data/config/siteConfig";
 import { useSiteSettings } from "../../../composables/useSiteSettings";
 
 const { settings } = useSiteSettings();

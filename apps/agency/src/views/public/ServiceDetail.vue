@@ -499,7 +499,7 @@
                     </h4>
                     <div class="flex flex-wrap gap-1.5 opacity-60">
                       <span
-                        v-for="tag in project.tags.slice(0, 2)"
+                        v-for="tag in (project.tags || []).slice(0, 2)"
                         :key="tag"
                         class="text-[9px] font-bold uppercase tracking-wider text-text-tertiary"
                       >
@@ -658,7 +658,7 @@
                 >
                   <li
                     v-for="f in selectedPkg?.features ||
-                    service.packageFeatures"
+                    service?.packageFeatures || []"
                     :key="f"
                     class="flex items-start gap-3 text-[0.92rem] text-text-secondary leading-tight"
                   >
@@ -741,7 +741,7 @@
           <ul class="space-y-3.5">
             <li
               v-for="(f, idx) in selectedPkg.features ||
-              service.packageFeatures"
+              service?.packageFeatures || []"
               :key="f"
               class="flex items-start gap-3 text-[0.85rem] text-text-secondary leading-tight"
               :style="{ transitionDelay: `${Number(idx) * 50}ms` }"
@@ -919,7 +919,7 @@
             <!-- Mini Features Checklist in Selection -->
             <div class="flex flex-wrap gap-x-4 gap-y-2">
               <div
-                v-for="f in (pkg.features || service.packageFeatures).slice(
+                v-for="f in (pkg.features || service?.packageFeatures || []).slice(
                   0,
                   3,
                 )"
@@ -930,10 +930,10 @@
                 {{ f }}
               </div>
               <div
-                v-if="(pkg.features || service.packageFeatures).length > 3"
+                v-if="(pkg.features || service?.packageFeatures || []).length > 3"
                 class="text-[0.65rem] text-accent-primary font-bold uppercase tracking-wider"
               >
-                +{{ (pkg.features || service.packageFeatures).length - 3 }}
+                +{{ (pkg.features || service?.packageFeatures || []).length - 3 }}
                 Lainnya
               </div>
             </div>
@@ -1040,7 +1040,7 @@
 import { ref, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 // import { servicesData, type Service } from "../../data/landing/services"; // REMOVED
-import { projectsData } from "../../data/landing/projects";
+// import { projectsData } from "../../data/landing/projects";
 // import { projectTypes } from "../../data/config/orderConfig"; // REMOVED: Static Data
 import {
   pricingService,
@@ -1048,6 +1048,7 @@ import {
   type ProjectType,
   type ServiceData,
 } from "../../services/pricingService"; // ADDED: Dynamic Service
+import { portfolioService, type PortfolioProject } from "../../services/portfolioService";
 
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import { BaseButton } from "@kangjessy/ui";
@@ -1129,13 +1130,7 @@ const isProjectsSheetOpen = ref(false);
 const searchQuery = ref("");
 const isFloatingExpanded = ref(false);
 
-const relatedProjects = computed(() => {
-  if (!service.value) return [];
-  // Filter projects where project.relatedServices includes current service.id
-  return projectsData.filter((p) =>
-    p.relatedServices?.includes(service.value!.id),
-  );
-});
+const relatedProjects = ref<PortfolioProject[]>([]);
 
 const availablePackages = computed(() => {
   if (!service.value || !allProjectTypes.value.length) return [];
@@ -1234,10 +1229,10 @@ const getFeatureIcon = (iconName?: string) => {
     Lock: Lock,
     Globe: Globe,
   };
-  return icons[iconName || "Check"] || Check;
+  return (iconName ? icons[iconName] : Puzzle) || Puzzle;
 };
 
-const getProjectIcon = (iconName: string) => {
+const getProjectIcon = (iconName?: string) => {
   const icons: Record<string, any> = {
     Globe: Globe,
     ShieldCheck: ShieldCheck,
@@ -1251,7 +1246,7 @@ const getProjectIcon = (iconName: string) => {
     BookOpen: BookOpen,
     Monitor: Monitor,
   };
-  return icons[iconName] || Puzzle;
+  return (iconName ? icons[iconName] : Puzzle) || Puzzle;
 };
 
 const formatCurrency = (val: number) => {
@@ -1281,8 +1276,15 @@ const fetchData = async () => {
     window.scrollTo({ top: 0, behavior: "instant" } as any);
 
     // Set initial selected package
-    if (availablePackages.value.length > 0) {
+    if (availablePackages.value.length > 0 && availablePackages.value[0]) {
       selectedPkg.value = availablePackages.value[0];
+    }
+    
+    // Fetch related projects from Sanity
+    try {
+      relatedProjects.value = await portfolioService.getProjectsByRelatedService(foundData.id);
+    } catch (e) {
+      console.error("Failed to load related projects", e);
     }
   } else {
     router.push("/");
@@ -1301,8 +1303,9 @@ onMounted(fetchData);
 watch(() => route.params.id, fetchData);
 
 watch(availablePackages, (newPkgs) => {
-  if (newPkgs.length > 0 && !selectedPkg.value) {
-    selectedPkg.value = newPkgs[0];
+  const firstPkg = newPkgs[0];
+  if (newPkgs.length > 0 && !selectedPkg.value && firstPkg) {
+    selectedPkg.value = firstPkg;
   }
 });
 </script>

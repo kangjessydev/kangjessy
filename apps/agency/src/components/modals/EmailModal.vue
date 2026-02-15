@@ -113,7 +113,6 @@
 import { ref, computed, watch } from "vue";
 import { Mail as MailIcon, Send as SendIcon } from "lucide-vue-next";
 import { BottomSheet } from "@kangjessy/ui";
-import { siteConfig } from "../../data/config/siteConfig";
 import { useSiteSettings } from "../../composables/useSiteSettings";
 
 const { settings } = useSiteSettings();

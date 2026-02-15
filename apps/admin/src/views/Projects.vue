@@ -118,6 +118,7 @@
             <option value="planning">PERENCANAAN</option>
             <option value="in_progress">SEDANG DIKERJAKAN</option>
             <option value="done">SELESAI</option>
+            <option value="waiting">MENUNGGU (BELUM LUNAS)</option>
             <option value="pending">PENDING</option>
             <option value="hold">HOLD</option>
           </AdminSelect>
@@ -187,13 +188,13 @@
                       <div class="flex items-center gap-2">
                         <span
                           class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"
-                          >{{ project.client?.name || "N/A" }}</span
+                          >{{ (project as any).year || "2024" }}</span
                         >
                         <span class="text-slate-200 text-[10px]">•</span>
                         <span
-                          class="text-[8px] font-black text-[#7029FF] px-1.5 py-0.5 bg-indigo-50 rounded uppercase tracking-widest"
+                          class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"
                         >
-                          {{ project.client_portal_token || "PRIVATE" }}
+                          {{ project.client?.name || "N/A" }}
                         </span>
                       </div>
                     </div>
@@ -754,7 +755,6 @@ import {
   Edit2,
   Zap,
   Clock,
-  ChevronDown,
   CheckCircle,
   FolderOpen,
   MessageCircle,
@@ -953,7 +953,7 @@ const getStatusClass = (status: string | undefined) => {
   return "bg-slate-50 text-slate-600 border-slate-100";
 };
 
-const kanbanColumns = ["planning", "in_progress", "done"];
+const kanbanColumns = ["planning", "in_progress", "done", "waiting"];
 
 const getProjectsByStatus = (status: string) => {
   return filteredProjects.value.filter((p) => p.status === status);
@@ -972,21 +972,46 @@ function openWhatsAppModal(project: any) {
   const phone = project.client?.phone;
   if (!phone) return showToast("Client phone missing", "error");
 
-  waModal.clientName = project.client?.name || "Client";
+  const client = project.client;
+  const isPaid = (client?.paid_amount || 0) >= (client?.total_amount || 0);
+
+  waModal.clientName = client?.name || "Client";
   waModal.clientPhone = phone;
-  waModal.text =
-    "Halo Kak " +
-    waModal.clientName +
-    ", izin memberikan update untuk projek *" +
-    project.name +
-    "*:\n\n📊 Progress: " +
-    (project.progress || 0) +
-    "%\nTahap: " +
-    (project.status?.toUpperCase().replace("_", " ") || "NEW") +
-    "\nDeadline: " +
-    (project.deadline ? formatDate(project.deadline) : "-") +
-    "\n\nPortal: https://kangjessy.com/portal/" +
-    project.client_portal_token;
+  
+  const status = (project.status || "new").toUpperCase().replace("_", " ");
+  
+  let text = `*PROJECT REPORT & MILESTONE UPDATE*
+---------------------------------------
+Halo Kak ${waModal.clientName}! 👋
+
+Berikut update progres untuk proyek:
+🚀 *${project.name}*
+
+📊 *Status Progres:*
+• Pengerjaan: ${project.progress || 0}%
+• Current Phase: ${status}
+• Target Deadline: ${project.deadline ? formatDate(project.deadline) : "-"}
+
+🔗 *Akses Link & Aset:*
+• Demo Preview: ${project.preview_url || "_"}
+`;
+  
+  if (isPaid) {
+    text += `• Production Link: ${project.prod_preview_url || "_"}\n`;
+    text += `• Figma Design: ${project.figma_url || "_"}\n`;
+    text += `• Source Code: ${project.github_url || "_"}\n`;
+  } else {
+    text += `• Production/Figma/GitHub: 🔒 *Locked (Pelunasan Belum Tercatat)*\n`;
+  }
+
+  if (project.client_portal_token) {
+    text += `\n🎯 *Portal Monitoring Real-time:*
+${window.location.origin}/portal/${project.client_portal_token}`;
+  }
+  
+  text += `\n\nSemangat! 🔥`;
+  
+  waModal.text = text;
   waModal.isOpen = true;
 }
 

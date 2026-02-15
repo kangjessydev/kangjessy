@@ -43,7 +43,7 @@
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-3">
                                 <span class="text-[10px] font-black text-accent-secondary uppercase tracking-widest px-2 py-0.5 bg-accent-secondary/10 rounded-md">
-                                    {{ stage.steps.length }} Langkah
+                                    {{ stage.steps?.length || 0 }} Langkah
                                 </span>
                             </div>
                             <h3 class="text-xl font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">{{ stage.name }}</h3>
@@ -236,7 +236,7 @@ const roadmapData = ref<RoadmapStage[]>([]);
 const selectedStageId = ref<string | null>(null);
 
 const currentStage = computed(() => 
-    roadmapData.value.find(s => s.id === selectedStageId.value)
+    roadmapData.value.find((s: RoadmapStage) => s.id === selectedStageId.value)
 );
 
 // Helper to get Lucide Icon from string name
@@ -257,13 +257,13 @@ const selectStage = (id: string) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-const handleStepAction = (step: any) => {
-    if (step.link && step.link.startsWith('http')) {
-        window.open(step.link, '_blank');
-    } else if (step.link) {
-        router.push(step.link);
-    }
-};
+// const handleStepAction = (step: any) => {
+//     if (step.link && step.link.startsWith('http')) {
+//         window.open(step.link, '_blank');
+//     } else if (step.link) {
+//         router.push(step.link);
+//     }
+// };
 
 const fetchBlueprint = async () => {
     loading.value = true;
@@ -274,7 +274,7 @@ const fetchBlueprint = async () => {
         // Handle initial stage from query param after data is loaded
         const stageFromQuery = route.query.stage;
         const stageId = Array.isArray(stageFromQuery) ? stageFromQuery[0] : stageFromQuery;
-        if (stageId && data.find(s => s.id === stageId)) {
+        if (stageId && data.find((s: RoadmapStage) => s.id === stageId)) {
             selectedStageId.value = stageId as string;
         }
     } catch (err) {
@@ -290,7 +290,7 @@ onMounted(fetchBlueprint);
 // Watch for route changes to update stage
 watch(() => route.query.stage, (newStage) => {
     const stageId = Array.isArray(newStage) ? newStage[0] : newStage;
-    if (stageId && roadmapData.value.find(s => s.id === stageId)) {
+    if (stageId && roadmapData.value.find((s: RoadmapStage) => s.id === stageId)) {
         selectedStageId.value = stageId as string;
     } else if (!stageId) {
         selectedStageId.value = null;

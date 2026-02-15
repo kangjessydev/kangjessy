@@ -125,7 +125,7 @@
                 >
                 <span
                   class="text-[10px] font-black text-slate-300 uppercase shrink-0"
-                  >{{ item.count }} Leads ({{ item.percentage }}%)</span
+                  >{{ item.count || 0 }} Leads ({{ item.percentage || 0 }}%)</span
                 >
               </div>
               <div
@@ -535,15 +535,15 @@
                       class="px-2.5 py-1.5 rounded-xl text-[9px] font-black cursor-help flex items-center gap-1.5 border-2 transition-all shadow-sm"
                       :class="{
                         'bg-rose-50 border-rose-100 text-rose-600':
-                          aiScores[lead.id].label === 'HOT',
+                          aiScores[lead.id]?.label === 'HOT',
                         'bg-amber-50 border-amber-100 text-amber-600':
-                          aiScores[lead.id].label === 'WARM',
+                          aiScores[lead.id]?.label === 'WARM',
                         'bg-slate-50 border-slate-100 text-slate-500':
-                          aiScores[lead.id].label === 'COLD',
+                          aiScores[lead.id]?.label === 'COLD',
                       }"
                     >
                       <Brain :size="10" />
-                      {{ aiScores[lead.id].score }}
+                      {{ aiScores[lead.id]?.score }}
 
                       <!-- AI Tooltip -->
                       <div
@@ -557,7 +557,7 @@
                           >
                         </div>
                         <p class="mb-3 italic">
-                          "{{ aiScores[lead.id].analysis }}"
+                          "{{ aiScores[lead.id]?.analysis }}"
                         </p>
                         <div
                           class="pt-2 border-t border-white/5 flex flex-col gap-1"
@@ -567,7 +567,7 @@
                             >Action Item:</span
                           >
                           <span class="text-emerald-400 font-bold">{{
-                            aiScores[lead.id].action_item
+                            aiScores[lead.id]?.action_item
                           }}</span>
                         </div>
                         <div
@@ -755,15 +755,15 @@
               v-else
               class="px-3 rounded-xl flex items-center gap-2 text-[10px] font-black"
               :class="{
-                'bg-rose-50 text-rose-600': aiScores[lead.id].label === 'HOT',
+                'bg-rose-50 text-rose-600': aiScores[lead.id]?.label === 'HOT',
                 'bg-amber-50 text-amber-600':
-                  aiScores[lead.id].label === 'WARM',
+                  aiScores[lead.id]?.label === 'WARM',
                 'bg-slate-50 text-slate-500':
-                  aiScores[lead.id].label === 'COLD',
+                  aiScores[lead.id]?.label === 'COLD',
               }"
             >
               <Brain :size="12" />
-              {{ aiScores[lead.id].score }}
+              {{ aiScores[lead.id]?.score }}
             </div>
 
             <!-- 1. View / Edit Detail -->
@@ -1131,7 +1131,6 @@ import {
   MessageCircle,
   ArrowRight,
   Eye,
-  ChevronDown,
   X,
   SlidersHorizontal,
   CheckSquare,
@@ -1158,16 +1157,15 @@ import AdminCard from "../components/ui/AdminCard.vue";
 import AdminSelect from "../components/ui/AdminSelect.vue";
 import BaseInput from "../components/ui/BaseInput.vue";
 import BentoStat from "../components/ui/BentoStat.vue";
-import { BaseButton } from "@kangjessy/ui";
 import ButtonSecondary from "../components/ui/ButtonSecondary.vue";
 import Toast from "../components/ui/Toast.vue";
 import WhatsAppModal from "../components/ui/WhatsAppModal.vue";
 import LeadEditModal from "../components/ui/LeadEditModal.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 import { BottomSheet } from "@kangjessy/ui";
+import { docsService } from "../services/docsService";
 
 const router = useRouter();
-import { docsService } from "../services/docsService";
 
 const leads = ref<Client[]>([]);
 const selectedIds = ref<string[]>([]);
@@ -1177,7 +1175,6 @@ const singleDeleteTarget = ref<Client | null>(null);
 const singleDeleteConfirmOpen = ref(false);
 const isSelectionMode = ref(false);
 const activeTab = ref<"inbox" | "insights">("inbox");
-// const openMenuId = ref<string | null>(null); // Removed in favor of Teleport menu
 
 // Teleport Menu Logic
 const activeMenuLead = ref<Client | null>(null);
@@ -1341,7 +1338,6 @@ const waModal = ref({
   driveUrl: "",
 });
 
-// Lifecycle
 // Lifecycle
 const closeMenuOnClickOutside = () => {
   activeMenuLead.value = null;

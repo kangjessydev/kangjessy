@@ -186,6 +186,16 @@ Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosis
 
 ---
 
+## 🏗️ 11.1. LATEST LOG (2026-02-15) - STATIC SYNC VALIDATION
+
+- **Portfolio Static Integration**: Validasi penambahan data proyek manual via `projects.ts`. Sukses merender "Bank Usaha Rakyat" dengan full-content (gallery, steps, metrics).
+- **Service Static Integration**: Validasi update data layanan via `order.ts`. Sukses mengubah "Web & Landing" menjadi "Web & Landing Premium".
+- **Hotfix GLO-002**: Perbaikan blank page pada `HeroSection.vue` akibat missing import `useSiteSettings`.
+- **Order Flow Validation**: Verifikasi alur `order.ts` -> `useOrderCalculator` -> `ProjectOrder.vue`. Data tersinkronisasi sempurna antara file statis dan UI Kalkulator.
+- **Lead Database Sync**: Verifikasi pengiriman lead dari Agency ke Supabase. Data masuk real-time ke tabel `clients` (ID: 4009cc...ad3).
+
+---
+
 ## 🏗️ 12. DETAILED ORDER WORKFLOW (APPENDIX)
 
 Isi di bawah ini adalah **Single Source of Truth** untuk alur pemesanan (Order Flow) di sistem KangJessy, yang harus disinkronkan antara Database dan Frontend Logic.

@@ -135,13 +135,13 @@ export const clientsService = {
   async getDealOrdersWithoutProject() {
     const { data, error } = await supabase
       .from('clients')
-      .select('id, name, project_name, total_amount, budget')
+      .select('*')
       .eq('status', 'Deal')
       .eq('is_converted', false)
       .order('created_at', { ascending: false })
     
     if (error) throw error
-    return data
+    return data as Client[]
   },
 
   // Real-time subscription helper

@@ -81,7 +81,7 @@
       </template>
 
       <!-- Custom Order Cell -->
-      <template #cell-order="{ item, index }">
+      <template #cell-order="{ index }">
         <div class="flex items-center gap-1">
           <button
             @click="moveStep(index, -1)"

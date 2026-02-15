@@ -161,7 +161,7 @@ import {
   MapPinned,
   Hotel,
 } from "lucide-vue-next";
-import { urlFor } from "@kangjessy/database";
+import { urlFor } from "../../../services/portfolioService";
 
 interface Project {
   _id: string;

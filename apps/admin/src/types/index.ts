@@ -58,6 +58,7 @@ export interface Project {
   price?: number
   deadline?: string
   preview_url?: string
+  prod_preview_url?: string
   created_at: string
   start_date?: string
   paid_amount?: number
@@ -69,6 +70,7 @@ export interface Project {
   brief?: string
   visual_style?: string
   timeline_notes?: string
+  client?: Client
 }
 
 export interface Task {

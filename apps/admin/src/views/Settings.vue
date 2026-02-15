@@ -344,6 +344,76 @@
               </div>
             </div>
           </AdminCard>
+
+          <!-- Marketing Stats -->
+          <AdminCard
+            title="Marketing Stats"
+            subtitle="Statistik performa agensi untuk Landing Page (Social Proof)"
+            class="mt-8"
+          >
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 py-2">
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Completed Projects</label
+                >
+                <BaseInput
+                  v-model.number="stats.projectsCompleted"
+                  type="number"
+                  placeholder="0"
+                >
+                  <template #icon>
+                    <Trophy :size="16" class="text-indigo-500" />
+                  </template>
+                </BaseInput>
+              </div>
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Happy Clients</label
+                >
+                <BaseInput
+                  v-model.number="stats.happyClients"
+                  type="number"
+                  placeholder="0"
+                >
+                  <template #icon>
+                    <Users :size="16" class="text-emerald-500" />
+                  </template>
+                </BaseInput>
+              </div>
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Years Experience</label
+                >
+                <BaseInput
+                  v-model.number="stats.yearsExperience"
+                  type="number"
+                  placeholder="0"
+                >
+                  <template #icon>
+                    <Briefcase :size="16" class="text-rose-500" />
+                  </template>
+                </BaseInput>
+              </div>
+              <div>
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 ml-1"
+                  >Awards Won</label
+                >
+                <BaseInput
+                  v-model.number="stats.awardsWon"
+                  type="number"
+                  placeholder="0"
+                >
+                  <template #icon>
+                    <Star :size="16" class="text-amber-500" />
+                  </template>
+                </BaseInput>
+              </div>
+            </div>
+          </AdminCard>
         </div>
       </div>
 
@@ -760,12 +830,12 @@
                       Portfolio
                     </p>
                     <p class="text-[9px] text-slate-400">
-                      {{ portfolioProjects.length }} records
+                      {{ portfolioProjects?.length || 0 }} records
                     </p>
                   </div>
                 </div>
                 <ExportButton
-                  :data="portfolioProjects"
+                  :data="portfolioProjects || []"
                   moduleName="portfolio"
                   size="sm"
                   @exported="handleExported"
@@ -790,12 +860,12 @@
                       Clients
                     </p>
                     <p class="text-[9px] text-slate-400">
-                      {{ clients.length }} records
+                      {{ clients?.length || 0 }} records
                     </p>
                   </div>
                 </div>
                 <ExportButton
-                  :data="clients"
+                  :data="clients || []"
                   moduleName="clients"
                   size="sm"
                   @exported="handleExported"
@@ -898,13 +968,10 @@ import {
   Trash2,
   Image,
   Hash,
-  Linkedin,
-  Github,
-  Youtube,
-  Instagram,
   MapPin,
   Mail,
   MessageCircle,
+  Trophy,
 } from "lucide-vue-next";
 import AdminCard from "../components/ui/AdminCard.vue";
 import AdminSelect from "../components/ui/AdminSelect.vue";
@@ -920,6 +987,7 @@ import { useBranding } from "../composables/useBranding";
 import { usePaymentSettings } from "../composables/usePaymentSettings";
 import { useProfile } from "../composables/useProfile";
 import { useContact } from "../composables/useContact";
+import { useMarketingStats } from "../composables/useMarketingStats";
 import { blogService } from "../services/blogService";
 import { portfolioService } from "../services/portfolioService";
 import { clientsService } from "../services/clientsService";
@@ -968,7 +1036,8 @@ const handleMediaSelect = (media: any) => {
   if (!ctx) return;
 
   if (ctx.type === "bank" && ctx.index !== undefined) {
-    bankAccounts.value[ctx.index].bank_logo = media.url;
+    const account = bankAccounts.value[ctx.index];
+    if (account) account.bank_logo = media.url;
   } else if (ctx.type === "branding") {
     branding.value.logo = media.url;
   }
@@ -986,25 +1055,15 @@ const {
 } = usePaymentSettings();
 const { contact, saveContact, addSocial, removeSocial, initContact } =
   useContact();
-const { profile, saveProfile, initProfile } = useProfile();
+const { stats, saveMarketingStats, initMarketingStats } = useMarketingStats();
+const { profile, saveProfile } = useProfile();
 
 const toggles = ref({
   notifications: true,
   wa: false,
 });
 
-const handleSaveBranding = async () => {
-  saving.value = true;
-  saveBranding(branding.value);
-  setTimeout(() => {
-    saving.value = false;
-    toast.value = {
-      show: true,
-      message: "Identitas Agensi tersimpan!",
-      variant: "success",
-    };
-  }, 800);
-};
+
 
 const handleSavePayment = async () => {
   saving.value = true;
@@ -1136,7 +1195,9 @@ const loadDocs = async () => {
 onMounted(() => {
   loadExportData();
   loadDocs();
+  loadDocs();
   initContact();
+  initMarketingStats();
 });
 
 const handleSaveDocs = async () => {
@@ -1159,18 +1220,7 @@ const handleSaveDocs = async () => {
   }
 };
 
-const handleSaveProfile = async () => {
-  saving.value = true;
-  saveProfile(profile.value);
-  setTimeout(() => {
-    saving.value = false;
-    toast.value = {
-      show: true,
-      message: "Profil Admin diperbarui!",
-      variant: "success",
-    };
-  }, 800);
-};
+
 
 const handleSave = async () => {
   saving.value = true;
@@ -1178,6 +1228,7 @@ const handleSave = async () => {
     await saveProfile(profile.value);
     await saveBranding(branding.value);
     await saveContact(contact.value);
+    await saveMarketingStats(stats.value);
     toast.value = {
       show: true,
       message: "Seluruh pengaturan umum berhasil disimpan!",

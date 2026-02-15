@@ -1,202 +1,58 @@
-import { sanityClient, sanityWriteClient } from '@kangjessy/database';
+import { projectsData, type Project } from '../data/landing/projects';
 
-export interface PortfolioProject {
-    _id?: string;
-    id?: string;
-    slug?: string | { current: string };
-    title: string;
-    category?: string;
-    categories?: string[];
-    tags?: string[];
-    excerpt?: string;
-    description?: string;
-    content?: string;
-    challenge?: string | { description: string };
-    image?: string | null;
-    mainImage?: string | null;
-    gallery?: any[];
-    client?: string;
-    date?: string;
-    status?: string | 'Success' | 'IDEA' | 'Live';
-    liveUrl?: string;
-    githubUrl?: string;
-    technologies?: string[];
-    steps?: { title: string; desc: string }[];
-    metrics?: { label: string; value: string; icon: string }[];
-    faqs?: { q: string; a: string }[];
-    pivot?: { title: string; subtitle: string; items: { icon: string; title: string; desc: string }[] };
-    impact?: string;
-    publishedAt?: string;
-    _createdAt?: string;
+export interface PortfolioProject extends Project {}
+
+// Helper to keep compatibility with components expecting Sanity's urlFor
+export function urlFor(source: any) {
+    return {
+        url: () => {
+            if (typeof source === 'string') return source;
+            if (source?.asset?.url) return source.asset.url;
+            return '';
+        }
+    };
 }
 
 export const portfolioService = {
-    async getProjects() {
-        const query = `*[_type == "project"] | order(date desc) {
-            "id": _id,
-            _id,
-            "slug": slug.current,
-            title,
-            excerpt,
-            "category": category->title,
-            "image": image.asset->url,
-            "mainImage": image.asset->url,
-            client,
-            date,
-            description,
-            content,
-            status,
-            liveUrl,
-            githubUrl,
-            technologies,
-            steps,
-            metrics,
-            faqs,
-            pivot,
-            impact,
-            "_createdAt": _createdAt
-        }`;
-        try {
-            return await sanityClient.fetch(query);
-        } catch (err) {
-            console.error('Error fetching portfolio projects:', err);
-            return [];
-        }
+    async getProjects(): Promise<PortfolioProject[]> {
+        return [...projectsData].sort((a, b) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateB - dateA;
+        });
     },
 
-    async getProjectById(id: string) {
-        const query = `*[_type == "project" && (_id == $id || _id == "drafts." + $id)][0] {
-            "id": _id,
-            _id,
-            "slug": slug.current,
-            title,
-            "category": category->_id,
-            "image": image.asset->url,
-            "mainImage": image.asset->url,
-            gallery[] {
-                asset-> { url }
-            },
-            client,
-            date,
-            description,
-            content,
-            status,
-            liveUrl,
-            githubUrl,
-            technologies,
-            steps,
-            metrics,
-            faqs,
-            pivot,
-            impact,
-            "_createdAt": _createdAt
-        }`;
-        try {
-            return await sanityClient.fetch(query, { id });
-        } catch (err) {
-            console.error(`Error fetching project by ID (${id}):`, err);
-            return null;
-        }
+    async getProjectsByRelatedService(serviceId: string): Promise<PortfolioProject[]> {
+        return projectsData.filter(p => p.relatedServices?.includes(serviceId));
     },
 
-    async addProject(project: Partial<PortfolioProject> & { imageAssetId?: string, categoryId?: string }) {
-        const slugValue = project.slug || project.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'project-' + Math.random().toString(36).substring(7);
-
-        const doc: any = {
-            _type: 'project',
-            title: project.title,
-            slug: { _type: 'slug', current: slugValue },
-            description: project.description || '',
-            content: project.content || '',
-            client: project.client || '',
-            date: project.date || new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-            status: project.status || 'Success',
-            liveUrl: project.liveUrl,
-            githubUrl: project.githubUrl,
-            technologies: project.technologies || [],
-            steps: project.steps || [],
-            metrics: project.metrics || [],
-            faqs: project.faqs || [],
-            pivot: project.pivot,
-            impact: project.impact,
-        };
-
-        if (project.categoryId) {
-            doc.category = { _type: 'reference', _ref: project.categoryId };
-        }
-
-        if (project.imageAssetId) {
-            doc.image = {
-                _type: 'image',
-                asset: { _type: 'reference', _ref: project.imageAssetId }
-            };
-        }
-
-        const result = await sanityWriteClient.create(doc);
-        return { ...result, id: result._id };
+    async getProjectBySlug(slug: string): Promise<PortfolioProject | null> {
+        const found = projectsData.find(p => p.slug === slug);
+        return found || null;
     },
 
-    async updateProject(id: string, updates: Partial<PortfolioProject> & { imageAssetId?: string, categoryId?: string }) {
-        const patch: any = {
-            title: updates.title,
-            description: updates.description,
-            content: updates.content,
-            client: updates.client,
-            date: updates.date,
-            status: updates.status,
-            liveUrl: updates.liveUrl,
-            githubUrl: updates.githubUrl,
-            technologies: updates.technologies,
-            steps: updates.steps,
-            metrics: updates.metrics,
-            faqs: updates.faqs,
-            pivot: updates.pivot,
-            impact: updates.impact,
-        };
-
-        if (updates.slug) {
-            patch.slug = { _type: 'slug', current: updates.slug };
-        }
-
-        if (updates.categoryId) {
-            patch.category = { _type: 'reference', _ref: updates.categoryId };
-        }
-
-        if (updates.imageAssetId) {
-            patch.image = {
-                _type: 'image',
-                asset: { _type: 'reference', _ref: updates.imageAssetId }
-            };
-        }
-
-        const result = await sanityWriteClient.patch(id).set(patch).commit();
-        return { ...result, id: result._id };
+    async getProjectById(id: string | number): Promise<PortfolioProject | null> {
+        const numId = typeof id === 'string' ? parseInt(id) : id;
+        return projectsData.find(p => p.id === numId) || null;
     },
 
-    async deleteProject(id: string) {
-        await sanityWriteClient.delete(id);
+    async addProject(project: any) {
+        console.warn('Portfolio is currently in hardcoded mode. Add operation ignored.');
+        return { ...project, id: Date.now() };
+    },
+
+    async updateProject(_id: string | number, project: any) {
+        console.warn('Portfolio is currently in hardcoded mode. Update operation ignored.');
+        return project;
+    },
+
+    async deleteProject(_id: string | number) {
+        console.warn('Portfolio is currently in hardcoded mode. Delete operation ignored.');
         return true;
     },
 
     async getCategories() {
-        return await sanityClient.fetch(`*[_type == "category"] | order(title asc) {
-            "id": _id,
-            _id,
-            title,
-            "slug": slug.current
-        }`);
-    },
-
-    async addCategory(title: string) {
-        const doc = {
-            _type: 'category',
-            title,
-            slug: { _type: 'slug', current: title.toLowerCase().replace(/[^a-z0-9]+/g, '-') }
-        };
-        return await sanityWriteClient.create(doc);
-    },
-
-    async uploadImage(file: File) {
-        return await sanityWriteClient.assets.upload('image', file);
+        const categories = projectsData.map(p => p.category);
+        return [...new Set(categories)];
     }
 };

@@ -373,7 +373,7 @@
                       "
                       :href="
                         sub.url &&
-                        (isExternalLink(sub.url) || sub.trigger === 'link')
+                        (isExternalLink(sub.url) || (sub.trigger as string) === 'link')
                           ? ensureProtocol(sub.url)
                           : undefined
                       "
@@ -745,7 +745,6 @@ import {
 import { BaseButton, BottomSheet, activeSheet } from "@kangjessy/ui";
 import { useGlobalTheme } from "../../composables/useTheme";
 import { menuItems, mobileMenuGroups } from "../../data/config/menuConfig";
-import { siteConfig } from "../../data/config/siteConfig";
 import { useSiteSettings } from "../../composables/useSiteSettings";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import { useRouter } from "vue-router";

@@ -1614,7 +1614,7 @@ onMounted(async () => {
 
   // Set default status for non-lead routes
   if (!isLeadRoute.value && !isEdit.value) {
-    formData.value.status = "Deal";
+    formData.value.status = "New";
   }
 
   if (isEdit.value) {

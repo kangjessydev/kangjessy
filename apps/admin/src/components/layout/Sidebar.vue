@@ -1,23 +1,23 @@
 <template>
   <aside
-    class="sidebar bg-white border-r border-slate-100 flex flex-col transition-all duration-300 ease-in-out z-[100]"
+    class="sidebar bg-white border-r border-slate-100/80 flex flex-col transition-all duration-500 ease-in-out z-100 shadow-[1px_0_10px_rgba(0,0,0,0.01)]"
     :class="[
-      effectiveCollapsed ? 'collapsed' : '',
+      effectiveCollapsed ? 'collapsed w-20' : 'w-72',
       isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
     ]"
   >
     <!-- Brand -->
     <div
-      class="flex items-center shrink-0 transition-all duration-300 px-6"
-      :class="effectiveCollapsed ? 'h-16 justify-center px-2!' : 'h-20 mb-2'"
+      class="flex items-center shrink-0 transition-all duration-500 px-6 py-4"
+      :class="effectiveCollapsed ? 'justify-center px-2!' : 'mb-2'"
     >
       <router-link
         to="/"
-        class="flex items-center gap-3 w-full"
+        class="flex items-center gap-3 w-full group/brand"
         :class="effectiveCollapsed ? 'justify-center' : ''"
       >
         <div
-          class="w-10 h-10 bg-linear-to-br from-[#1B2559] to-[#702DFF] rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 text-white font-black text-lg transition-all duration-300 overflow-hidden"
+          class="w-10 h-10 bg-linear-to-br from-[#1B2559] to-[#4338ca] rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/10 text-white font-black text-lg transition-transform duration-500 group-hover/brand:scale-105 overflow-hidden border-2 border-white/10"
         >
           <img
             src="/logo-agency.png"
@@ -27,16 +27,16 @@
         </div>
         <div
           v-if="!effectiveCollapsed"
-          class="whitespace-nowrap overflow-hidden"
+          class="whitespace-nowrap overflow-hidden transition-all duration-500"
         >
           <h1
-            class="text-sm font-black text-[#1B2559] leading-tight uppercase tracking-tight"
+            class="text-[15px] font-black text-[#1B2559] leading-tight uppercase tracking-tighter"
           >
             KANG
-            <span class="text-indigo-400">JESSY</span>
+            <span class="text-indigo-500">JESSY</span>
           </h1>
           <p
-            class="text-[8px] text-slate-400 font-bold uppercase tracking-[0.2em]"
+            class="text-[9px] text-slate-400 font-bold uppercase tracking-[0.25em] -mt-0.5"
           >
             Agency Admin
           </p>
@@ -46,27 +46,27 @@
 
     <!-- Navigation Groups -->
     <nav
-      class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar transition-all duration-300 pb-12"
+      class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar transition-all duration-300 pb-4"
       :class="
-        effectiveCollapsed ? 'space-y-4 py-4 px-2' : 'space-y-6 py-2 px-4'
+        effectiveCollapsed ? 'space-y-6 py-4 px-2' : 'space-y-8 py-2 px-5'
       "
     >
       <div v-for="group in navigationConfig" :key="group.title">
         <!-- Title / Separator for Collapsed -->
         <h3
           v-if="!effectiveCollapsed"
-          class="px-2 mb-3 text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-80"
+          class="px-3 mb-4 text-[10px] font-black text-slate-300 uppercase tracking-[.2em] opacity-80"
         >
           {{ group.title }}
         </h3>
         <div
           v-else
-          class="h-px bg-slate-100 w-8 mx-auto mb-4 rounded-full"
+          class="h-px bg-slate-100 w-8 mx-auto mb-6 rounded-full opacity-50"
         ></div>
 
         <div
-          class="space-y-0.5"
-          :class="effectiveCollapsed ? 'flex flex-col items-center gap-1' : ''"
+          class="space-y-1"
+          :class="effectiveCollapsed ? 'flex flex-col items-center gap-2' : ''"
         >
           <SidebarItem
             v-for="item in group.items"
@@ -80,6 +80,9 @@
         </div>
       </div>
     </nav>
+
+    <!-- Sidebar Profile -->
+    <SidebarProfile :collapsed="effectiveCollapsed" />
   </aside>
 </template>
 
@@ -89,6 +92,7 @@ import { useRoute } from "vue-router";
 import { useSidebar } from "../../composables/useSidebar";
 import { navigationConfig } from "../../config/navigation";
 import SidebarItem from "./SidebarItem.vue";
+import SidebarProfile from "./SidebarProfile.vue";
 
 const route = useRoute();
 const { isCollapsed, isMobileOpen, closeMobileSidebar } = useSidebar();
@@ -141,11 +145,14 @@ initExpanded();
 .custom-scrollbar::-webkit-scrollbar {
   width: 3px;
 }
-.custom-scrollbar::-webkit-scrollbar-track {
+.custom-scrollbar-track {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
+  background: #f1f5f9;
   border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #e2e8f0;
 }
 </style>

@@ -1217,10 +1217,7 @@ const selectFolder = (folderId: string | null) => {
   selectedFolderId.value = folderId;
 };
 
-const onFolderSelect = (event: Event) => {
-  const target = event.target as HTMLSelectElement;
-  selectFolder(target.value || null);
-};
+
 
 const setFilterType = (type: string) => {
   filterType.value = type as any;

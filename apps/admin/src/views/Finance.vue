@@ -463,7 +463,6 @@ import {
   // Download, // Removed unused
   // AlertCircle, // Removed unused
   // FileText, // Removed unused
-  Edit2, // Actually used for edit
   Trash2,
   History,
   PieChart,

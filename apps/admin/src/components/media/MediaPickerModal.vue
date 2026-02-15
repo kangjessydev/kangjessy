@@ -104,12 +104,7 @@
                       class="flex gap-1 bg-slate-100 p-1 rounded-xl shrink-0"
                     >
                       <button
-                        v-for="option in [
-                          { label: 'All', value: 'all', icon: Database },
-                          { label: 'Images', value: 'images', icon: Image },
-                          { label: 'Videos', value: 'videos', icon: Video },
-                          { label: 'Docs', value: 'documents', icon: FileText },
-                        ]"
+                        v-for="option in filterOptions"
                         :key="option.value"
                         @click="filterType = option.value"
                         class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all"
@@ -371,6 +366,12 @@ const selectedFolderId = ref<string | null>(null);
 const selectedMedia = ref<MediaItem | null>(null);
 const searchQuery = ref("");
 const filterType = ref<"all" | "images" | "videos" | "documents">("all");
+const filterOptions = [
+  { label: "All", value: "all", icon: Database },
+  { label: "Images", value: "images", icon: Image },
+  { label: "Videos", value: "videos", icon: Video },
+  { label: "Docs", value: "documents", icon: FileText },
+] as const;
 const loading = ref(false);
 const savingAlt = ref(false);
 

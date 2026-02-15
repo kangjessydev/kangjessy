@@ -1378,6 +1378,10 @@ async function executePaymentUpdate(payload: {
 }
 
 async function convertToProject(order: Client) {
+  if (safeNumber(order.paid_amount) <= 0) {
+    return showToast("Input DP (Down Payment) dulu baru bisa mulai Proyek ya Kak!", "error");
+  }
+
   confirmModal.value = {
     isOpen: true,
     title: "Create Development Project",

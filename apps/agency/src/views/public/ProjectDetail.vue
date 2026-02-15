@@ -958,7 +958,8 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useSEO } from "../../composables/useSEO";
-import { urlFor, sanityClient } from "@kangjessy/database";
+import { urlFor } from "../../services/portfolioService";
+import { portfolioService } from "../../services/portfolioService";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import SectionHeader from "../../components/ui/SectionHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
@@ -1180,15 +1181,7 @@ onMounted(async () => {
     const slug = route.params.slug as string;
 
     // 1. Try fetching from Sanity first
-    const query = `*[_type == "project" && slug.current == $slug][0]{
-            ...,
-            "mainImage": mainImage.asset->url,
-            "gallery": gallery[].asset->url,
-            "technologies": technologies[]->title,
-            "category": coalesce(category->title, category)
-        }`;
-
-    const sanityProject = await sanityClient.fetch(query, { slug });
+    const sanityProject = await portfolioService.getProjectBySlug(slug);
 
     if (sanityProject) {
       console.log("Using Sanity data for:", slug);

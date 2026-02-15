@@ -530,7 +530,7 @@ export default {
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useSEO } from "../../composables/useSEO";
-import { sanityClient } from "@kangjessy/database";
+import { portfolioService } from "../../services/portfolioService";
 import ProjectCard from "../../components/sections/portfolio/ProjectCard.vue";
 import SectionHeader from "../../components/ui/SectionHeader.vue";
 import { BottomSheet } from "@kangjessy/ui";
@@ -701,24 +701,7 @@ onMounted(async () => {
   window.addEventListener("click", handleOutsideClick);
 
   try {
-    const query = `*[_type == "project"] | order(completionDate desc){
-            _id,
-            title,
-            slug,
-            excerpt,
-            description,
-            "image": mainImage.asset->url,
-            "client": clientName,
-            "category": coalesce(category->title, category),
-            industry,
-            icon,
-            color,
-            status,
-            date,
-            "technologies": technologies[]->title
-        }`;
-
-    const sanityProjects = await sanityClient.fetch(query);
+    const sanityProjects = await portfolioService.getProjects();
 
     projects.value = sanityProjects.map((p: any) => ({
       ...p,

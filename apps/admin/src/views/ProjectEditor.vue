@@ -106,9 +106,6 @@
                   @change="onOrderSelect"
                   class="select-field group-hover:border-indigo-100 transition-all text-[11px]! font-black! py-3!"
                 >
-                  <option :value="undefined">
-                    No Linked Order (Internal/Friend)
-                  </option>
                   <option
                     v-for="order in availableOrders"
                     :key="order.id"
@@ -124,9 +121,9 @@
               </div>
               <p
                 v-if="!isEdit"
-                class="text-[9px] text-slate-300 font-bold uppercase mt-1"
+                class="text-[9px] text-[#7029FF] font-black uppercase mt-1 italic"
               >
-                Note: Only shows DEAL orders that aren't converted yet.
+                Note: Proyek baru harus terhubung ke Order (Client) yang sudah ada.
               </p>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -181,6 +178,26 @@
                 <BaseInput
                   v-model="formData.github_url"
                   placeholder="https://github.com/..."
+                />
+              </div>
+              <div class="space-y-1.5">
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1"
+                  >Demo/Preview Link</label
+                >
+                <BaseInput
+                  v-model="formData.preview_url"
+                  placeholder="https://dev.example.com"
+                />
+              </div>
+              <div class="space-y-1.5">
+                <label
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1"
+                  >Production/Live Link</label
+                >
+                <BaseInput
+                  v-model="formData.prod_preview_url"
+                  placeholder="https://example.com"
                 />
               </div>
               <div
@@ -336,13 +353,13 @@
                         v-model="phaseEditName"
                         @blur="savePhaseName(phaseName)"
                         @keyup.enter="savePhaseName(phaseName)"
-                        class="text-[13px] font-black text-[#7029FF] uppercase tracking-[0.1em] bg-transparent outline-none w-full"
+                        class="text-[13px] font-black text-[#7029FF] uppercase tracking-widest bg-transparent outline-none w-full"
                         v-focus
                       />
                       <h4
                         v-else
                         @click="startEditingPhase(phaseName)"
-                        class="text-[13px] font-black text-[#1B2559] uppercase tracking-[0.1em] leading-tight cursor-text hover:text-[#702DFF] transition-colors truncate"
+                        class="text-[13px] font-black text-[#1B2559] uppercase tracking-widest leading-tight cursor-text hover:text-[#702DFF] transition-colors truncate"
                       >
                         {{ phaseName }}
                       </h4>
@@ -527,7 +544,8 @@
               <AdminSelect v-model="formData.status" label="Status Pengerjaan">
                 <option value="planning">PLANNING</option>
                 <option value="in_progress">IN PROGRESS</option>
-                <option value="done">DONE</option>
+                <option value="done">DONE (FINALLY!)</option>
+                <option value="waiting">WAITING (UNPAID)</option>
                 <option value="pending">PENDING</option>
                 <option value="hold">HOLD</option>
               </AdminSelect>
@@ -546,7 +564,7 @@
                   class="h-4 bg-slate-50 rounded-full border border-slate-100 overflow-hidden shadow-inner p-1"
                 >
                   <div
-                    class="h-full bg-gradient-to-r from-indigo-500 to-[#7029FF] rounded-full transition-all duration-700"
+                    class="h-full bg-linear-to-r from-indigo-500 to-[#7029FF] rounded-full transition-all duration-700"
                     :style="{ width: autoProgress + '%' }"
                   ></div>
                 </div>
@@ -687,7 +705,7 @@ import {
   type ProjectTemplate,
 } from "../data/projectTemplates";
 import { timelineOptions } from "../data/order/options";
-import type { Project, Task } from "../types";
+import type { Project, Task, Client } from "../types";
 import PageHeader from "../components/ui/PageHeader.vue";
 import AdminCard from "../components/ui/AdminCard.vue";
 import { BaseButton } from "@kangjessy/ui";
@@ -745,6 +763,8 @@ const formData = ref<Partial<Project>>({
   order_id: undefined,
   client_id: "",
   client_portal_token: "",
+  preview_url: "",
+  prod_preview_url: "",
 });
 
 const waModal = reactive({
@@ -1121,6 +1141,8 @@ async function moveTask(task: any, direction: "up" | "down") {
       ? phaseTasks[taskIdxInPhase - 1]
       : phaseTasks[taskIdxInPhase + 1];
 
+  if (!swapTask) return;
+
   // Swap sort_orders
   const tempOrder = task.sort_order || 0;
   task.sort_order = swapTask.sort_order || 0;
@@ -1263,7 +1285,7 @@ function onOrderSelect() {
     (o) => o.id === formData.value.order_id,
   );
   if (order) {
-    formData.value.client_id = order.client_id || order.id;
+    formData.value.client_id = (order as any).client_id || order.id;
     formData.value.name = order.project_name || `${order.name} - Project`;
 
     // Sync additional info from Order
@@ -1285,20 +1307,40 @@ function onOrderSelect() {
   }
 }
 
-async function handleSave(shouldClose: boolean = true) {
+ async function handleSave(shouldClose: boolean = true) {
   if (!formData.value.name)
     return showToast("Project Name is required", "error");
+  
+  if (!formData.value.order_id && !isEdit.value) {
+    return showToast("Pilih Order terkait dulu ya Kak, minimal data Ordernya ada.", "error");
+  }
+
   saving.value = true;
   isClosing.value = shouldClose;
   try {
-    formData.value.progress = autoProgress.value;
+    const progress = autoProgress.value;
+    formData.value.progress = progress;
+
+    // Logic for Automatic Status (Done vs Waiting)
+    if (progress >= 100) {
+      // Check payment status from linked order
+      const order = await clientsService.getById(formData.value.order_id as string);
+      const isPaid = (order.paid_amount || 0) >= (order.total_amount || 0);
+
+      if (isPaid) {
+        formData.value.status = "done";
+      } else {
+        formData.value.status = "waiting";
+        showToast("Projek selesai, tapi pembayaran belum lunas. Status: WAITING (UNPAID)", "warning");
+      }
+    }
 
     let projectId = id.value;
     // Cleanup foreign key objects before saving to avoid schema errors
     const saveData = { ...formData.value };
     delete (saveData as any).client;
-    delete (saveData as any).client_portal_token; // Temporarily exclude if column missing in DB
-
+    // client_portal_token should be saved if we added the column
+    
     if (isEdit.value && !id.value.toString().startsWith("temp")) {
       await projectsService.update(id.value, saveData);
       showToast("Project updated successfully");
@@ -1343,18 +1385,32 @@ function copyPortalLink() {
 }
 
 function openWhatsAppModal() {
-  const clientName = (formData.value as any).client?.name || "Client";
+  const client = (formData.value as any).client as Client;
+  const clientName = client?.name || "Client";
   const progress = autoProgress.value;
+  const isPaid = (client?.paid_amount || 0) >= (client?.total_amount || 0);
+  
   const status = (formData.value.status || "new")
     .toUpperCase()
     .replace("_", " ");
 
-  let text = `Halo ${clientName}, ini update progres proyek *${formData.value.name}*:\n\n`;
-  text += `Progres: *${progress}%*\n`;
-  text += `Status: *${status}*\n\n`;
+  let text = `*PROJECT REPORT & MILESTONE UPDATE*
+---------------------------------------
+Halo Kak ${clientName}! 👋
+
+Berikut adalah rincian progres terbaru untuk proyek:
+🚀 *${formData.value.name}*
+
+📊 *Status Progres:*
+• *Pengerjaan:* ${progress}% Selesai
+• *Current Phase:* ${status}
+• *Start Date:* ${formData.value.start_date || "-"}
+• *Target Deadline:* ${formData.value.deadline || "-"}
+
+✅ *Detail Roadmap:*
+`;
 
   if (tasks.value.length > 0) {
-    text += `Detail Roadmap:\n`;
     const grouped = groupedTasks.value;
     Object.entries(grouped).forEach(([phase, phaseTasks]: [string, any]) => {
       const done = phaseTasks.filter((t: any) => isTaskCompleted(t)).length;
@@ -1362,9 +1418,23 @@ function openWhatsAppModal() {
     });
   }
 
-  if (formData.value.client_portal_token) {
-    text += `\nCek progres real-time di sini ya: ${window.location.origin}/portal/${formData.value.client_portal_token}`;
+  text += `\n🔗 *Akses Link & Aset:*`;
+  text += `\n• Demo Preview: ${formData.value.preview_url || "_"}`;
+  
+  if (isPaid) {
+    text += `\n• Production Link: ${formData.value.prod_preview_url || "_"}`;
+    text += `\n• Figma Design: ${formData.value.figma_url || "_"}`;
+    text += `\n• Source Code (GitHub): ${formData.value.github_url || "_"}`;
+  } else {
+    text += `\n• Production/Figma/GitHub: 🔒 *Akan terbuka otomatis setelah pelunasan*`;
   }
+
+  if (formData.value.client_portal_token) {
+    text += `\n\n🎯 *Portal Monitoring Real-time:*
+${window.location.origin}/portal/${formData.value.client_portal_token}`;
+  }
+
+  text += `\n\nJika ada yang perlu didiskusikan terkait update ini, silakan hubungi saya ya Kak. Semangat! 🔥`;
 
   waModal.text = text;
   waModal.isOpen = true;

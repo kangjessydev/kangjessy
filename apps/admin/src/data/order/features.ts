@@ -55,7 +55,7 @@ export const availableFeatures: Feature[] = [
   {
     id: "speed-tuning-99",
     name: "Extreme Speed Performance",
-    price: 1500000,
+    price: 1000000,
     desc: "Optimasi skor Lighthouse hingga 95-100% untuk user experience yang super kilat.",
     relevantTo: ["web-app"],
     icon: Zap,
@@ -119,7 +119,7 @@ export const availableFeatures: Feature[] = [
   {
     id: "rag-knowledge",
     name: "Custom AI Knowledge Base",
-    price: 4500000,
+    price: 4000000,
     desc: "Melatih AI Agent menggunakan data internal perusahaan (PDF, Docx, FAQ) agar cerdas & akurat.",
     relevantTo: ["automation"],
     icon: Cpu,

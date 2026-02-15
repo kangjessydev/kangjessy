@@ -196,7 +196,6 @@ import {
   X as XIcon,
 } from "lucide-vue-next";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
-import { siteConfig } from "../../data/config/siteConfig";
 import { useSiteSettings } from "../../composables/useSiteSettings";
 import { activeSheet } from "@kangjessy/ui";
 import { menuItems } from "../../data/config/menuConfig";

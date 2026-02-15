@@ -416,6 +416,43 @@
                 </button>
               </div>
             </div>
+
+            <!-- Timeline & Urgency -->
+            <div class="space-y-4 pt-8 border-t border-slate-50">
+              <div class="flex items-center justify-between">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Timeline & Urgency</label>
+                <span class="text-[8px] font-black text-indigo-500 uppercase tracking-widest bg-indigo-50 px-2 py-1 rounded-lg">Sync with Agency</span>
+              </div>
+              <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <button
+                  v-for="opt in [
+                    { id: 'Normal', label: 'Normal', multiplier: '1.0x', desc: 'Standard', color: 'slate' },
+                    { id: 'Standard', label: 'Priority', multiplier: '1.1x', desc: 'Faster', color: 'indigo' },
+                    { id: 'Express', label: 'Express', multiplier: '1.35x', desc: 'High Priority', color: 'amber' },
+                    { id: 'Urgent', label: 'Urgent', multiplier: '1.5x', desc: 'ASAP', color: 'rose' }
+                  ]"
+                  :key="opt.id"
+                  @click="formData.selected_timeline = opt.id"
+                  class="p-4 rounded-3xl border text-left transition-all relative overflow-hidden group"
+                  :class="
+                    formData.selected_timeline === opt.id
+                      ? `border-${opt.color}-500 bg-${opt.color}-500 text-white shadow-lg`
+                      : 'bg-white border-slate-100 hover:border-slate-200 shadow-sm'
+                  "
+                >
+                  <p class="text-[10px] font-black uppercase tracking-tight mb-1">{{ opt.label }}</p>
+                  <p class="text-[14px] font-black tracking-tight" :class="formData.selected_timeline === opt.id ? 'text-white' : 'text-[#1B2559]'">{{ opt.multiplier }}</p>
+                  <p class="text-[8px] font-bold opacity-60 uppercase tracking-widest">{{ opt.desc }}</p>
+                  
+                  <div 
+                    v-if="formData.selected_timeline === opt.id"
+                    class="absolute top-2 right-2"
+                  >
+                    <Check :size="10" stroke-width="4" />
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1024,8 +1061,10 @@ const finalTotal = computed(() => {
     foundationPrice.value +
     selectedFeatures.value.reduce((sum, f) => sum + f.price, 0);
   let multiplier = 1;
-  if (formData.value.selected_timeline === "Express") multiplier = 1.25;
-  if (formData.value.selected_timeline === "Urgent") multiplier = 1.5;
+  // Sync with Agency: standard (1.1), express (1.35)
+  if (formData.value.selected_timeline === "Standard") multiplier = 1.1;
+  if (formData.value.selected_timeline === "Express") multiplier = 1.35;
+  if (formData.value.selected_timeline === "Urgent") multiplier = 1.5; // Keeping Urgent as a premium option
 
   let voucherVal = 0;
   const v = activeVouchers.value.find(

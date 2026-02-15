@@ -392,21 +392,10 @@ const processOrder = async (isWhatsApp = false) => {
       source: isWhatsApp ? "order_whatsapp" : "order_form",
       brief: form.brief,
       features: selectedFeatures.value.map((f) => getFeatureName(f)),
-      voucher: discountCode.value || null,
+      voucher: discountCode.value || undefined,
     });
 
     if (!client?.id) throw new Error("Gagal mengidentifikasi klien.");
-
-    // 2. CREATE PROJECT linked to the client
-    const project = await projectService.createProject({
-      client_id: client.id,
-      name: `${currentType.value?.name} - ${form.name}`,
-      description: `Style: ${selectedStyle.value}\nTimeline: ${selectedTimeline.value}\nBrief: ${form.brief}`,
-      price: totalPrice.value,
-      status: "pending",
-    });
-
-    createdProjectId.value = project.id;
 
     if (!isWhatsApp) {
       // 3. Trigger Transactional Email (Resend)
@@ -417,7 +406,7 @@ const processOrder = async (isWhatsApp = false) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             order: {
-              id: project.id,
+              id: client.id,
               name: form.name,
               email: form.email,
               projectType: currentType.value?.name,
@@ -439,7 +428,7 @@ const processOrder = async (isWhatsApp = false) => {
         selectedTimeline: selectedTimeline.value,
         selectedStyle: selectedStyle.value,
         form: { ...form },
-        projectId: project.id,
+        clientId: client.id,
       };
       localStorage.setItem("GZ_ORDER_TEMP", JSON.stringify(finalData));
 
@@ -448,7 +437,7 @@ const processOrder = async (isWhatsApp = false) => {
     } else {
       toast.success("Data terkirim ke sistem! Membuka WhatsApp...");
     }
-    return project;
+    return client;
   } catch (e) {
     console.error("Order process failed:", e);
     toast.error("Gagal memproses pemesanan.");

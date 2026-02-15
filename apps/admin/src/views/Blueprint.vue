@@ -16,7 +16,7 @@
         title="Total Stages"
         :value="stages.length"
         :icon="Layers"
-        variant="indigo"
+        variant="primary"
         tooltip="Jumlah tahapan utama dalam Digital Business Roadmap."
       />
       <BentoStat

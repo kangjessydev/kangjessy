@@ -44,9 +44,9 @@ export default defineConfig(() => ({
   ssgOptions: {
     script: 'async',
     formatting: 'minify',
-    includedRoutes(paths, routes) {
+    includedRoutes(paths: string[]) {
       // Basic routes
-      const staticPaths = paths.filter(p => !p.includes(':') && !p.includes('*'))
+      const staticPaths = paths.filter((p: string) => !p.includes(':') && !p.includes('*'))
       
       // Dynamic routes for Projects
       const projectSlugs = [

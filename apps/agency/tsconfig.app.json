@@ -18,10 +18,7 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@kangjessy/config": ["../../packages/config"],
-      "@kangjessy/database": ["../../packages/database"],
-      "@kangjessy/ui": ["../../packages/ui"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]

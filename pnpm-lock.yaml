@@ -112,14 +112,14 @@ importers:
         specifier: ^0.24.1
         version: 0.24.1
       '@kangjessy/config':
-        specifier: file:../../packages/config
+        specifier: workspace:*
         version: link:../../packages/config
       '@kangjessy/database':
-        specifier: file:../../packages/database
+        specifier: workspace:*
         version: link:../../packages/database
       '@kangjessy/ui':
-        specifier: file:../../packages/ui
-        version: file:packages/ui(lucide-vue-next@0.562.0(vue@3.5.26(typescript@5.9.3)))(tailwindcss@4.1.18)(vue@3.5.26(typescript@5.9.3))
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@portabletext/vue':
         specifier: ^1.0.14
         version: 1.0.14(vue@3.5.26(typescript@5.9.3))
@@ -2042,13 +2042,6 @@ packages:
 
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
-
-  '@kangjessy/ui@file:packages/ui':
-    resolution: {directory: packages/ui, type: directory}
-    peerDependencies:
-      lucide-vue-next: ^0.470.0
-      tailwindcss: ^4.0.0
-      vue: ^3.5.0
 
   '@kurkle/color@0.3.4':
     resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
@@ -9011,13 +9004,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.5
 
   '@juggle/resize-observer@3.4.0': {}
-
-  '@kangjessy/ui@file:packages/ui(lucide-vue-next@0.562.0(vue@3.5.26(typescript@5.9.3)))(tailwindcss@4.1.18)(vue@3.5.26(typescript@5.9.3))':
-    dependencies:
-      '@kangjessy/config': link:packages/config
-      lucide-vue-next: 0.562.0(vue@3.5.26(typescript@5.9.3))
-      tailwindcss: 4.1.18
-      vue: 3.5.26(typescript@5.9.3)
 
   '@kurkle/color@0.3.4': {}
 

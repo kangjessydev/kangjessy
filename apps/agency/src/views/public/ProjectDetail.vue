@@ -740,12 +740,11 @@
         <div class="w-px h-8 bg-white/10"></div>
         <div class="flex items-center gap-2">
           <BaseButton
-            v-if="project.liveUrl"
-            :href="project.liveUrl"
+            v-if="project.liveUrl || project.demoUrl"
             variant="primary"
             size="md"
-            target="_blank"
             class="rounded-full! px-6! h-10! text-xs font-bold"
+            @click="handlePreviewClick"
           >
             Live Preview
             <ExternalLinkIcon :size="14" class="ml-2" />
@@ -824,11 +823,9 @@
           <BaseButton
             variant="primary"
             class="rounded-2xl! px-6! h-11! font-bold text-[13px] shadow-lg"
-            target="_blank"
-            :href="project.liveUrl || '#'"
-            @click="!project.liveUrl ? openContact() : null"
+            @click="project.liveUrl || project.demoUrl ? handlePreviewClick() : openContact()"
           >
-            {{ project.liveUrl ? "Live Preview" : "Mulai" }}
+            {{ project.liveUrl || project.demoUrl ? "Live Preview" : "Mulai" }}
           </BaseButton>
         </div>
       </div>
@@ -860,6 +857,27 @@
             </div>
             <ExternalLinkIcon :size="18" class="text-text-tertiary" />
           </a>
+          <button
+            v-else-if="project.demoUrl"
+            @click="isLinksOpen = false; handlePreviewClick()"
+            class="flex items-center gap-5 p-5 bg-bg-tertiary/50 border border-white/5 rounded-[24px] active:bg-accent-primary/10 transition-colors group w-full text-left"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-accent-primary/10 flex items-center justify-center text-accent-primary group-hover:scale-110 transition-transform"
+            >
+              <MonitorIcon :size="24" />
+            </div>
+            <div class="flex flex-col flex-1">
+              <span class="text-[15px] font-bold text-text-primary"
+                >Demo Preview</span
+              >
+              <span
+                class="text-[11px] text-text-tertiary uppercase tracking-wider mt-0.5"
+                >Versi Demonstrasi</span
+              >
+            </div>
+            <ExternalLinkIcon :size="18" class="text-text-tertiary" />
+          </button>
           <a
             v-if="project.githubUrl"
             :href="project.githubUrl"

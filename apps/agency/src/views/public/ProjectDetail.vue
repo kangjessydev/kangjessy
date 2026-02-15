@@ -1040,6 +1040,7 @@ import { useRoute } from "vue-router";
 import { useSEO } from "../../composables/useSEO";
 import { urlFor } from "../../services/portfolioService";
 import { portfolioService } from "../../services/portfolioService";
+import { projectsData } from "../../data/landing/projects"; // Direct import for instant load
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import SectionHeader from "../../components/ui/SectionHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
@@ -1077,8 +1078,12 @@ import {
 const route = useRoute();
 const popup = usePopupManager();
 
-const project = ref<any>(null);
-const loading = ref(true);
+// Try to load synchronously first to prevent flicker
+const slug = route.params.slug as string;
+const initialProject = projectsData.find(p => p.slug === slug);
+
+const project = ref<any>(initialProject || null);
+const loading = ref(!initialProject); // Only show spinner if not found locally
 const selectedImage = ref<string | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
 const isLinksOpen = ref(false);

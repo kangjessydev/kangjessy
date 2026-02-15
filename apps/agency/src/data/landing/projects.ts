@@ -11,6 +11,7 @@ export interface Project {
   client: string;
   date: string;
   liveUrl: string;
+  demoUrl?: string;
   githubUrl: string;
   gallery?: string[];
   steps?: { title: string; desc: string }[];

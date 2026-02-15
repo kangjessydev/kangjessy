@@ -524,12 +524,11 @@
               </h3>
               <div class="flex flex-col gap-4 relative z-10">
                 <BaseButton
-                  v-if="project.liveUrl"
-                  :href="project.liveUrl"
+                  v-if="project.liveUrl || (project as any).demoUrl"
                   variant="primary"
                   size="lg"
-                  target="_blank"
                   class="w-full shadow-lg shadow-accent-primary/20"
+                  @click="handlePreviewClick"
                 >
                   <span>Live Preview</span>
                   <ExternalLinkIcon :size="18" class="ml-2" />
@@ -1010,6 +1009,8 @@ import {
   Boxes,
   Cpu,
   MapPinned,
+  Monitor as MonitorIcon,
+  Info as InfoIcon,
 } from "lucide-vue-next";
 
 const route = useRoute();
@@ -1020,6 +1021,9 @@ const loading = ref(true);
 const selectedImage = ref<string | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
 const isLinksOpen = ref(false);
+const isWAModalOpen = ref(false);
+const isDemoModalOpen = ref(false);
+const { settings } = useSiteSettings();
 const activeFaqIndex = ref<number | null>(null);
 
 // SEO Setup
@@ -1235,6 +1239,19 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+const handlePreviewClick = () => {
+  if (!project.value) return;
+  const demoUrl = (project.value as any).demoUrl;
+
+  if (demoUrl && !project.value.liveUrl) {
+    isDemoModalOpen.value = true;
+  } else if (project.value.liveUrl) {
+    window.open(project.value.liveUrl, "_blank");
+  } else {
+    // If no links at all, though button shouldn't show
+    openContact();
+  }
+};
 </script>
 
 <style scoped>

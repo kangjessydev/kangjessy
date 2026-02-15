@@ -524,7 +524,7 @@
               </h3>
               <div class="flex flex-col gap-4 relative z-10">
                 <BaseButton
-                  v-if="project.liveUrl || (project as any).demoUrl"
+                  v-if="project.liveUrl || project.demoUrl"
                   variant="primary"
                   size="lg"
                   class="w-full shadow-lg shadow-accent-primary/20"
@@ -993,7 +993,7 @@
         <div class="pt-4 space-y-3">
           <BaseButton 
             v-if="project"
-            :href="(project as any).demoUrl"
+            :href="project.demoUrl"
             variant="primary" 
             size="lg" 
             class="w-full"
@@ -1256,6 +1256,7 @@ onMounted(async () => {
         id: sp._id || sp.id,
         client: sp.clientName || sp.client,
         content: sp.content || sp.description,
+        demoUrl: sp.demoUrl || "",
         tags: sp.tags || [],
         technologies: sp.technologies || sp.tags || [],
         gallery: sanityProject.gallery || [],
@@ -1282,7 +1283,7 @@ onMounted(async () => {
 });
 const handlePreviewClick = () => {
   if (!project.value) return;
-  const demoUrl = (project.value as any).demoUrl;
+  const demoUrl = project.value.demoUrl;
 
   if (demoUrl && !project.value.liveUrl) {
     isDemoModalOpen.value = true;

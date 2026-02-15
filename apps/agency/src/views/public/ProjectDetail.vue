@@ -535,6 +535,18 @@
                   <ExternalLinkIcon :size="18" class="ml-2" />
                 </BaseButton>
 
+                <!-- Fallback Inquiry Button if Live Preview is missing -->
+                <BaseButton
+                  v-else
+                  variant="primary"
+                  size="lg"
+                  class="w-full shadow-lg shadow-accent-primary/20"
+                  @click="openContact"
+                >
+                  <span>Tanya Detail Teknis</span>
+                  <MessageCircleIcon :size="18" class="ml-2" />
+                </BaseButton>
+
                 <BaseButton
                   v-if="project.githubUrl"
                   :href="project.githubUrl"
@@ -543,9 +555,17 @@
                   class="w-full hover:bg-white/5"
                 >
                   <span>Lihat Kode</span>
-                  <GithubIcon :size="18" class="ml-2 opacity-70" />
+                  <GithubIcon :size="18" class="ml-2" />
                 </BaseButton>
 
+                <!-- Privacy Note if no Github -->
+                <p 
+                  v-else
+                  class="text-[10px] text-text-tertiary italic leading-relaxed px-2 text-center"
+                >
+                  * Kode sumber bersifat rahasia (NDA) untuk melindungi aset bisnis klien.
+                </p>
+              </div>
                 <!-- Case Study Shortcut -->
                 <button
                   v-if="project.content"

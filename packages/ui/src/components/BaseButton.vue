@@ -61,7 +61,7 @@ const buttonClasses = computed(() => {
   const base =
     "inline-flex items-center justify-center gap-2 font-bold tracking-tight transition-all duration-300 rounded-2xl cursor-pointer focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]";
 
-  const variants = {
+  const variants: Record<string, string> = {
     primary:
       "bg-accent-primary text-white hover:brightness-110 shadow-lg shadow-accent-primary/20 border border-transparent",
     secondary:
@@ -74,7 +74,7 @@ const buttonClasses = computed(() => {
       "bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20",
   };
 
-  const sizes = {
+  const sizes: Record<string, string> = {
     xs: "px-2.5 py-1.5 text-[10px] uppercase tracking-widest",
     sm: "px-4 py-2 text-xs uppercase tracking-wider",
     md: "px-6 py-3 text-sm",
@@ -82,6 +82,10 @@ const buttonClasses = computed(() => {
     xl: "px-10 py-5 text-lg",
   };
 
-  return `${base} ${variants[props.variant]} ${sizes[props.size]} ${props.loading ? "opacity-70 pointer-events-none" : ""}`;
+  const variantClass = variants[props.variant as string] || variants.primary;
+  const sizeClass = sizes[props.size as string] || sizes.md;
+
+  return `${base} ${variantClass} ${sizeClass} ${props.loading ? "opacity-70 pointer-events-none" : ""}`;
 });
+
 </script>

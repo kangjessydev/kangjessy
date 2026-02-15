@@ -150,7 +150,7 @@ const updateBreakpoint = () => {
 
 watch(
   () => props.fullHeight,
-  (newVal) => {
+  (newVal: boolean) => {
     localFullHeight.value = newVal;
   },
 );
@@ -172,7 +172,7 @@ onUnmounted(() => {
 
 watch(
   () => [props.modelValue, props.isOpen],
-  ([newVal, newIsOpen]) => {
+  ([newVal, newIsOpen]: boolean[]) => {
     const active = !!(newVal || newIsOpen);
     sheetManager.syncWithModel(active);
     if (active) {
@@ -255,7 +255,7 @@ const handleTouchEnd = () => {
 
 watch(
   () => [props.modelValue, props.isOpen],
-  ([newVal, newIsOpen]) => {
+  ([newVal, newIsOpen]: boolean[]) => {
     if (newVal || newIsOpen) {
       document.body.style.overflow = "hidden";
     } else {

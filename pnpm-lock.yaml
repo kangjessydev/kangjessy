@@ -14,6 +14,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@google/generative-ai':
+        specifier: ^0.24.1
+        version: 0.24.1
       '@headlessui/vue':
         specifier: ^1.7.23
         version: 1.7.23(vue@3.5.27(typescript@5.9.3))
@@ -59,6 +62,9 @@ importers:
       '@tiptap/vue-3':
         specifier: ^3.18.0
         version: 3.19.0(@floating-ui/dom@1.7.5)(@tiptap/core@3.19.0(@tiptap/pm@3.19.0))(@tiptap/pm@3.19.0)(vue@3.5.27(typescript@5.9.3))
+      '@vercel/node':
+        specifier: ^5.5.17
+        version: 5.5.33(rollup@4.57.1)
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -325,13 +331,13 @@ importers:
       tailwindcss:
         specifier: ^4.0.0
         version: 4.1.18
-      vue:
-        specifier: ^3.5.0
-        version: 3.5.27(typescript@5.7.3)
     devDependencies:
       typescript:
         specifier: ~5.7.0
         version: 5.7.3
+      vue:
+        specifier: ^3.5.0
+        version: 3.5.27(typescript@5.7.3)
       vue-tsc:
         specifier: ^2.2.0
         version: 2.2.12(typescript@5.7.3)

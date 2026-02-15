@@ -1331,7 +1331,7 @@ function onOrderSelect() {
         formData.value.status = "done";
       } else {
         formData.value.status = "waiting";
-        showToast("Projek selesai, tapi pembayaran belum lunas. Status: WAITING (UNPAID)", "warning");
+        showToast("Projek selesai, tapi pembayaran belum lunas. Status: WAITING (UNPAID)", "error");
       }
     }
 

@@ -46,7 +46,7 @@ export function useBottomSheetManager(sheetId: SheetId) {
         }
     };
 
-    watch(activeSheet, (newActiveSheet) => {
+    watch(activeSheet, (newActiveSheet: string | null) => {
         if (newActiveSheet !== sheetId && isOpen.value) {
             isOpen.value = false;
         }

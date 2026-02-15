@@ -53,7 +53,7 @@ export interface Project {
   order_id?: string
   name: string
   description?: string
-  status: 'planning' | 'in_progress' | 'done' | 'pending' | 'hold'
+  status: 'planning' | 'in_progress' | 'done' | 'pending' | 'hold' | 'waiting'
   progress?: number
   price?: number
   deadline?: string

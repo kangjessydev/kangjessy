@@ -564,7 +564,7 @@
                 >
                   * Kode sumber bersifat rahasia (NDA) untuk melindungi aset bisnis klien.
                 </p>
-              </div>
+
                 <!-- Case Study Shortcut -->
                 <button
                   v-if="project.content"

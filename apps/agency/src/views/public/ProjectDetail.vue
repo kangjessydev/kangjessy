@@ -970,6 +970,49 @@
     <BaseButton to="/projects" variant="secondary" size="lg"
       >Kembali ke Portofolio</BaseButton
     >
+
+    <!-- Demo Explanation Modal -->
+    <BottomSheet
+      v-model="isDemoModalOpen"
+      title="Demo Version"
+      :icon="MonitorIcon"
+    >
+      <div class="p-8 text-center space-y-6">
+        <div class="w-16 h-16 bg-accent-primary/10 rounded-2xl flex items-center justify-center text-accent-primary mx-auto">
+          <InfoIcon :size="32" />
+        </div>
+        
+        <div class="space-y-3">
+          <h4 class="text-xl font-bold text-white">Versi Demonstrasi</h4>
+          <p class="text-sm text-text-secondary leading-relaxed">
+            Dikarenakan website asli proyek ini sudah tidak aktif (legacy), saya telah menyiapkan 
+            <strong>versi kloning/demonstrasi</strong> dengan data dummy agar Anda tetap dapat meninjau interface dan alur fungsionalitasnya.
+          </p>
+        </div>
+
+        <div class="pt-4 space-y-3">
+          <BaseButton 
+            v-if="project"
+            :href="(project as any).demoUrl"
+            variant="primary" 
+            size="lg" 
+            class="w-full"
+            target="_blank"
+            @click="isDemoModalOpen = false"
+          >
+            Buka Demo Project
+          </BaseButton>
+          <BaseButton 
+            variant="ghost" 
+            size="md" 
+            class="w-full"
+            @click="isDemoModalOpen = false"
+          >
+            Tutup
+          </BaseButton>
+        </div>
+      </div>
+    </BottomSheet>
   </div>
 </template>
 
@@ -1021,9 +1064,7 @@ const loading = ref(true);
 const selectedImage = ref<string | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
 const isLinksOpen = ref(false);
-const isWAModalOpen = ref(false);
 const isDemoModalOpen = ref(false);
-const { settings } = useSiteSettings();
 const activeFaqIndex = ref<number | null>(null);
 
 // SEO Setup

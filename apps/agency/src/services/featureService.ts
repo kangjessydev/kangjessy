@@ -46,7 +46,7 @@ export const featureService = {
 
       if (error) throw error;
 
-      return data.map(item => ({
+      return data.map((item: any) => ({
         id: item.id,
         name: item.name,
         price: Number(item.price), // Ensure number

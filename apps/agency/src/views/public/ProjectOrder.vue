@@ -212,7 +212,7 @@ useSEO({
 import { whatsappConfig, defaultConfig } from "../../data/config/orderConfig";
 
 // Services
-import { projectService } from "../../services/projectService";
+// import { projectService } from "../../services/projectService";
 import { clientService } from "../../services/clientService";
 
 const router = useRouter();

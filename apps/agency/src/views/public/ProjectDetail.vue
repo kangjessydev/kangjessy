@@ -1185,10 +1185,11 @@ onMounted(async () => {
 
     if (sanityProject) {
       console.log("Using Sanity data for:", slug);
+      const sp = sanityProject as any;
       project.value = {
         ...sanityProject,
-        id: sanityProject._id,
-        client: sanityProject.clientName || sanityProject.client,
+        id: sp._id,
+        client: sp.clientName || sanityProject.client,
         content: sanityProject.description || sanityProject.content,
         tags: sanityProject.tags || [],
         technologies: sanityProject.technologies || [],

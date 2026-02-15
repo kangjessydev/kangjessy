@@ -13,7 +13,7 @@ export const blueprintService = {
             if (error) throw error;
             
             // Sort individual steps by sort_order
-            return data.map(stage => ({
+            return data.map((stage: any) => ({
                 ...stage,
                 steps: (stage.steps || []).sort((a: any, b: any) => a.sort_order - b.sort_order)
             })) as RoadmapStage[];

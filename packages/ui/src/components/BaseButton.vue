@@ -63,7 +63,7 @@ const buttonClasses = computed(() => {
 
   const variants: Record<string, string> = {
     primary:
-      "bg-accent-primary text-white hover:brightness-110 shadow-lg shadow-accent-primary/20 border border-transparent",
+      "bg-accent-primary !text-white hover:brightness-110 shadow-lg shadow-accent-primary/20 border border-transparent",
     secondary:
       "bg-white/5 backdrop-blur-sm text-text-primary hover:bg-white/10 border border-white/10",
     outline:
@@ -71,7 +71,7 @@ const buttonClasses = computed(() => {
     ghost:
       "bg-transparent text-text-tertiary hover:text-text-primary hover:bg-white/5",
     danger:
-      "bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20",
+      "bg-red-500/10 text-red-500 hover:bg-red-500 hover:!text-white border border-red-500/20",
   };
 
   const sizes: Record<string, string> = {

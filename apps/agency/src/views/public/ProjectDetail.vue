@@ -1188,11 +1188,11 @@ onMounted(async () => {
       const sp = sanityProject as any;
       project.value = {
         ...sanityProject,
-        id: sp._id,
-        client: sp.clientName || sanityProject.client,
-        content: sanityProject.description || sanityProject.content,
-        tags: sanityProject.tags || [],
-        technologies: sanityProject.technologies || [],
+        id: sp._id || sp.id,
+        client: sp.clientName || sp.client,
+        content: sp.content || sp.description,
+        tags: sp.tags || [],
+        technologies: sp.technologies || sp.tags || [],
         gallery: sanityProject.gallery || [],
         steps: sanityProject.steps || [],
         metrics: sanityProject.metrics || [],

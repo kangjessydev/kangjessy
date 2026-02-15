@@ -705,7 +705,9 @@ onMounted(async () => {
 
     projects.value = sanityProjects.map((p: any) => ({
       ...p,
-      technologies: p.technologies || [],
+      _id: String(p._id || p.id),
+      slug: typeof p.slug === "string" ? { current: p.slug } : p.slug,
+      technologies: p.technologies || p.tags || [],
       status: p.status || "SUCCESS",
     }));
 

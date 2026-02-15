@@ -945,31 +945,6 @@
         </div>
       </Transition>
     </Teleport>
-  </div>
-
-  <!-- 3. 404 State -->
-  <div
-    v-else
-    class="min-h-screen bg-bg-primary flex flex-col items-center justify-center space-y-8 p-10"
-  >
-    <div
-      class="w-24 h-24 bg-bg-secondary rounded-full flex items-center justify-center border border-white/5"
-    >
-      <div class="w-12 h-12 text-text-tertiary">
-        <XIcon :size="48" />
-      </div>
-    </div>
-    <div class="text-center space-y-2">
-      <h2 class="text-3xl font-black text-white italic">
-        Proyek Tidak Ditemukan
-      </h2>
-      <p class="text-text-secondary">
-        Proyek mungkin belum di-publish atau URL salah.
-      </p>
-    </div>
-    <BaseButton to="/projects" variant="secondary" size="lg"
-      >Kembali ke Portofolio</BaseButton
-    >
 
     <!-- Demo Explanation Modal -->
     <BottomSheet
@@ -1013,6 +988,31 @@
         </div>
       </div>
     </BottomSheet>
+  </div>
+
+  <!-- 3. 404 State -->
+  <div
+    v-else
+    class="min-h-screen bg-bg-primary flex flex-col items-center justify-center space-y-8 p-10"
+  >
+    <div
+      class="w-24 h-24 bg-bg-secondary rounded-full flex items-center justify-center border border-white/5"
+    >
+      <div class="w-12 h-12 text-text-tertiary">
+        <XIcon :size="48" />
+      </div>
+    </div>
+    <div class="text-center space-y-2">
+      <h2 class="text-3xl font-black text-white italic">
+        Proyek Tidak Ditemukan
+      </h2>
+      <p class="text-text-secondary">
+        Proyek mungkin belum di-publish atau URL salah.
+      </p>
+    </div>
+    <BaseButton to="/projects" variant="secondary" size="lg"
+      >Kembali ke Portofolio</BaseButton
+    >
   </div>
 </template>
 

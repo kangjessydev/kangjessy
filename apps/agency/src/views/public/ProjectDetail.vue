@@ -646,12 +646,13 @@
           <div 
             v-for="(goal, idx) in project.goals" 
             :key="idx" 
-            class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors group"
+            class="bg-bg-secondary border border-border-color rounded-3xl p-8 hover:border-accent-primary/50 transition-all duration-300 group hover:-translate-y-1 hover:shadow-lg hover:shadow-accent-primary/5"
           >
-            <div class="w-12 h-12 rounded-xl bg-accent-primary/10 flex items-center justify-center text-accent-primary mb-4 group-hover:bg-accent-primary group-hover:text-white transition-colors">
-              <Target :size="24" />
+            <div class="w-14 h-14 rounded-2xl bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary mb-6 group-hover:bg-accent-primary group-hover:text-white transition-colors duration-300 shadow-sm">
+              <Target :size="28" />
             </div>
-            <p class="text-white font-medium leading-relaxed">{{ goal }}</p>
+            <p class="text-white text-lg font-bold leading-tight mb-2">Objective {{ idx + 1 }}</p>
+            <p class="text-text-secondary leading-relaxed text-sm h-auto">{{ goal }}</p>
           </div>
         </div>
       </section>

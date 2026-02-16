@@ -618,6 +618,44 @@
         </aside>
       </div>
 
+      <!-- Project Goals Section -->
+      <section
+        v-if="project.goals && project.goals.length > 0"
+        class="mt-24 border-t border-white/5 pt-16 max-w-5xl mx-auto px-6 md:px-0"
+      >
+        <div class="text-left mb-16">
+          <div
+            class="text-[10px] font-black text-accent-primary uppercase tracking-[0.3em] mb-6 flex items-center justify-start gap-3"
+          >
+            <div class="w-8 h-px bg-accent-primary/50"></div>
+            Definisi Sukses
+          </div>
+          <h2
+            class="text-[clamp(2.5rem,5vw,3.5rem)] font-black text-white tracking-tight mb-4"
+          >
+            Project Objectives
+          </h2>
+          <p
+            class="text-text-tertiary text-sm font-bold uppercase tracking-widest max-w-2xl"
+          >
+            Target utama dan Key Performance Indicators (KPI) yang disepakati
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div 
+            v-for="(goal, idx) in project.goals" 
+            :key="idx" 
+            class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors group"
+          >
+            <div class="w-12 h-12 rounded-xl bg-accent-primary/10 flex items-center justify-center text-accent-primary mb-4 group-hover:bg-accent-primary group-hover:text-white transition-colors">
+              <Target :size="24" />
+            </div>
+            <p class="text-white font-medium leading-relaxed">{{ goal }}</p>
+          </div>
+        </div>
+      </section>
+
       <!-- Full Width Deep Dive Section (Outside Grid) -->
       <!-- Fase 04: Konten Detail / Case Study Tambahan (Deep Dive) -->
       <section
@@ -646,7 +684,18 @@
         </div>
 
         <div
-          class="text-[clamp(1.1rem,2vw,1.25rem)] leading-[1.8] text-text-secondary space-y-8 font-medium whitespace-pre-line border-t border-white/5 pt-16 [&>h1]:text-white [&>h1]:font-black [&>h1]:text-[clamp(2rem,4vw,2.5rem)] [&>h1]:mb-6 [&>h1]:leading-[1.1] [&>h2]:text-white [&>h2]:font-black [&>h2]:text-[clamp(1.5rem,3vw,1.8rem)] [&>h2]:mt-8 [&>h2]:mb-8 [&>h2]:leading-tight [&>h2]:text-left [&>h2]:pb-2 [&>h3]:text-white [&>h3]:font-bold [&>h3]:text-[clamp(1.2rem,2vw,1.4rem)] [&>h3]:mt-12 [&>h3]:mb-4 [&>h4]:text-white [&>h4]:font-bold [&>h4]:text-[1.1rem] [&>h4]:mt-8 [&>h4]:mb-3 [&>ul]:pl-5 [&>ul]:space-y-4 [&>ul]:list-disc [&>ul]:my-8 [&>ul]:text-text-secondary [&>ol]:pl-5 [&>ol]:space-y-4 [&>ol]:list-decimal [&>ol]:my-8 [&>blockquote]:border-l-4 [&>blockquote]:border-accent-primary [&>blockquote]:pl-8 [&>blockquote]:italic [&>blockquote]:text-white/90 [&>blockquote]:text-xl [&>blockquote]:my-12 [&>blockquote]:bg-linear-to-r [&>blockquote]:from-bg-secondary [&>blockquote]:to-transparent [&>blockquote]:p-8 [&>blockquote]:rounded-r-2xl [&>a]:text-accent-primary [&>a]:underline [&>a]:decoration-2 [&>a]:underline-offset-4 hover:[&>a]:text-white transition-colors [&_strong]:text-white [&_strong]:font-black [&>img]:w-full [&>img]:rounded-[32px] [&>img]:border-4 [&>img]:border-white/10 [&>img]:shadow-2xl [&>img]:my-16"
+          class="text-[clamp(1.1rem,2vw,1.25rem)] leading-[1.8] text-text-secondary space-y-6 font-medium border-t border-white/5 pt-12 
+          [&>h1]:text-white [&>h1]:font-black [&>h1]:text-[clamp(2rem,4vw,2.5rem)] [&>h1]:mb-4 [&>h1]:leading-[1.1] 
+          [&>h2]:text-white [&>h2]:font-black [&>h2]:text-[clamp(1.5rem,3vw,1.8rem)] [&>h2]:mt-10 [&>h2]:mb-4 [&>h2]:leading-tight [&>h2]:text-left [&>h2]:pb-2 
+          [&>h3]:text-white [&>h3]:font-bold [&>h3]:text-[clamp(1.2rem,2vw,1.4rem)] [&>h3]:mt-8 [&>h3]:mb-3 
+          [&>h4]:text-white [&>h4]:font-bold [&>h4]:text-[1.1rem] [&>h4]:mt-6 [&>h4]:mb-2 
+          [&>p]:mb-4
+          [&>ul]:pl-5 [&>ul]:space-y-2 [&>ul]:list-disc [&>ul]:my-6 [&>ul]:text-text-secondary 
+          [&>ol]:pl-5 [&>ol]:space-y-2 [&>ol]:list-decimal [&>ol]:my-6 
+          [&>blockquote]:border-l-4 [&>blockquote]:border-accent-primary [&>blockquote]:pl-6 [&>blockquote]:italic [&>blockquote]:text-white/90 [&>blockquote]:text-xl [&>blockquote]:my-8 [&>blockquote]:bg-linear-to-r [&>blockquote]:from-bg-secondary [&>blockquote]:to-transparent [&>blockquote]:p-6 [&>blockquote]:rounded-r-2xl 
+          [&>a]:text-accent-primary [&>a]:underline [&>a]:decoration-2 [&>a]:underline-offset-4 hover:[&>a]:text-white transition-colors 
+          [&_strong]:text-white [&_strong]:font-black 
+          [&>img]:w-full [&>img]:rounded-[24px] [&>img]:border-2 [&>img]:border-white/10 [&>img]:shadow-xl [&>img]:my-8"
           v-html="renderedContent"
         ></div>
       </section>

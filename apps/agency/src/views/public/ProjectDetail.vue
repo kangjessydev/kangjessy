@@ -647,7 +647,7 @@
 
         <div
           class="text-[clamp(1.1rem,2vw,1.25rem)] leading-[1.8] text-text-secondary space-y-8 font-medium whitespace-pre-line border-t border-white/5 pt-16 [&>h1]:text-white [&>h1]:font-black [&>h1]:text-[clamp(2rem,4vw,2.5rem)] [&>h1]:mb-6 [&>h1]:leading-[1.1] [&>h2]:text-white [&>h2]:font-black [&>h2]:text-[clamp(1.5rem,3vw,1.8rem)] [&>h2]:mt-8 [&>h2]:mb-8 [&>h2]:leading-tight [&>h2]:text-left [&>h2]:pb-2 [&>h3]:text-white [&>h3]:font-bold [&>h3]:text-[clamp(1.2rem,2vw,1.4rem)] [&>h3]:mt-12 [&>h3]:mb-4 [&>h4]:text-white [&>h4]:font-bold [&>h4]:text-[1.1rem] [&>h4]:mt-8 [&>h4]:mb-3 [&>ul]:pl-5 [&>ul]:space-y-4 [&>ul]:list-disc [&>ul]:my-8 [&>ul]:text-text-secondary [&>ol]:pl-5 [&>ol]:space-y-4 [&>ol]:list-decimal [&>ol]:my-8 [&>blockquote]:border-l-4 [&>blockquote]:border-accent-primary [&>blockquote]:pl-8 [&>blockquote]:italic [&>blockquote]:text-white/90 [&>blockquote]:text-xl [&>blockquote]:my-12 [&>blockquote]:bg-linear-to-r [&>blockquote]:from-bg-secondary [&>blockquote]:to-transparent [&>blockquote]:p-8 [&>blockquote]:rounded-r-2xl [&>a]:text-accent-primary [&>a]:underline [&>a]:decoration-2 [&>a]:underline-offset-4 hover:[&>a]:text-white transition-colors [&_strong]:text-white [&_strong]:font-black [&>img]:w-full [&>img]:rounded-[32px] [&>img]:border-4 [&>img]:border-white/10 [&>img]:shadow-2xl [&>img]:my-16"
-          v-html="project.content"
+          v-html="renderedContent"
         ></div>
       </section>
 
@@ -1037,6 +1037,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import { marked } from "marked";
 import { useSEO } from "../../composables/useSEO";
 import { urlFor } from "../../services/portfolioService";
 import { portfolioService } from "../../services/portfolioService";
@@ -1317,6 +1318,17 @@ const handlePreviewClick = () => {
     openContact();
   }
 };
+
+const renderedContent = computed(() => {
+  if (!project.value?.content) return "";
+  // If content starts with <, treat as HTML (legacy support for other projects)
+  if (project.value.content.trim().startsWith("<")) {
+    return project.value.content;
+  }
+  // Otherwise parse as Markdown
+  // @ts-ignore
+  return marked.parse(project.value.content);
+});
 </script>
 
 <style scoped>

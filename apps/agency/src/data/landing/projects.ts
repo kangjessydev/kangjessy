@@ -25,6 +25,10 @@ export interface Project {
   relatedServices?: string[]; // IDs of services where this project should appear as a case study
 }
 
+import { type Project } from "@/types/landing";
+// @ts-ignore - import raw markdown
+import hijiruContent from "./case-studies/hijiru-company-profile.md?raw";
+
 export const projectsData: Project[] = [
   // --- WORDPRESS & CMS ---
   {
@@ -36,31 +40,7 @@ export const projectsData: Project[] = [
     icon: "Globe",
     color: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
     description: "Website profil perusahaan dengan plugin custom untuk toko & preview ebook.",
-    content: `
-      <h2>Latar Belakang</h2>
-      <p>Hijiru adalah produsen perlengkapan ibadah premium yang membutuhkan transformasi digital total. Website lama mereka berbasis page builder usang yang lambat dan sulit dikelola, menghambat pertumbuhan penjualan online mereka.</p>
-
-      <blockquote>
-        "Kami ingin platform yang mencerminkan kualitas premium produk kami, namun tetap fungsional untuk kebutuhan komunitas dzikir kami."
-      </blockquote>
-
-      <h2>Tantangan & Solusi</h2>
-      <p>Tantangan utama adalah migrasi data dari sistem lama tanpa kehilangan SEO ranking yang sudah terbentuk. Kami menerapkan strategi <strong>Hybrid Engineering</strong>, di mana kami mempertahankan struktur URL lama namun mengganti mesin di belakangnya dengan arsitektur modern.</p>
-
-      <img src="/images/portfolio/hijiru-1.png" alt="Hijiru Redesign Process" />
-
-      <h2>Implementasi Strategis</h2>
-      <p>Kami membangun <strong>Custom Plugin</strong> khusus untuk fitur "Lomba Dzikir Harian". Sebelumnya, fitur ini adalah aplikasi web terpisah yang membingungkan user. Sekarang, fitur ini terintegrasi langsung di dalam WordPress Dashboard user.</p>
-
-      <ul>
-        <li><strong>Unified Login System:</strong> Satu akun untuk belanja dan akses aplikasi komunitas.</li>
-        <li><strong>Ebook Previewer:</strong> Pembaca PDF interaktif yang ringan untuk cuplikan buku digital.</li>
-        <li><strong>Lazy Loading Asset:</strong> Optimasi gambar produk 4K agar tetap cepat diakses via mobile.</li>
-      </ul>
-
-      <h2>Dampak Bisnis</h2>
-      <p>Pasca peluncuran, terjadi peningkatan <strong>40% dwell time</strong> (durasi kunjungan) dan penurunan bounce rate yang signifikan. Komunitas dzikir juga melaporkan kemudahan akses yang jauh lebih baik.</p>
-    `,
+    content: hijiruContent,
     client: "Hijiru",
     date: "Mar 2025",
     liveUrl: "",
@@ -77,16 +57,16 @@ export const projectsData: Project[] = [
     technologies: ["WordPress", "Elementor Pro", "WooCommerce", "Advanced Custom Fields", "PHP 8.2", "MySQL", "Redis Object Cache"],
     faqs: [
       {
-        question: "Apakah plugin custom akan hilang jika WordPress diupdate?",
-        answer: "Tidak. Plugin dikembangkan dengan standar WordPress Codex terbaru dan terpisah dari theme, sehingga aman terhadap update core WordPress."
+        q: "Apakah plugin custom akan hilang jika WordPress diupdate?",
+        a: "Tidak. Plugin dikembangkan dengan standar WordPress Codex terbaru dan terpisah dari theme, sehingga aman terhadap update core WordPress."
       },
       {
-        question: "Bagaimana dengan kecepatan website mengingat banyaknya fitur?",
-        answer: "Kami menggunakan Redis Object Cache dan teknik 'Asset Unloading' untuk mematikan skrip yang tidak dipakai di halaman tertentu, menjaga PageSpeed skor tetap hijau (90+)."
+        q: "Bagaimana dengan kecepatan website mengingat banyaknya fitur?",
+        a: "Kami menggunakan Redis Object Cache dan teknik 'Asset Unloading' untuk mematikan skrip yang tidak dipakai di halaman tertentu, menjaga PageSpeed skor tetap hijau (90+)."
       },
       {
-        question: "Apakah data member lama bisa diselamatkan?",
-        answer: "Ya, 100% data member dan riwayat transaksi berhasil dimigrasikan ke database baru dengan integritas yang terjaga."
+        q: "Apakah data member lama bisa diselamatkan?",
+        a: "Ya, 100% data member dan riwayat transaksi berhasil dimigrasikan ke database baru dengan integritas yang terjaga."
       }
     ],
     goals: [

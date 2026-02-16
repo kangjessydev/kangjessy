@@ -50,8 +50,10 @@ export const projectsData: Project[] = [
       title: "Technical Pivot",
       subtitle: "Fase 01.5 / Hybrid Engineering",
       items: [
-        { icon: "Layers", title: "Hybrid Page Builder Strategy", desc: "Menangani infrastruktur legacy berbasis Beaver Builder sambil mengintegrasikan Elementor. Teknik 'Mix-and-Match' ini memungkinkan pembangunan ulang website tanpa mengganggu stabilitas data yang ada." },
-        { icon: "Zap", title: "Standalone to Plugin Evolution", desc: "Melakukan migrasi fitur Tasbih Online (yang sebelumnya aplikasi web mandiri) menjadi sebuah Custom WordPress Plugin terintegrasi, menjaga fungsionalitas lomba dzikir harian tetap stabil." }
+        { icon: "Layers", title: "Hybrid Architecture Execution", desc: "Menjalankan dual-stack system dimana core database tetap menggunakan struktur legacy namun frontend dirender ulang menggunakan engine modern untuk fleksibilitas maksimal." },
+        { icon: "Zap", title: "Plugin-First Development", desc: "Mengekstrak 100% bisnis logic komunitas (Lomba Dzikir) dari theme functions ke dalam custom plugin independen, menjamin keamanan data saat ganti tema." },
+        { icon: "Database", title: "Database Synchronization Bridge", desc: "Membangun middleware internal yang men-sinkronisasi tabel user WooCommerce dengan tabel member lama secara real-time tanpa konflik ID." },
+        { icon: "Activity", title: "Extreme Performance Engineering", desc: "Implementasi 'Asset Unloading' agresif yang mematikan script CSS/JS pihak ketiga pada halaman yang tidak membutuhkannya, mengejar skor hijau Core Web Vitals." }
       ]
     },
     technologies: ["WordPress", "Elementor Pro", "WooCommerce", "Advanced Custom Fields", "PHP 8.2", "MySQL", "Redis Object Cache"],
@@ -70,9 +72,12 @@ export const projectsData: Project[] = [
       }
     ],
     goals: [
-      "Modernisasi UI/UX agar setara brand fashion internasional",
-      "Penyatuan database Toko Online dan Komunitas Aplikasi",
-      "Optimasi Core Web Vitals untuk SEO Mobile"
+      "Rebranding Digital Total dengan estetika 'Premium Minimalist'",
+      "Peningkatan Konversi Checkout Mobile hingga 2x lipat",
+      "Penyatuan Database User (Toko & Komunitas) dalam satu SSO",
+      "Pencapaian Skor Core Web Vitals Hijau (< 2 detik loading)",
+      "Infrastruktur Scalable yang siap menampung lonjakan trafik Ramadhan",
+      "Implementasi Automasi Marketing via Email & WhatsApp Gateway"
     ],
     metrics: [
       { label: "PageSpeed Score", value: "96/100", icon: "Zap" },
@@ -85,9 +90,10 @@ export const projectsData: Project[] = [
       { title: "Performance Polish", desc: "Optimasi aset media dan database query untuk kecepatan maksimal." }
     ],
     gallery: [
-      "/images/portfolio/hijiru-mockup-1.jpg",
-      "/images/portfolio/hijiru-mockup-2.jpg", 
-      "/images/portfolio/hijiru-mobile.jpg"
+      "https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=1200&auto=format&fit=crop"
     ]
   },
   {

@@ -23,9 +23,9 @@ export interface Project {
   impact?: string;
   technologies?: string[];
   relatedServices?: string[]; // IDs of services where this project should appear as a case study
+  goals?: string[];
 }
 
-import { type Project } from "@/types/landing";
 // @ts-ignore - import raw markdown
 import hijiruContent from "./case-studies/hijiru-company-profile.md?raw";
 

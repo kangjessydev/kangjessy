@@ -69,6 +69,8 @@ export const projectsData: Project[] = [
         a: "Ya, 100% data member dan riwayat transaksi berhasil dimigrasikan ke database baru dengan integritas yang terjaga."
       }
     ],
+    goals: [
+      "Modernisasi UI/UX agar setara brand fashion internasional",
       "Penyatuan database Toko Online dan Komunitas Aplikasi",
       "Optimasi Core Web Vitals untuk SEO Mobile"
     ],

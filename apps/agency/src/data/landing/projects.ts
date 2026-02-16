@@ -69,11 +69,24 @@ export const projectsData: Project[] = [
         a: "Ya, 100% data member dan riwayat transaksi berhasil dimigrasikan ke database baru dengan integritas yang terjaga."
       }
     ],
-    goals: [
-      "Modernisasi UI/UX agar setara brand fashion internasional",
       "Penyatuan database Toko Online dan Komunitas Aplikasi",
       "Optimasi Core Web Vitals untuk SEO Mobile"
     ],
+    metrics: [
+      { label: "PageSpeed Score", value: "96/100", icon: "Zap" },
+      { label: "User Retention", value: "+40%", icon: "TrendingUp" },
+      { label: "Server Uptime", value: "99.99%", icon: "Activity" }
+    ],
+    steps: [
+      { title: "Discovery Phase", desc: "Audit menyeluruh terhadap infrastruktur legacy dan mapping migrasi data user." },
+      { title: "Hybrid Engineering", desc: "Membangun sistem baru secara paralel tanpa mematikan layanan lama (Zero Downtime)." },
+      { title: "Performance Polish", desc: "Optimasi aset media dan database query untuk kecepatan maksimal." }
+    ],
+    gallery: [
+      "/images/portfolio/hijiru-mockup-1.jpg",
+      "/images/portfolio/hijiru-mockup-2.jpg", 
+      "/images/portfolio/hijiru-mobile.jpg"
+    ]
   },
   {
     id: 2,

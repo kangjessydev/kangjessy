@@ -23,7 +23,7 @@ export interface Project {
   impact?: string;
   technologies?: string[];
   relatedServices?: string[]; // IDs of services where this project should appear as a case study
-  goals?: string[];
+  goals?: { title: string; desc: string }[];
 }
 
 // @ts-ignore - import raw markdown
@@ -72,25 +72,37 @@ export const projectsData: Project[] = [
       }
     ],
     goals: [
-      "Rebranding Digital Total dengan estetika 'Premium Minimalist'",
-      "Peningkatan Konversi Checkout Mobile hingga 2x lipat",
-      "Penyatuan Database User (Toko & Komunitas) dalam satu SSO",
-      "Pencapaian Skor Core Web Vitals Hijau (< 2 detik loading)",
-      "Infrastruktur Scalable yang siap menampung lonjakan trafik Ramadhan",
-      "Implementasi Automasi Marketing via Email & WhatsApp Gateway"
+      { title: "Transformasi Visual", desc: "Redesign total dari tampilan konvensional ke estetika 'Neo-Minimalist' setara butik fashion global." },
+      { title: "Mobile Conversion", desc: "Memangkas checkout flow di smartphone dari 5 langkah menjadi 2 langkah seamless." },
+      { title: "Unified Ecosystem", desc: "Integrasi database user toko & komunitas dalam satu sistem Single Sign-On (SSO)." },
+      { title: "Speed Performance", desc: "Mengejar skor Core Web Vitals hijau stabil (>90) dengan teknik Asset Unloading." },
+      { title: "Scalable Infrastructure", desc: "Persiapan arsitektur serverless untuk menangani lonjakan trafik 1000% saat musim Ramadhan." },
+      { title: "Marketing Automation", desc: "Sistem loyalty point otomatis yang terhubung langsung ke email receipt & WhatsApp." }
     ],
     metrics: [
       { label: "PageSpeed Score", value: "96/100", icon: "Zap" },
       { label: "User Retention", value: "+40%", icon: "TrendingUp" },
       { label: "Server Uptime", value: "99.99%", icon: "Activity" }
     ],
+    challenge: {
+      title: "Latar Belakang & Tantangan",
+      description: `
+        <p class="mb-6">Hijiru, sebagai pelopor brand perlengkapan ibadah premium di Indonesia, menghadapi titik stagnasi digital yang kritis pada akhir kuartal 2024. Meskipun dikenal sebagai market leader dengan basis komunitas ribuan anggota aktif dalam program "Dzikir Harian", platform digital mereka masih terjebak dalam arsitektur generasi lama.</p>
+        
+        
+      `,
+      painPoints: ["Technical Debt Akut", "Database Fragmented", "Checkout Lambat"] 
+    },
     steps: [
-      { title: "Discovery Phase", desc: "Audit menyeluruh terhadap infrastruktur legacy dan mapping migrasi data user." },
-      { title: "Hybrid Engineering", desc: "Membangun sistem baru secara paralel tanpa mematikan layanan lama (Zero Downtime)." },
-      { title: "Performance Polish", desc: "Optimasi aset media dan database query untuk kecepatan maksimal." }
+      { title: "Custom Plugin Core", desc: "Ekstraksi logika bisnis komunitas (Lomba Dzikir) menjadi plugin mandiri terpisah dari tema." },
+      { title: "Unified SSO Ecosystem", desc: "Penyatuan database user WooCommerce & Komunitas dengan bridging authentication system." },
+      { title: "Headless-Feel Frontend", desc: "Optimasi Elementor dengan Asset Unloading & Critical CSS agar terasa seringan aplikasi headless." },
+      { title: "Interactive Ebook Reader", desc: "Integrasi PDF viewer HTML5 dengan efek page-flip responsif untuk preview buku digital." },
+      { title: "Smart Inventory Lock", desc: "Sistem penguncian stok real-time via Redis untuk mencegah overselling saat flash sale." },
+      { title: "Mobile-First Checkout", desc: "Redesign total flow pembayaran menjadi 2-step process yang dioptimalkan untuk jempol." }
     ],
     gallery: [
-      "https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=1200&auto=format&fit=crop"
@@ -101,42 +113,91 @@ export const projectsData: Project[] = [
     slug: "nur-alam-security-hardening",
     title: "Nur Alam Security Hardening",
     category: "Security",
-    tags: ["Security", "Firewall", "2FA"],
+    tags: ["Security", "Firewall", "2FA", "Malware Removal"],
     icon: "ShieldCheck",
     color: "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)",
-    description: "Konfigurasi keamanan tingkat lanjut termasuk firewall, 2FA, dan proteksi anti-bruteforce.",
+    description: "Proses pembersihan malware tingkat lanjut dan penguatan sistem keamanan server hotel bintang 4.",
     content: `
-      <h2>Analisis Ancaman & Metodologi</h2>
-      <p>Proyek ini dimulai dengan audit forensik setelah klien melaporkan adanya aktivitas mencurigakan. Kami menemukan bahwa serangan dilakukan melalui celah <em>plugin</em> yang sudah usang, yang kemudian digunakan untuk menyuntikkan ribuan halaman SEO spam.</p>
+      <h2>The Breach Analysis</h2>
+      <p>Serangan yang dialami Nur Alam Hotel dikategorikan sebagai <em>Japanese Keyword Hack</em> (SEO Spam) yang sangat persisten. Hacker menanamkan ribuan file HTML statis berisi link judi di dalam direktori <code>/wp-content/uploads</code> yang disamarkan seolah-olah file gambar.</p>
       
       <blockquote>
-        "Keamanan bukan sekadar memasang firewall, tapi memahami bagaimana peretas berfikir. Kami menutup pintu yang bahkan klien tidak sadar kalau itu ada."
+        "Sistem keamanan terbaik bukanlah yang paling mahal, tapi yang paling membosankan bagi peretas. Kami membuat server mereka 'mahal' untuk diretas."
       </blockquote>
 
-      <h2>Langkah-Langkah Taktis</h2>
-      <p>Langkah pertama yang kami ambil adalah melakukan isolasi sistem. Kami mematikan seluruh akses eksekusi file PHP di direktori <code>/uploads</code> untuk mencegah eksekusi script malware lebih lanjut.</p>
-      
-      <ul>
-        <li><strong>Audit Forensik:</strong> Membedah 1.2GB log server untuk mencari IP asal serangan.</li>
-        <li><strong>Hardening:</strong> Implementasi kustomisasi firewall yang membatasi akses ke <code>wp-admin</code> hanya untuk range IP tertentu.</li>
-        <li><strong>Recovery:</strong> Membersihkan database dari 15.000+ entri post palsu yang dibuat oleh bot.</li>
-      </ul>
-
-      <p>Hasilnya, website kembali normal dalam 48 jam dengan tingkat keamanan yang jauh lebih tinggi dari standar WordPress biasa.</p>
+      <h2>Defense Strategy</h2>
+      <p>Kami menerapkan strategi <strong>Defense in Depth</strong> (berlapis). Tidak hanya mengandalkan plugin keamanan, kami melakukan hardening di level server (Nginx Config) dan level DNS (Cloudflare WAF).</p>
     `,
     client: "Nur Alam Hotel",
     date: "Jan 2025",
-    liveUrl: "#",
-    githubUrl: "#",
+    liveUrl: "https://nuralamhotel.com",
+    demoUrl: "",
+    githubUrl: "",
+    challenge: {
+      title: "Serangan SEO Spam & Ransomware Note",
+      description: `
+        <p class="mb-6">Nur Alam Hotel, sebuah properti bintang 4 yang prestisius, mengalami "mimpi buruk digital" ketika portal reservasi utama mereka dibajak oleh sindikat peretas internasional. Pengunjung yang mencari kamar melalui Google dialihkan secara paksa ke situs judi online ilegal, menyebabkan penurunan direct booking hingga 90% dalam waktu kurang dari 24 jam.</p>
+        
+        <p class="mb-6">Situasi memburuk ketika tim IT internal mencoba membersihkan malware tersebut. Setiap kali file berbahaya dihapus, malware tersebut meregenerasi dirinya sendiri dalam hitungan menit. Ini adalah serangan <em>Polymorphic Backdoor</em> yang canggih, tertanam jauh di dalam file inti sistem dan menyamar sebagai file lisensi plugin resmi.</p>
+        
+        <p class="mb-6">Reputasi hotel dipertaruhkan. Google Search Console memberikan penalti merah, melabeli situs sebagai "Berbahaya". Tamu korporat mulai membatalkan kontrak karena ketakutan data kartu kredit mereka bocor. Manajemen merasakan tekanan finansial yang luar biasa di tengah musim liburan yang sedang memuncak.</p>
+        
+        <p class="mb-6">Kami dipanggil untuk melakukan Audit Forensik Darurat. Investigasi kami menemukan "Patient Zero": sebuah celah keamanan di plugin slider yang tidak di-patch selama 3 bulan. Celah ini menjadi pintu masuk bagi peretas untuk menanamkan <em>Web Shell</em> yang memberikan mereka akses root penuh ke server.</p>
+        
+        <p class="mb-6">Backup sistem ternyata tidak berguna karena infeksi sudah terjadi sebelum siklus backup terakhir (Dormant Virus). Pilihan restore data mustahil dilakukan tanpa mengembalikan virusnya juga. Kami harus melakukan "operasi bedah digital" manual untuk memisahkan jaringan sel sehat dari sel kanker.</p>
+        
+        <p>Tujuannya bukan sekadar membersihkan, tapi membangun benteng digital baru. Kami mentransformasi arsitektur keamanan mereka dari reaktif menjadi proaktif, memastikan serangan serupa tidak akan pernah bisa menembus pertahanan hotel lagi di masa depan.</p>
+      `,
+      painPoints: ["Reputasi Brand Hancur", "Google Blacklist", "Traffic Loss 90%"]
+    },
     pivot: {
-      title: "Deteksi Pola & Investigasi",
-      subtitle: "Fase 01.5 / Investigation",
+      title: "Forensik & Investigasi",
+      subtitle: "Fase 01.5 / Threat Hunting",
       items: [
-        { icon: "Search", title: "Identifikasi Malware Samaran", desc: "Mengidentifikasi file berbahaya yang memiliki nama sangat mirip dengan file sistem WordPress (Obfuscated), yang digunakan peretas untuk SEO Poisoning." },
-        { icon: "Bot", title: "AI-Assisted Code Audit", desc: "Membedah struktur kode backdoor menggunakan asisten AI untuk mengonfirmasi titik akses remote ilegal yang selama ini dieksploitasi." }
+        { icon: "Search", title: "Pattern Recognition Forensics", desc: "Menganalisis 1.2GB log server untuk melacak pola User-Agent aneh yang digunakan botnet saat menyuntikkan script." },
+        { icon: "Code", title: "Malware De-obfuscation", desc: "Melakukan reverse engineering terhadap kode base64 yang disamarkan peretas untuk memahami cara kerja backdoor mereka." },
+        { icon: "GitGraph", title: "Core Integrity Check", desc: "Membandingkan checksum file WordPress yang terpasang dengan repositori resmi WordPress.org untuk mendeteksi modifikasi sekecil 1 byte pun." },
+        { icon: "Eye", title: "Honeypot Deployment", desc: "Memasang file jebakan (trap files) yang jika diakses akan otomatis memblokir IP penyerang secara permanen di level firewall." }
       ]
     },
-    relatedServices: ["business-system", "web-app"]
+    technologies: ["Cloudflare Enterprise", "Wordfence Premium", "WP-CLI", "Linux Hardening", "2FA Hardware Key"],
+    faqs: [
+      {
+        q: "Apakah website benar-benar aman setelah dibersihkan?",
+        a: "Ya. Kami memberikan garansi 12 bulan bebas infeksi ulang. Jika ada insiden, kami bersihkan ulang gratis."
+      },
+      {
+        q: "Berapa lama waktu yang dibutuhkan untuk recovery?",
+        a: "Pembersihan malware memakan waktu 4-6 jam, namun pemulihan reputasi SEO Google membutuhkan waktu 2-4 minggu."
+      }
+    ],
+    goals: [
+      { title: "Zero Reinfection Guarantee", desc: "Memastikan server 100% steril dari malware dan menutup semua celah backdoor yang mungkin tertinggal." },
+      { title: "SEO Authority Restore", desc: "Mengembalikan ranking Google dan menghapus label peringatan 'Deceptive Site Ahead' di browser." },
+      { title: "Bruteforce Immunity", desc: "Mencegah serangan tebak password dengan membatasi login attempt dan mewajibkan 2FA." },
+      { title: "99.99% Server Uptime", desc: "Memastikan stabilitas server tetap terjaga meskipun sedang diserang DDoS Layer 7." },
+      { title: "Data Integrity & Privacy", desc: "Melindungi database pelanggan dari ekstrusi data sesuai standar kepatuhan GDPR." },
+      { title: "Security Awareness Culture", desc: "Melatih staf internal hotel untuk mengenali teknik Phishing dan Social Engineering." }
+    ],
+    metrics: [
+      { label: "THREATS BLOCKED", value: "15k+", icon: "ShieldAlert" },
+      { label: "SECURITY SCORE", value: "A+", icon: "Lock" },
+      { label: "RECOVERY TIME", value: "4 Hours", icon: "Clock" }
+    ],
+    steps: [
+      { title: "Deep Forensic Audit", desc: "Scanning menyeluruh menggunakan tools heuristik untuk menemukan letak malware yang tersembunyi (Obfuscated Code)." },
+      { title: "Surgical Malware Removal", desc: "Pembersihan manual file-file terinfeksi tanpa merusak fungsionalitas website utama." },
+      { title: "Core System Hardening", desc: "Mematikan eksekusi PHP di folder /uploads dan /cache untuk mencegah upload script jahat." },
+      { title: "WAF Implementation", desc: "Pemasangan Web Application Firewall (Cloudflare) dengan aturan ketat untuk memblokir botnet." },
+      { title: "Strict 2FA Enforcement", desc: "Mewajibkan Two-Factor Authentication untuk semua akun administrator tanpa terkecuali." },
+      { title: "Immutable Backup Strategy", desc: "Setup backup off-site otomatis yang tidak bisa dienkripsi oleh ransomware (WORM Storage)." }
+    ],
+    gallery: [
+      "https://plus.unsplash.com/premium_photo-1767600118415-3ae902ccb5f1?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1760199789455-49098afd02f0?q=80&w=1200&auto=format&fit=crop",
+      "https://plus.unsplash.com/premium_photo-1682145181120-73cfdfc8a36d?q=80&w=1200&auto=format&fit=crop",
+      "https://plus.unsplash.com/premium_photo-1733306489269-449d1e8ae119?q=80&w=1200&auto=format&fit=crop"
+    ]
   },
   {
     id: 3,

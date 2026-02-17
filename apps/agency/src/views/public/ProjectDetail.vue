@@ -187,7 +187,7 @@
       <div
         class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-16 lg:gap-24 relative"
       >
-        <div class="space-y-24">
+        <div class="space-y-8">
           <!-- Fase 00: Concept Discovery (IDEAS) -->
           <section v-if="isIdea">
             <div
@@ -285,7 +285,6 @@
               <div
                 v-if="project.challenge?.description"
                 v-html="project.challenge.description"
-                class="whitespace-pre-line"
               ></div>
               <p v-else class="whitespace-pre-line">
                 {{
@@ -651,8 +650,8 @@
             <div class="w-14 h-14 rounded-2xl bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary mb-6 group-hover:bg-accent-primary group-hover:text-white transition-colors duration-300 shadow-sm">
               <Target :size="28" />
             </div>
-            <p class="text-white text-lg font-bold leading-tight mb-2">Objective {{ idx + 1 }}</p>
-            <p class="text-text-secondary leading-relaxed text-sm h-auto">{{ goal }}</p>
+            <p class="text-white text-lg font-bold leading-tight mb-2">{{ goal.title }}</p>
+            <p class="text-text-secondary leading-relaxed text-sm h-auto">{{ goal.desc }}</p>
           </div>
         </div>
       </section>

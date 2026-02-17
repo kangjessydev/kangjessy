@@ -167,6 +167,43 @@ Berdasarkan audit terbaru, berikut adalah area yang telah tersinkronisasi dan di
 
 ---
 
+## 🔮 8. FUTURE ROADMAP & SCALABILITY STRATEGY
+
+Strategi teknis jangka panjang untuk mengakomodasi pertumbuhan bisnis KangJessy Agensi. Prinsip utamanya adalah **"Profit-Driven Infrastructure"**: Jangan upgrade infrastruktur sebelum cashflow menuntutnya.
+
+### 8.1. Frontend Evolution: SSR Migration
+
+**Trigger**: Saat portofolio > 50 items atau kebutuhan SEO menjadi sangat kompetitif.
+
+- **Current (Fase 1)**: `Vite SSG`. Cepat, murah, hosting gratis di Vercel. Kekurangan: Konfigurasi routing dinamis manual, tidak ada image optimization otomatis.
+- **Future (Fase 2)**: **Nuxt 4+**.
+  - **Why**: `Nuxt Image` untuk optimasi gambar otomatis (WebP/AVIF), `Nuxt SEO` untuk meta-tags otomatis, dan Server Routes untuk backend logic sederhana.
+  - **Status**: _Planned_. Jangan migrasi sekarang agar fokus jualan terjaga.
+
+### 8.2. Backend Infrastructure: SaaS vs Self-Hosted
+
+**Trigger**: Saat tagihan Cloud (Supabase/Sanity) > Biaya sewa VPS ($20/bulan) atau butuh kontrol data penuh.
+
+- **Fase 1: Cloud Native (Sekarang - 2 Tahun)**
+  - **Stack**: Supabase (Backend/Auth/DB) + Sanity (Content).
+  - **Pros**: Zero maintenance. Tidak perlu urus OS patch, backup server, security. Fokus 100% cari klien.
+  - **Cons**: Biaya scale-up linier (makin banyak user/data, makin mahal).
+
+- **Fase 2: Hybrid & Self-Hosted (Scale Up)**
+  - **Stack**: VPS (Coolify) + Laravel (Backend Core) + MinIO (Storage) + Directus (Headless CMS).
+  - **Why Laravel?**: Standar industri untuk sistem bisnis kompleks (ERP/CRM/Finance) dengan fitur antrian (Queue) dan keamanan enterprise yang matang.
+  - **Why Directus?**: Pengganti Sanity yang gratis (Self-Hosted) dan unlimited seats.
+
+### 8.3. High-Performance Computing
+
+**Trigger**: Jika membangun produk SaaS dengan trafik masif (>10k req/detik).
+
+- **Role**: Microservice khusus (bukan monolith backend).
+- **Stack**: **Golang**. Digunakan spesifik untuk _heavy processing_ seperti scraping data, real-time analytics, atau transcoding video.
+- **Note**: Jangan gunakan Go untuk CRUD admin sederhana (Overkill & lambat development-nya dibanding Laravel).
+
+---
+
 ## 🎨 11. TECHNICAL AUDIT & HOTFIX LOG (2026-02-14)
 
 Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosistem:

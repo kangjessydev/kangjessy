@@ -233,6 +233,16 @@ Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosis
 
 ---
 
+## 🏗️ 11.2. LATEST LOG (2026-02-17) - PROJECT DETAIL POLISH
+
+- **UI Synchronization**: Menyelaraskan styling `ProjectDetail.vue` dengan `BlogDetail.vue` (Typography, Spacing, Code Blocks, Mac-Window Style).
+- **Responsive Data Tables**: Implementasi _JS-based Table Wrapper_ otomatis untuk menjamin tabel dalam konten Markdown tetap responsif dan full-width di mobile/desktop.
+- **Social Sharing**: Penambahan fitur "Bagikan Proyek" (Twitter, LinkedIn, WhatsApp, Copy Link) dengan notifikasi Toast di akhir artikel Case Study.
+- **Compiler Fixes**: Pembersihan duplikasi import icon `lucide-vue-next` dan perbaikan logika computed property pada `ProjectDetail.vue`.
+- **Content Calibration**: Update data dummy `hijiru-company-profile.md` untuk validasi styling tabel dan tipografi.
+
+---
+
 ## 🏗️ 12. DETAILED ORDER WORKFLOW (APPENDIX)
 
 Isi di bawah ini adalah **Single Source of Truth** untuk alur pemesanan (Order Flow) di sistem KangJessy, yang harus disinkronkan antara Database dan Frontend Logic.

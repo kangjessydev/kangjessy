@@ -36,6 +36,71 @@ Kami merumuskan 6 pilar solusi teknis untuk menjawab kompleksitas ini:
 6.  **Mobile-First Checkout Experience**
     Kami merombak total experience checkout WooCommerce default. Memangkas field dari 12 kolom menjadi hanya 4 kolom esensial. Integrasi API RajaOngkir Pro memungkinkan perhitungan ongkos kirim otomatis hingga tingkat kecamatan tanpa loading berputar-putar. Tombol "Beli via WhatsApp" juga disematkan sebagai alternatif checkout cepat bagi segmen user senior.
 
-## Dampak Bisnis
+## Kondisi Pasar & Dampak Bisnis
 
 Transformasi ini membawa dampak instan yang terukur. Dalam 30 hari pertama pasca-peluncuran, time-on-site meningkat drastis karena experience membaca ebook dan leaderboard yang mulus. Keluhan member soal "gagal login" turun hingga 0%, dan citra brand Hijiru kini sejajar dengan pemain fashion muslim papan atas, siap bersaing di pasar global.
+
+---
+
+## 🧪 Visual Style Test (Dummy Elements)
+
+Bagian di bawah ini hanya untuk pengujian visual style Markdown di halaman Project Detail.
+
+### 1. Typography & Links
+
+Ini adalah paragraf biasa. Ini adalah **teks tebal (bold)** untuk penekanan. Ini adalah _teks miring (italic)_ untuk istilah asing. Dan ini adalah [link text](https://google.com) yang mengarah ke eksternal. Kami juga sering menggunakan `inline code` untuk menyorot nama teknis seperti `useEffect` atau `wp_options`.
+
+### 2. Lists (Unordered & Ordered)
+
+**Kelebihan Sistem Baru:**
+
+- Load time di bawah 1 detik.
+- Keamanan data terjamin.
+- Modular arsitektur:
+  - Mudah dikembangkan.
+  - Tidak bergantung tema.
+
+**Langkah Migrasi:**
+
+1.  Backup Database Lama.
+2.  Install WordPress Fresh.
+3.  Import User & Transaksi via WP-CLI.
+
+### 3. Data Tables
+
+| Metrics       | Sebelum | Sesudah     | Delta  |
+| :------------ | :------ | :---------- | :----- |
+| **PageSpeed** | 45/100  | **98/100**  | +117%  |
+| **Checkout**  | 5 Steps | **2 Steps** | -60%   |
+| **Uptime**    | 98.5%   | **99.99%**  | Stable |
+
+### 4. Code Window (Syntax Highlighting)
+
+```typescript
+// Contoh implementasi Redux State untuk Cart
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  qty: number;
+}
+
+const addToCart = (product: Product): void => {
+  const newItem: CartItem = {
+    id: product.id,
+    name: product.title,
+    price: product.price,
+    qty: 1,
+  };
+
+  // Dispatch action to global store
+  store.dispatch("cart/add", newItem);
+  console.log("Product added:", newItem.name);
+};
+```
+
+```bash
+# Contoh command terminal
+npm install @kangjessy/ui
+npm run build --prod
+```

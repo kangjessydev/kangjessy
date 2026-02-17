@@ -683,21 +683,30 @@
           </p>
         </div>
 
-        <div
-          class="text-[clamp(1.1rem,2vw,1.25rem)] leading-[1.8] text-text-secondary space-y-6 font-medium border-t border-white/5 pt-12 
-          [&>h1]:text-white [&>h1]:font-black [&>h1]:text-[clamp(2rem,4vw,2.5rem)] [&>h1]:mb-4 [&>h1]:leading-[1.1] 
-          [&>h2]:text-white [&>h2]:font-black [&>h2]:text-[clamp(1.5rem,3vw,1.8rem)] [&>h2]:mt-10 [&>h2]:mb-4 [&>h2]:leading-tight [&>h2]:text-left [&>h2]:pb-2 
-          [&>h3]:text-white [&>h3]:font-bold [&>h3]:text-[clamp(1.2rem,2vw,1.4rem)] [&>h3]:mt-8 [&>h3]:mb-3 
-          [&>h4]:text-white [&>h4]:font-bold [&>h4]:text-[1.1rem] [&>h4]:mt-6 [&>h4]:mb-2 
-          [&>p]:mb-4
-          [&>ul]:pl-5 [&>ul]:space-y-2 [&>ul]:list-disc [&>ul]:my-6 [&>ul]:text-text-secondary 
-          [&>ol]:pl-5 [&>ol]:space-y-2 [&>ol]:list-decimal [&>ol]:my-6 
-          [&>blockquote]:border-l-4 [&>blockquote]:border-accent-primary [&>blockquote]:pl-6 [&>blockquote]:italic [&>blockquote]:text-white/90 [&>blockquote]:text-xl [&>blockquote]:my-8 [&>blockquote]:bg-linear-to-r [&>blockquote]:from-bg-secondary [&>blockquote]:to-transparent [&>blockquote]:p-6 [&>blockquote]:rounded-r-2xl 
-          [&>a]:text-accent-primary [&>a]:underline [&>a]:decoration-2 [&>a]:underline-offset-4 hover:[&>a]:text-white transition-colors 
-          [&_strong]:text-white [&_strong]:font-black 
-          [&>img]:w-full [&>img]:rounded-[24px] [&>img]:border-2 [&>img]:border-white/10 [&>img]:shadow-xl [&>img]:my-8"
-          v-html="renderedContent"
-        ></div>
+        <div class="rich-content" v-html="renderedContent"></div>
+
+        <!-- Sharing Box -->
+        <div class="bg-bg-secondary p-8 md:p-10 rounded-[32px] border border-border-color mb-[60px] mt-20">
+            <h3 class="text-xl font-bold text-white mb-6">Bagikan proyek ini:</h3>
+            <div class="flex flex-wrap gap-4">
+                <button @click="shareOnTwitter"
+                    class="px-6 py-3 rounded-full border border-white/10 bg-bg-primary text-text-primary font-bold flex items-center gap-2.5 transition-all hover:border-accent-primary hover:bg-bg-secondary hover:-translate-y-0.5 cursor-pointer w-full md:w-auto justify-center text-sm">
+                    <Twitter :size="18" class="shrink-0" /> Twitter
+                </button>
+                <button @click="shareOnLinkedIn"
+                    class="px-6 py-3 rounded-full border border-white/10 bg-bg-primary text-text-primary font-bold flex items-center gap-2.5 transition-all hover:border-accent-primary hover:bg-bg-secondary hover:-translate-y-0.5 cursor-pointer w-full md:w-auto justify-center text-sm">
+                    <LinkedinIcon :size="18" class="shrink-0" /> LinkedIn
+                </button>
+                <button @click="shareOnWhatsApp"
+                    class="px-6 py-3 rounded-full border border-white/10 bg-bg-primary text-text-primary font-bold flex items-center gap-2.5 transition-all hover:border-accent-primary hover:bg-bg-secondary hover:-translate-y-0.5 cursor-pointer w-full md:w-auto justify-center text-sm">
+                    <MessageCircleIcon :size="18" class="shrink-0" /> WhatsApp
+                </button>
+                <button @click="copyLink"
+                    class="px-6 py-3 rounded-full border border-white/10 bg-bg-primary text-text-primary font-bold flex items-center gap-2.5 transition-all hover:border-accent-primary hover:bg-bg-secondary hover:-translate-y-0.5 cursor-pointer w-full md:w-auto justify-center text-sm">
+                    <Copy :size="18" class="shrink-0" /> Salin Link
+                </button>
+            </div>
+        </div>
       </section>
 
       <!-- FAQ Section (Moved to Bottom) -->
@@ -837,6 +846,21 @@
         </div>
       </div>
     </div>
+
+    <!-- Toast Notification -->
+    <Teleport to="body">
+        <Transition enter-active-class="transform ease-out duration-300 transition"
+            enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+            enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+            leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
+            leave-to-class="opacity-0">
+            <div v-if="showToast"
+                class="fixed bottom-5 right-5 z-[3000] flex items-center gap-3 bg-bg-secondary border border-accent-primary/50 text-text-primary px-5 py-3 rounded-xl shadow-2xl shadow-accent-primary/10">
+                <ShieldCheck :size="18" class="text-accent-primary shrink-0" />
+                <span class="font-bold text-sm">{{ toastMessage }}</span>
+            </div>
+        </Transition>
+    </Teleport>
 
     <!-- Floating Action Bar (Mobile) -->
     <div
@@ -1123,6 +1147,9 @@ import {
   MapPinned,
   Monitor as MonitorIcon,
   Info as InfoIcon,
+  Twitter, 
+  Linkedin as LinkedinIcon, 
+  Copy, 
 } from "lucide-vue-next";
 
 const route = useRoute();
@@ -1138,7 +1165,10 @@ const selectedImage = ref<string | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
 const isLinksOpen = ref(false);
 const isDemoModalOpen = ref(false);
+
 const activeFaqIndex = ref<number | null>(null);
+const showToast = ref(false);
+const toastMessage = ref('');
 
 // SEO Setup
 useSEO({
@@ -1370,14 +1400,71 @@ const handlePreviewClick = () => {
 
 const renderedContent = computed(() => {
   if (!project.value?.content) return "";
+  
+  let html = "";
   // If content starts with <, treat as HTML (legacy support for other projects)
   if (project.value.content.trim().startsWith("<")) {
-    return project.value.content;
+    html = project.value.content;
+  } else {
+    // Otherwise parse as Markdown
+    // @ts-ignore
+    html = marked.parse(project.value.content);
   }
-  // Otherwise parse as Markdown
-  // @ts-ignore
-  return marked.parse(project.value.content);
+
+  // Post-process HTML to wrap tables for responsiveness
+  if (typeof window !== 'undefined') {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    
+    const tables = div.querySelectorAll('table');
+    tables.forEach(table => {
+      // Check if already wrapped
+      if (table.parentElement?.classList.contains('table-wrapper')) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-wrapper';
+      table.parentNode?.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
+    return div.innerHTML;
+  }
+
+  return html;
 });
+
+const triggerToast = (msg: string) => {
+    toastMessage.value = msg;
+    showToast.value = true;
+    setTimeout(() => {
+        showToast.value = false;
+    }, 3000);
+};
+
+const shareOnTwitter = () => {
+    if (!project.value) return;
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Check out ${project.value.title} by KangJessy`);
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+};
+
+const shareOnLinkedIn = () => {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+};
+
+const shareOnWhatsApp = () => {
+    if (!project.value) return;
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Check out ${project.value.title} by KangJessy`);
+    window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+};
+
+const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    triggerToast('Link berhasil disalin!');
+};
+
 </script>
 
 <style scoped>
@@ -1398,5 +1485,230 @@ const renderedContent = computed(() => {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* --- TOAST ANIMATIONS --- */
+.translate-y-2 { transform: translateY(0.5rem); }
+.translate-y-0 { transform: translateY(0px); }
+.translate-x-2 { transform: translateX(0.5rem); }
+.translate-x-0 { transform: translateX(0px); }
+.opacity-0 { opacity: 0; }
+.opacity-100 { opacity: 1; }
+
+/* --- RICH CONTENT STYLES (MATCHES BLOG DETAIL) --- */
+.rich-content {
+  color: var(--text-secondary);
+  font-weight: 500;
+  line-height: 1.8;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 3rem;
+}
+
+.rich-content :deep(h1) {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 900;
+  margin-bottom: 2rem;
+  line-height: 1.1;
+  color: white;
+}
+
+.rich-content :deep(h2) {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 900;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.rich-content :deep(h3) {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-weight: 800;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  color: white;
+  line-height: 1.2;
+}
+
+.rich-content :deep(h4) {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.rich-content :deep(p) {
+  margin-bottom: 1.5rem;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+}
+
+.rich-content :deep(blockquote) {
+  border-left: 4px solid var(--accent-primary);
+  background: linear-gradient(to right, rgba(var(--bg-secondary-rgb), 0.5), transparent);
+  padding: 2.5rem 2rem;
+  margin: 3rem 0;
+  font-style: italic;
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 0 1rem 1rem 0;
+}
+
+.rich-content :deep(ul) {
+  list-style-type: disc;
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.rich-content :deep(ol) {
+  list-style-type: decimal;
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.rich-content :deep(li) {
+  margin-bottom: 0.75rem;
+  line-height: 1.8;
+  padding-left: 0.5rem;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+}
+
+.rich-content :deep(li::marker) {
+  color: var(--accent-primary);
+  font-weight: 800;
+}
+
+.rich-content :deep(a) {
+  color: var(--accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.rich-content :deep(a:hover) {
+  color: white;
+}
+
+.rich-content :deep(strong) {
+  color: white;
+  font-weight: 900;
+}
+
+.rich-content :deep(img) {
+  border-radius: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  margin: 3rem 0;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  width: 100%;
+}
+
+.rich-content :deep(hr) {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 4rem 0;
+}
+
+/* --- TABLE STYLES --- */
+/* --- TABLE STYLES --- */
+.rich-content :deep(.table-wrapper) {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  background: rgba(15, 23, 42, 0.5); /* #0F172A at 50% */
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rich-content :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  background: transparent;
+  border: none;
+}
+
+.rich-content :deep(th) {
+  text-align: left;
+  padding: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rich-content :deep(th:first-child) { padding-left: 2rem; }
+.rich-content :deep(th:last-child) { padding-right: 2rem; }
+
+.rich-content :deep(td) {
+  padding: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  transition: background-color 0.2s;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+}
+
+.rich-content :deep(td:first-child) { padding-left: 2rem; }
+.rich-content :deep(td:last-child) { padding-right: 2rem; }
+
+.rich-content :deep(tr:last-child td) { border-bottom: none; }
+.rich-content :deep(tr:hover td) { background: rgba(255, 255, 255, 0.05); }
+
+
+/* --- MAC WINDOW CODE BLOCK --- */
+.rich-content :deep(pre) {
+  background: #0F172A;
+  border-radius: 1rem;
+  padding: 3rem 1.5rem 1.5rem; /* Top padding for Traffic Lights */
+  margin: 2rem 0;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+/* Traffic Lights (Mac Dots) */
+.rich-content :deep(pre)::before {
+  content: "";
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: #ff5f56; /* Red */
+  box-shadow: 1.25rem 0 0 #ffbd2e, 2.5rem 0 0 #27c93f; /* Yellow & Green */
+  z-index: 10;
+}
+
+.rich-content :deep(code) {
+  background: rgba(255,255,255,0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.375rem;
+  color: var(--accent-primary);
+  font-family: monospace;
+  font-size: 0.95em;
+}
+
+.rich-content :deep(pre code) {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: #e2e8f0;
+  display: block;
+  overflow-x: auto;
+  white-space: pre;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.7;
 }
 </style>

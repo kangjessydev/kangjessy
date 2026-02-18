@@ -69,6 +69,9 @@ export interface ProjectType {
   isMicro?: boolean;
   badge?: string;
   workflow?: { title: string; description: string }[];
+  process?: { title: string; description: string }[];
+  faq?: { question: string; answer: string }[];
+  technologies?: string[];
 }
 
 export interface ServiceData {

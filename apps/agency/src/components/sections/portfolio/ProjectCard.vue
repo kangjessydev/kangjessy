@@ -125,24 +125,7 @@ export default {
 
 <script setup lang="ts">
 import {
-  Folder as FolderIcon,
   ArrowUpRight as ArrowUpRightIcon,
-  Globe,
-  ShieldCheck,
-  ShoppingBag,
-  BarChart3,
-  Building2,
-  Monitor,
-  MessageCircle,
-  UserCheck,
-  ShoppingCart,
-  BookOpen,
-  ShieldAlert,
-  Leaf,
-  Boxes,
-  Cpu,
-  MapPinned,
-  Hotel,
   Image as ImageIcon,
 } from "lucide-vue-next";
 import { urlFor } from "../../../services/portfolioService";
@@ -182,26 +165,5 @@ const getImageUrl = (source: any) => {
   }
 };
 
-const getIconComponent = (name: string | undefined) => {
-  if (!name) return FolderIcon;
-  const icons: Record<string, any> = {
-    Globe,
-    ShieldCheck,
-    ShoppingBag,
-    BarChart3,
-    Building2,
-    Monitor,
-    MessageCircle,
-    UserCheck,
-    ShoppingCart,
-    BookOpen,
-    Hotel,
-    ShieldAlert,
-    Leaf,
-    Boxes,
-    Cpu,
-    MapPinned,
-  };
-  return icons[name] || FolderIcon;
-};
+
 </script>

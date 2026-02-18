@@ -729,10 +729,7 @@
         <div class="py-5 px-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-bg-primary/50 border-t border-border-color/30 backdrop-blur-md">
           <!-- Reset Selection Button (Desktop Only) -->
           <button
-            v-if="
-              (sheetMode === 'type' && selectedType) ||
-              (sheetMode === 'feature' && selectedFeatures.length > 0)
-            "
+            v-if="selectedFeatures.length > 0"
             @click="handleReset"
             class="hidden sm:flex items-center gap-2 group px-4 py-2 rounded-lg hover:bg-red-500/5 transition-all active:scale-95"
           >

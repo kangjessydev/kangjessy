@@ -444,7 +444,7 @@
                 <div
                   class="w-10 h-10 bg-accent-primary text-white rounded-xl flex items-center justify-center font-extrabold shrink-0"
                 >
-                  {{ (idx + 1).toString().padStart(2, "0") }}
+                  {{ (Number(idx) + 1).toString().padStart(2, "0") }}
                 </div>
                 <div class="space-y-1">
                   <h4 class="font-bold text-text-primary">{{ step.title }}</h4>
@@ -459,13 +459,13 @@
           </section>
 
           <!-- Technology -->
-          <section v-if="selectedPkg?.technologies || service.technologies">
+          <section v-if="(selectedPkg as any)?.technologies || service.technologies">
             <h3 class="text-2xl font-bold mb-5 text-text-primary">
               Stack Used
             </h3>
             <div class="flex flex-wrap gap-2.5">
               <span
-                v-for="tech in selectedPkg?.technologies || service.technologies"
+                v-for="tech in (selectedPkg as any)?.technologies || service.technologies"
                 :key="tech"
                 class="px-4 py-2 bg-bg-secondary border border-border-color rounded-lg text-[0.85rem] text-text-secondary font-medium"
               >
@@ -563,7 +563,7 @@
           </section>
 
           <!-- FAQ -->
-          <section v-if="(selectedPkg?.faq && selectedPkg.faq.length) || (service.faq && service.faq.length)">
+          <section v-if="((selectedPkg as any)?.faq && (selectedPkg as any).faq.length) || (service.faq && service.faq.length)">
             <h3 class="text-2xl font-bold mb-5 text-text-primary">
               Common Questions
             </h3>
@@ -573,7 +573,7 @@
                 :key="index"
                 :title="item.question"
                 :isOpen="activeFaqIndex === index"
-                @toggle="toggleFaq(index)"
+                @toggle="toggleFaq(Number(index))"
               >
                 <p>{{ item.answer }}</p>
               </AccordionItem>
@@ -625,8 +625,8 @@
                   >
                     {{ formatCurrency(totalInvestment) }}
                   </span>
-                  <p 
-                    v-if="selectedFeatures.length"
+                  <p
+                    v-if="selectedFeatures.length > 0"
                     class="mt-2 text-[10px] text-accent-primary font-bold uppercase tracking-wider"
                   >
                     + {{ selectedFeatures.length }} Fitur Tambahan

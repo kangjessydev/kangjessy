@@ -163,7 +163,7 @@ export function useOrderCalculator() {
 
     // Logic: What would this cost if built manually?
     // 1. Identify Foundation Fee based on project category
-    const isSystem = currentType.value.serviceId === 'business-system' || currentType.value.serviceId === 'saas-accelerator';
+    const isSystem = currentType.value.serviceId === 'maintenance-custom';
     const foundationFee = isSystem ? defaultConfig.foundationPrices.system : defaultConfig.foundationPrices.web;
 
     // 2. Sum of all features that are included in this bundle

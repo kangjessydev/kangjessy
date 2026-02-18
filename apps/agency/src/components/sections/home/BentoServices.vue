@@ -16,6 +16,7 @@
           :key="service.id"
           :service="service"
           :project-types="projectTypes"
+          :available-features="features"
           :custom-class="getGridClass(index) + ' min-h-[400px]'"
         />
       </div>
@@ -49,6 +50,7 @@
             :key="'mob-' + service.id"
             :service="service"
             :project-types="projectTypes"
+            :available-features="features"
             custom-class="snap-center shrink-0 w-[calc(100%-20px)] shadow-lg"
           />
         </div>
@@ -82,6 +84,7 @@ import {
   pricingService,
   type ServiceData,
   type ProjectType,
+  type Feature,
 } from "../../../services/pricingService";
 
 const props = defineProps({
@@ -112,14 +115,17 @@ const currentSlide = ref(0);
 const sliderRef = ref<HTMLElement | null>(null);
 const services = ref<ServiceData[]>([]);
 const projectTypes = ref<ProjectType[]>([]);
+const features = ref<Feature[]>([]);
 
 onMounted(async () => {
-  const [svcs, projs] = await Promise.all([
+  const [svcs, projs, feats] = await Promise.all([
     pricingService.getAllServices(),
     pricingService.getAllProjectTypes(),
+    pricingService.getAllFeatures(),
   ]);
   services.value = svcs;
   projectTypes.value = projs;
+  features.value = feats;
 });
 
 const formattedTitle = computed(() => {

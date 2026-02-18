@@ -231,10 +231,7 @@
 
           <!-- Extra Features (Enhance Your Solution) - Only for Foundation -->
           <section
-            v-if="
-              relevantFeatures.length &&
-              (selectedPkg?.id.startsWith('foundation-') || service.id === 'maintenance-custom')
-            "
+            v-if="relevantFeatures.length"
             class="space-y-8 pb-10 border-b border-border-color/20 mb-10"
           >
             <div class="flex items-center justify-between">
@@ -320,8 +317,8 @@
             </div>
           </section>
 
-          <!-- What's Included -->
-          <section v-if="!(selectedPkg?.detailedFeatures || service.detailedFeatures)">
+          <!-- What's Included (Simple List - only when NO features at all) -->
+          <section v-if="allFeaturesList.length === 0 && (service.included?.length || selectedPkg?.features?.length)">
             <h3 class="text-2xl font-bold mb-5 text-text-primary">
               What's Included
             </h3>
@@ -337,9 +334,9 @@
             </ul>
           </section>
 
-          <!-- Detailed Features (Animated Bento) -->
+          <!-- Detailed Features (Animated Bento) - shows when features exist from relational mapping -->
           <section
-            v-else
+            v-if="allFeaturesList.length > 0"
             class="space-y-10 border-t border-border-color/20 pt-10 mt-10 overflow-hidden"
           >
             <div class="flex flex-col gap-2">
@@ -1262,13 +1259,29 @@ const totalInvestment = computed(() => {
   return total;
 });
 
+// Build features list from relational mapping (relevantTo includes project type ID)
+const pkgRelevantFeatures = computed(() => {
+  if (!selectedPkg.value) return [];
+  return features.value.filter(f => f.relevantTo?.includes(selectedPkg.value!.id));
+});
+
 const allFeaturesList = computed(() => {
-  if (selectedPkg.value?.detailedFeatures) return selectedPkg.value.detailedFeatures;
-  if (service.value?.detailedFeatures) return service.value.detailedFeatures;
+  // 1. If package has detailedFeatures, use them
+  if (selectedPkg.value?.detailedFeatures?.length) return selectedPkg.value.detailedFeatures;
+  if (service.value?.detailedFeatures?.length) return service.value.detailedFeatures;
   
-  // Fallback if only simple features exist
-  const simpleFeatures = selectedPkg.value?.features || service.value?.packageFeatures || [];
-  return simpleFeatures.map(f => ({ title: f, items: [], icon: undefined }));
+  // 2. If package has simple features, use them
+  const simpleFeatures = selectedPkg.value?.features || [];
+  if (simpleFeatures.length > 0) {
+    return simpleFeatures.map(f => ({ title: f, items: [], icon: undefined }));
+  }
+
+  // 3. Auto-generate from relational feature mapping
+  return pkgRelevantFeatures.value.map(f => ({
+    title: f.name,
+    items: [f.desc],
+    icon: undefined
+  }));
 });
 
 const displayedFeatures = computed(() => allFeaturesList.value.slice(0, 5));
@@ -1301,8 +1314,17 @@ const relevantFeatures = computed(() => {
   if (!service.value) return [];
   // If maintenance service, show ALL features
   if (service.value.id === 'maintenance-custom') return features.value;
-  // Use 'relevantTo' from dynamic feature service
-  return features.value.filter((f) => f.relevantTo.includes(service.value!.id));
+  // Filter by selected project type ID (from relational mapping)
+  if (selectedPkg.value) {
+    return features.value.filter(f => f.relevantTo?.includes(selectedPkg.value!.id));
+  }
+  // Fallback: show all features for any project type within this service
+  const serviceProjectIds = allProjectTypes.value
+    .filter(p => p.serviceId === service.value!.id)
+    .map(p => p.id);
+  return features.value.filter(f => 
+    f.relevantTo?.some(rt => serviceProjectIds.includes(rt) || rt === 'maintenance-custom')
+  );
 });
 const activeFaqIndex = ref<number | null>(null);
 const isPackagesSheetOpen = ref(false);

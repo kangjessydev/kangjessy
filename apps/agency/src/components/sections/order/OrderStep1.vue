@@ -983,10 +983,10 @@ const filteredFeatures = computed(() => {
     // 'Semua' is active.
     if (
       selectedTypeData.value?.id !== "fitur-rakitan" &&
-      selectedTypeData.value?.serviceId
+      selectedTypeData.value?.id
     ) {
       result = result.filter((f) =>
-        f.relevantTo?.includes(selectedTypeData.value!.serviceId),
+        f.relevantTo?.includes(selectedTypeData.value!.id),
       );
     }
   }

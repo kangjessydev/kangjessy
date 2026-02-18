@@ -160,9 +160,7 @@
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import {
-  Brain as BrainIcon,
   Zap as ZapIcon,
-  Cpu as CpuIcon,
   Monitor as MonitorIcon,
   Check as CheckIcon,
   Settings as SettingsIcon,
@@ -171,6 +169,7 @@ import {
   Flame,
   Layers as LayersIcon,
   Rocket as RocketIcon,
+  Globe as GlobeIcon,
 } from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
 import type { ServiceData, ProjectType } from "../../services/pricingService";
@@ -192,6 +191,10 @@ export default defineComponent({
       type: Array as () => ProjectType[],
       default: () => [],
     },
+    availableFeatures: {
+      type: Array as () => any[],
+      default: () => [],
+    },
     customClass: {
       type: String,
       default: "",
@@ -211,37 +214,49 @@ export default defineComponent({
         (p) => p.serviceId === props.service.id && p.basePrice > 0,
       );
 
-      // 2. If no packages, fallback to manual price in service data
-      if (relatedPackages.length === 0) {
+      // 2. Specialized logic for Maintenance or services with no fixed packages
+      if (props.service.id === 'maintenance-custom' || relatedPackages.length === 0) {
+        // Find cheapest feature relevant to this service
+        const relevantFeatures = (props.availableFeatures || []).filter(
+          f => f.relevantTo?.includes(props.service.id) && f.price > 0
+        );
+
+        if (relevantFeatures.length > 0) {
+          const cheapestFeature = [...relevantFeatures].sort((a, b) => a.price - b.price)[0];
+          return {
+            display: cheapestFeature.price,
+            original: null
+          };
+        }
+
+        // Final fallback to service price or 0
         return {
           display: props.service.price || 0,
           original: props.service.originalPrice || null,
         };
       }
 
-      // 3. Sort by Base Price (Ascending)
+      // 3. Normal Service: Sort by Base Price (Ascending)
       const sortedByPrice = [...relatedPackages].sort(
         (a, b) => a.basePrice - b.basePrice,
       );
       const cheapest = sortedByPrice[0];
 
-      if (!cheapest) {
-        return { display: 0, original: null };
-      }
-
       return {
-        display: cheapest.basePrice,
-        original: cheapest.originalPrice || null,
+        display: cheapest ? cheapest.basePrice : 0,
+        original: cheapest?.originalPrice || null,
       };
     });
 
-    const getIcon = (iconName: string) => {
+    const getIcon = (iconName: any) => {
+      // If it's already a component object, return it
+      if (typeof iconName !== 'string') return iconName;
+
       const icons: Record<string, any> = {
-        Brain: BrainIcon,
-        Zap: ZapIcon,
-        Cpu: CpuIcon,
-        Monitor: MonitorIcon,
+        Globe: GlobeIcon,
         Settings: SettingsIcon,
+        Monitor: MonitorIcon,
+        Zap: ZapIcon,
         ShoppingCart: CartIcon,
         Layers: LayersIcon,
         Rocket: RocketIcon,

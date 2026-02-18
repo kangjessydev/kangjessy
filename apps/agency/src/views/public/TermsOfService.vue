@@ -13,7 +13,7 @@
 
         <section>
           <h2 class="text-2xl font-bold text-text-primary mt-8 mb-4">2. Services</h2>
-          <p>KangJessy Agency provides web development, automation, and digital asset services. Details of specific projects will be outlined in separate project agreements.</p>
+          <p>KangJessy Agency provides web development and maintenance services. Details of specific projects will be outlined in separate project agreements.</p>
         </section>
 
         <section>

@@ -38,212 +38,228 @@ export interface StyleOption {
 }
 
 export const projectTypes: ProjectType[] = [
-  // WEB & LANDING
+  // WEBSITE HIGH-CONVERSION
   {
-    id: "landing-express",
+    id: "authority-personal-brand",
     serviceId: "website-high-conversion",
-    name: "Landing Page Express",
-    basePrice: 3000000,
-    desc: "Single page premium untuk konversi maksimal & marketing.",
+    name: "The Authority Personal Brand",
+    basePrice: 1500000,
+    desc: "Bangun kredibilitas sebagai profesional atau coach dengan website personal yang powerful & terpercaya.",
     category: "Web & Landing",
-    deliveryTime: "1-2 Weeks",
-    maxPages: "1 Page",
-    revisions: "2x Minor, 1x Mayor",
-    features: ["Conversion Focused", "Mobile Responsive", "Social Media Integration", "Fast Performance", "Basic SEO"],
-    detailedFeatures: [
-      { 
-        title: "High Conversion Design", 
-        icon: "Zap", 
-        items: ["Psychology-based layout for better conversion", "Clear Call-to-Action (CTA) placement", "Mobile-first responsive approach"] 
-      },
-      { 
-        title: "Performance Optimized", 
-        icon: "Rocket", 
-        items: ["Core Web Vitals ready (Green score)", "Automated lazy loading for assets", "Lightweight code for rapid loading"] 
-      }
-    ],
+    features: [],
     process: [
-      { title: "Discovery", description: "Sesi konsolidasi untuk menentukan tujuan utama landing page Anda." },
-      { title: "Rapid Development", description: "Proses desain UI dan coding yang dilakukan secara paralel untuk kecepatan." },
-      { title: "Launch & Optimize", description: "Deployment ke server production dan setup dasar analitik." }
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "Copywriting & Storytelling", description: "Penyusunan narasi persuasif sesuai brand voice." },
+      { title: "UI/UX High-Conversion Design", description: "Desain visual fokus pada user journey & konversi." },
+      { title: "Tech Stack Architecture", description: "Setup environment (Vue, Sanity, Supabase, Laravel, dll)." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Content Entry & CMS Setup", description: "Input data awal & konfigurasi akses dashboard klien." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
     ],
     faq: [
-      { question: "Berapa lama proses pembuatan landing page?", answer: "Untuk paket Express, pengerjaan memakan waktu 1-2 minggu setelah data aset kami terima lengkap." },
-      { question: "Apakah saya perlu beli hosting & domain sendiri?", answer: "Harganya belum termasuk hosting/domain, tapi kami bisa membantu proses setup-nya secara gratis agar bapak terima jadi." },
-      { question: "Bisa bayar bertahap (DP)?", answer: "Bisa pak! Standar pembayaran kami adalah 50% di awal dan pelunasan saat website siap launching." }
+      { question: "Apakah saya bisa update konten sendiri?", answer: "Tentu, kami sediakan CMS/Admin Dashboard yang user-friendly." },
+      { question: "Bisa integrasi ke sistem booking luar?", answer: "Bisa, kami bisa hubungkan via API ke sistem eksternal pilihan Anda." },
+      { question: "Bagaimana jika ada perubahan copywriting?", answer: "Kami berikan revisi copywriting sesuai paket untuk memastikan narasi tetap tajam." },
     ],
-    technologies: ["Vue.js 3", "Tailwind CSS", "Vercel", "Google Sheets API"]
   },
   {
-    id: "company-profile",
+    id: "conversion-landing-page",
     serviceId: "website-high-conversion",
-    name: "Company Profile Pro",
-    basePrice: 5000000,
-    desc: "Website company profile modern untuk branding instansi/bisnis.",
+    name: "Conversion-Focused Landing Page",
+    basePrice: 1500000,
+    desc: "Landing page yang dirancang khusus untuk menarik leads dari iklan dan mengubah pengunjung jadi pembeli.",
     category: "Web & Landing",
-    deliveryTime: "2-4 Weeks",
-    maxPages: "5-10 Pages",
-    revisions: "2x Minor, 1x Mayor",
-    features: ["CMS Management", "Dynamic Services Page", "Blog System", "Advanced UI Components", "SEO Optimized"],
-    detailedFeatures: [
-      { 
-        title: "Brand Identity Hub", 
-        icon: "Palette", 
-        items: ["Custom theme sesuai brand guidelines", "Konsistensi visual di seluruh halaman", "Tipografi dan palet warna profesional"] 
-      },
-      { 
-        title: "CMS Management", 
-        icon: "Layers", 
-        items: ["Update konten (teks/gambar) tanpa coding", "Manajemen data layanan & portofolio", "Sistem blog untuk konten marketing"] 
-      },
-      { 
-        title: "Scalable Architecture", 
-        icon: "Globe", 
-        items: ["Multi-page support (About, Services, Contact)", "Pondasi SEO yang kuat di tiap halaman", "Teknologi modern yang mudah di-upscale"] 
-      }
-    ],
+    features: [],
     process: [
-      { title: "Strategy & Sitemap", description: "Pemetaan struktur halaman dan alur informasi yang efektif." },
-      { title: "Design Phase", description: "Pembuatan mockup desain UI high-fidelity untuk review bapak." },
-      { title: "CMS Integration", description: "Pembangunan sistem backend agar bapak bisa edit konten sendiri." },
-      { title: "Training & Go-Live", description: "Panduan cara penggunaan admin panel sebelum website diluncurkan." }
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "Copywriting & Storytelling", description: "Penyusunan narasi persuasif sesuai brand voice." },
+      { title: "UI/UX High-Conversion Design", description: "Desain visual fokus pada user journey & konversi." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Speed & Performance Tuning", description: "Optimasi Core Web Vitals (Lighthouse Hijau)." },
+      { title: "QA & Stress Testing", description: "Uji coba fungsionalitas di berbagai perangkat." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
     ],
     faq: [
-      { question: "Apakah saya bisa edit isi website sendiri?", answer: "Tentu pak! Kami sertakan Admin Panel (CMS) yang user-friendly sehingga bapak bisa ganti gambar atau teks tanpa perlu coding." },
-      { question: "Kalau ada bug setelah website jadi bagaimana?", answer: "Bapak dapat garansi pembersihan bug selamanya jika website tidak diotak-atik kodenya oleh pihak ketiga." },
-      { question: "Apakah websitenya aman dari hacker?", answer: "Kami mengimplementasikan standar keamanan Supabase & sistem auth terbaru untuk menjaga data perusahaan tetap aman." }
+      { question: "Bagaimana jika ada perubahan copywriting?", answer: "Kami berikan revisi copywriting sesuai paket untuk memastikan narasi tetap tajam." },
+      { question: "Apakah aman dari serangan hacker?", answer: "Kami menggunakan enkripsi SSL dan tech stack modern yang minim celah keamanan." },
+      { question: "Apakah tracking Pixel sudah terpasang?", answer: "Ya, kami pasang Google Analytics & Meta Pixel untuk kebutuhan marketing." },
     ],
-    technologies: ["Nuxt 3", "Supabase", "Tailwind CSS", "TypeScript", "Sanity CMS"]
   },
   {
-    id: "sales-funnel",
+    id: "modern-corporate-profile",
     serviceId: "website-high-conversion",
-    name: "Sales Funnel Gold",
-    icon: "BarChart3",
-    basePrice: 4000000,
-    desc: "Website fokus pada psikologi penjualan & lead generation.",
+    name: "Modern Corporate Profile",
+    basePrice: 1500000,
+    desc: "Tampilkan profesionalisme perusahaan Anda dengan company profile modern yang memukau klien baru.",
     category: "Web & Landing",
-    deliveryTime: "2 Weeks",
-    maxPages: "3-5 specialized sections",
-    revisions: "2x Minor, 1x Mayor",
-    features: ["Form Integration", "A/B Testing Ready", "Email Marketing Setup", "High-speed loading", "Copywriting focus"],
-    detailedFeatures: [
-      { title: "Lead Capture", icon: "Check", items: ["Custom forms with validation", "Direct email notifications", "Google Sheets leads sync"] }
-    ],
+    features: [],
     process: [
-      { title: "Copy Review", description: "Bantu optimasi teks agar lebih persuasif." },
-      { title: "Setup Automasi", description: "Integrasi leads ke email bapak otomatis." }
-    ],
-    faq: [{ question: "Aman dari spam?", answer: "Sudah include Google reCAPTCHA v3 pak." }]
-  },
-  {
-    id: "personal-branding",
-    serviceId: "website-high-conversion",
-    name: "Personal Portfolio Pro",
-    icon: "UserCheck",
-    basePrice: 3500000,
-    desc: "Tingkatkan kredibilitas profesional bapak dengan portofolio elegan.",
-    category: "Web & Landing",
-    deliveryTime: "1-2 Weeks",
-    maxPages: "3 Pages",
-    revisions: "2x Minor, 1x Mayor",
-    features: ["Project Gallery", "Resume Download", "Testimonial Section", "Dark/Light Mode", "Social Links"],
-    detailedFeatures: [
-      { title: "Visual Story", icon: "Palette", items: ["Showcase project bapak dengan foto HD", "Interaksi animasi yang halus", "Tipografi personal yang kuat"] }
-    ],
-    process: [
-      { title: "Asset Gathering", description: "Pengumpulan foto dan biodata profesional bapak." }
-    ],
-    faq: [{ question: "Bisa ganti foto sendiri?", answer: "Bisa pak, kami ajarkan cara updatenya." }]
-  },
-  {
-    id: "ecommerce-lite",
-    serviceId: "website-high-conversion",
-    name: "E-Commerce Catalog",
-    icon: "ShoppingBag",
-    basePrice: 7500000,
-    desc: "Toko online simpel untuk display produk (order via WA/Link).",
-    category: "Web & Landing",
-    deliveryTime: "3-5 Weeks",
-    maxPages: "Unlimited Products",
-    revisions: "2x Minor, 1x Mayor",
-    features: ["Product Filter", "Search Function", "WhatsApp Order integration", "Dashboard Admin", "Inventory Management"],
-    detailedFeatures: [
-      { title: "Shop Dashboard", icon: "Monitor", items: ["Kelola produk, harga & stok", "Cetak laporan penjualan harian", "Otomasi link checkout WA"] }
-    ],
-    process: [
-      { title: "Database Setup", description: "Inisialisasi kategori & variasi produk." }
-    ],
-    faq: [{ question: "Bisa bayar lewat BCA/Mandiri otomatis?", answer: "Bisa pak, tapi perlu integrasi Midtrans (biaya terpisah)." }]
-  },
-  {
-    id: "news-blog-pro",
-    serviceId: "website-high-conversion",
-    name: "News Portal / Blog Pro",
-    icon: "BookOpen",
-    basePrice: 6000000,
-    desc: "Website portal berita atau blog majalah dengan load super cepat.",
-    category: "Web & Landing",
-    deliveryTime: "3 Weeks",
-    maxPages: "Unlimited Articles",
-    revisions: "2x Minor, 1x Mayor",
-    features: ["Advertisement Slots", "Category System", "Writer Dashboard", "SEO Silo Structure", "Instant Search"],
-    detailedFeatures: [
-      { title: "Editor Hub", icon: "Layers", items: ["Sistem penulis banyak user", "Editor teks seperti MS Word", "Manajemen tag & kategori"] }
-    ],
-    process: [
-      { title: "Optimization", description: "Tuning server agar kuat menampung ribuan pembaca." }
-    ],
-    faq: [{ question: "Aman dari trafik tinggi?", answer: "Pasti pak! Kita pakai static rendering (SSG/ISR)." }]
-  },
-  {
-    id: "listing-directory",
-    serviceId: "website-high-conversion",
-    name: "Property / Directory",
-    icon: "Globe",
-    basePrice: 8500000,
-    desc: "Sistem listing properti, direktori bisnis, atau katalog sewa.",
-    category: "Web & Landing",
-    deliveryTime: "4-6 Weeks",
-    maxPages: "Complex Data Schema",
-    revisions: "2x Minor, 1x Mayor",
-    features: ["Map Integration", "Advanced Advanced Filter", "User Submissions", "Saved Items", "Booking Interest"],
-    detailedFeatures: [
-      { title: "Directory Core", icon: "ShieldCheck", items: ["Pencarian lokasi berbasis map", "Validasi input data otomatis", "Dashboard monitoring listing"] }
-    ],
-    process: [
-      { title: "Logic Design", description: "Penyusunan filter data yang paling efektif untuk klien bapak." }
-    ],
-    faq: [{ question: "Bisa tambah map?", answer: "Include integrasi Google Maps / Mapbox pak." }]
-  },
-  // THE FOUNDATION (Starter Kit - Custom Build)
-  {
-    id: "foundation-web",
-    serviceId: "website-high-conversion",
-    name: "The Foundation (Web)",
-    basePrice: 1000000,
-    desc: "Starter kit website dengan fitur dasar (Auth, Blog, SEO). Cocok untuk klien yang ingin custom fitur sendiri.",
-    category: "The Foundation",
-    features: ["Clean Architecture", "Basic Auth System", "SEO Config Ready", "Responsive Layout", "Ultra-fast Loading"],
-    detailedFeatures: [
-      { 
-        title: "Frontend Core", 
-        icon: "Layers", 
-        items: ["Next.js/Vue 3 starter template", "Tailwind CSS integration", "Mobile-first responsive design"] 
-      },
-      { 
-        title: "Auth & SEO", 
-        icon: "ShieldCheck", 
-        items: ["Basic login/register logic", "Meta tag manager", "Sitemap & robots.txt generator"] 
-      }
-    ],
-    process: [
-      { title: "Boilerplate Setup", description: "Instalasi pondasi kode ke repositori bapak." },
-      { title: "Basic Integration", description: "Penyambungan database dan sistem autentikasi dasar." }
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "UI/UX High-Conversion Design", description: "Desain visual fokus pada user journey & konversi." },
+      { title: "Tech Stack Architecture", description: "Setup environment (Vue, Sanity, Supabase, Laravel, dll)." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Content Entry & CMS Setup", description: "Input data awal & konfigurasi akses dashboard klien." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
     ],
     faq: [
-      { question: "Apa bedanya Foundation dengan paket Express?", answer: "Foundation hanya berisi 'rangka' dan fitur dasar bapak. Bapak yang merakit fitur tambahannya sendiri atau dengan bantuan tim kami." }
-    ]
+      { question: "Apakah saya bisa update konten sendiri?", answer: "Tentu, kami sediakan CMS/Admin Dashboard yang user-friendly." },
+      { question: "Bisa multi-bahasa?", answer: "Bisa, sistem kami mendukung skalabilitas bahasa tanpa merusak desain." },
+      { question: "Bisa tambah fitur lowongan kerja?", answer: "Bisa, kami sediakan modul khusus untuk management pelamar." },
+    ],
+  },
+  {
+    id: "digital-catalog",
+    serviceId: "website-high-conversion",
+    name: "Digital Catalog",
+    basePrice: 1500000,
+    desc: "Pamerkan produk Anda secara visual dan arahkan pelanggan langsung order via WhatsApp.",
+    category: "Web & Landing",
+    features: [],
+    process: [
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "Tech Stack Architecture", description: "Setup environment (Vue, Sanity, Supabase, Laravel, dll)." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Content Entry & CMS Setup", description: "Input data awal & konfigurasi akses dashboard klien." },
+      { title: "QA & Stress Testing", description: "Uji coba fungsionalitas di berbagai perangkat." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
+    ],
+    faq: [
+      { question: "Apakah saya bisa update konten sendiri?", answer: "Tentu, kami sediakan CMS/Admin Dashboard yang user-friendly." },
+      { question: "Bisakah katalog diubah jadi e-commerce nanti?", answer: "Sangat bisa, struktur database kami scalable untuk upgrade ke fitur checkout." },
+      { question: "Apakah aman dari serangan hacker?", answer: "Kami menggunakan enkripsi SSL dan tech stack modern yang minim celah keamanan." },
+    ],
+  },
+  {
+    id: "educational-course-hub",
+    serviceId: "website-high-conversion",
+    name: "Educational/Course Hub",
+    basePrice: 1500000,
+    desc: "Platform untuk menjual materi kursus, webinar, atau konten edukasi secara profesional.",
+    category: "Web & Landing",
+    features: [],
+    process: [
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "Copywriting & Storytelling", description: "Penyusunan narasi persuasif sesuai brand voice." },
+      { title: "Tech Stack Architecture", description: "Setup environment (Vue, Sanity, Supabase, Laravel, dll)." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Content Entry & CMS Setup", description: "Input data awal & konfigurasi akses dashboard klien." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
+    ],
+    faq: [
+      { question: "Apakah saya bisa update konten sendiri?", answer: "Tentu, kami sediakan CMS/Admin Dashboard yang user-friendly." },
+      { question: "Bisa integrasi ke sistem booking luar?", answer: "Bisa, kami bisa hubungkan via API ke sistem eksternal pilihan Anda." },
+      { question: "Apakah file download bisa diproteksi?", answer: "Ya, kami bisa setting hanya user yang mengisi data yang bisa mendownload." },
+    ],
+  },
+  {
+    id: "seo-powerhouse",
+    serviceId: "website-high-conversion",
+    name: "The SEO Powerhouse",
+    basePrice: 1500000,
+    desc: "Website yang dibangun dari nol untuk mendominasi halaman pertama Google secara organik.",
+    category: "Web & Landing",
+    features: [],
+    process: [
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "Copywriting & Storytelling", description: "Penyusunan narasi persuasif sesuai brand voice." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Advanced SEO Implementation", description: "Setup technical SEO, schema, & metadata." },
+      { title: "Speed & Performance Tuning", description: "Optimasi Core Web Vitals (Lighthouse Hijau)." },
+      { title: "QA & Stress Testing", description: "Uji coba fungsionalitas di berbagai perangkat." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
+    ],
+    faq: [
+      { question: "Apakah website ini SEO friendly?", answer: "Ya, semua website dibangun dengan struktur HTML5 yang bersih dan terbaca Google." },
+      { question: "Apa bedanya dengan WordPress biasa?", answer: "Website kami lebih ringan, aman dari malware, dan performa speed jauh lebih tinggi." },
+      { question: "Berapa lama artikel SEO bisa masuk halaman satu?", answer: "Tergantung kompetisi, tapi secara teknis kami optimasi struktur agar secepat mungkin terindeks." },
+    ],
+  },
+  {
+    id: "event-webinar-landing",
+    serviceId: "website-high-conversion",
+    name: "Event & Webinar Landing",
+    basePrice: 1500000,
+    desc: "Halaman pendaftaran acara atau webinar yang cepat, ringkas, dan siap terima ratusan peserta.",
+    category: "Web & Landing",
+    features: [],
+    process: [
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "UI/UX High-Conversion Design", description: "Desain visual fokus pada user journey & konversi." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Speed & Performance Tuning", description: "Optimasi Core Web Vitals (Lighthouse Hijau)." },
+      { title: "QA & Stress Testing", description: "Uji coba fungsionalitas di berbagai perangkat." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
+    ],
+    faq: [
+      { question: "Bisa integrasi ke sistem booking luar?", answer: "Bisa, kami bisa hubungkan via API ke sistem eksternal pilihan Anda." },
+      { question: "Apakah aman dari serangan hacker?", answer: "Kami menggunakan enkripsi SSL dan tech stack modern yang minim celah keamanan." },
+      { question: "Apakah tracking Pixel sudah terpasang?", answer: "Ya, kami pasang Google Analytics & Meta Pixel untuk kebutuhan marketing." },
+    ],
+  },
+  {
+    id: "portfolio-showcase",
+    serviceId: "website-high-conversion",
+    name: "Portfolio Showcase",
+    basePrice: 1500000,
+    desc: "Showcase visual berkelas tinggi untuk kreator, fotografer, atau desainer yang ingin tampil beda.",
+    category: "Web & Landing",
+    features: [],
+    process: [
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "UI/UX High-Conversion Design", description: "Desain visual fokus pada user journey & konversi." },
+      { title: "Tech Stack Architecture", description: "Setup environment (Vue, Sanity, Supabase, Laravel, dll)." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Speed & Performance Tuning", description: "Optimasi Core Web Vitals (Lighthouse Hijau)." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
+    ],
+    faq: [
+      { question: "Apakah saya bisa update konten sendiri?", answer: "Tentu, kami sediakan CMS/Admin Dashboard yang user-friendly." },
+      { question: "Apa bedanya dengan WordPress biasa?", answer: "Website kami lebih ringan, aman dari malware, dan performa speed jauh lebih tinggi." },
+      { question: "Apakah aman dari serangan hacker?", answer: "Kami menggunakan enkripsi SSL dan tech stack modern yang minim celah keamanan." },
+    ],
+  },
+  {
+    id: "local-business-maps",
+    serviceId: "website-high-conversion",
+    name: "Local Business Maps",
+    basePrice: 1500000,
+    desc: "Website khusus bisnis lokal seperti resto, klinik, atau salon — lengkap dengan peta lokasi & jam operasional.",
+    category: "Web & Landing",
+    features: [],
+    process: [
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "Tech Stack Architecture", description: "Setup environment (Vue, Sanity, Supabase, Laravel, dll)." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Advanced SEO Implementation", description: "Setup technical SEO, schema, & metadata." },
+      { title: "QA & Stress Testing", description: "Uji coba fungsionalitas di berbagai perangkat." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
+    ],
+    faq: [
+      { question: "Apakah website ini SEO friendly?", answer: "Ya, semua website dibangun dengan struktur HTML5 yang bersih dan terbaca Google." },
+      { question: "Apakah ada biaya bulanan?", answer: "Hanya biaya hosting & domain tahunan. Tidak ada biaya berlangganan fitur kami." },
+      { question: "Apakah tracking Pixel sudah terpasang?", answer: "Ya, kami pasang Google Analytics & Meta Pixel untuk kebutuhan marketing." },
+    ],
+  },
+  {
+    id: "link-in-bio-pro",
+    serviceId: "website-high-conversion",
+    name: "Link-in-Bio Pro",
+    basePrice: 1500000,
+    desc: "Ganti Linktree dengan halaman branding Anda sendiri — satu link untuk semua sosmed, data, dan portofolio.",
+    category: "Web & Landing",
+    features: [],
+    process: [
+      { title: "Business & Brand Strategy", description: "Konsultasi mendalam hubungan web dengan model bisnis." },
+      { title: "UI/UX High-Conversion Design", description: "Desain visual fokus pada user journey & konversi." },
+      { title: "Core Development", description: "Proses pengkodean fitur utama & integrasi sistem." },
+      { title: "Speed & Performance Tuning", description: "Optimasi Core Web Vitals (Lighthouse Hijau)." },
+      { title: "Deployment & Handover", description: "Peluncuran website & sesi training penggunaan dashboard." },
+    ],
+    faq: [
+      { question: "Apakah link sosmed bisa di-update berkala?", answer: "Bisa, Anda punya dashboard khusus untuk kelola semua link aggregator." },
+      { question: "Apakah ada biaya bulanan?", answer: "Hanya biaya hosting & domain tahunan. Tidak ada biaya berlangganan fitur kami." },
+      { question: "Apakah tracking Pixel sudah terpasang?", answer: "Ya, kami pasang Google Analytics & Meta Pixel untuk kebutuhan marketing." },
+    ],
   },
   // MAINTENANCE & CUSTOM FEATURES
   {
@@ -259,90 +275,31 @@ export const projectTypes: ProjectType[] = [
 ];
 
 export const availableFeatures: AvailableFeature[] = [
-  {
-    id: "seo",
-    name: "Advanced SEO pro",
-    price: 1000000,
-    desc: "Optimasi meta-tag, sitemap, dan Google Search Console.",
-    relevantTo: ["website-high-conversion", "maintenance-custom"],
-  },
-  {
-    id: "blog",
-    name: "Blog System",
-    price: 1500000,
-    desc: "Fitur posting artikel untuk konten marketing.",
-    relevantTo: ["website-high-conversion", "maintenance-custom"],
-  },
-  {
-    id: "pwa",
-    name: "PWA (Mobile Install)",
-    price: 2000000,
-    desc: "Website bisa diinstall di HP seperti aplikasi asli.",
-    relevantTo: ["website-high-conversion", "maintenance-custom"],
-  },
-  {
-    id: "speed-tuning",
-    name: "Extreme Speed Tuning",
-    price: 1000000,
-    desc: "Optimasi score Lighthouse hingga 95+.",
-    relevantTo: ["website-high-conversion", "maintenance-custom"],
-  },
-  {
-    id: "multi-platform",
-    name: "Multi-Platform Sync",
-    price: 2500000,
-    desc: "Hubungkan bot ke WA, Telegram, dan Email sekaligus.",
-    relevantTo: ["maintenance-custom"],
-  },
-  {
-    id: "scheduler",
-    name: "Custom Scheduler",
-    price: 1500000,
-    desc: "Kirim pesan otomatis terjadwal (Broadcast/Reminder).",
-    relevantTo: ["maintenance-custom"],
-  },
-  {
-    id: "crm-sync",
-    name: "CRM Auto-Sync",
-    price: 2000000,
-    desc: "Otomatis input data leads ke CRM pilihan Anda.",
-    relevantTo: ["maintenance-custom"],
-  },
-  {
-    id: "inventory",
-    name: "Inventory Module",
-    price: 3500000,
-    desc: "Sistem Manajemen Stok & Gudang real-time.",
-    relevantTo: ["maintenance-custom"],
-  },
-  {
-    id: "reporting",
-    name: "Financial Reporting",
-    price: 2500000,
-    desc: "Laporan neraca, laba rugi, dan arus kas otomatis.",
-    relevantTo: ["maintenance-custom"],
-  },
-  {
-    id: "rag-pro",
-    name: "Advanced RAG Master",
-    price: 4000000,
-    desc: "AI dilatih dengan ribuan dokumen kustom tanpa limit.",
-    relevantTo: ["maintenance-custom"],
-  },
-  {
-    id: "human-handoff",
-    name: "Human-to-AI Handoff",
-    price: 2000000,
-    desc: "Alihkan diskusi ke Admin jika AI tidak bisa jawab.",
-    relevantTo: ["maintenance-custom"],
-  },
-  {
-    id: "maintenance",
-    name: "Priority Care (3 Month)",
-    price: 2000000,
-    desc: "Bebas biaya perbaikan & update minor selama 3 bulan.",
-    relevantTo: ["website-high-conversion", "maintenance-custom"],
-  },
+  { id: "blogging-article", name: "Blogging/Article System", price: 1000000, desc: "Sistem blog lengkap untuk konten marketing & SEO.", relevantTo: ["authority-personal-brand", "seo-powerhouse", "maintenance-custom"] },
+  { id: "portfolio-case-study", name: "Portfolio/Case Study Layout", price: 800000, desc: "Tampilan portofolio & studi kasus yang profesional.", relevantTo: ["authority-personal-brand", "portfolio-showcase", "maintenance-custom"] },
+  { id: "appointment-booking", name: "Appointment Booking", price: 1500000, desc: "Sistem booking janji temu online terintegrasi kalender.", relevantTo: ["authority-personal-brand", "maintenance-custom"] },
+  { id: "high-speed-optimization", name: "High-Speed Optimization", price: 750000, desc: "Optimasi performa website hingga skor Lighthouse 95+.", relevantTo: ["conversion-landing-page", "event-webinar-landing", "maintenance-custom"] },
+  { id: "copywriting-framework", name: "Copywriting Framework", price: 1500000, desc: "Struktur copywriting persuasif yang dirancang untuk konversi.", relevantTo: ["conversion-landing-page", "maintenance-custom"] },
+  { id: "whatsapp-form-integration", name: "WhatsApp/Form Integration", price: 350000, desc: "Formulir kontak yang langsung terhubung ke WhatsApp Anda.", relevantTo: ["conversion-landing-page", "digital-catalog", "link-in-bio-pro", "maintenance-custom"] },
+  { id: "analytics-tracking", name: "Analytics & Tracking (Advanced)", price: 500000, desc: "Setup Google Analytics, Meta Pixel, dan tracking konversi.", relevantTo: ["conversion-landing-page", "link-in-bio-pro", "maintenance-custom"] },
+  { id: "cms", name: "Content Management System (CMS)", price: 1250000, desc: "Admin panel untuk edit konten website tanpa coding.", relevantTo: ["modern-corporate-profile", "maintenance-custom"] },
+  { id: "multi-language", name: "Multi-language Support", price: 1000000, desc: "Website multi-bahasa (ID/EN) dengan switcher otomatis.", relevantTo: ["modern-corporate-profile", "maintenance-custom"] },
+  { id: "career-job-listing", name: "Career/Job Listing Page", price: 800000, desc: "Halaman lowongan kerja dengan form lamaran terintegrasi.", relevantTo: ["modern-corporate-profile", "maintenance-custom"] },
+  { id: "product-catalog", name: "Product Catalog System", price: 1500000, desc: "Katalog produk lengkap dengan filter, kategori, dan detail.", relevantTo: ["digital-catalog", "maintenance-custom"] },
+  { id: "product-filter-search", name: "Product Filter/Search", price: 750000, desc: "Fitur pencarian & filter produk yang cepat dan akurat.", relevantTo: ["digital-catalog", "maintenance-custom"] },
+  { id: "video-integration", name: "Video Integration", price: 400000, desc: "Embed video YouTube/Vimeo dengan layout yang optimal.", relevantTo: ["digital-catalog", "maintenance-custom"] },
+  { id: "newsletter-email-signup", name: "Newsletter/Email Signup", price: 500000, desc: "Form subscribe newsletter terintegrasi email marketing.", relevantTo: ["educational-course-hub", "maintenance-custom"] },
+  { id: "downloadable-resource", name: "Downloadable Resource System", price: 500000, desc: "Sistem download file (e-book, brosur, katalog) untuk leads.", relevantTo: ["educational-course-hub", "maintenance-custom"] },
+  { id: "advanced-seo", name: "Advanced SEO Setup", price: 1000000, desc: "Optimasi meta-tag, sitemap, schema markup, dan Search Console.", relevantTo: ["seo-powerhouse", "local-business-maps", "maintenance-custom"] },
+  { id: "automatic-internal-linking", name: "Automatic Internal Linking", price: 600000, desc: "Sistem internal link otomatis untuk memperkuat SEO.", relevantTo: ["seo-powerhouse", "maintenance-custom"] },
+  { id: "countdown-timer", name: "Countdown Timer", price: 300000, desc: "Timer hitung mundur untuk promo, event, atau launching.", relevantTo: ["seo-powerhouse", "event-webinar-landing", "maintenance-custom"] },
+  { id: "google-calendar-integration", name: "Google Calendar Integration", price: 750000, desc: "Sinkronisasi jadwal booking langsung ke Google Calendar.", relevantTo: ["event-webinar-landing", "maintenance-custom"] },
+  { id: "interactive-elements", name: "Interactive Elements (GSAP)", price: 1000000, desc: "Animasi interaktif premium dengan GSAP untuk kesan WOW.", relevantTo: ["portfolio-showcase", "maintenance-custom"] },
+  { id: "google-maps-integration", name: "Google Maps Integration", price: 300000, desc: "Embed peta lokasi bisnis dengan pin & info kustom.", relevantTo: ["portfolio-showcase", "maintenance-custom"] },
+  { id: "testimonial-review", name: "Testimonial/Review Section", price: 450000, desc: "Section testimoni/review pelanggan dengan layout dinamis.", relevantTo: ["portfolio-showcase", "maintenance-custom"] },
+  { id: "social-links-aggregator", name: "Social Links Aggregator", price: 400000, desc: "Kumpulkan semua link sosial media dalam satu tampilan elegan.", relevantTo: ["link-in-bio-pro", "maintenance-custom"] },
+  { id: "advanced-business-dashboard", name: "Advanced Business Dashboard", price: 2500000, desc: "Dashboard admin bisnis lengkap dengan grafik & laporan.", relevantTo: ["maintenance-custom"] },
+  { id: "custom-lead-form", name: "Custom Lead Form (Advanced)", price: 500000, desc: "Form lead generation kustom dengan validasi & notifikasi.", relevantTo: ["event-webinar-landing", "maintenance-custom"] },
 ];
 
 export const timelineOptions: TimelineOption[] = [

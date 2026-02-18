@@ -19,8 +19,8 @@ import HeroSection from '../../components/sections/HeroSection.vue'
 
 // SEO Setup
 useSEO({
-  title: 'Specialist Website, Sistem & Automasi Business',
-  description: 'Bantu bisnis Anda Auto-Pilot dengan Landing Page High-Conversion, Sistem CRM/ERP custom, dan Robot Automasi AI. Eksekusi cepat, hasil serius.',
+  title: 'Specialist Website High-Conversion & Maintenance',
+  description: 'Bantu bisnis Anda tumbuh dengan Website High-Conversion (Landing Page/Company Profile) dan layanan Maintenance/Fitur Rakitan custom. Eksekusi cepat, hasil serius.',
   url: '/'
 })
 

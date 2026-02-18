@@ -242,7 +242,7 @@ export const projectsData: Project[] = [
       "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2070&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop"
     ],
-    relatedServices: ["web-app", "business-system"]
+    relatedServices: ["website-high-conversion", "maintenance-custom"]
   },
   {
     id: 4,
@@ -276,7 +276,7 @@ export const projectsData: Project[] = [
     ],
     impact: "Upgrade ini berhasil mengubah infrastruktur IT hotel dari sekadar 'brosur online' menjadi ekosistem digital yang terintegrasi penuh. Efisiensi operasional meningkat drastis seiring hilangnya proses administrasi manual, sementara pemilik memiliki visibilitas data yang jauh lebih akurat dan real-time.",
     technologies: ["WordPress", "Custom Hooks", "Midtrans Integration", "Affiliate WP", "Accounting Automation Logic"],
-    relatedServices: ["business-system", "automation"]
+    relatedServices: ["maintenance-custom"]
   },
   {
     id: 5,
@@ -305,7 +305,7 @@ export const projectsData: Project[] = [
       { label: "DATA INTEGRITY", value: "Verified", icon: "ShieldCheck" },
       { label: "COST EFFICIENCY", value: "High", icon: "Target" }
     ],
-    relatedServices: ["business-system"],
+    relatedServices: ["maintenance-custom"],
     faqs: [
       { q: "Mengapa tidak menggunakan aplikasi web khusus?", a: "Google Sheets dipilih sebagai 'Trade-off' antara biaya pengembangan yang rendah dengan fungsionalitas kolaborasi cloud yang sangat familiar di sisi staf operasional." }
     ],
@@ -350,7 +350,7 @@ export const projectsData: Project[] = [
       "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=2070&auto=format&fit=crop"
 
     ],
-    relatedServices: ["web-app"]
+    relatedServices: ["website-high-conversion"]
   },
   {
     id: 7,
@@ -384,7 +384,7 @@ export const projectsData: Project[] = [
     ],
     impact: "Web utama ini kini beroperasi tanpa hambatan teknis. Pembersihan 'Technical Debt' masa lalu berhasil menghilangkan seluruh keluhan bug dari tamu dan memberikan tim manajemen platform promosi yang stabil, aman, dan profesional.",
     technologies: ["WordPress Ecosystem", "Premium Theme Architecture", "Booking Engine Sync", "Conflict Resolution Protocols"],
-    relatedServices: ["web-app"]
+    relatedServices: ["website-high-conversion"]
   },
   {
     id: 8,
@@ -427,7 +427,7 @@ export const projectsData: Project[] = [
     ],
     impact: "Sistem ini berhasil memposisikan Bank Usaha Rakyat sebagai pionir layanan digital di kategorinya. Digitalisasi saldo dan informasi kredit ini tidak hanya meningkatkan transparansi, tetapi juga menurunkan beban kerja customer service fisik secara signifikan melalui otomasi informasi rutin nasabah.",
     technologies: ["Google Apps Script", "Google Sheets Database", "WhatsApp Integration Logic", "Serverless API Hooks", "FinTech Compliance Patterns"],
-    relatedServices: ["automation", "business-system"]
+    relatedServices: ["maintenance-custom"]
   },
   {
     id: 9,
@@ -458,7 +458,7 @@ export const projectsData: Project[] = [
     ],
     impact: "Portal ini kini berdiri sebagai 'Single Source of Truth' bagi media dan pendukung. Keberhasilan dalam mengintegrasikan sistem event ke dalam web profil meningkatkan efektivitas tim lapangan dalam mengelola mobilisasi massa secara lebih data-driven.",
     technologies: ["WordPress", "Premium Multimedia Caching", "Event Ticketing Logic", "Advanced SEO Profiling"],
-    relatedServices: ["web-app"]
+    relatedServices: ["website-high-conversion"]
   },
   {
     id: 10,
@@ -487,7 +487,7 @@ export const projectsData: Project[] = [
     ],
     impact: "Berhasil mendemonstrasikan kapabilitas teknis dalam menangani seluruh end-to-end lifecycle e-commerce, mulai dari arsitektur database hingga implementasi fungsionalitas reaktif di sisi pengguna.",
     technologies: ["Laravel", "Vue.js", "Tailwind CSS", "MySQL", "Fintech Payment Hooks"],
-    relatedServices: ["saas-accelerator"]
+    relatedServices: ["maintenance-custom"]
   },
   {
     id: 11,
@@ -516,7 +516,7 @@ export const projectsData: Project[] = [
     ],
     impact: "Platform ini menjadi bukti penerapan standar pengerjaan aplikasi yang memprioritaskan fungsi inti dan kemudahan penggunaan, menghasilkan fondasi teknis yang kuat untuk pengembangan fitur pembelajaran lebih lanjut.",
     technologies: ["Laravel Framework", "Blade Engine", "Database Relationships", "Admin Controls"],
-    relatedServices: ["saas-accelerator"]
+    relatedServices: ["maintenance-custom"]
   },
   // --- 2025-2026 IDEAS ---
   {
@@ -534,7 +534,7 @@ export const projectsData: Project[] = [
     date: "2025 Idea",
     liveUrl: "#",
     githubUrl: "#",
-    relatedServices: ["saas-accelerator", "business-system"]
+    relatedServices: ["maintenance-custom"]
   },
   {
     id: 13,
@@ -551,7 +551,7 @@ export const projectsData: Project[] = [
     date: "2025 Idea",
     liveUrl: "#",
     githubUrl: "#",
-    relatedServices: ["business-system", "automation"]
+    relatedServices: ["maintenance-custom"]
   },
   {
     id: 14,
@@ -568,7 +568,7 @@ export const projectsData: Project[] = [
     date: "2026 Idea",
     liveUrl: "#",
     githubUrl: "#",
-    relatedServices: ["web-app"]
+    relatedServices: ["website-high-conversion"]
   },
   {
     id: 15,
@@ -585,7 +585,7 @@ export const projectsData: Project[] = [
     date: "2025 Idea",
     liveUrl: "#",
     githubUrl: "#",
-    relatedServices: ["saas-accelerator", "automation"]
+    relatedServices: ["maintenance-custom"]
   },
   {
     id: 16,
@@ -602,7 +602,7 @@ export const projectsData: Project[] = [
     date: "2026 Idea",
     liveUrl: "#",
     githubUrl: "#",
-    relatedServices: ["web-app"]
+    relatedServices: ["website-high-conversion"]
   },
   {
     id: 17,
@@ -647,7 +647,7 @@ export const projectsData: Project[] = [
       "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=2070&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop"
     ],
-    relatedServices: ["web-app", "business-system"]
+    relatedServices: ["website-high-conversion", "maintenance-custom"]
   }
 ];
 

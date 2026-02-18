@@ -21,6 +21,7 @@ import {
   Repeat,
   Server,
   Settings2,
+  Settings,
   Headphones,
   Users,
   Monitor,
@@ -98,7 +99,7 @@ export interface ServiceData {
 }
 
 const iconMap: Record<string, any> = {
-  Languages, Zap, BarChart3, Wallet, MessageSquare, ShieldCheck, Database, Search, Cpu, Layout, ScanLine, History, Repeat, Server, Settings2, Headphones, Users,
+  Languages, Zap, BarChart3, Wallet, MessageSquare, ShieldCheck, Database, Search, Cpu, Layout, ScanLine, History, Repeat, Server, Settings2, Settings, Headphones, Users,
   Monitor, ShoppingBag, Hotel, Building2, BookOpen, MessageCircle, UserCheck, ShoppingCart, Check, Palette, Lock, Globe, Rocket
 };
 

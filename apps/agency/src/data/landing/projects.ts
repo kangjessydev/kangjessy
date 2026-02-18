@@ -12,7 +12,9 @@ export interface Project {
   date: string;
   liveUrl: string;
   demoUrl?: string;
+  demoType?: 'legacy' | 'nda';
   githubUrl: string;
+  image?: string;
   gallery?: string[];
   steps?: { title: string; desc: string }[];
   status?: string;
@@ -39,12 +41,17 @@ export const projectsData: Project[] = [
     tags: ["WordPress", "Elementor", "MySQL", "PHP"],
     icon: "Globe",
     color: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+    // Placeholder High-Quality Image (Business/Tech)
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
     description: "Website profil perusahaan dengan plugin custom untuk toko & preview ebook.",
     content: hijiruContent,
+    
     client: "Hijiru",
     date: "Mar 2025",
+    
     liveUrl: "",
     demoUrl: "https://demo.kangjessy.com/hijiru",
+    demoType: "legacy",
     githubUrl: "#",
     pivot: {
       title: "Technical Pivot",

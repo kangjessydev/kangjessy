@@ -1037,7 +1037,6 @@
       </Transition>
     </Teleport>
 
-    <!-- Demo Explanation Modal -->
     <BottomSheet
       v-model="isDemoModalOpen"
       title="Demo Version"
@@ -1049,11 +1048,8 @@
         </div>
         
         <div class="space-y-3">
-          <h4 class="text-xl font-bold text-white">Versi Demonstrasi</h4>
-          <p class="text-sm text-text-secondary leading-relaxed">
-            Dikarenakan website asli proyek ini sudah tidak aktif (legacy), saya telah menyiapkan 
-            <strong>versi kloning/demonstrasi</strong> dengan data dummy agar Anda tetap dapat meninjau interface dan alur fungsionalitasnya.
-          </p>
+          <h4 class="text-xl font-bold text-white">{{ demoInfo.title }}</h4>
+          <p class="text-sm text-text-secondary leading-relaxed" v-html="demoInfo.message"></p>
         </div>
 
         <div class="pt-4 space-y-3">
@@ -1066,7 +1062,7 @@
             target="_blank"
             @click="isDemoModalOpen = false"
           >
-            Buka Demo Project
+            {{ demoInfo.buttonText }}
           </BaseButton>
           <BaseButton 
             variant="ghost" 
@@ -1360,6 +1356,7 @@ onMounted(async () => {
         client: sp.clientName || sp.client,
         content: sp.content || sp.description,
         demoUrl: sp.demoUrl || "",
+        demoType: sp.demoType || "legacy",
         tags: sp.tags || [],
         technologies: sp.technologies || sp.tags || [],
         gallery: sanityProject.gallery || [],
@@ -1431,6 +1428,26 @@ const renderedContent = computed(() => {
   }
 
   return html;
+});
+
+
+const demoInfo = computed(() => {
+  const type = project.value?.demoType || 'legacy';
+  
+  if (type === 'nda') {
+    return {
+      title: 'Versi Terbatas (NDA)',
+      message: `Dikarenakan proyek ini bersifat <strong>Rahasia (NDA)</strong> dan merupakan dashboard internal perusahaan, saya hanya dapat menampilkan <strong>versi samaran/dummy</strong> yang telah disetujui untuk tujuan demonstrasi portofolio, tanpa mengungkap data sensitif klien.`,
+      buttonText: 'Buka Demo Terbatas'
+    };
+  }
+
+  // Default to legacy
+  return {
+    title: 'Versi Demonstrasi',
+    message: `Dikarenakan website asli proyek ini sudah tidak aktif (legacy), saya telah menyiapkan <strong>versi kloning/demonstrasi</strong> dengan data dummy agar Anda tetap dapat meninjau interface dan alur fungsionalitasnya.`,
+    buttonText: 'Buka Demo Project'
+  };
 });
 
 const triggerToast = (msg: string) => {

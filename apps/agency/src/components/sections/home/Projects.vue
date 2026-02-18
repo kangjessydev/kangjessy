@@ -74,7 +74,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { sanityClient } from "@kangjessy/database";
 import { projectsData } from "../../../data/landing/projects";
 import ProjectCard from "../portfolio/ProjectCard.vue";
 import { ArrowRight as ArrowRightIcon } from "lucide-vue-next";
@@ -86,14 +85,10 @@ const projects = ref<any[]>([]);
 const loading = ref(true);
 const activeFilter = ref("All");
 
-// TOGGLE: Set to true to use local data (projects.ts), false for Sanity
-const ENABLE_LOCAL_DATA = false;
-
 const categories = computed(() => {
   const cats = ["All"];
   projects.value.forEach((p) => {
-    const catName =
-      typeof p.category === "object" ? p.category?.title : p.category;
+    const catName = p.category;
     if (catName && !cats.includes(catName)) cats.push(catName);
   });
   return cats;
@@ -101,11 +96,7 @@ const categories = computed(() => {
 
 const filteredProjects = computed(() => {
   if (activeFilter.value === "All") return projects.value;
-  return projects.value.filter((p) => {
-    const catName =
-      typeof p.category === "object" ? p.category?.title : p.category;
-    return catName === activeFilter.value;
-  });
+  return projects.value.filter((p) => p.category === activeFilter.value);
 });
 
 const displayedProjects = computed(() => {
@@ -116,69 +107,29 @@ const navigateToProject = (slug: string) => {
   if (slug) router.push(`/project/${slug}`);
 };
 
-onMounted(async () => {
+onMounted(() => {
   try {
-    if (ENABLE_LOCAL_DATA) {
-      projects.value = projectsData
-        .filter((p) => p.status !== "IDEA")
-        .map((p) => ({
-          _id: String(p.id),
-          title: p.title,
-          slug: { current: p.slug || "" },
-          category: p.category,
-          tags: p.tags,
-          description: p.description,
-          localIcon: p.icon,
-          localColor: p.color,
-          date: p.date,
-        }));
-    } else {
-      // Using a more optimized query for Home showcase
-      const query = `*[_type == "project" && status != "IDEA"] | order(completionDate desc, _createdAt desc)[0...12]{
-                _id,
-                title,
-                slug,
-                excerpt,
-                description,
-                "image": mainImage.asset->url,
-                "client": clientName,
-                "category": coalesce(category->title, category),
-                status,
-                date,
-                "technologies": technologies[]->title
-            }`;
+    // Use local data from projects.ts
+    // Sort by ID descending (newest first) assuming higher ID is newer
+    const sortedData = [...projectsData]
+      .filter((p) => p.status !== "IDEA")
+      .sort((a, b) => b.id - a.id);
 
-      const sanityProjects = await sanityClient.fetch(query);
-
-      if (sanityProjects && sanityProjects.length) {
-        projects.value = sanityProjects;
-      } else {
-        // Fallback to local if sanity is empty
-        projects.value = (projectsData as any[]).map((p) => ({
-          ...p,
-          _id: String(p.id),
-          slug: { current: p.slug },
-          image: p.image,
-          client: p.client || "Personal",
-          localIcon: p.icon,
-          localColor: p.color,
-        }));
-      }
-    }
-  } catch (e) {
-    console.error(
-      "Error fetching projects from Sanity, falling back to local data",
-      e,
-    );
-    projects.value = (projectsData as any[]).map((p) => ({
-      ...p,
+    projects.value = sortedData.map((p) => ({
       _id: String(p.id),
-      slug: { current: p.slug },
-      image: p.image,
-      client: p.client || "Personal",
+      title: p.title,
+      slug: { current: p.slug || "" },
+      category: p.category,
+      tags: p.tags,
+      description: p.description,
       localIcon: p.icon,
       localColor: p.color,
+      date: p.date,
+      client: p.client,
+      status: p.status
     }));
+  } catch (e) {
+    console.error("Error loading projects data", e);
   } finally {
     loading.value = false;
   }

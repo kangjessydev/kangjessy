@@ -39,7 +39,7 @@
                   >Delivery Time</small
                 >
                 <span class="font-bold text-text-primary">{{
-                  service.deliveryTime
+                  selectedPkg?.deliveryTime || service.deliveryTime
                 }}</span>
               </div>
             </div>
@@ -51,7 +51,7 @@
                   >Revisions</small
                 >
                 <span class="font-bold text-text-primary">{{
-                  service.revisions
+                  selectedPkg?.revisions || service.revisions
                 }}</span>
               </div>
             </div>
@@ -79,7 +79,7 @@
           </section>
 
           <!-- Packages Grid -->
-          <section v-if="availablePackages.length">
+          <section v-if="availablePackages.length && service.id !== 'maintenance-custom'">
             <div class="flex justify-between items-end mb-6">
               <div>
                 <h3 class="text-2xl font-bold text-text-primary">
@@ -233,7 +233,7 @@
           <section
             v-if="
               relevantFeatures.length &&
-              selectedPkg?.id.startsWith('foundation-')
+              (selectedPkg?.id.startsWith('foundation-') || service.id === 'maintenance-custom')
             "
             class="space-y-8 pb-10 border-b border-border-color/20 mb-10"
           >
@@ -245,8 +245,7 @@
                   Enhance Your Solution
                 </h3>
                 <p class="text-text-tertiary text-[0.8rem]">
-                  Pondasi ini dapat Anda upscale dengan fitur tambahan berikut
-                  sesuai kebutuhan bisnis.
+                  {{ service.id === 'maintenance-custom' ? 'Pilih fitur yang ingin Anda tambahkan atau rakit ke dalam sistem Anda.' : 'Pondasi ini dapat Anda upscale dengan fitur tambahan berikut sesuai kebutuhan bisnis.' }}
                 </p>
               </div>
             </div>
@@ -255,8 +254,19 @@
               <div
                 v-for="feature in relevantFeatures"
                 :key="feature.id"
-                class="p-5 bg-bg-primary border border-border-color rounded-2xl flex flex-col justify-between group transition-all hover:border-accent-primary/30 relative overflow-hidden"
+                class="p-5 bg-bg-primary border rounded-2xl flex flex-col justify-between group transition-all cursor-pointer relative overflow-hidden"
+                :class="selectedFeatures.includes(feature.id) 
+                  ? 'border-accent-primary bg-accent-primary/5 shadow-sm' 
+                  : 'border-border-color hover:border-accent-primary/30 hover:bg-white/5'"
+                @click="toggleFeature(feature.id)"
               >
+                <!-- Selection Mark -->
+                <div 
+                  v-if="selectedFeatures.includes(feature.id)"
+                  class="absolute top-0 right-0 w-8 h-8 bg-accent-primary text-white flex items-center justify-center rounded-bl-xl shadow-lg"
+                >
+                  <Check :size="14" />
+                </div>
                 <div>
                   <div class="flex items-center justify-between mb-2">
                     <h4
@@ -302,9 +312,7 @@
               <BaseButton
                 variant="secondary"
                 size="md"
-                @click="
-                  router.push(`/order?type=${selectedPkg?.id || service.id}`)
-                "
+                @click="goToOrder"
               >
                 <PlusIcon :size="16" class="mr-2" />
                 Pilih Fitur di Kalkulator
@@ -313,13 +321,13 @@
           </section>
 
           <!-- What's Included -->
-          <section v-if="!service.detailedFeatures">
+          <section v-if="!(selectedPkg?.detailedFeatures || service.detailedFeatures)">
             <h3 class="text-2xl font-bold mb-5 text-text-primary">
               What's Included
             </h3>
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <li
-                v-for="item in service.included"
+                v-for="item in selectedPkg?.features || service.included"
                 :key="item"
                 class="flex items-center gap-3 text-text-secondary"
               >
@@ -336,7 +344,7 @@
           >
             <div class="flex flex-col gap-2">
               <h3 class="text-2xl font-bold text-text-primary">
-                What's Included in {{ selectedPkg?.name || service.title }}
+                {{ service.id === 'maintenance-custom' ? 'Standard Assembly & Scalability' : `What's Included in ${selectedPkg?.name || service.title}` }}
               </h3>
               <p class="text-text-secondary text-sm">
                 Fitur berikut sudah termasuk dalam paket yang Anda pilih untuk
@@ -350,8 +358,7 @@
               class="grid grid-cols-1 gap-8 relative"
             >
               <div
-                v-for="(feature, fIdx) in selectedPkg?.detailedFeatures ||
-                service.detailedFeatures"
+                v-for="(feature, fIdx) in displayedFeatures"
                 :key="(selectedPkg?.id || 'default') + '-' + fIdx"
                 class="group p-6 md:p-8 bg-bg-secondary border border-border-color rounded-[32px] transition-all hover:bg-bg-secondary/80 hover:border-accent-primary/20 relative overflow-hidden"
                 :style="{ '--delay': (Number(fIdx) * 0.1).toFixed(1) + 's' }"
@@ -387,7 +394,7 @@
                     >
                       {{ feature.title }}
                     </h4>
-                    <ul class="space-y-4">
+                    <ul v-if="feature.items && feature.items.length" class="space-y-4">
                       <li
                         v-for="(item, iIdx) in feature.items"
                         :key="iIdx"
@@ -406,6 +413,21 @@
                 </div>
               </div>
             </TransitionGroup>
+
+            <!-- Show all features btn -->
+            <div 
+              v-if="allFeaturesList.length > 5"
+              class="flex justify-center mt-12"
+            >
+              <BaseButton 
+                variant="secondary"
+                size="lg"
+                class="rounded-full! px-8!"
+                @click="isFeaturesSheetOpen = true"
+              >
+                Lihat Semua Fitur ({{ allFeaturesList.length }})
+              </BaseButton>
+            </div>
           </section>
 
           <!-- Workflow -->
@@ -415,7 +437,7 @@
             </h3>
             <div class="space-y-5">
               <div
-                v-for="(step, idx) in service.process"
+                v-for="(step, idx) in (selectedPkg as any)?.workflow || (selectedPkg as any)?.process || service.process"
                 :key="idx"
                 class="flex gap-6 p-6 bg-bg-secondary border border-border-color rounded-2xl transition-all hover:border-accent-primary/30"
               >
@@ -437,13 +459,13 @@
           </section>
 
           <!-- Technology -->
-          <section v-if="service.technologies">
+          <section v-if="selectedPkg?.technologies || service.technologies">
             <h3 class="text-2xl font-bold mb-5 text-text-primary">
               Stack Used
             </h3>
             <div class="flex flex-wrap gap-2.5">
               <span
-                v-for="tech in service.technologies"
+                v-for="tech in selectedPkg?.technologies || service.technologies"
                 :key="tech"
                 class="px-4 py-2 bg-bg-secondary border border-border-color rounded-lg text-[0.85rem] text-text-secondary font-medium"
               >
@@ -541,13 +563,13 @@
           </section>
 
           <!-- FAQ -->
-          <section v-if="service.faq && service.faq.length">
+          <section v-if="(selectedPkg?.faq && selectedPkg.faq.length) || (service.faq && service.faq.length)">
             <h3 class="text-2xl font-bold mb-5 text-text-primary">
               Common Questions
             </h3>
             <div class="space-y-4">
               <AccordionItem
-                v-for="(item, index) in service.faq"
+                v-for="(item, index) in (selectedPkg as any)?.faq || service.faq"
                 :key="index"
                 :title="item.question"
                 :isOpen="activeFaqIndex === index"
@@ -601,23 +623,25 @@
                   <span
                     class="text-[clamp(1.875rem,3vw,2.25rem)] font-extrabold text-text-primary block leading-none"
                   >
-                    {{
-                      selectedPkg
-                        ? formatCurrency(selectedPkg.basePrice)
-                        : formatCurrency(service.price)
-                    }}
+                    {{ formatCurrency(totalInvestment) }}
                   </span>
+                  <p 
+                    v-if="selectedFeatures.length"
+                    class="mt-2 text-[10px] text-accent-primary font-bold uppercase tracking-wider"
+                  >
+                    + {{ selectedFeatures.length }} Fitur Tambahan
+                  </p>
                 </div>
 
                 <!-- Operational Highlights in Sidebar -->
-                <div v-if="selectedPkg" class="grid grid-cols-2 gap-2 mb-8">
+                <div v-if="selectedPkg" class="grid grid-cols-3 gap-2 mb-6">
                   <div
                     v-if="selectedPkg.maxPages"
-                    class="bg-white/5 border border-white/10 p-3 rounded-2xl"
+                    class="bg-white/5 border border-white/10 p-2.5 rounded-xl"
                   >
-                    <FileText :size="14" class="text-accent-primary mb-1" />
+                    <FileText :size="12" class="text-accent-primary mb-1" />
                     <div
-                      class="text-[8px] font-black text-text-tertiary uppercase tracking-widest"
+                      class="text-[7.5px] font-black text-text-tertiary uppercase tracking-widest"
                     >
                       Scope
                     </div>
@@ -629,11 +653,11 @@
                   </div>
                   <div
                     v-if="selectedPkg.deliveryTime"
-                    class="bg-white/5 border border-white/10 p-3 rounded-2xl"
+                    class="bg-white/5 border border-white/10 p-2.5 rounded-xl"
                   >
-                    <Clock :size="14" class="text-accent-primary mb-1" />
+                    <Clock :size="12" class="text-accent-primary mb-1" />
                     <div
-                      class="text-[8px] font-black text-text-tertiary uppercase tracking-widest"
+                      class="text-[7.5px] font-black text-text-tertiary uppercase tracking-widest"
                     >
                       Waktu
                     </div>
@@ -643,9 +667,27 @@
                       {{ selectedPkg.deliveryTime }}
                     </div>
                   </div>
+                  <div
+                    v-if="selectedPkg.revisions"
+                    class="bg-white/5 border border-white/10 p-2.5 rounded-xl"
+                  >
+                    <RefreshCw :size="12" class="text-accent-primary mb-1" />
+                    <div
+                      class="text-[7.5px] font-black text-text-tertiary uppercase tracking-widest"
+                    >
+                      Revisi
+                    </div>
+                    <div
+                      class="text-[10px] font-bold text-text-primary truncate"
+                    >
+                      {{ selectedPkg.revisions }}
+                    </div>
+                  </div>
                 </div>
 
-                <!-- Package Description in Sidebar -->
+                <h4 v-if="service?.id === 'maintenance-custom' && selectedFeatures.length" class="text-[10px] font-black uppercase tracking-[0.2em] text-accent-primary mb-4">
+                  Fitur yang bapak rakit
+                </h4>
                 <p
                   v-if="selectedPkg?.desc"
                   class="text-[0.85rem] text-text-secondary leading-relaxed mb-6 opacity-80 italic"
@@ -654,19 +696,28 @@
                 </p>
 
                 <ul
-                  class="space-y-3.5 mb-10 border-t border-border-color/10 pt-8"
+                  class="space-y-3 mb-8 border-t border-border-color/10 pt-6"
                 >
                   <li
-                    v-for="f in selectedPkg?.features ||
-                    service?.packageFeatures || []"
-                    :key="f"
-                    class="flex items-start gap-3 text-[0.92rem] text-text-secondary leading-tight"
+                    v-for="f in sidebarDisplayList"
+                    :key="f.title"
+                    class="flex items-start gap-3 text-[0.88rem] text-text-secondary leading-tight"
                   >
                     <Check
-                      :size="16"
+                      :size="14"
                       class="text-accent-primary grow-0 shrink-0 mt-0.5"
                     />
-                    <span>{{ f }}</span>
+                    <span>{{ f.title }}</span>
+                  </li>
+                  
+                  <li v-if="(service?.id === 'maintenance-custom' ? selectedFeatures.length : allFeaturesList.length) > 5">
+                    <button 
+                      @click="isFeaturesSheetOpen = true"
+                      class="text-[11px] font-black uppercase tracking-widest text-accent-primary hover:text-white transition-colors flex items-center gap-2 mt-2"
+                    >
+                      +{{ (service?.id === 'maintenance-custom' ? selectedFeatures.length : allFeaturesList.length) - 5 }} Fitur Lainnya
+                      <ArrowRight :size="12" />
+                    </button>
                   </li>
                 </ul>
 
@@ -674,11 +725,7 @@
                   <BaseButton
                     variant="primary"
                     size="lg"
-                    @click="
-                      router.push(
-                        `/order?type=${selectedPkg?.id || service.id}`,
-                      )
-                    "
+                    @click="goToOrder"
                   >
                     Start Project
                   </BaseButton>
@@ -707,7 +754,7 @@
     <!-- Floating Mobile Action Bar -->
     <div
       v-if="selectedPkg"
-      class="fixed bottom-[84px] left-4 right-4 z-[1100] md:hidden transition-all duration-500"
+      class="fixed bottom-[84px] left-4 right-4 z-1100 md:hidden transition-all duration-500"
       :class="{
         'opacity-0 pointer-events-none translate-y-10': isPackagesSheetOpen,
       }"
@@ -738,20 +785,29 @@
               <X :size="16" />
             </button>
           </div>
-          <ul class="space-y-3.5">
+          <ul class="space-y-3">
             <li
-              v-for="(f, idx) in selectedPkg.features ||
-              service?.packageFeatures || []"
-              :key="f"
-              class="flex items-start gap-3 text-[0.85rem] text-text-secondary leading-tight"
-              :style="{ transitionDelay: `${Number(idx) * 50}ms` }"
+              v-for="f in displayedFeatures"
+              :key="f.title"
+              class="flex items-start gap-3 text-[0.825rem] text-text-secondary leading-tight"
             >
-              <Check :size="14" class="text-accent-primary shrink-0 mt-0.5" />
-              <span>{{ f }}</span>
+              <Check :size="13" class="text-accent-primary shrink-0 mt-0.5" />
+              <span>{{ f.title }}</span>
             </li>
           </ul>
+          
+          <div v-if="allFeaturesList.length > 5" class="mt-4">
+            <button 
+              @click="isFeaturesSheetOpen = true; isFloatingExpanded = false"
+              class="text-[10px] font-black uppercase tracking-widest text-accent-primary flex items-center gap-2"
+            >
+              Lihat {{ allFeaturesList.length - 5 }} Fitur Lainnya
+              <ArrowRight :size="12" />
+            </button>
+          </div>
+
           <div class="mt-5 pt-4 border-t border-white/5">
-            <p class="text-[0.75rem] text-text-tertiary italic leading-relaxed">
+            <p class="text-[0.7rem] text-text-tertiary italic leading-relaxed">
               "{{ selectedPkg.desc }}"
             </p>
           </div>
@@ -806,8 +862,14 @@
                 >
                   {{ formatCurrency(selectedPkg.originalPrice) }}
                 </span>
-                <span class="text-[13px] font-bold text-accent-primary">
-                  {{ formatCurrency(selectedPkg.basePrice) }}
+                <span class="text-[14px] font-bold text-accent-primary">
+                  {{ formatCurrency(totalInvestment) }}
+                </span>
+                <span 
+                  v-if="selectedFeatures.length"
+                  class="text-[9px] font-black text-accent-primary uppercase"
+                >
+                  +{{ selectedFeatures.length }} Add-ons
                 </span>
               </div>
             </div>
@@ -824,7 +886,7 @@
             <BaseButton
               variant="primary"
               class="rounded-xl! px-6! h-10! font-bold text-[13px] shadow-lg shadow-accent-primary/20"
-              @click="router.push(`/order?type=${selectedPkg.id}`)"
+              @click="goToOrder"
             >
               Order
             </BaseButton>
@@ -838,6 +900,7 @@
       v-model="isPackagesSheetOpen"
       title="Paket Layanan Tersedia"
       :icon="Layers"
+      :maxWidth="packageModalMaxWidth"
     >
       <!-- Search Bar -->
       <div class="px-6 pt-4">
@@ -855,12 +918,15 @@
         </div>
       </div>
 
-      <!-- Grid View (Single Column for Mobile detail) -->
-      <div class="px-6 py-6 grid grid-cols-1 gap-4 pb-safe">
+      <!-- Grid View (Dynamic Column Layout) -->
+      <div 
+        class="px-6 py-6 grid gap-4 pb-safe overflow-x-hidden"
+        :class="packageModalGridClass"
+      >
         <div
           v-for="pkg in filteredPackages"
           :key="pkg.id"
-          class="p-4 rounded-[24px] border transition-all active:scale-[0.98] flex flex-col gap-2 relative bg-bg-primary/50 cursor-pointer overflow-hidden group col-span-2"
+          class="p-4 rounded-[24px] border transition-all active:scale-[0.98] flex flex-col gap-2 relative bg-bg-primary/50 cursor-pointer overflow-hidden group col-span-1"
           :class="
             selectedPkg?.id === pkg.id
               ? 'border-accent-primary bg-accent-primary/5 shadow-md shadow-accent-primary/10'
@@ -962,17 +1028,21 @@
       v-model="isProjectsSheetOpen"
       :title="`Studi Kasus ${service?.title || 'Layanan'}`"
       :icon="Layers"
+      :maxWidth="projectsModalMaxWidth"
     >
-      <div class="px-6 py-6 pb-20 sm:pb-6 space-y-4">
+      <div class="px-6 py-6 pb-20 sm:pb-6 space-y-6">
         <p
-          class="text-[clamp(0.85rem,2vw,0.9rem)] text-text-secondary leading-relaxed mb-4"
+          class="text-[clamp(0.85rem,2vw,0.9rem)] text-text-secondary leading-relaxed"
         >
           Berikut adalah beberapa case study yang relevan dengan layanan
           <strong>{{ service?.title }}</strong
           >. Klik salah satu untuk melihat detail pengerjaan.
         </p>
 
-        <div class="grid grid-cols-1 gap-3">
+        <div 
+          class="grid gap-4"
+          :class="projectsModalGridClass"
+        >
           <router-link
             v-for="project in relatedProjects"
             :key="project.id"
@@ -1030,6 +1100,45 @@
             <span>Lihat Seluruh Portfolio dalam Kategori Ini</span>
             <ArrowUpRight :size="18" />
           </BaseButton>
+        </div>
+      </div>
+    </BottomSheet>
+
+    <!-- All Features Bottom Sheet -->
+    <BottomSheet
+      v-model="isFeaturesSheetOpen"
+      :title="service?.id === 'maintenance-custom' ? 'Daftar Rakitan Fitur' : `Full Features: ${selectedPkg?.name || service?.title}`"
+      :icon="Check"
+      :maxWidth="featuresModalMaxWidth"
+    >
+      <div 
+        class="px-6 py-6 pb-24 sm:pb-8 grid gap-8"
+        :class="featuresModalGridClass"
+      >
+        <div 
+          v-for="(feature, idx) in modalFeaturesList" 
+          :key="idx"
+          class="space-y-4 pb-8 border-b lg:border-b-0 border-white/5 last:border-0"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-accent-primary/10 border border-accent-primary/20 rounded-xl flex items-center justify-center text-accent-primary shrink-0">
+               <component :is="getFeatureIcon(feature.icon)" :size="20" />
+            </div>
+            <h4 class="text-lg font-bold text-text-primary">
+              {{ feature.title }}
+            </h4>
+          </div>
+
+          <ul v-if="feature.items && feature.items.length" class="space-y-3.5 pl-1">
+            <li 
+              v-for="(item, iIdx) in feature.items" 
+              :key="iIdx"
+              class="flex items-start gap-3"
+            >
+              <div class="mt-2 w-1.5 h-1.5 rounded-full bg-accent-primary/40 shrink-0"></div>
+              <span class="text-text-secondary text-sm leading-relaxed">{{ item }}</span>
+            </li>
+          </ul>
         </div>
       </div>
     </BottomSheet>
@@ -1095,7 +1204,7 @@ import {
   Workflow,
   Activity,
   CreditCard,
-  PlusIcon, // Added missing import if needed, assuming it was used in template
+  Plus as PlusIcon,
 } from "lucide-vue-next";
 
 // ...
@@ -1115,18 +1224,90 @@ useSEO({
     () =>
       service.value?.tagline || "Layanan profesional dari KangJessy Agency.",
   ),
-  url: computed(() => `/services/${route.params.id}`),
+  url: computed(() => `/service/${route.params.id}`),
 });
 const selectedPkg = ref<ProjectType | null>(null); // Updated Type
+const selectedFeatures = ref<string[]>([]);
+
+const toggleFeature = (id: string) => {
+  const idx = selectedFeatures.value.indexOf(id);
+  if (idx > -1) {
+    selectedFeatures.value.splice(idx, 1);
+  } else {
+    selectedFeatures.value.push(id);
+  }
+};
+
+const goToOrder = () => {
+  if (!service.value) return;
+  const baseUrl = "/order";
+  const type = selectedPkg.value?.id || service.value.id;
+  let url = `${baseUrl}?type=${type}`;
+  
+  if (selectedFeatures.value.length > 0) {
+    url += `&addFeature=${selectedFeatures.value.join(",")}`;
+  }
+  
+  router.push(url);
+};
+
+const totalInvestment = computed(() => {
+  let total = selectedPkg.value?.basePrice || service.value?.price || 0;
+  
+  selectedFeatures.value.forEach(fId => {
+    const f = features.value.find(feat => feat.id === fId);
+    if (f) total += f.price;
+  });
+  
+  return total;
+});
+
+const allFeaturesList = computed(() => {
+  if (selectedPkg.value?.detailedFeatures) return selectedPkg.value.detailedFeatures;
+  if (service.value?.detailedFeatures) return service.value.detailedFeatures;
+  
+  // Fallback if only simple features exist
+  const simpleFeatures = selectedPkg.value?.features || service.value?.packageFeatures || [];
+  return simpleFeatures.map(f => ({ title: f, items: [], icon: undefined }));
+});
+
+const displayedFeatures = computed(() => allFeaturesList.value.slice(0, 5));
+
+const sidebarDisplayList = computed(() => {
+  if (service.value?.id === 'maintenance-custom') {
+    return selectedFeatures.value.map(fId => {
+      const f = features.value.find(feat => feat.id === fId);
+      return { title: f?.name || fId };
+    }).slice(0, 5);
+  }
+  return displayedFeatures.value;
+});
+
+const modalFeaturesList = computed(() => {
+  if (service.value?.id === 'maintenance-custom') {
+    return selectedFeatures.value.map(fId => {
+      const f = features.value.find(feat => feat.id === fId);
+      return { 
+        title: f?.name || fId, 
+        items: f?.desc ? [f.desc] : [],
+        icon: 'Zap'
+      };
+    });
+  }
+  return allFeaturesList.value;
+});
 
 const relevantFeatures = computed(() => {
   if (!service.value) return [];
+  // If maintenance service, show ALL features
+  if (service.value.id === 'maintenance-custom') return features.value;
   // Use 'relevantTo' from dynamic feature service
   return features.value.filter((f) => f.relevantTo.includes(service.value!.id));
 });
 const activeFaqIndex = ref<number | null>(null);
 const isPackagesSheetOpen = ref(false);
 const isProjectsSheetOpen = ref(false);
+const isFeaturesSheetOpen = ref(false);
 const searchQuery = ref("");
 const isFloatingExpanded = ref(false);
 
@@ -1172,6 +1353,54 @@ const featuredPackages = computed(() => {
   return availablePackages.value.slice(0, 4);
 });
 
+// Dynamic Modal Width & Grid Logic
+const packageModalMaxWidth = computed(() => {
+  const count = filteredPackages.value.length;
+  if (count <= 2) return "3xl"; // Approx 2 columns width
+  if (count === 3) return "5xl"; // Approx 3 columns width
+  return "7xl"; // Max 4 columns width
+});
+
+const packageModalGridClass = computed(() => {
+  const count = filteredPackages.value.length;
+  if (count <= 1) return "grid-cols-1 max-w-sm mx-auto";
+  if (count === 2) return "grid-cols-1 sm:grid-cols-2";
+  if (count === 3) return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+});
+
+// Projects Modal
+const projectsModalMaxWidth = computed(() => {
+  const count = relatedProjects.value.length;
+  if (count <= 2) return "3xl";
+  if (count === 3) return "5xl";
+  return "7xl";
+});
+
+const projectsModalGridClass = computed(() => {
+  const count = relatedProjects.value.length;
+  if (count <= 1) return "grid-cols-1 max-w-sm mx-auto";
+  if (count === 2) return "grid-cols-1 sm:grid-cols-2";
+  if (count === 3) return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+});
+
+// Features Modal
+const featuresModalMaxWidth = computed(() => {
+  const count = modalFeaturesList.value.length;
+  if (count <= 2) return "3xl";
+  if (count === 3) return "5xl";
+  return "7xl";
+});
+
+const featuresModalGridClass = computed(() => {
+  const count = modalFeaturesList.value.length;
+  if (count <= 1) return "grid-cols-1 max-w-sm mx-auto";
+  if (count === 2) return "grid-cols-1 sm:grid-cols-2";
+  if (count === 3) return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+});
+
 const toggleFaq = (index: number) => {
   activeFaqIndex.value = activeFaqIndex.value === index ? null : index;
 };
@@ -1182,22 +1411,12 @@ const handleSelectPackage = (pkg: any) => {
 };
 
 const scrollToFoundation = () => {
-  const foundation = availablePackages.value.find((p) =>
-    p.id.startsWith("foundation-"),
-  );
-  if (foundation) {
-    selectedPkg.value = foundation;
-    // Find the features section and scroll to it
-    const featureSection = document.querySelector(".mt-10.pt-10");
-    if (featureSection) {
-      featureSection.scrollIntoView({ behavior: "smooth" });
-    }
-  } else {
-    isPackagesSheetOpen.value = true;
-  }
+  router.push("/service/maintenance-custom");
 };
 
-const getServiceIcon = (iconName: string) => {
+const getServiceIcon = (iconName: any) => {
+  if (typeof iconName !== 'string') return iconName || Puzzle;
+
   const icons: Record<string, any> = {
     Monitor: Monitor,
     Brain: Brain,
@@ -1228,6 +1447,8 @@ const getFeatureIcon = (iconName?: string) => {
     Zap: Zap,
     Lock: Lock,
     Globe: Globe,
+    Rocket: Rocket,
+    Layers: Layers,
   };
   return (iconName ? icons[iconName] : Puzzle) || Puzzle;
 };
@@ -1249,7 +1470,8 @@ const getProjectIcon = (iconName?: string) => {
   return (iconName ? icons[iconName] : Puzzle) || Puzzle;
 };
 
-const formatCurrency = (val: number) => {
+const formatCurrency = (val?: number) => {
+  if (val === undefined || val === null) return "Rp 0";
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -1276,7 +1498,9 @@ const fetchData = async () => {
     window.scrollTo({ top: 0, behavior: "instant" } as any);
 
     // Set initial selected package
-    if (availablePackages.value.length > 0 && availablePackages.value[0]) {
+    if (foundData.id === 'maintenance-custom') {
+      selectedPkg.value = fetchedProjects.find(p => p.id === 'fitur-rakitan') || null;
+    } else if (availablePackages.value.length > 0 && availablePackages.value[0]) {
       selectedPkg.value = availablePackages.value[0];
     }
     

@@ -31,7 +31,18 @@
             'h-[75vh]': !localFullHeight,
             'h-[97vh] border-t-0 rounded-t-none': localFullHeight,
           },
-          'lg:inset-auto lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-full lg:max-w-md lg:h-auto lg:max-h-[90vh] lg:rounded-[32px] lg:border-[1px] lg:border-border-color lg:shadow-2xl !lg:transform',
+          'lg:inset-auto lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-auto lg:max-h-[85vh] lg:rounded-[32px] lg:border-[1px] lg:border-border-color lg:shadow-2xl !lg:transform',
+          maxWidth === 'sm' ? 'lg:w-[384px]' : 
+          maxWidth === 'md' ? 'lg:w-[448px]' :
+          maxWidth === 'lg' ? 'lg:w-[512px]' :
+          maxWidth === 'xl' ? 'lg:w-[576px]' :
+          maxWidth === '2xl' ? 'lg:w-[672px]' :
+          maxWidth === '3xl' ? 'lg:w-[768px]' :
+          maxWidth === '4xl' ? 'lg:w-[896px]' :
+          maxWidth === '5xl' ? 'lg:w-[1024px]' :
+          maxWidth === '6xl' ? 'lg:w-[1152px]' :
+          maxWidth === '7xl' ? 'lg:w-[1280px]' :
+          'lg:w-md',
         ]"
       >
         <!-- Drag Handle (Mobile Only) -->
@@ -113,6 +124,7 @@ interface Props {
   sheetClass?: string;
   contentClass?: string;
   icon?: any;
+  maxWidth?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {

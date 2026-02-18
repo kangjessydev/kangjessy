@@ -24,7 +24,8 @@ import {
     // Gift, // Store removed
     Rocket,
     Palette,
-    MessageSquare
+    MessageSquare,
+    Settings
 } from 'lucide-vue-next';
 
 export interface MenuItem {
@@ -53,10 +54,11 @@ export const menuItems: MenuItem[] = [
             {
                 title: 'Core Services',
                 items: [
-                    { text: 'Website High-Conv', desc: 'Landing page & Company Profile.', url: '/service/web-app', icon: Monitor },
+                    { text: 'Website High-Conv', desc: 'Landing page & Company Profile.', url: '/service/website-high-conversion', icon: Monitor },
                     { text: 'Sistem Manajemen', desc: 'ERP, CRM, LMS & Internal Tools.', url: '/service/business-system', icon: Layers },
-                    { text: 'Robot Automasi', desc: 'Coming Soon - Maintenance.', icon: Zap, url: '', comingSoon: true },
-                    { text: 'SaaS Accelerator', desc: 'Coming Soon - Maintenance.', icon: Rocket, url: '', comingSoon: true }
+                    { text: 'AI Agent & Bot', desc: 'AI Custom Data & Automation.', url: '/service/ai-agent', icon: Cpu },
+                    { text: 'Robot Automasi', desc: 'Otomatisasi tugas & Integrasi.', url: '/service/automation', icon: Zap },
+                    { text: 'Maintenance & Rakitan', desc: 'Update fitur & System care.', url: '/service/maintenance-custom', icon: Settings }
                 ]
             },
             {

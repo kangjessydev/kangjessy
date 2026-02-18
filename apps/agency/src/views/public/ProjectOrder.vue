@@ -261,6 +261,7 @@ const form = reactive({
   email: "",
   phone: "",
   company: "",
+  websiteStatus: "no", // Default to 'no' (Belum punya)
   domain: "",
   brief: "",
 });
@@ -310,10 +311,11 @@ const loadDraft = () => {
   if (typeFromUrl) {
     selectedType.value = typeFromUrl as string;
 
-    // Check for specific feature addition from Home Carousel
+    // Check for specific feature addition from URL (supports multiple comma-separated IDs)
     const featureToAdd = route.query.addFeature;
     if (featureToAdd) {
-      selectedFeatures.value = [featureToAdd as string];
+      const featuresArr = (featureToAdd as string).split(",");
+      selectedFeatures.value = featuresArr;
     } else {
       selectedFeatures.value = [];
     }

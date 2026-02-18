@@ -52,10 +52,9 @@
             >
               <component
                 :is="selectedTypeData?.icon || LayoutIcon"
-                :size="24"
-                sm:size="32"
+                :size="32"
                 stroke-width="1.5"
-                class="shrink-0"
+                class="shrink-0 scale-75 sm:scale-100 transition-transform"
               />
             </div>
 
@@ -366,70 +365,76 @@
       v-model="isSheetOpen"
       :title="sheetTitle"
       :icon="sheetIcon"
+      :maxWidth="sheetMaxWidth"
       full-height
     >
-      <div class="px-6 pt-6">
-        <!-- Header Actions Row -->
-        <div class="flex items-center gap-3 mb-4">
-          <div class="relative flex-1">
-            <SearchIcon
-              :size="18"
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary"
-            />
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Cari layanan atau fitur..."
-              class="w-full bg-bg-primary border-2 border-border-color rounded-2xl py-3.5 pl-12 pr-4 text-sm font-medium text-text-primary focus:border-accent-primary outline-none transition-all shadow-sm"
-            />
+      <!-- Combined Desktop Header: Search + Category Tabs -->
+      <div 
+        class="sticky top-0 z-40 bg-bg-secondary border-b border-border-color/30 px-6 py-4"
+      >
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 lg:gap-8">
+          <!-- Search Box (Compact) -->
+          <div class="flex items-center gap-2 w-full md:w-[200px] shrink-0">
+            <div class="relative flex-1">
+              <SearchIcon
+                :size="14"
+                class="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary"
+              />
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Cari..."
+                class="w-full bg-bg-primary border-2 border-border-color rounded-xl py-2 pl-10 pr-4 text-xs font-medium text-text-primary focus:border-accent-primary outline-none transition-all placeholder:text-text-tertiary/50"
+              />
+            </div>
+            
+            <!-- Mobile-only Reset Button (Trash Icon - Inline with Search) -->
+            <button
+              v-if="
+                ((sheetMode === 'type' && selectedType) ||
+                  (sheetMode === 'feature' && selectedFeatures.length > 0))
+              "
+              @click="handleReset"
+              class="sm:hidden w-10 h-10 flex items-center justify-center rounded-xl border border-red-500/20 bg-red-500/5 text-red-500/80 active:scale-90 transition-all shrink-0"
+            >
+              <TrashIcon :size="16" />
+            </button>
           </div>
 
-          <!-- Reset Button (Trash Icon) -->
-          <button
+          <!-- Category Tabs (Main Area) -->
+          <div
             v-if="
-              (sheetMode === 'type' && selectedType) ||
-              (sheetMode === 'feature' && selectedFeatures.length > 0)
+              sheetMode === 'type' ||
+              (sheetMode === 'feature' &&
+                props.selectedType === 'custom-maintenance')
             "
-            @click="handleReset"
-            class="w-12 h-12 flex items-center justify-center rounded-2xl border-2 border-red-500/20 bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all shrink-0 active:scale-95"
-            :title="
-              sheetMode === 'type' ? 'Hapus pilihan tipe' : 'Hapus semua fitur'
-            "
+            class="flex-1 w-full overflow-hidden"
           >
-            <TrashIcon :size="20" />
-          </button>
+            <div class="flex gap-1.5 overflow-x-auto no-scrollbar scroll-smooth">
+              <button
+                v-for="cat in currentCategories"
+                :key="cat"
+                @click.stop="activeCategory = cat"
+                class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest border-2 whitespace-nowrap transition-all shrink-0"
+                :class="
+                  activeCategory === cat
+                    ? 'bg-accent-primary text-white border-accent-primary shadow-lg shadow-accent-primary/20'
+                    : 'bg-bg-secondary/50 text-text-tertiary border-transparent hover:border-border-color'
+                "
+              >
+                {{ cat }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Category Tabs (Adaptive & Sticky) -->
-      <div
-        v-if="
-          sheetMode === 'type' ||
-          (sheetMode === 'feature' &&
-            props.selectedType === 'custom-maintenance')
-        "
-        class="sticky -top-px z-30 bg-bg-secondary px-6 pt-4 pb-4 border-b border-border-color/30"
-      >
-        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          <button
-            v-for="cat in currentCategories"
-            :key="cat"
-            @click.stop="activeCategory = cat"
-            class="px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 whitespace-nowrap transition-all"
-            :class="
-              activeCategory === cat
-                ? 'bg-accent-primary text-white border-accent-primary shadow-lg shadow-accent-primary/20'
-                : 'bg-bg-secondary/50 text-text-tertiary border-transparent hover:border-border-color'
-            "
-          >
-            {{ cat }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Selection Grid -->
+      <!-- Selection Grid (Dynamic Columns) -->
       <div class="px-6 py-6 pb-24">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div 
+          class="grid gap-4"
+          :class="sheetGridClass"
+        >
           <template v-if="sheetMode === 'type'">
             <button
               v-for="type in filteredProjectTypes"
@@ -440,7 +445,10 @@
                   ? 'border-accent-primary bg-accent-primary/5'
                   : 'border-border-color'
               "
-              @click="$emit('update:selectedType', type.id)"
+              @click="
+                $emit('update:selectedType', type.id);
+                isSheetOpen = false;
+              "
             >
               <div
                 class="flex justify-between items-start w-full relative z-10"
@@ -530,7 +538,10 @@
                   ? 'border-accent-primary bg-accent-primary/5'
                   : 'border-border-color'
               "
-              @click="$emit('update:selectedStyle', style.id)"
+              @click="
+                $emit('update:selectedStyle', style.id);
+                isSheetOpen = false;
+              "
             >
               <!-- Style Preview Image -->
               <div class="w-full aspect-16/10 overflow-hidden relative">
@@ -573,7 +584,10 @@
                   ? 'border-accent-primary bg-accent-primary/5'
                   : 'border-border-color'
               "
-              @click="$emit('update:selectedTimeline', time.id)"
+              @click="
+                $emit('update:selectedTimeline', time.id);
+                isSheetOpen = false;
+              "
             >
               <!-- Icon Above -->
               <div
@@ -711,12 +725,30 @@
         </div>
       </div>
 
-      <template #footer>
-        <div class="p-6">
+      <template #footer v-if="sheetMode === 'feature'">
+        <div class="py-5 px-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-bg-primary/50 border-t border-border-color/30 backdrop-blur-md">
+          <!-- Reset Selection Button (Desktop Only) -->
+          <button
+            v-if="
+              (sheetMode === 'type' && selectedType) ||
+              (sheetMode === 'feature' && selectedFeatures.length > 0)
+            "
+            @click="handleReset"
+            class="hidden sm:flex items-center gap-2 group px-4 py-2 rounded-lg hover:bg-red-500/5 transition-all active:scale-95"
+          >
+            <div class="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
+              <TrashIcon :size="14" />
+            </div>
+            <span class="text-[10px] font-black uppercase tracking-widest text-red-500/80 group-hover:text-red-500">
+              Hapus Semua Pilihan
+            </span>
+          </button>
+          <div v-else class="hidden sm:block"></div>
+
+          <!-- Action Button -->
           <BaseButton
             variant="primary"
-            size="lg"
-            class="w-full rounded-2xl py-4 font-black shadow-xl shadow-accent-primary/20"
+            class="w-full sm:w-fit min-w-[200px] px-8 rounded-xl py-3.5 font-black shadow-xl shadow-accent-primary/20 hover:scale-105 active:scale-95 transition-all text-[12px] uppercase tracking-wider"
             @click="isSheetOpen = false"
           >
             Selesai Memilih
@@ -796,6 +828,32 @@ const timelineOptions = computed(() => {
   return Array.isArray(props.timelines) && props.timelines.length > 0
     ? props.timelines
     : [];
+});
+
+// --- Dynamic Modal Controls ---
+const sheetItemsCount = computed(() => {
+  if (sheetMode.value === 'type') return filteredProjectTypes.value.length;
+  if (sheetMode.value === 'feature') return filteredFeatures.value.length;
+  if (sheetMode.value === 'style') return styleOptions.value.length;
+  if (sheetMode.value === 'timeline') return timelineOptions.value.length;
+  return 0;
+});
+
+const sheetMaxWidth = computed(() => {
+  const count = sheetItemsCount.value;
+  if (count <= 2) return "2xl";
+  if (count === 3) return "3xl";
+  return "4xl"; // Conservative max-width to ensure margins on desktop
+});
+
+const sheetGridClass = computed(() => {
+  const count = sheetItemsCount.value;
+  if (count <= 1) return "grid-cols-1 max-w-sm mx-auto";
+  if (count === 2) return "grid-cols-1 sm:grid-cols-2";
+  if (count === 3) return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  // For style, we might want 2 columns because images are large, 
+  // but let's stick to the 4-column pattern for consistency first.
+  return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 });
 
 const isTimelineVisible = computed(() => !props.isMicro);

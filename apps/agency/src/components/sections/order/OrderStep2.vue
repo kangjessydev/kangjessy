@@ -48,14 +48,58 @@
                             class="bg-bg-primary border-2 border-border-color rounded-2xl px-5 py-4 text-text-primary text-[0.95rem] outline-none transition-all focus:border-accent-primary focus:shadow-lg focus:shadow-accent-primary/5">
                     </div>
 
-                    <!-- Domain Checker -->
-                    <div class="flex flex-col gap-2.5 sm:col-span-2">
-                        <label class="text-[0.8rem] font-black text-text-tertiary uppercase tracking-widest">Domain
-                            Impian (Opsional)</label>
+                    <!-- Domain Selector -->
+                    <div class="flex flex-col gap-5 sm:col-span-2">
+                        <label class="text-[0.8rem] font-black text-text-tertiary uppercase tracking-widest">Status Website & Domain</label>
+                        
+                        <!-- Premium Radio Group -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <label 
+                                class="flex items-center gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer group"
+                                :class="form.websiteStatus === 'yes' ? 'border-accent-primary bg-accent-primary/5' : 'border-border-color hover:border-accent-primary/20 bg-bg-primary/50'"
+                            >
+                                <input type="radio" value="yes" v-model="form.websiteStatus" class="sr-only">
+                                <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all"
+                                    :class="form.websiteStatus === 'yes' ? 'border-accent-primary' : 'border-text-tertiary group-hover:border-accent-primary'">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-accent-primary scale-0 transition-all"
+                                        :class="{ 'scale-100': form.websiteStatus === 'yes' }"></div>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-text-primary">Sudah punya Website</span>
+                                    <span class="text-[0.65rem] text-text-tertiary font-medium uppercase tracking-tight">Redesign / Maintenance</span>
+                                </div>
+                            </label>
+
+                            <label 
+                                class="flex items-center gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer group"
+                                :class="form.websiteStatus === 'no' ? 'border-accent-primary bg-accent-primary/5' : 'border-border-color hover:border-accent-primary/20 bg-bg-primary/50'"
+                            >
+                                <input type="radio" value="no" v-model="form.websiteStatus" class="sr-only">
+                                <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all"
+                                    :class="form.websiteStatus === 'no' ? 'border-accent-primary' : 'border-text-tertiary group-hover:border-accent-primary'">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-accent-primary scale-0 transition-all"
+                                        :class="{ 'scale-100': form.websiteStatus === 'no' }"></div>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-text-primary">Belum punya Website</span>
+                                    <span class="text-[0.65rem] text-text-tertiary font-medium uppercase tracking-tight">Buat Baru (Start from Scratch)</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Dynamic Domain Checker Input -->
                         <div class="flex flex-col gap-3">
+                            <label 
+                                v-if="form.websiteStatus"
+                                class="text-[0.8rem] font-black text-text-tertiary uppercase tracking-widest"
+                            >
+                                {{ form.websiteStatus === 'yes' ? 'Website Sekarang' : 'Domain Impian' }}
+                            </label>
                             <div class="relative flex items-center">
-                                <GlobeIcon :size="18" class="absolute left-5 text-text-tertiary shrink-0" />
-                                <input type="text" v-model="form.domain" placeholder="namabisnismu.com"
+                                <GlobeIcon v-if="form.websiteStatus === 'no'" :size="18" class="absolute left-5 text-text-tertiary shrink-0" />
+                                <LinkIcon v-else :size="18" class="absolute left-5 text-text-tertiary shrink-0" />
+                                <input type="text" v-model="form.domain" 
+                                    :placeholder="form.websiteStatus === 'yes' ? 'www.websitekamu.com' : 'namabisnismu.com'"
                                     @input="debounceDomainCheck"
                                     class="w-full bg-bg-primary border-2 border-border-color rounded-2xl pl-12 pr-5 py-4 text-text-primary text-[0.95rem] outline-none transition-all focus:border-accent-primary focus:shadow-lg focus:shadow-accent-primary/5">
                             </div>
@@ -67,10 +111,11 @@
                                 <XIcon v-else-if="domainStatus.available === false" :size="16" class="shrink-0" />
                                 <span>{{ domainStatus.message }}</span>
                             </div>
-                        </div>
-                        <p class="text-[0.7rem] text-text-tertiary italic mt-1">*Cek ketersediaan awal. Status
-                            'Tersedia' harus divalidasi saat pembelian.</p>
+                        <p v-if="form.websiteStatus === 'no'" class="text-[0.7rem] text-text-tertiary italic mt-2">
+                            *Domain akan kami cek kembali ketersediaannya di penyedia domain, dan statusnya akan kami infokan via WhatsApp.
+                        </p>
                     </div>
+                </div>
 
                     <!-- Honeypot -->
                     <div class="hidden">
@@ -108,6 +153,7 @@ import { reactive } from 'vue';
 import {
     ChevronLeft as ChevronLeftIcon,
     Globe as GlobeIcon,
+    Link as LinkIcon,
     Loader2 as Loader2Icon,
     Check as CheckIcon,
     X as XIcon

@@ -6,7 +6,7 @@ const socials = {
     youtube: "https://youtube.com/@kangjessy",
     thread: "https://threads.net/@kangjessy",
     email: "hi.kangjessy@gmail.com",
-    whatsapp: "6288218705236",
+    whatsapp: "0881023762866",
 };
 
 export const siteConfig = {

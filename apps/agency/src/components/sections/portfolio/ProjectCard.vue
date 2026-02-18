@@ -24,30 +24,13 @@
         />
       </template>
 
-      <!-- Fallback Icon/Gradient -->
-      <template v-else-if="project.localIcon || project.icon">
-        <div
-          class="w-full h-full flex items-center justify-center bg-linear-to-br from-bg-secondary to-bg-tertiary group-hover:scale-105 transition-transform duration-700"
-          :style="{ background: project.localColor || project.color }"
-        >
-          <div
-            class="w-20 h-20 text-white drop-shadow-2xl opacity-80 group-hover:opacity-100 transition-opacity"
-          >
-            <component
-              :is="getIconComponent(project.localIcon || project.icon)"
-              :size="80"
-              stroke-width="1.5"
-            />
-          </div>
-        </div>
-      </template>
-
-      <!-- Default Fallback -->
+      <!-- Unified Fallback for Missing Images -->
       <template v-else>
         <div
-          class="w-full h-full flex items-center justify-center bg-bg-tertiary/30"
+          class="w-full h-full flex flex-col items-center justify-center bg-white/5 border border-white/5 group-hover:bg-white/10 transition-colors duration-500"
         >
-          <FolderIcon :size="48" class="text-text-tertiary opacity-30" />
+          <ImageIcon :size="48" class="text-white/20 mb-3" />
+          <span class="text-xs font-bold text-white/30 uppercase tracking-widest">No Thumbnail</span>
         </div>
       </template>
 
@@ -160,6 +143,7 @@ import {
   Cpu,
   MapPinned,
   Hotel,
+  Image as ImageIcon,
 } from "lucide-vue-next";
 import { urlFor } from "../../../services/portfolioService";
 

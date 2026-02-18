@@ -216,58 +216,6 @@ export const projectTypes: ProjectType[] = [
     ],
     faq: [{ question: "Bisa tambah map?", answer: "Include integrasi Google Maps / Mapbox pak." }]
   },
-  // AUTOMATION
-  {
-    id: "wa-sheets-auto",
-    serviceId: "automation",
-    name: "WA & Sheets Sync",
-    basePrice: 2000000,
-    desc: "Robot otomatis buat catat data dari WhatsApp ke Google Sheets.",
-    category: "Automation",
-  },
-  {
-    id: "omnichannel-bot",
-    serviceId: "automation",
-    name: "Omnichannel Bot",
-    basePrice: 4000000,
-    desc: "Otomatisasi notifikasi & broadcast di berbagai platform chat.",
-    category: "Automation",
-  },
-  // BUSINESS SYSTEM
-  {
-    id: "crm-lite",
-    serviceId: "business-system",
-    name: "Custom CRM Lite",
-    basePrice: 7000000,
-    desc: "Sistem manajemen data pelanggan, status order, dan database.",
-    category: "Business System",
-  },
-  {
-    id: "inventory-app",
-    serviceId: "business-system",
-    name: "Stock & Inventory",
-    basePrice: 10000000,
-    desc: "Sistem kontrol stok barang, gudang, dan laporan masuk-keluar.",
-    category: "Business System",
-  },
-  // AI AGENT
-  {
-    id: "ai-support",
-    serviceId: "ai-agent",
-    name: "AI Customer Support",
-    basePrice: 5000000,
-    desc: "AI yang dilatih khusus dengan data bisnis Anda untuk menjawab chat pelanggan.",
-    category: "AI Agent",
-  },
-  {
-    id: "ai-automation-agent",
-    serviceId: "ai-agent",
-    name: "AI Doc Processor",
-    basePrice: 8000000,
-    desc: "AI untuk analisis dokumen kustom dan otomatisasi tugas kompleks.",
-    category: "AI Agent",
-  },
-
   // THE FOUNDATION (Starter Kit - Custom Build)
   {
     id: "foundation-web",
@@ -297,35 +245,6 @@ export const projectTypes: ProjectType[] = [
       { question: "Apa bedanya Foundation dengan paket Express?", answer: "Foundation hanya berisi 'rangka' dan fitur dasar bapak. Bapak yang merakit fitur tambahannya sendiri atau dengan bantuan tim kami." }
     ]
   },
-  {
-    id: "foundation-system",
-    serviceId: "business-system",
-    name: "The Foundation (System)",
-    basePrice: 3000000,
-    desc: "Starter kit sistem bisnis dengan Admin Dashboard, CRUD, dan Role Management. Tambahkan modul sesuai kebutuhan.",
-    category: "The Foundation",
-    features: ["Admin Dashboard", "User Role Management", "CRUD Generator", "Dark Mode Ready", "Database Schema Initialized"],
-    detailedFeatures: [
-      { 
-        title: "Admin Core", 
-        icon: "Monitor", 
-        items: ["Dashboard layout built-in", "Sidebar navigation with roles", "Profile & Settings page template"] 
-      },
-      { 
-        title: "Data Engine", 
-        icon: "Database", 
-        items: ["Supabase/Prisma integration", "Generic CRUD hooks", "Real-time data support"] 
-      }
-    ],
-    process: [
-      { title: "Skeleton Setup", description: "Instalasi sistem admin ke infrastruktur bapak." },
-      { title: "Database Migrations", description: "Inisialisasi skema tabel dasar (User, Profile, Audit Logs)." }
-    ],
-    faq: [
-      { question: "Apakah ini include desain UI?", answer: "Sudah include UI dasar Dashboard pak, bapak tinggal fokus ke logika bisnis intinya saja." }
-    ]
-  },
-
   // MAINTENANCE & CUSTOM FEATURES
   {
     id: "fitur-rakitan",
@@ -373,56 +292,56 @@ export const availableFeatures: AvailableFeature[] = [
     name: "Multi-Platform Sync",
     price: 2500000,
     desc: "Hubungkan bot ke WA, Telegram, dan Email sekaligus.",
-    relevantTo: ["automation", "maintenance-custom"],
+    relevantTo: ["maintenance-custom"],
   },
   {
     id: "scheduler",
     name: "Custom Scheduler",
     price: 1500000,
     desc: "Kirim pesan otomatis terjadwal (Broadcast/Reminder).",
-    relevantTo: ["automation", "maintenance-custom"],
+    relevantTo: ["maintenance-custom"],
   },
   {
     id: "crm-sync",
     name: "CRM Auto-Sync",
     price: 2000000,
     desc: "Otomatis input data leads ke CRM pilihan Anda.",
-    relevantTo: ["automation", "maintenance-custom"],
+    relevantTo: ["maintenance-custom"],
   },
   {
     id: "inventory",
     name: "Inventory Module",
     price: 3500000,
     desc: "Sistem Manajemen Stok & Gudang real-time.",
-    relevantTo: ["business-system", "maintenance-custom"],
+    relevantTo: ["maintenance-custom"],
   },
   {
     id: "reporting",
     name: "Financial Reporting",
     price: 2500000,
     desc: "Laporan neraca, laba rugi, dan arus kas otomatis.",
-    relevantTo: ["business-system", "maintenance-custom"],
+    relevantTo: ["maintenance-custom"],
   },
   {
     id: "rag-pro",
     name: "Advanced RAG Master",
     price: 4000000,
     desc: "AI dilatih dengan ribuan dokumen kustom tanpa limit.",
-    relevantTo: ["ai-agent", "maintenance-custom"],
+    relevantTo: ["maintenance-custom"],
   },
   {
     id: "human-handoff",
     name: "Human-to-AI Handoff",
     price: 2000000,
     desc: "Alihkan diskusi ke Admin jika AI tidak bisa jawab.",
-    relevantTo: ["ai-agent", "maintenance-custom"],
+    relevantTo: ["maintenance-custom"],
   },
   {
     id: "maintenance",
     name: "Priority Care (3 Month)",
     price: 2000000,
     desc: "Bebas biaya perbaikan & update minor selama 3 bulan.",
-    relevantTo: ["website-high-conversion", "business-system", "automation", "ai-agent", "maintenance-custom"],
+    relevantTo: ["website-high-conversion", "maintenance-custom"],
   },
 ];
 
@@ -499,79 +418,13 @@ export const serviceCategories = [
     workflow: []
   },
   {
-    id: "automation",
-    title: "Automation",
-    tagline: "Otomatisasi tugas rutin & integrasi sistem.",
-    icon: "Zap",
-    price: 2000000,
-    status: "active",
-    order: 2,
-    badge: "Time Saver",
-    isFeatured: false,
-    originalPrice: 4000000,
-    deliveryTime: "1-2 Weeks",
-    revisions: "3 Times",
-    overview: "Solusi otomatisasi alur kerja menggunakan Robot WhatsApp dan integrasi Google Sheets.",
-    included: ["WA API Integration", "Google Sheets Sync", "Daily Reports"],
-    detailedFeatures: [],
-    process: [],
-    technologies: ["Node.js", "Google Apps Script"],
-    packageFeatures: ["24/7 Monitoring"],
-    faq: [],
-    workflow: []
-  },
-  {
-    id: "business-system",
-    title: "Business System",
-    tagline: "Sistem manajemen data & internal tools.",
-    icon: "Database",
-    price: 7000000,
-    status: "active",
-    order: 3,
-    badge: "Enterprise",
-    isFeatured: false,
-    originalPrice: 12000000,
-    deliveryTime: "4-8 Weeks",
-    revisions: "5 Times",
-    overview: "Pengembangan sistem internal kustom untuk kebutuhan bisnis yang spesifik dan kompleks.",
-    included: ["Custom CRM", "Inventory Management", "Admin Dashboard"],
-    detailedFeatures: [],
-    process: [],
-    technologies: ["Supabase", "Vue.js", "Tailwind CSS"],
-    packageFeatures: ["Priority Support"],
-    faq: [],
-    workflow: []
-  },
-  {
-    id: "ai-agent",
-    title: "AI Agent",
-    tagline: "Solusi AI cerdas untuk bisnis masa depan.",
-    icon: "Cpu",
-    price: 5000000,
-    status: "active",
-    order: 4,
-    badge: "Next-Gen",
-    isFeatured: false,
-    originalPrice: 10000000,
-    deliveryTime: "2-4 Weeks",
-    revisions: "Unlimited",
-    overview: "Integrasi kecerdasan buatan untuk otomatisasi layanan pelanggan dan pengolahan data.",
-    included: ["GPT-4 Integration", "Custom Knowledge Base", "Human Handoff"],
-    detailedFeatures: [],
-    process: [],
-    technologies: ["OpenAI", "LangChain", "Node.js"],
-    packageFeatures: ["Free LLM consultation"],
-    faq: [],
-    workflow: []
-  },
-  {
     id: "maintenance-custom",
     title: "Maintenance & Fitur Rakitan",
     tagline: "Rawat sistem Anda atau tambahkan fitur baru sesuai kebutuhan.",
     icon: "Settings",
     price: 0,
     status: "active",
-    order: 5,
+    order: 2,
     badge: "For Existing Clients",
     isFeatured: false,
     originalPrice: 0,

@@ -953,8 +953,8 @@ const filteredProjectTypes = computed(() => {
 
   // Sort: Custom Maintenance first, then Micro-Services, then others
   return result.sort((a, b) => {
-    if (a.id === "custom-maintenance") return -1;
-    if (b.id === "custom-maintenance") return 1;
+    if (a.id === "fitur-rakitan") return -1;
+    if (b.id === "fitur-rakitan") return 1;
     if (a.category === "Micro-Service" && b.category !== "Micro-Service")
       return -1;
     if (a.category !== "Micro-Service" && b.category === "Micro-Service")
@@ -982,7 +982,7 @@ const filteredFeatures = computed(() => {
   } else {
     // 'Semua' is active.
     if (
-      selectedTypeData.value?.id !== "custom-maintenance" &&
+      selectedTypeData.value?.id !== "fitur-rakitan" &&
       selectedTypeData.value?.serviceId
     ) {
       result = result.filter((f) =>

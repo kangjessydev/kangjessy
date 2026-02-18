@@ -1,27 +1,16 @@
 import { 
     Monitor, 
-    Layers, 
     Globe, 
     Search, 
     Briefcase,
     BookOpen,
-    // ShoppingCart, // Store removed
     FileText,
     Users,
-    // History,
     Calculator,
-    // Package, // Store removed
-    // Layout, // Store removed
-    // GraduationCap, // Store removed
     Send,
-    // HelpCircle,
     Info,
-    // Star,
     Mail,
     Zap,
-    // Puzzle, // Store removed
-    Cpu,
-    // Gift, // Store removed
     Rocket,
     Palette,
     MessageSquare,
@@ -55,9 +44,6 @@ export const menuItems: MenuItem[] = [
                 title: 'Core Services',
                 items: [
                     { text: 'Website High-Conv', desc: 'Landing page & Company Profile.', url: '/service/website-high-conversion', icon: Monitor },
-                    { text: 'Sistem Manajemen', desc: 'ERP, CRM, LMS & Internal Tools.', url: '/service/business-system', icon: Layers },
-                    { text: 'AI Agent & Bot', desc: 'AI Custom Data & Automation.', url: '/service/ai-agent', icon: Cpu },
-                    { text: 'Robot Automasi', desc: 'Otomatisasi tugas & Integrasi.', url: '/service/automation', icon: Zap },
                     { text: 'Maintenance & Rakitan', desc: 'Update fitur & System care.', url: '/service/maintenance-custom', icon: Settings }
                 ]
             },
@@ -65,9 +51,7 @@ export const menuItems: MenuItem[] = [
                 title: 'Micro-Services',
                 items: [
                     { text: 'Lihat Semua Fitur', desc: 'Katalog lengkap fitur instan.', url: '/#microservices', icon: Zap },
-                    { text: 'SEO Infrastructure', desc: 'Optimasi ranking Google otomatis.', url: '/order?type=custom-maintenance&addFeature=seo-pro', icon: Search },
-                    { text: 'WA Notification', desc: 'Kirim invoice & notif via WA.', url: '/order?type=custom-maintenance&addFeature=wa-notif-system', icon: MessageSquare },
-                    { text: 'AI Knowledge Base', desc: 'Latih AI dengan data internal.', url: '/order?type=custom-maintenance&addFeature=rag-knowledge', icon: Cpu }
+                    { text: 'SEO Infrastructure', desc: 'Optimasi ranking Google otomatis.', url: '/order?type=fitur-rakitan&addFeature=seo', icon: Search },
                 ]
             },
             {
@@ -81,12 +65,6 @@ export const menuItems: MenuItem[] = [
                         triggerProps: { initialMessage: 'Halo Kang Jessy, saya mau konsultasi tentang strategi teknologi bisnis saya.' },
                         icon: Globe 
                     },
-                    { 
-                        text: 'SEO Audit', 
-                        desc: 'Dapatkan audit website gratis secara instan.', 
-                        url: 'https://kangjessy-tools.vercel.app/seo-scanner',
-                        icon: Search 
-                    }
                 ]
             }
         ]
@@ -133,7 +111,6 @@ export const menuItems: MenuItem[] = [
                     { text: 'Visionary', desc: 'Tahap Memulai & Identitas.', url: '/blueprint?stage=visionary', icon: Palette },
                     { text: 'Scaler', desc: 'Membangun Kredibilitas.', url: '/blueprint?stage=scaler', icon: Monitor },
                     { text: 'Optimizer', desc: 'Optimasi & Performa.', url: '/blueprint?stage=optimizer', icon: Search },
-                    { text: 'Automator', desc: 'Sistem & Automasi.', url: '/blueprint?stage=automator', icon: Zap }
                 ]
             },
             {

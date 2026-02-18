@@ -88,7 +88,7 @@
                 </div>
 
                 <button
-                  @click="router.push('/order?type=custom-maintenance')"
+                  @click="router.push('/order?type=fitur-rakitan')"
                   class="flex-1 group/btn p-6 bg-bg-primary border border-border-color rounded-2xl hover:border-accent-primary/40 transition-all text-left flex flex-col justify-between"
                 >
                   <div class="flex flex-col h-full">
@@ -414,7 +414,7 @@ const isBundle = (item: any) => item && "serviceId" in item;
 
 const filteredItems = computed(() => {
   const bundles = (projectTypes.value || []).filter(
-    (p) => !p.id.startsWith("foundation-") && p.id !== "custom-maintenance",
+    (p) => !p.id.startsWith("foundation-") && p.id !== "fitur-rakitan",
   );
   const featureList = features.value; // Use dynamic features
 
@@ -451,7 +451,7 @@ const handleItemClick = (item: any) => {
   if (isBundle(item)) {
     router.push(`/order?type=${item.id}`);
   } else {
-    router.push(`/order?type=custom-maintenance&addFeature=${item.id}`);
+    router.push(`/order?type=fitur-rakitan&addFeature=${item.id}`);
   }
 };
 

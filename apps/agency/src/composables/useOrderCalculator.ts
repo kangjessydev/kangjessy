@@ -85,7 +85,7 @@ export function useOrderCalculator() {
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("id-ID").format(Math.round(price));
 
-  const isMicro = computed(() => !!currentType.value?.isMicro || currentType.value?.id === 'custom-maintenance');
+  const isMicro = computed(() => !!currentType.value?.isMicro || currentType.value?.id === 'fitur-rakitan');
 
   const totalPriceWithoutMultiplier = computed(() => {
     let base = currentType.value?.basePrice || 0;

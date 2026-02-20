@@ -42,16 +42,31 @@ export const formValidation = {
   },
 };
 
+export const pricingConfig = {
+  tieredDiscounts: [
+    { threshold: 10000000, discount: 0.10 }, // > 10jt = 10%
+    { threshold: 6000000, discount: 0.12 },  // > 6jt = 12%
+    { threshold: 3000000, discount: 0.15 },  // > 3jt = 15%
+    { threshold: 0, discount: 0.20 }         // < 3jt = 20%
+  ]
+};
+
+/** Bulatkan harga KE BAWAH ke kelipatan 5.000 terdekat.
+ * Selisih (0–4.999) dianggap hemat untuk klien → masuk badge "Hemat".
+ * Misal: 608.000 → 605.000 | 668.500 → 665.000 | 760.000 → 760.000 */
+export const roundPrice = (price: number): number => {
+  return Math.floor(price / 5000) * 5000;
+};
+
+/** Biaya overhead default per fitur (audit + integrasi + deploy).
+ * Berlaku untuk maintenance/fitur-rakitan (tanpa Starter Pack).
+ * Override per-fitur dengan field setupFee di availableFeatures.
+ * Ubah ke 0 jika tidak ingin ada overhead sama sekali. */
+export const DEFAULT_SETUP_FEE = 75000; // Rp 75.000 per fitur
+
 export const defaultConfig = {
   selectedType: "landing-page",
   selectedFeatures: [],
   selectedTimeline: "relaxed",
-  storageKey: "project_order_draft",
-  featurePremiumMultiplier: 1.1, // 10% premium for a la carte/foundation orders
-  foundationPrices: {
-    web: 1500000,    // <--- Ganti harga Foundation Web di sini
-    system: 4500000  // <--- Ganti harga Foundation System di sini
-  }
+  storageKey: "project_order_draft"
 };
-
-

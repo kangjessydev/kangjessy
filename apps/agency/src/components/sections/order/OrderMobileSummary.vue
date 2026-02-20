@@ -203,52 +203,78 @@
             </div>
           </div>
 
-          <!-- Features -->
-          <div class="space-y-3">
-            <div class="flex justify-between items-center px-1">
+            <!-- Bundled Features -->
+            <div v-if="currentType?.features?.length" class="space-y-3">
               <span
-                class="text-[0.65rem] font-black text-text-tertiary uppercase"
-                >Fitur Tambahan</span
+                class="text-[0.65rem] font-black text-text-tertiary uppercase ml-1"
+                >Sudah Termasuk (Paket)</span
               >
-              <button
-                @click="
-                  isFeatureSheetOpen = true;
-                  isSheetOpen = false;
-                "
-                class="text-[0.65rem] font-black text-accent-primary uppercase underline"
-              >
-                Tambah
-              </button>
-            </div>
-            <div class="space-y-2">
-              <div
-                v-for="featId in selectedFeatures"
-                :key="featId"
-                class="flex justify-between items-center text-sm p-4 bg-bg-secondary border border-border-color rounded-xl gap-4"
-              >
-                <span class="text-text-secondary">{{
-                  getFeatureName(featId)
-                }}</span>
-                <div class="flex items-center gap-3 shrink-0">
-                  <span class="font-mono text-text-primary"
-                    >+Rp {{ formatPrice(getFeaturePrice(featId)) }}</span
-                  >
-                  <button
-                    @click="$emit('toggle-feature', featId)"
-                    class="text-red-500/50"
-                  >
-                    <TrashIcon :size="14" />
-                  </button>
+              <div class="space-y-2">
+                <div
+                  v-for="featId in currentType.features"
+                  :key="featId"
+                  class="flex justify-between items-center text-xs p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl"
+                >
+                  <div class="flex items-center gap-2">
+                    <CheckIcon :size="10" class="text-emerald-500" />
+                    <span class="font-bold text-emerald-600">{{ getFeatureName(featId) }}</span>
+                  </div>
+                  <span class="text-[0.6rem] font-black uppercase text-emerald-500/60 tracking-wider">PAKET</span>
                 </div>
               </div>
-              <div
-                v-if="selectedFeatures.length === 0"
-                class="text-sm text-text-tertiary italic p-4 text-center border border-dashed border-border-color rounded-xl bg-bg-secondary/30"
-              >
-                Belum ada fitur tambahan
+            </div>
+
+            <!-- Features -->
+            <div class="space-y-3">
+              <div class="flex justify-between items-center px-1">
+                <span
+                  class="text-[0.65rem] font-black text-text-tertiary uppercase"
+                  >Fitur Tambahan (Add-ons)</span
+                >
+                <button
+                  @click="
+                    isFeatureSheetOpen = true;
+                    isSheetOpen = false;
+                  "
+                  class="text-[0.65rem] font-black text-accent-primary uppercase underline"
+                >
+                  Tambah
+                </button>
+              </div>
+              <div class="space-y-2">
+                <div
+                  v-for="featId in selectedFeatures"
+                  :key="featId"
+                  class="flex justify-between items-center text-sm p-4 bg-bg-secondary border border-border-color rounded-xl gap-4"
+                >
+                  <span class="text-text-secondary">{{
+                    getFeatureName(featId)
+                  }}</span>
+                  <div class="flex items-center gap-3 shrink-0">
+                   <div class="flex flex-col items-end shrink-0">
+                    <span v-if="getFeatureOriginalPrice(featId)" class="text-[10px] text-text-tertiary line-through opacity-50 font-mono">
+                      Rp {{ formatPrice(getFeatureOriginalPrice(featId) || 0) }}
+                    </span>
+                    <span class="font-mono text-text-primary">
+                      +Rp {{ formatPrice(getFeaturePrice(featId)) }}
+                    </span>
+                  </div>
+                    <button
+                      @click="$emit('toggle-feature', featId)"
+                      class="text-red-500/50"
+                    >
+                      <TrashIcon :size="14" />
+                    </button>
+                  </div>
+                </div>
+                <div
+                  v-if="selectedFeatures.length === 0"
+                  class="text-sm text-text-tertiary italic p-4 text-center border border-dashed border-border-color rounded-xl bg-bg-secondary/30"
+                >
+                  Belum ada fitur tambahan
+                </div>
               </div>
             </div>
-          </div>
 
           <!-- Modifiers & Promo -->
           <div class="space-y-3">
@@ -808,6 +834,7 @@ const props = defineProps<{
   coupons: Coupon[];
   getFeatureName: (id: string) => string;
   getFeaturePrice: (id: string) => number;
+  getFeatureOriginalPrice: (id: string) => number | undefined;
   formatPrice: (price: number) => string;
   step?: number;
   availableFeatures: Feature[];
@@ -858,12 +885,28 @@ const filteredTypes = computed(() => {
 });
 
 const filteredFeatures = computed(() => {
+  if (!props.currentType) return [];
+  const sid = props.currentType.serviceId;
+  const tid = props.currentType.id;
+
+  // Get ALL project type IDs in the same service
+  const allRelatedTypeIds = (props.projectTypes || [])
+    .filter(t => t.serviceId === sid)
+    .map(t => t.id);
+
+  // Match by serviceId, project type id, OR any sibling project type id in same service
   const relevant = props.availableFeatures.filter((f) =>
-    f.relevantTo.includes(props.currentType?.serviceId),
+    f.relevantTo.includes(sid) ||
+    f.relevantTo.includes(tid) ||
+    allRelatedTypeIds.some(relId => f.relevantTo.includes(relId))
   );
-  if (!featureSearchQuery.value) return relevant;
+
+  // Hide features already bundled in the selected type
+  const bundledIds = props.currentType.features || [];
+  const notBundled = relevant.filter((f) => !bundledIds.includes(f.id));
+  if (!featureSearchQuery.value) return notBundled;
   const query = featureSearchQuery.value.toLowerCase();
-  return relevant.filter(
+  return notBundled.filter(
     (f) =>
       f.name.toLowerCase().includes(query) ||
       f.desc.toLowerCase().includes(query),

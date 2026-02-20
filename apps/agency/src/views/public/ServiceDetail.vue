@@ -1,5 +1,21 @@
 <template>
-  <div class="min-h-screen bg-bg-primary" v-if="service">
+  <!-- Loading State -->
+  <div v-if="isLoading" class="min-h-screen bg-bg-primary flex items-center justify-center">
+    <div class="flex flex-col items-center gap-4">
+      <div class="w-12 h-12 border-2 border-accent-primary/30 border-t-accent-primary rounded-full animate-spin"></div>
+      <p class="text-text-tertiary text-sm font-medium">Memuat layanan...</p>
+    </div>
+  </div>
+
+  <!-- Not Found State -->
+  <div v-else-if="!service && !isLoading" class="min-h-screen bg-bg-primary flex items-center justify-center">
+    <div class="text-center">
+      <p class="text-text-secondary text-lg font-bold mb-4">Layanan tidak ditemukan</p>
+      <router-link to="/" class="text-accent-primary hover:underline text-sm">← Kembali ke beranda</router-link>
+    </div>
+  </div>
+
+  <div class="min-h-screen bg-bg-primary" v-else-if="service">
     <!-- Hero Section -->
     <header
       class="bg-bg-secondary border-b border-border-color pt-32 pb-15 md:pt-40 md:pb-20"
@@ -64,7 +80,7 @@
     <main class="container mx-auto px-6 max-w-6xl py-15 md:py-20">
       <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-15 lg:gap-20">
         <!-- Info Column -->
-        <div class="space-y-16">
+        <div class="space-y-16 min-w-0">
           <section>
             <h3
               class="text-[clamp(1.5rem,3vw,1.875rem)] font-bold mb-5 text-text-primary"
@@ -79,7 +95,7 @@
           </section>
 
           <!-- Packages Grid -->
-          <section v-if="availablePackages.length && service.id !== 'maintenance-custom'">
+          <section v-if="availablePackages.length">
             <div class="flex justify-between items-end mb-6">
               <div>
                 <h3 class="text-2xl font-bold text-text-primary">
@@ -98,7 +114,7 @@
               </button>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <div
                 v-for="pkg in featuredPackages"
                 :key="pkg.id"
@@ -112,15 +128,15 @@
               >
                 <!-- Badge -->
                 <div
-                  v-if="pkg.badge"
+                  v-if="pkg.badge || getPackageOriginalPrice(pkg) > pkg.basePrice"
                   class="absolute -right-8 top-4 text-white text-[9px] font-black py-1 px-10 rotate-45 shadow-sm"
                   :class="
-                    pkg.badge.toLowerCase().includes('recommend')
+                    (pkg.badge && pkg.badge.toLowerCase().includes('recommend'))
                       ? 'bg-accent-primary'
                       : 'bg-amber-500'
                   "
                 >
-                  {{ pkg.badge }}
+                  {{ pkg.badge || 'PROMO' }}
                 </div>
 
                 <div
@@ -144,11 +160,11 @@
                   <div class="flex flex-col leading-none">
                     <span
                       v-if="
-                        pkg.originalPrice && pkg.originalPrice > pkg.basePrice
+                        getPackageOriginalPrice(pkg) > pkg.basePrice
                       "
                       class="text-[0.8rem] text-text-secondary line-through opacity-70 mb-0.5"
                     >
-                      {{ formatCurrency(pkg.originalPrice) }}
+                      {{ formatCurrency(getPackageOriginalPrice(pkg)) }}
                     </span>
                     <div
                       class="text-accent-primary font-black text-[clamp(1.1rem,1.5vw,1.2rem)]"
@@ -183,6 +199,7 @@
 
               <!-- Not Sure Card -->
               <div
+                v-if="service.id !== 'maintenance-custom'"
                 class="p-5 bg-accent-primary/5 border-2 border-dashed border-accent-primary/20 rounded-[24px] cursor-pointer flex flex-col gap-3 transition-all duration-300 hover:border-accent-primary/50 group relative overflow-hidden"
                 @click="scrollToFoundation"
               >
@@ -247,9 +264,33 @@
               </div>
             </div>
 
+            <!-- Category Tabs (UI Standard) -->
+            <div 
+              v-if="featureCategories.length > 1"
+              class="flex bg-bg-secondary p-1 rounded-2xl border border-border-color w-full lg:w-fit max-w-full overflow-x-auto no-scrollbar items-center gap-1 mb-6"
+              role="tablist"
+            >
+              <button
+                v-for="cat in featureCategories"
+                :key="cat"
+                @click="activeFeatureCategory = cat"
+                role="tab"
+                :aria-selected="activeFeatureCategory === cat"
+                class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 whitespace-nowrap shrink-0"
+                :class="activeFeatureCategory === cat 
+                  ? 'bg-accent-primary text-white shadow-lg shadow-accent-primary/20' 
+                  : 'text-text-tertiary hover:text-text-primary hover:bg-white/5'"
+              >
+                {{ cat }}
+                <span class="ml-1 opacity-50 text-[10px]">
+                  ({{ relevantFeatures.filter(f => (f.category || 'Other') === cat).length }})
+                </span>
+              </button>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div
-                v-for="feature in relevantFeatures"
+                v-for="feature in (featureCategories.length > 1 ? filteredRelevantFeatures : relevantFeatures)"
                 :key="feature.id"
                 class="p-5 bg-bg-primary border rounded-2xl flex flex-col justify-between group transition-all cursor-pointer relative overflow-hidden"
                 :class="selectedFeatures.includes(feature.id) 
@@ -271,13 +312,21 @@
                     >
                       {{ feature.name }}
                     </h4>
-                    <div
-                      class="text-[0.7rem] font-mono font-bold text-accent-primary bg-accent-primary/5 px-2 py-0.5 rounded-lg border border-accent-primary/10"
-                    >
-                      +Rp
-                      {{
-                        formatCurrency(feature.price).replace("Rp", "").trim()
-                      }}
+                    <div class="flex flex-col items-end">
+                      <span
+                        v-if="feature.originalPrice && feature.originalPrice > feature.price"
+                        class="text-[0.6rem] text-text-tertiary line-through opacity-70 mb-0.5"
+                      >
+                        +Rp {{ formatCurrency(feature.originalPrice).replace("Rp", "").trim() }}
+                      </span>
+                      <div
+                        class="text-[0.7rem] font-mono font-bold text-accent-primary bg-accent-primary/5 px-2 py-0.5 rounded-lg border border-accent-primary/10 leading-none"
+                      >
+                        +Rp
+                        {{
+                          formatCurrency(feature.price).replace("Rp", "").trim()
+                        }}
+                      </div>
                     </div>
                   </div>
                   <p
@@ -357,9 +406,22 @@
               <div
                 v-for="(feature, fIdx) in displayedFeatures"
                 :key="(selectedPkg?.id || 'default') + '-' + fIdx"
-                class="group p-6 md:p-8 bg-bg-secondary border border-border-color rounded-[32px] transition-all hover:bg-bg-secondary/80 hover:border-accent-primary/20 relative overflow-hidden"
+                class="group p-6 md:p-8 rounded-[32px] transition-all relative overflow-hidden"
+                :class="[
+                  feature.title === 'Starter Pack' 
+                    ? 'bg-linear-to-br from-accent-primary/[0.08] via-bg-secondary to-bg-secondary border-2 border-accent-primary/40 shadow-[0_0_40px_-15px_rgba(59,130,246,0.1)] ring-1 ring-accent-primary/20 hover:border-accent-primary/60 hover:shadow-[0_0_50px_-10px_rgba(59,130,246,0.2)]' 
+                    : 'bg-bg-secondary border border-border-color hover:bg-bg-secondary/80 hover:border-accent-primary/20'
+                ]"
                 :style="{ '--delay': (Number(fIdx) * 0.1).toFixed(1) + 's' }"
               >
+                <!-- Bento Badge for Starter Pack -->
+                <div 
+                  v-if="feature.title === 'Starter Pack'"
+                  class="absolute top-6 right-6 px-3 py-1 bg-accent-primary text-white text-[10px] font-black uppercase tracking-widest rounded-full z-20 shadow-lg shadow-accent-primary/20"
+                >
+                  Core Foundation
+                </div>
+
                 <div
                   class="absolute -right-4 -top-4 w-32 h-32 bg-accent-primary/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                 ></div>
@@ -596,15 +658,14 @@
                 <div class="mt-3 mb-6">
                   <div
                     v-if="
-                      selectedPkg?.originalPrice &&
-                      selectedPkg.originalPrice > selectedPkg.basePrice
+                      effectiveOriginalPrice > (selectedPkg?.basePrice || 0)
                     "
                     class="flex items-center gap-2 mb-1"
                   >
                     <span
                       class="text-sm text-text-secondary line-through opacity-70"
                     >
-                      {{ formatCurrency(selectedPkg.originalPrice) }}
+                      {{ formatCurrency(effectiveOriginalPrice) }}
                     </span>
                     <span
                       class="bg-red-500/10 text-red-400 border border-red-500/20 text-[0.65rem] font-bold px-2 py-0.5 rounded-full"
@@ -612,7 +673,7 @@
                       Hemat
                       {{
                         formatCurrency(
-                          selectedPkg.originalPrice - selectedPkg.basePrice,
+                          effectiveOriginalPrice - (selectedPkg?.basePrice || 0),
                         )
                       }}
                     </span>
@@ -933,15 +994,15 @@
         >
           <!-- Badge -->
           <div
-            v-if="pkg.badge"
+            v-if="pkg.badge || getPackageOriginalPrice(pkg) > pkg.basePrice"
             class="absolute right-0 top-0 text-[8px] font-black py-1.5 px-4 rounded-bl-xl shadow-sm text-white"
             :class="
-              pkg.badge.toLowerCase().includes('recommend')
+              (pkg.badge && pkg.badge.toLowerCase().includes('recommend'))
                 ? 'bg-accent-primary'
                 : 'bg-amber-500'
             "
           >
-            {{ pkg.badge }}
+            {{ pkg.badge || 'PROMO' }}
           </div>
 
           <div class="flex items-start gap-4">
@@ -1202,6 +1263,8 @@ import {
   Activity,
   CreditCard,
   Plus as PlusIcon,
+  Layout,
+  Cpu,
 } from "lucide-vue-next";
 
 // ...
@@ -1210,9 +1273,10 @@ const route = useRoute();
 const router = useRouter();
 const popup = usePopupManager();
 
-const service = ref<ServiceData | null>(null); // Updated Type
+const service = ref<ServiceData | null>(null);
 const features = ref<Feature[]>([]);
-const allProjectTypes = ref<ProjectType[]>([]); // ADDED: Dynamic State
+const allProjectTypes = ref<ProjectType[]>([]);
+const isLoading = ref(true); // Loading guard to prevent premature redirect
 
 // SEO Setup
 useSEO({
@@ -1248,84 +1312,245 @@ const goToOrder = () => {
   router.push(url);
 };
 
-const totalInvestment = computed(() => {
-  let total = selectedPkg.value?.basePrice || service.value?.price || 0;
+// Helper for identifying Website services (Aggressive Detection)
+const isWebsiteService = computed(() => {
+  const currentId = route.params.id as string;
+  const sId = service.value?.id || '';
+  const pServiceId = selectedPkg.value?.serviceId || '';
   
-  selectedFeatures.value.forEach(fId => {
-    const f = features.value.find(feat => feat.id === fId);
-    if (f) total += f.price;
-  });
-  
-  return total;
+  return currentId === 'website-high-conversion' || 
+         sId === 'website-high-conversion' || 
+         pServiceId === 'website-high-conversion';
 });
 
-// Build features list from relational mapping (relevantTo includes project type ID)
+const packageMarketValue = computed(() => {
+  if (!selectedPkg.value || !selectedPkg.value.features) return 0;
+  
+  // Sum up all features that are included in this package based on their individual prices
+  return selectedPkg.value.features.reduce((acc, fId) => {
+    const cleanId = String(fId).trim().toLowerCase();
+    const f = features.value.find(feat => feat.id.trim().toLowerCase() === cleanId);
+    if (!f && cleanId === 'starter-pack') return acc + 1000000;
+    return acc + (f?.price || 0);
+  }, 0);
+});
+
+const effectiveOriginalPrice = computed(() => {
+  if (!selectedPkg.value) return 0;
+  // Use the larger of the two: hardcoded original price OR the sum of individual features (market value)
+  const baseOriginal = selectedPkg.value.originalPrice || 0;
+  return Math.max(baseOriginal, packageMarketValue.value);
+});
+
+const totalInvestment = computed(() => {
+  // basePrice already computed with tiered discount in pricingService
+  let base = selectedPkg.value?.basePrice || 0;
+  
+  // Add manually selected add-on features
+  let addonsTotal = 0;
+  selectedFeatures.value.forEach(fId => {
+    const cleanId = String(fId).trim().toLowerCase();
+    // Skip if feature is already part of the package bundle
+    if (selectedPkg.value?.features?.map(id => id.trim().toLowerCase()).includes(cleanId)) return;
+    
+    const f = features.value.find(feat => feat.id.trim().toLowerCase() === cleanId);
+    if (f) {
+      addonsTotal += f.price;
+    } else if (cleanId === 'starter-pack') {
+      addonsTotal += 1000000;
+    }
+  });
+  
+  return base + addonsTotal;
+});
+
+// Build features list from relational mapping
 const pkgRelevantFeatures = computed(() => {
   if (!selectedPkg.value) return [];
-  return features.value.filter(f => f.relevantTo?.includes(selectedPkg.value!.id));
+  return features.value.filter(f => f.relevantTo?.map(r => r.trim().toLowerCase()).includes(selectedPkg.value!.id.trim().toLowerCase()));
 });
 
 const allFeaturesList = computed(() => {
-  // 1. If package has detailedFeatures, use them
-  if (selectedPkg.value?.detailedFeatures?.length) return selectedPkg.value.detailedFeatures;
-  if (service.value?.detailedFeatures?.length) return service.value.detailedFeatures;
+  const rawFeatures = selectedPkg.value?.features || [];
+  const includedIds = rawFeatures.map(id => String(id).trim().toLowerCase());
   
-  // 2. If package has simple features, use them
-  const simpleFeatures = selectedPkg.value?.features || [];
-  if (simpleFeatures.length > 0) {
-    return simpleFeatures.map(f => ({ title: f, items: [], icon: undefined }));
+  // Also include manually selected features that are NOT in the bundle
+  selectedFeatures.value.forEach(fId => {
+    const cleanId = String(fId).trim().toLowerCase();
+    if (!includedIds.includes(cleanId)) includedIds.push(cleanId);
+  });
+
+  const list: any[] = [];
+  
+  // 1. MANDATORY: Starter Pack for all Website High-Conversion or if pack includes it
+  if (isWebsiteService.value || includedIds.includes('starter-pack')) {
+    list.push({
+      title: "Starter Pack",
+      icon: "Zap",
+      items: [
+        "Mobile Responsive Optimization (Smartphone & Tablet)",
+        "Security Setup (SSL, Modern Encryption & Anti-Brute)",
+        "Performance Tuning (Fast Page Loads & Core Web Vitals)",
+        "Basic SEO Setup (Meta tags, Sitemap & Search Console)",
+        "Integrated Analytics (Google Analytics & Meta Pixel Tracking)"
+      ]
+    });
   }
 
-  // 3. Auto-generate from relational feature mapping
+  // 2. Detailed Features (if not maintenance-starter which is covered by Starter Pack)
+  if (selectedPkg.value?.id !== 'maintenance-starter') {
+    if (selectedPkg.value?.detailedFeatures?.length) {
+      list.push(...selectedPkg.value.detailedFeatures);
+    } else if (service.value?.detailedFeatures?.length) {
+      list.push(...service.value.detailedFeatures);
+    }
+  }
+
+  // 3. Simple Features from include list
+  includedIds.forEach(id => {
+    if (id === 'starter-pack') return;
+    const f = features.value.find(feat => feat.id.trim().toLowerCase() === id);
+    if (f && !list.find(l => l.title === f.name)) {
+      list.push({
+        title: f.name,
+        items: [f.desc],
+        icon: f.icon || 'Puzzle'
+      });
+    }
+  });
+
+  if (list.length > 0) return list;
+
   return pkgRelevantFeatures.value.map(f => ({
     title: f.name,
     items: [f.desc],
-    icon: undefined
+    icon: f.icon || 'Zap'
   }));
 });
 
 const displayedFeatures = computed(() => allFeaturesList.value.slice(0, 5));
 
 const sidebarDisplayList = computed(() => {
-  if (service.value?.id === 'maintenance-custom') {
-    return selectedFeatures.value.map(fId => {
-      const f = features.value.find(feat => feat.id === fId);
-      return { title: f?.name || fId };
-    }).slice(0, 5);
+  const list: any[] = [];
+  const rawFeatures = selectedPkg.value?.features || [];
+  const includedIds = rawFeatures.map(id => String(id).trim().toLowerCase());
+  
+  // 1. Always show Starter Pack if it's there (Priority #1)
+  if (isWebsiteService.value || includedIds.includes('starter-pack') || selectedFeatures.value.map(id => id.trim().toLowerCase()).includes('starter-pack')) {
+    list.push({ title: 'Starter Pack Included', icon: 'Zap' });
   }
-  return displayedFeatures.value;
+
+  // 2. Add other bundled features
+  includedIds.forEach(fId => {
+    if (fId === 'starter-pack') return;
+    const f = features.value.find(feat => feat.id.trim().toLowerCase() === fId);
+    if (f) list.push({ title: f.name });
+  });
+
+  // 3. Add manually selected add-ons
+  selectedFeatures.value.forEach(fId => {
+    const cleanId = String(fId).trim().toLowerCase();
+    if (cleanId === 'starter-pack') return;
+    if (includedIds.includes(cleanId)) return;
+    const f = features.value.find(feat => feat.id.trim().toLowerCase() === cleanId);
+    if (f) list.push({ title: f.name });
+  });
+
+  return list.slice(0, 5);
 });
 
 const modalFeaturesList = computed(() => {
   if (service.value?.id === 'maintenance-custom') {
-    return selectedFeatures.value.map(fId => {
-      const f = features.value.find(feat => feat.id === fId);
-      return { 
-        title: f?.name || fId, 
-        items: f?.desc ? [f.desc] : [],
-        icon: 'Zap'
-      };
+    const list: any[] = [];
+    if (isWebsiteService.value || selectedPkg.value?.features?.map(id => id.trim().toLowerCase()).includes('starter-pack') || selectedFeatures.value.map(id => id.trim().toLowerCase()).includes('starter-pack')) {
+       list.push({
+         title: "Starter Pack",
+         items: ["Mobile Responsive, Security, Speed, SEO, & Analytics"],
+         icon: 'Zap'
+       });
+    }
+    
+    selectedFeatures.value.forEach(fId => {
+      const cleanId = String(fId).trim().toLowerCase();
+      if (cleanId === 'starter-pack') return;
+      const f = features.value.find(feat => feat.id.trim().toLowerCase() === cleanId);
+      if (f) {
+        list.push({ 
+          title: f.name, 
+          items: [f.desc],
+          icon: f.icon || 'Zap'
+        });
+      }
     });
+    return list;
   }
   return allFeaturesList.value;
 });
 
 const relevantFeatures = computed(() => {
   if (!service.value) return [];
-  // If maintenance service, show ALL features
-  if (service.value.id === 'maintenance-custom') return features.value;
-  // Filter by selected project type ID (from relational mapping)
-  if (selectedPkg.value) {
-    return features.value.filter(f => f.relevantTo?.includes(selectedPkg.value!.id));
+  
+  const includedFeatureIds = (selectedPkg.value?.features || []).map(id => id.trim().toLowerCase());
+  
+  let baseList: Feature[] = [];
+  if (service.value.id === 'maintenance-custom') {
+    baseList = features.value;
+  } else if (selectedPkg.value) {
+    baseList = features.value.filter(f => f.relevantTo?.map(r => r.trim().toLowerCase()).includes(selectedPkg.value!.id.trim().toLowerCase()));
+  } else {
+    const serviceProjectIds = allProjectTypes.value
+      .filter(p => p.serviceId === service.value!.id)
+      .map(p => p.id.trim().toLowerCase());
+    baseList = features.value.filter(f => 
+      f.relevantTo?.some(rt => serviceProjectIds.includes(rt.trim().toLowerCase()) || rt.trim().toLowerCase() === 'maintenance-custom')
+    );
   }
-  // Fallback: show all features for any project type within this service
-  const serviceProjectIds = allProjectTypes.value
-    .filter(p => p.serviceId === service.value!.id)
-    .map(p => p.id);
-  return features.value.filter(f => 
-    f.relevantTo?.some(rt => serviceProjectIds.includes(rt) || rt === 'maintenance-custom')
-  );
+
+  return baseList.filter(f => {
+    const cleanId = f.id.trim().toLowerCase();
+    // Hide if already included in bundle
+    if (includedFeatureIds.includes(cleanId)) return false;
+    // For non-maintenance, hide foundation items like starter-pack from add-ons list
+    if (!isWebsiteService.value && service.value?.id !== 'maintenance-custom' && cleanId === 'starter-pack') return false;
+    // For website service, always hide starter pack from add-ons because it's bundled
+    if (isWebsiteService.value && cleanId === 'starter-pack') return false;
+    return true;
+  });
 });
+
+const featureCategories = computed(() => {
+  const cats = relevantFeatures.value.reduce((acc: string[], f) => {
+    const cat = f.category || 'Other';
+    if (!acc.includes(cat)) acc.push(cat);
+    return acc;
+  }, []);
+  return cats;
+});
+
+const activeFeatureCategory = ref<string>("");
+
+const getPackageOriginalPrice = (pkg: ProjectType) => {
+  if (!features.value.length) return pkg.originalPrice || 0;
+  const marketVal = (pkg.features || []).reduce((acc, fId) => {
+    const f = features.value.find(feat => feat.id === fId);
+    return acc + (f?.price || 0);
+  }, 0);
+  return Math.max(pkg.originalPrice || 0, marketVal);
+};
+
+const filteredRelevantFeatures = computed(() => {
+  if (!activeFeatureCategory.value) {
+    if (featureCategories.value.length > 0) return relevantFeatures.value.filter(f => (f.category || 'Other') === featureCategories.value[0]);
+    return relevantFeatures.value;
+  }
+  return relevantFeatures.value.filter(f => (f.category || 'Other') === activeFeatureCategory.value);
+});
+
+watch(featureCategories, (newCats) => {
+  if (newCats.length > 0 && (!activeFeatureCategory.value || !newCats.includes(activeFeatureCategory.value))) {
+    activeFeatureCategory.value = newCats[0] || "";
+  }
+}, { immediate: true });
 const activeFaqIndex = ref<number | null>(null);
 const isPackagesSheetOpen = ref(false);
 const isProjectsSheetOpen = ref(false);
@@ -1462,17 +1687,13 @@ const getServiceIcon = (iconName: any) => {
   return icons[iconName] || Puzzle;
 };
 
-const getFeatureIcon = (iconName?: string) => {
+const getFeatureIcon = (icon: any) => {
+  if (icon && typeof icon !== 'string') return icon;
+  
   const icons: Record<string, any> = {
-    ShieldCheck: ShieldCheck,
-    Palette: Palette,
-    Zap: Zap,
-    Lock: Lock,
-    Globe: Globe,
-    Rocket: Rocket,
-    Layers: Layers,
+    ShieldCheck, Palette, Zap, Lock, Globe, Rocket, Layers, Search, Layout, Cpu, Database
   };
-  return (iconName ? icons[iconName] : Puzzle) || Puzzle;
+  return (icon ? icons[icon] : Zap) || Zap;
 };
 
 const getProjectIcon = (iconName?: string) => {
@@ -1503,37 +1724,46 @@ const formatCurrency = (val?: number) => {
 
 const fetchData = async () => {
   const id = route.params.id as string;
+  if (!id) return;
 
-  const [allServices, fetchedFeatures, fetchedProjects] = await Promise.all([
-    pricingService.getAllServices(),
-    pricingService.getAllFeatures(),
-    pricingService.getAllProjectTypes(),
-  ]);
+  isLoading.value = true;
+  service.value = null;
 
-  const foundData = allServices.find((s) => s.id === id);
+  try {
+    const [allServices, fetchedFeatures, fetchedProjects] = await Promise.all([
+      pricingService.getAllServices(),
+      pricingService.getAllFeatures(),
+      pricingService.getAllProjectTypes(),
+    ]);
 
-  if (foundData) {
-    service.value = foundData;
-    features.value = fetchedFeatures;
-    allProjectTypes.value = fetchedProjects;
+    const foundData = allServices.find((s) => s.id === id);
 
-    window.scrollTo({ top: 0, behavior: "instant" } as any);
+    if (foundData) {
+      service.value = foundData;
+      features.value = fetchedFeatures;
+      allProjectTypes.value = fetchedProjects;
 
-    // Set initial selected package
-    if (foundData.id === 'maintenance-custom') {
-      selectedPkg.value = fetchedProjects.find(p => p.id === 'fitur-rakitan') || null;
-    } else if (availablePackages.value.length > 0 && availablePackages.value[0]) {
-      selectedPkg.value = availablePackages.value[0];
+      window.scrollTo({ top: 0, behavior: "instant" } as any);
+
+      // Set initial selected package
+      if (foundData.id === 'maintenance-custom') {
+        selectedPkg.value = fetchedProjects.find(p => p.id === 'maintenance-starter') || fetchedProjects.find(p => p.id === 'fitur-rakitan') || null;
+      } else if (availablePackages.value.length > 0 && availablePackages.value[0]) {
+        selectedPkg.value = availablePackages.value[0];
+      }
+      
+      // Fetch related projects
+      try {
+        relatedProjects.value = await portfolioService.getProjectsByRelatedService(foundData.id);
+      } catch (e) {
+        console.error("Failed to load related projects", e);
+      }
     }
-    
-    // Fetch related projects from Sanity
-    try {
-      relatedProjects.value = await portfolioService.getProjectsByRelatedService(foundData.id);
-    } catch (e) {
-      console.error("Failed to load related projects", e);
-    }
-  } else {
-    router.push("/");
+    // NOTE: No longer auto-redirect to home if not found — show 404 state instead
+  } catch (e) {
+    console.error("Failed to load service data", e);
+  } finally {
+    isLoading.value = false;
   }
 };
 

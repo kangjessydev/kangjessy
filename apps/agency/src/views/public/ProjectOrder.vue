@@ -67,7 +67,7 @@
             :totalBundleSavings="totalBundleSavings"
             :isMicro="isMicro"
             :formatPrice="formatPrice"
-            :available-features="features"
+            :available-features="effectiveFeatures"
             :project-types="projectTypes"
             :service-types="serviceTypes"
             :styles="styles"
@@ -89,7 +89,8 @@
                 :discountAmount="discountAmount"
                 :coupons="availableCoupons"
                 :getFeatureName="getFeatureName"
-                :getFeaturePrice="getFeaturePrice"
+                :getFeaturePrice="getEffectiveAddOnPrice"
+                :getFeatureOriginalPrice="getFeatureOriginalPrice"
                 :formatPrice="formatPrice"
                 @next="goToStep2"
                 @apply-discount="(code) => applyDiscount(code)"
@@ -128,7 +129,8 @@
                 :discountAmount="discountAmount"
                 :coupons="availableCoupons"
                 :getFeatureName="getFeatureName"
-                :getFeaturePrice="getFeaturePrice"
+                :getFeaturePrice="getEffectiveAddOnPrice"
+                :getFeatureOriginalPrice="getFeatureOriginalPrice"
                 :formatPrice="formatPrice"
                 buttonText="Kirim Penawaran"
                 :showWhatsApp="true"
@@ -173,9 +175,10 @@
       :discount-amount="discountAmount"
       :coupons="availableCoupons"
       :get-feature-name="getFeatureName"
-      :get-feature-price="getFeaturePrice"
+      :get-feature-price="getEffectiveAddOnPrice"
+      :get-feature-original-price="getFeatureOriginalPrice"
       :format-price="formatPrice"
-      :available-features="features"
+      :available-features="effectiveFeatures"
       :project-types="projectTypes"
       @next="step === 1 ? goToStep2() : submitOrder()"
       @select-type="(val) => selectType(val)"
@@ -241,13 +244,14 @@ const {
   applyDiscount,
   toggleFeature,
   getFeatureName,
-  getFeaturePrice,
   formatPrice,
-  features,
+  timelines,
   projectTypes,
   serviceTypes,
   styles,
-  timelines,
+  getEffectiveAddOnPrice,
+  getFeatureOriginalPrice,
+  effectiveFeatures,
 } = useOrderCalculator();
 
 const step = ref(1);

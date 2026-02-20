@@ -77,6 +77,15 @@
                 v-if="selectedTypeData"
                 class="flex flex-wrap gap-2 mt-3 mb-1"
               >
+                <!-- Key Included Highlight (e.g. Starter Pack) -->
+                <div 
+                  v-if="selectedTypeData.features?.includes('starter-pack')"
+                  class="flex items-center gap-1.5 bg-accent-primary/10 border border-accent-primary/20 px-2.5 py-1 rounded-lg text-[9px] font-black text-accent-primary uppercase"
+                >
+                  <ZapIcon :size="10" />
+                  Starter Pack Included
+                </div>
+
                 <div
                   v-if="selectedTypeData.maxPages"
                   class="flex items-center gap-1.5 bg-bg-primary/50 border border-border-color px-2.5 py-1 rounded-lg text-[9px] font-black text-text-secondary uppercase"
@@ -90,13 +99,6 @@
                 >
                   <ClockIcon :size="10" class="text-accent-primary" />
                   {{ selectedTypeData.deliveryTime }}
-                </div>
-                <div
-                  v-if="selectedTypeData.revisions"
-                  class="flex items-center gap-1.5 bg-bg-primary/50 border border-border-color px-2.5 py-1 rounded-lg text-[9px] font-black text-text-secondary uppercase"
-                >
-                  <RefreshCwIcon :size="10" class="text-accent-primary" />
-                  {{ selectedTypeData.revisions }}
                 </div>
               </div>
 
@@ -669,10 +671,7 @@
                 </div>
                 <div class="flex flex-col items-end">
                   <span
-                    v-if="
-                      feature.originalPrice &&
-                      feature.originalPrice > feature.price
-                    "
+                    v-if="feature.originalPrice"
                     class="text-[0.65rem] text-text-tertiary line-through opacity-60"
                   >
                     +{{ formatPrice(feature.originalPrice) }}
@@ -770,7 +769,6 @@ import {
   Search as SearchIcon,
   Trash2 as TrashIcon,
   FileText as FileTextIcon,
-  RefreshCw as RefreshCwIcon,
   Globe,
   Cpu,
   Rocket,
@@ -981,17 +979,33 @@ const filteredFeatures = computed(() => {
     }
   } else {
     // 'Semua' is active.
-    if (
-      selectedTypeData.value?.id !== "fitur-rakitan" &&
-      selectedTypeData.value?.id
-    ) {
+    // Show all features relevant to the same SERVICE as the selected type
+    // Since relevantTo can use either serviceId OR projectTypeId, we check all project types
+    // in the same service to ensure maximum feature coverage
+    if (selectedTypeData.value) {
+      const sid = selectedTypeData.value.serviceId; // e.g. "website-high-conversion"
+      const tid = selectedTypeData.value.id;          // e.g. "authority-personal-brand"
+
+      // Get ALL project type IDs in the same service to match project-type-level relevantTo
+      const allRelatedTypeIds = (props.projectTypes || [])
+        .filter(t => t.serviceId === sid)
+        .map(t => t.id);
+
       result = result.filter((f) =>
-        f.relevantTo?.includes(selectedTypeData.value!.id),
+        f.relevantTo?.includes(sid) ||
+        f.relevantTo?.includes(tid) ||
+        allRelatedTypeIds.some(relId => f.relevantTo?.includes(relId))
       );
     }
   }
 
-  // 2. Filter by search
+  // 2. Hide features that are already included in the selected project type
+  if (selectedTypeData.value?.features) {
+    const includedIds = selectedTypeData.value.features;
+    result = result.filter((f) => !includedIds.includes(f.id));
+  }
+
+  // 3. Filter by search
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     result = result.filter(

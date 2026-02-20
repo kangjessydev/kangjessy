@@ -44,11 +44,13 @@ export interface Feature {
   name: string;
   price: number;
   originalPrice?: number;
+  setupFee?: number; // Per-feature overhead override
   desc: string;
   relevantTo: string[];
   icon?: any; // Changed to any to support Component type
   deliveryTime?: string;
   serviceName?: string;
+  category?: string;
 }
 
 export interface ProjectType {
@@ -98,6 +100,8 @@ export interface ServiceData {
   workflow: { title: string; description: string }[];
 }
 
+import { pricingConfig } from '../data/config/order/settings';
+
 const iconMap: Record<string, any> = {
   Languages, Zap, BarChart3, Wallet, MessageSquare, ShieldCheck, Database, Search, Cpu, Layout, ScanLine, History, Repeat, Server, Settings2, Settings, Headphones, Users,
   Monitor, ShoppingBag, Hotel, Building2, BookOpen, MessageCircle, UserCheck, ShoppingCart, Check, Palette, Lock, Globe, Rocket
@@ -107,15 +111,47 @@ export const pricingService = {
   async getAllFeatures(): Promise<Feature[]> {
     return hardcodedFeatures.map(f => ({
       ...f,
-      icon: iconMap[f.id] || Zap
+      icon: iconMap[f.id] || Zap,
+      category: f.category
     }));
   },
 
   async getAllProjectTypes(): Promise<ProjectType[]> {
-    return hardcodedProjectTypes.map(p => ({
-      ...p,
-      icon: iconMap[p.id] || Layout
-    }));
+    const featuresList = hardcodedFeatures;
+    
+    return hardcodedProjectTypes.map(p => {
+      // 1. Calculate Market Value (Original Price) from included features
+      const includedIds = p.features || [];
+      const marketValue = includedIds.reduce((acc, id) => {
+        const cleanId = String(id).trim().toLowerCase();
+        const feat = featuresList.find(f => f.id.trim().toLowerCase() === cleanId);
+        
+        if (!feat && cleanId === 'starter-pack') {
+          return acc + 1000000; // Fallback for starter-pack if not found in list
+        }
+        return acc + (feat?.price || 0);
+      }, 0);
+
+      // 2. Calculate Discounted Base Price based on tiers
+      let basePrice = marketValue;
+      if (p.id !== 'fitur-rakitan') {
+        const tier = pricingConfig.tieredDiscounts.find(t => marketValue >= t.threshold);
+        const discount = tier ? tier.discount : 0;
+        basePrice = marketValue * (1 - discount);
+      }
+
+      // 3. Fallback for empty packages
+      if (basePrice === 0 && p.id !== 'fitur-rakitan') {
+        basePrice = marketValue;
+      }
+
+      return {
+        ...p,
+        basePrice: Math.round(basePrice),
+        originalPrice: Math.round(marketValue),
+        icon: iconMap[p.id] || Layout
+      };
+    });
   },
 
   async getAllServices(): Promise<ServiceData[]> {

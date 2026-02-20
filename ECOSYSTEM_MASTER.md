@@ -243,6 +243,31 @@ Berikut adalah catatan perbaikan teknis mendalam untuk menjaga stabilitas ekosis
 
 ---
 
+---
+
+## 🏗️ 11.3. PRODUCT DATA SYNC SYSTEM (SOP)
+
+Untuk memudahkan pengelolaan data produk, harga, dan fitur tanpa harus menyentuh kode TypeScript secara langsung, sistem menggunakan direktori `/product_notes` sebagai **Source of Truth**.
+
+### 🛠️ Alur Pembaruan Data:
+
+1.  **User Action**: USER melakukan perubahan pada file Markdown di dalam folder `/product_notes/` (misal: menambahkan tipe proyek baru di `PROJECT_TYPES.md` atau mengubah harga di `FEATURES.md`).
+2.  **AI Command**: USER memberikan perintah kepada AI: _"Update [FILE_NAME].md"_ (Contoh: _"Update PROJECT_TYPES.md"_).
+3.  **AI Action (MANDATORY)**: AI harus membaca file tersebut dan secara otomatis mensinkronkan perubahannya ke file data fungsional di:
+    - `apps/agency/src/data/landing/order.ts` (Primary Data)
+    - `apps/agency/src/services/pricingService.ts` (Mapping Service)
+4.  **Verification**: AI menjalankan pengecekan build dan memastikan tidak ada inkonsistensi antara `product_notes` dan kode operasional.
+
+### 📁 Struktur Repository `/product_notes`:
+
+- **`SERVICES.md`**: Kategori Layanan Utama.
+- **`PROJECT_TYPES.md`**: Paket Bundling & Included Features.
+- **`FEATURES.md`**: Library Fitur Add-ons & Pricing.
+- **`STYLE_VIBES.md`**: Opsi Visual Design.
+- **`DEADLINES.md`**: Opsi Timeline & Multiplier.
+
+---
+
 ## 🏗️ 12. DETAILED ORDER WORKFLOW (APPENDIX)
 
 Isi di bawah ini adalah **Single Source of Truth** untuk alur pemesanan (Order Flow) di sistem KangJessy, yang harus disinkronkan antara Database dan Frontend Logic.

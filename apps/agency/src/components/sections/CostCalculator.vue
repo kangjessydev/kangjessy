@@ -23,7 +23,7 @@
           :total-bundle-savings="totalBundleSavings"
           :is-micro="isMicro"
           :format-price="formatPrice"
-          :available-features="features"
+          :available-features="effectiveFeatures"
           :project-types="projectTypes"
           :service-types="serviceTypes"
           :styles="styles"
@@ -43,7 +43,8 @@
               :active-coupon="activeCoupon"
               :discount-amount="discountAmount"
               :get-feature-name="getFeatureName"
-              :get-feature-price="getFeaturePrice"
+              :get-feature-price="getEffectiveAddOnPrice"
+              :get-feature-original-price="getFeatureOriginalPrice"
               :format-price="formatPrice"
               :coupons="availableCoupons"
               @next="handleNext"
@@ -68,9 +69,10 @@
       :active-coupon="activeCoupon"
       :discount-amount="discountAmount"
       :get-feature-name="getFeatureName"
-      :get-feature-price="getFeaturePrice"
+      :get-feature-price="getEffectiveAddOnPrice"
+      :get-feature-original-price="getFeatureOriginalPrice"
       :format-price="formatPrice"
-      :available-features="features"
+      :available-features="effectiveFeatures"
       :project-types="projectTypes"
       :coupons="availableCoupons"
       @next="handleNext"
@@ -113,14 +115,15 @@ const {
   toggleFeature,
   applyDiscount,
   getFeatureName,
-  getFeaturePrice,
   formatPrice,
-  features,
+  timelines,
   projectTypes,
   serviceTypes,
   styles,
-  timelines,
   availableCoupons,
+  getEffectiveAddOnPrice,
+  getFeatureOriginalPrice,
+  effectiveFeatures,
 } = useOrderCalculator();
 
 const handleNext = () => {

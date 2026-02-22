@@ -26,14 +26,14 @@
               @click="isTypeSheetOpen = true"
               class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-bg-primary border border-border-color rounded-full text-[0.65rem] font-black text-text-secondary uppercase tracking-widest active:scale-95 transition-all"
             >
-              <Layout :size="12" class="text-accent-primary" />
+              <LayoutIcon :size="12" class="text-accent-primary" />
               Ganti Tipe
             </button>
             <button
               @click="isFeatureSheetOpen = true"
               class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-bg-primary border border-border-color rounded-full text-[0.65rem] font-black text-text-secondary uppercase tracking-widest active:scale-95 transition-all"
             >
-              <Plus :size="12" class="text-accent-primary" />
+              <PlusIcon :size="12" class="text-accent-primary" />
               Tambah Fitur
             </button>
           </template>
@@ -42,7 +42,7 @@
               @click="$emit('back')"
               class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-bg-primary border border-border-color rounded-full text-[0.65rem] font-black text-text-secondary uppercase tracking-widest active:scale-95 transition-all"
             >
-              <ChevronLeft :size="12" class="text-accent-primary" />
+              <ChevronLeftIcon :size="12" class="text-accent-primary" />
               Kembali Ke Konf.
             </button>
           </template>
@@ -56,7 +56,7 @@
                 : ''
             "
           >
-            <Ticket :size="12" class="text-accent-secondary" />
+            <TicketIcon :size="12" class="text-accent-secondary" />
             {{ discountCode ? "Kupon Aktif" : "Pake Kupon" }}
           </button>
         </div>
@@ -73,7 +73,7 @@
               >
                 HEMAT
               </div>
-              <ChevronUp
+              <ChevronUpIcon
                 :size="12"
                 class="text-accent-primary animate-bounce-custom"
               />
@@ -96,7 +96,7 @@
               @click="isSheetOpen = true"
               class="p-3 rounded-xl bg-bg-tertiary/50 border border-border-color text-text-secondary active:scale-95 transition-all"
             >
-              <List :size="20" />
+              <ListIcon :size="20" />
             </button>
 
             <!-- Quick WhatsApp (Step 2 Only) -->
@@ -105,7 +105,7 @@
               @click="$emit('whatsapp')"
               class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 active:scale-95 transition-all"
             >
-              <MessageCircle :size="20" />
+              <MessageCircleIcon :size="20" />
             </button>
 
             <button
@@ -113,8 +113,8 @@
               class="px-6 py-3 rounded-xl bg-accent-primary text-white font-bold text-sm shadow-lg shadow-accent-primary/25 active:scale-95 transition-all flex items-center gap-2"
             >
               {{ step === 1 ? "Lanjut" : "Kirim" }}
-              <ArrowRight v-if="step === 1" :size="16" />
-              <Send v-else :size="16" />
+              <ArrowRightIcon v-if="step === 1" :size="16" />
+              <SendIcon v-else :size="16" />
             </button>
           </div>
         </div>
@@ -141,7 +141,7 @@
         @click="$emit('next')"
       >
         Mulai Konsultasi
-        <ArrowRight :size="18" class="ml-2" />
+        <ArrowRightIcon :size="18" class="ml-2" />
       </BaseButton>
     </div>
 
@@ -149,7 +149,7 @@
     <BottomSheet
       v-model="isSheetOpen"
       title="Ringkasan Pesanan"
-      :icon="Layout"
+      :icon="LayoutIcon"
     >
       <div class="p-6 pb-12">
         <div class="space-y-6">
@@ -216,7 +216,7 @@
                   class="flex justify-between items-center text-xs p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl"
                 >
                   <div class="flex items-center gap-2">
-                    <Check :size="10" class="text-emerald-500" />
+                    <CheckIcon :size="10" class="text-emerald-500" />
                     <span class="font-bold text-emerald-600">{{ getFeatureName(featId) }}</span>
                   </div>
                   <span class="text-[0.6rem] font-black uppercase text-emerald-500/60 tracking-wider">PAKET</span>
@@ -263,7 +263,7 @@
                       @click="$emit('toggle-feature', featId)"
                       class="text-red-500/50"
                     >
-                      <Trash2 :size="14" />
+                      <TrashIcon :size="14" />
                     </button>
                   </div>
                 </div>
@@ -332,7 +332,7 @@
                         : 'bg-bg-primary text-text-tertiary'
                     "
                   >
-                    <Ticket :size="18" />
+                    <TicketIcon :size="18" />
                   </div>
                   <div class="flex flex-col">
                     <span
@@ -361,7 +361,7 @@
                     class="font-mono text-emerald-500 font-bold text-sm"
                     >-Rp {{ formatPrice(discountAmount) }}</span
                   >
-                  <ChevronRight :size="14" class="text-text-tertiary" />
+                  <ChevronRightIcon :size="14" class="text-text-tertiary" />
                 </div>
               </button>
 
@@ -371,7 +371,7 @@
                 @click.stop="applyCoupon('')"
                 class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all"
               >
-                <X :size="12" />
+                <XIcon :size="12" />
               </button>
             </div>
           </div>
@@ -405,7 +405,7 @@
                 v-if="totalBundleSavings > 0"
                 class="inline-flex items-center gap-2 px-4 py-2 bg-accent-primary/10 rounded-[18px] border border-accent-primary/20 w-fit"
               >
-                <Sparkles
+                <SparklesIcon
                   :size="12"
                   class="text-accent-primary animate-pulse"
                 />
@@ -444,7 +444,7 @@
               @click="$emit('whatsapp')"
               class="shrink-0 p-4 bg-emerald-500/10 border-2 border-emerald-500/20 text-emerald-500 rounded-2xl active:scale-95 transition-all flex items-center justify-center"
             >
-              <MessageCircle :size="24" />
+              <MessageCircleIcon :size="24" />
             </button>
 
             <button
@@ -455,8 +455,8 @@
               class="flex-1 py-4 bg-accent-primary text-white font-black rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-3 outline-none"
             >
               {{ step === 1 ? "Lanjut Booking Sesi" : "Kirim Penawaran" }}
-              <ArrowRight v-if="step === 1" :size="20" />
-              <Send v-else :size="20" />
+              <ArrowRightIcon v-if="step === 1" :size="20" />
+              <SendIcon v-else :size="20" />
             </button>
           </div>
         </div>
@@ -467,12 +467,12 @@
     <BottomSheet
       v-model="isTypeSheetOpen"
       title="Pilih Tipe Proyek"
-      :icon="Layout"
+      :icon="LayoutIcon"
       full-height
     >
       <div class="px-6 pt-6 mb-4">
         <div class="relative">
-          <Search
+          <SearchIcon
             :size="18"
             class="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary"
           />
@@ -514,7 +514,7 @@
               v-if="currentType?.id === type.id"
               class="w-5 h-5 bg-accent-primary rounded-full flex items-center justify-center text-white"
             >
-              <Check :size="12" />
+              <CheckIcon :size="12" />
             </div>
           </div>
 
@@ -567,12 +567,12 @@
     <BottomSheet
       v-model="isFeatureSheetOpen"
       title="Tambah Fitur"
-      :icon="Plus"
+      :icon="PlusIcon"
       full-height
     >
       <div class="px-6 pt-6 mb-4">
         <div class="relative">
-          <Search
+          <SearchIcon
             :size="18"
             class="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary"
           />
@@ -606,11 +606,11 @@
                     : 'bg-bg-secondary text-text-tertiary'
                 "
               >
-                <Check
+                <CheckIcon
                   v-if="selectedFeatures.includes(feat.id)"
                   :size="20"
                 />
-                <Plus v-else :size="20" />
+                <PlusIcon v-else :size="20" />
               </div>
               <div class="flex flex-col items-end">
                 <span
@@ -658,7 +658,7 @@
     <BottomSheet
       v-model="isDiscountSheetOpen"
       title="Pake Kupon Diskon"
-      :icon="Ticket"
+      :icon="TicketIcon"
     >
       <div class="p-6 pb-12 space-y-10">
         <!-- Manual Input -->
@@ -706,7 +706,7 @@
                 <div
                   class="w-12 h-12 rounded-xl bg-bg-secondary flex items-center justify-center text-accent-secondary"
                 >
-                  <Ticket :size="24" />
+                  <TicketIcon :size="24" />
                 </div>
                 <div class="flex-1">
                   <div class="flex justify-between items-center mb-0.5">
@@ -760,7 +760,7 @@
                     v-else
                     class="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-[0.7rem] font-black"
                   >
-                    <Check :size="12" />
+                    <CheckIcon :size="12" />
                     Terpakai
                   </div>
                 </div>
@@ -799,21 +799,21 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import {
-  Layout,
-  ArrowRight,
-  List,
-  ChevronUp,
-  ChevronRight,
-  Plus,
-  Check,
-  Trash2,
-  Ticket,
-  Search,
-  X,
-  ChevronLeft,
-  Send,
-  MessageCircle,
-  Sparkles,
+  Layout as LayoutIcon,
+  ArrowRight as ArrowRightIcon,
+  List as ListIcon,
+  ChevronUp as ChevronUpIcon,
+  ChevronRight as ChevronRightIcon,
+  Plus as PlusIcon,
+  Check as CheckIcon,
+  Trash2 as TrashIcon,
+  Ticket as TicketIcon,
+  Search as SearchIcon,
+  X as XIcon,
+  ChevronLeft as ChevronLeftIcon,
+  Send as SendIcon,
+  MessageCircle as MessageCircleIcon,
+  Sparkles as SparklesIcon,
 } from "lucide-vue-next";
 import { BottomSheet, BaseButton, activeSheet } from "@kangjessy/ui";
 import type { Coupon } from "@kangjessy/config";

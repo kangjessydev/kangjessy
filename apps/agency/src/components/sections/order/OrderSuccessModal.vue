@@ -1,3 +1,4 @@
+<template>
   <Teleport to="body">
     <Transition
       enter-active-class="transition duration-300 ease-out"
@@ -70,7 +71,7 @@
                   @click="handleWhatsAppFollowUp"
                   class="flex items-center justify-center gap-2.5 h-14 bg-emerald-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
                 >
-                  <MessageCircleIcon :size="18" />
+                  <MessageCircle :size="18" />
                   WhatsApp
                 </button>
                 

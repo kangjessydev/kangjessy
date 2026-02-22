@@ -213,7 +213,7 @@ useSEO({
 });
 
 // Data & Config
-import { whatsappConfig, defaultConfig } from "../../data/config/orderConfig";
+import { defaultConfig } from "../../data/config/orderConfig";
 
 // Services
 // import { projectService } from "../../services/projectService";

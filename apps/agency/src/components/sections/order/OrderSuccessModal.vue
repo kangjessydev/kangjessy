@@ -22,7 +22,7 @@
           <div class="relative z-10">
             <div class="text-accent-primary mb-8 flex justify-center">
               <div class="w-20 h-20 rounded-3xl bg-accent-primary/10 flex items-center justify-center text-accent-primary animate-bounce-subtle">
-                <CheckCircleIcon :size="48" />
+                <CheckCircle :size="48" />
               </div>
             </div>
 
@@ -60,7 +60,7 @@
                 class="w-full h-14 rounded-2xl font-bold text-base shadow-xl shadow-accent-primary/20"
                 href="#"
               >
-                <FileTextIcon :size="18" class="mr-2.5" />
+                <FileText :size="18" class="mr-2.5" />
                 Lihat Penawaran (Invoice)
               </BaseButton>
 
@@ -80,7 +80,7 @@
                   class="h-14 rounded-2xl font-bold text-xs uppercase tracking-widest border-2"
                   @click="$emit('go-home')"
                 >
-                  <HomeIcon :size="18" class="mr-2" />
+                  <Home :size="18" class="mr-2" />
                   Beranda
                 </BaseButton>
               </div>
@@ -101,10 +101,10 @@
 
 <script setup lang="ts">
 import {
-  CheckCircle as CheckCircleIcon,
-  FileText as FileTextIcon,
-  MessageCircle as MessageCircleIcon,
-  Home as HomeIcon,
+  CheckCircle,
+  FileText,
+  MessageCircle,
+  Home,
 } from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
 import { usePopupManager, Popups } from "../../../composables/usePopupManager";
@@ -119,7 +119,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(["close", "view-invoice", "go-home"]);
-const { openModal, Popups } = usePopupManager();
+const { openModal } = usePopupManager();
 
 const handleWhatsAppFollowUp = () => {
   // Close the success modal first

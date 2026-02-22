@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between mb-10">
         <h3 class="text-xl font-bold flex items-center gap-3 text-text-primary uppercase tracking-tight">
           <div class="w-8 h-8 rounded-lg bg-accent-primary/10 flex items-center justify-center text-accent-primary shrink-0">
-            <LayoutIcon :size="18" />
+            <Layout :size="18" />
           </div>
           Ringkasan Biaya
         </h3>
@@ -38,7 +38,7 @@
             <span class="text-[0.75rem] text-text-tertiary font-bold uppercase tracking-wider">
               Sudah Termasuk ({{ currentType.features.length }})
             </span>
-            <ChevronDownIcon
+            <ChevronDown
               :size="12"
               class="text-text-tertiary transition-transform duration-200 mt-0.5"
               :class="showBundled ? 'rotate-180' : ''"
@@ -55,7 +55,7 @@
                 :key="featId"
                 class="flex items-center gap-2 text-[0.75rem] text-emerald-500/70"
               >
-                <CheckIcon :size="11" class="text-emerald-500 shrink-0" />
+                <Check :size="11" class="text-emerald-500 shrink-0" />
                 <span>{{ getFeatureName(featId) }}</span>
               </li>
             </ul>
@@ -124,7 +124,7 @@
             <div class="flex items-center gap-3">
               <span class="font-mono text-emerald-500 font-black">-Rp {{ formatPrice(discountAmount) }}</span>
               <button @click="$emit('apply-discount', '')" class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all">
-                <XIcon :size="12" />
+                <X :size="12" />
               </button>
             </div>
           </div>
@@ -163,7 +163,7 @@
           
           <div class="flex items-center gap-3 relative z-10 shrink-0">
             <span v-if="discountAmount > 0" class="font-mono text-emerald-500 font-black text-sm">-Rp {{ formatPrice(discountAmount) }}</span>
-            <ChevronDownIcon :size="14" class="text-text-tertiary group-hover:text-accent-primary transition-colors" />
+            <ChevronDown :size="14" class="text-text-tertiary group-hover:text-accent-primary transition-colors" />
           </div>
 
           <!-- Background Highlight -->
@@ -299,7 +299,7 @@
                     Pakai
                   </button>
                   <div v-else class="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl text-[0.75rem] font-black shadow-lg shadow-emerald-500/20">
-                    <CheckIcon :size="14" />
+                    <Check :size="14" />
                     Terpasang
                   </div>
                 </div>
@@ -333,6 +333,10 @@ import {
   Sparkles as SparklesIcon,
   Ticket as TicketIcon,
   Trash2 as TrashIcon,
+  Layout,
+  ChevronDown,
+  Check,
+  X,
 } from "lucide-vue-next";
 import type { Coupon } from "../../../services/couponService";
 import { BottomSheet, BaseButton } from "@kangjessy/ui";

@@ -93,6 +93,7 @@ const props = withDefaults(
     title?: string;
     actionText?: string;
     initialMessage?: string;
+    initialName?: string;
     bubbleMessage?: string;
     category?: string;
   }>(),
@@ -109,7 +110,7 @@ const currentTime = computed(() =>
 );
 
 const form = ref({
-  name: "",
+  name: props.initialName || "",
   message: "",
 });
 
@@ -120,12 +121,13 @@ const displayGreeting = computed(() => {
   );
 });
 
-// Set initial message when modal opens
+// Set initial data when modal opens
 watch(
   () => props.isOpen,
   (val) => {
     if (val) {
       form.value.message = props.initialMessage || settings.value.whatsappMsg;
+      if (props.initialName) form.value.name = props.initialName;
     }
   },
 );

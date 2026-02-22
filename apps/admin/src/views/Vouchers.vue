@@ -218,6 +218,7 @@ import {
   TrendingUp,
   Edit2,
   Trash2,
+  Clock,
 } from "lucide-vue-next";
 import { couponsService, type Coupon } from "../services/couponsService";
 import PageHeader from "../components/ui/PageHeader.vue";

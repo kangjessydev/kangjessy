@@ -117,6 +117,26 @@
               </div>
 
               <div
+                v-if="lead.voucher"
+                class="flex items-center justify-between p-3 bg-emerald-50 rounded-2xl border border-emerald-100/50"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-emerald-500 shadow-sm"
+                  >
+                    <Hash :size="14" />
+                  </div>
+                  <span class="text-sm font-black text-[#1B2559] uppercase tracking-wider">{{
+                    lead.voucher
+                  }}</span>
+                </div>
+                <span
+                  class="text-[8px] font-black uppercase text-emerald-400 tracking-tighter bg-white px-2 py-0.5 rounded-full shadow-sm"
+                  >Applied Voucher</span
+                >
+              </div>
+
+              <div
                 class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100"
               >
                 <div class="flex items-center gap-3">

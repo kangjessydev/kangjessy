@@ -133,10 +133,9 @@
                 :getFeatureOriginalPrice="getFeatureOriginalPrice"
                 :formatPrice="formatPrice"
                 buttonText="Kirim Penawaran"
-                :showWhatsApp="true"
+                :showWhatsApp="false"
                 @next="submitOrder"
                 @apply-discount="(code) => applyDiscount(code)"
-                @whatsapp="redirectToWhatsApp"
               />
             </template>
           </OrderStep2>
@@ -151,6 +150,7 @@
       :totalPrice="totalPrice"
       :formatPrice="formatPrice"
       :projectId="createdProjectId"
+      :projectType="currentType?.name"
       @close="showSuccess = false"
       @view-invoice="router.push(`/portal?id=${createdProjectId}`)"
       @go-home="goHome"
@@ -203,6 +203,7 @@ import OrderSuccessModal from "../../components/sections/order/OrderSuccessModal
 import OrderMobileSummary from "../../components/sections/order/OrderMobileSummary.vue";
 import { Share2 as Share2Icon, Save as SaveIcon } from "lucide-vue-next";
 import { useSEO } from "../../composables/useSEO";
+import { usePopupManager, Popups } from "../../composables/usePopupManager";
 
 useSEO({
   title: "Initiate Project Order",
@@ -253,6 +254,8 @@ const {
   getFeatureOriginalPrice,
   effectiveFeatures,
 } = useOrderCalculator();
+
+const { openModal } = usePopupManager();
 
 const step = ref(1);
 const isSubmitting = ref(false);
@@ -465,45 +468,14 @@ const redirectToWhatsApp = async () => {
     console.warn("Silent fail save to DB, still opening WA");
   }
 
-  // 2. Open WhatsApp with formatted message
-  const featuresList = selectedFeatures.value
-    .map((f) => `- ${getFeatureName(f)}`)
-    .join("\n");
-
-  const discountText =
-    discountAmount.value > 0
-      ? `\n🎉 *Hemat (Kupon ${discountCode.value}):* -Rp ${formatPrice(discountAmount.value)}`
-      : "";
-
-  const message = `Halo Admin! Saya baru saja melakukan order project via website. Berikut detailnya:
-
-📦 *TIPE PROJECT*
-${currentType.value?.name || selectedType.value}
-_(Rp ${formatPrice(currentType.value?.basePrice || 0)})_
-
-✨ *FITUR TAMBAHAN*
-${featuresList || "- Tidak ada tambahan"}
-
-⏱️ *TIMELINE*
-${currentTimeline.value?.label} _(${currentTimeline.value?.multiplier}x Multiplier)_
-
-💰 *TOTAL ESTIMASI: Rp ${formatPrice(totalPrice.value)}* ${discountText}
-
---------------------------------
-*DATA PEMESAN*
-👤 Nama: ${form.name || "-"}
-📧 Email: ${form.email || "-"}
-🏢 Perusahaan: ${form.company || "-"}
-📝 Brief Singkat:
-${form.brief || "-"}
-
-Mohon segera diproses invoice-nya. Terima kasih!`;
-
-  const encoded = encodeURIComponent(message);
-  window.open(
-    `https://wa.me/${whatsappConfig.phoneNumber}?text=${encoded}`,
-    "_blank",
-  );
+  // 2. Open WhatsApp Modal instead of direct redirect
+  const msg = `Halo Kak Jessy, saya baru saja mengirim pesanan ${currentType.value?.name || selectedType.value}. Tolong dicek ya agar bisa segera diproses.`;
+  
+  openModal(Popups.CHAT_WA, { 
+    initialMessage: msg,
+    initialName: form.name,
+    bubbleMessage: "Halo! Detail pesanan Anda sudah kami terima di sistem. Silakan klik kirim untuk terhubung ke WhatsApp saya agar bisa saya respon lebih cepat."
+  });
 };
 
 const goHome = () => {

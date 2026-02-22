@@ -131,29 +131,53 @@
         </div>
       </div>
 
-      <!-- Voucher Section -->
-      <div class="mb-8 pt-6 border-t border-border-color/10">
-        <label class="text-[0.65rem] font-black uppercase tracking-[0.15em] text-text-tertiary mb-3 block px-1">
-          HAVE A VOUCHER CODE?
+      <!-- Voucher Section (Trigger Pattern) -->
+      <div class="mb-10 pt-8 border-t border-border-color/30">
+        <label class="text-[0.7rem] font-black uppercase tracking-[0.2em] text-text-tertiary mb-3 block px-1">
+          Promo & Voucher
         </label>
-        <div class="flex gap-2">
-          <input
-            v-model="localCoupon"
-            type="text"
-            placeholder="KODE PROMO"
-            class="flex-1 bg-bg-primary border border-border-color/60 rounded-xl py-3 px-4 text-xs font-mono font-bold text-text-primary outline-none focus:border-accent-primary transition-all uppercase shadow-inner"
-            @keyup.enter="$emit('apply-discount', localCoupon)"
-          />
-          <button
-            @click="$emit('apply-discount', localCoupon)"
-            class="px-5 py-3 bg-accent-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:shadow-lg hover:shadow-accent-primary/20 active:scale-95 transition-all shrink-0"
-          >
-            Apply
-          </button>
-        </div>
-        <p v-if="discountAmount > 0" class="mt-2 px-1 text-[10px] font-bold text-emerald-500 flex items-center gap-1">
-          <CheckIcon :size="12" /> Kupon berhasil terpasang!
-        </p>
+        
+        <button 
+          @click="isDiscountSheetOpen = true"
+          class="w-full p-5 rounded-[24px] border-2 border-dashed flex items-center justify-between transition-all group overflow-hidden relative"
+          :class="discountAmount > 0 
+            ? 'bg-emerald-500/5 border-emerald-500/40 shadow-lg shadow-emerald-500/5' 
+            : 'bg-bg-secondary/30 border-border-color hover:border-accent-primary/40'"
+        >
+          <div class="flex items-center gap-3.5 text-left relative z-10">
+            <div 
+              class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300"
+              :class="discountAmount > 0 
+                ? 'bg-emerald-500 text-white shadow-lg' 
+                : 'bg-bg-primary text-text-tertiary group-hover:bg-accent-primary group-hover:text-white'"
+            >
+              <TicketIcon :size="18" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[0.6rem] font-black uppercase text-text-tertiary tracking-widest mb-0.5">Voucher Diskon</span>
+              <span class="text-sm font-bold truncate max-w-[140px]" :class="discountAmount > 0 ? 'text-emerald-500' : 'text-text-primary'">
+                {{ discountCode ? `KODE: ${discountCode}` : 'Klik untuk pake promo' }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-3 relative z-10 shrink-0">
+            <span v-if="discountAmount > 0" class="font-mono text-emerald-500 font-black text-sm">-Rp {{ formatPrice(discountAmount) }}</span>
+            <ChevronDownIcon :size="14" class="text-text-tertiary group-hover:text-accent-primary transition-colors" />
+          </div>
+
+          <!-- Background Highlight -->
+          <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-accent-primary/5 rounded-full blur-2xl group-hover:bg-accent-primary/10 transition-colors"></div>
+        </button>
+
+        <!-- Remove Applied Coupon -->
+        <button 
+          v-if="discountAmount > 0"
+          @click="$emit('apply-discount', '')"
+          class="mt-3 w-full py-2 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-500/60 hover:text-red-500 transition-colors"
+        >
+          <TrashIcon :size="12" /> Lepas Kupon
+        </button>
       </div>
 
       <!-- Total Box -->
@@ -198,20 +222,121 @@
         </BaseButton>
       </div>
     </div>
+
+    <!-- Voucher Selection Drawer (Desktop Variant) -->
+    <BottomSheet
+      v-model="isDiscountSheetOpen"
+      title="Pake Kupon Diskon"
+      :icon="TicketIcon"
+      maxWidth="500px"
+    >
+      <div class="p-8 space-y-10">
+        <!-- Manual Input -->
+        <div class="space-y-4">
+          <label class="text-[0.7rem] font-black uppercase tracking-widest text-text-tertiary px-1">Punya kode promo sendiri?</label>
+          <div class="flex gap-2">
+            <input
+              v-model="localCoupon"
+              type="text"
+              placeholder="MASUKKAN KODE"
+              class="flex-1 bg-bg-primary border-2 border-border-color rounded-2xl py-4 px-6 text-sm text-text-primary outline-none focus:border-accent-primary transition-all uppercase font-mono font-bold shadow-inner"
+              @keyup.enter="$emit('apply-discount', localCoupon)"
+            />
+            <button
+              @click="$emit('apply-discount', localCoupon)"
+              class="px-8 py-4 bg-accent-primary text-white text-sm font-black rounded-2xl active:scale-95 transition-all shadow-xl shadow-accent-primary/20"
+            >
+              Gunakan
+            </button>
+          </div>
+        </div>
+
+        <!-- Promo List -->
+        <div class="space-y-6">
+          <h5 class="text-[0.7rem] font-black uppercase tracking-widest text-text-tertiary px-1">Promo Tersedia</h5>
+          <div class="grid grid-cols-1 gap-5">
+            <div
+              v-for="coupon in coupons"
+              :key="coupon.code"
+              class="flex flex-col border-2 rounded-[32px] transition-all relative overflow-hidden group/coupon"
+              :class="discountCode?.toUpperCase() === coupon.code.toUpperCase()
+                ? 'bg-emerald-500/5 border-emerald-500 shadow-lg shadow-emerald-500/5'
+                : 'bg-bg-primary border-border-color hover:border-accent-primary/40'"
+            >
+              <!-- Ticket Body -->
+              <div class="p-6 flex items-center gap-5">
+                <div class="w-14 h-14 rounded-2xl bg-bg-secondary flex items-center justify-center text-accent-secondary group-hover/coupon:scale-110 transition-transform">
+                  <TicketIcon :size="28" />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-mono font-black text-sm text-text-primary tracking-wider">{{ coupon.code }}</span>
+                    <span class="text-[0.6rem] font-black text-text-tertiary uppercase">{{ coupon.expiryDate }}</span>
+                  </div>
+                  <h5 class="text-base font-black text-text-primary truncate">
+                    {{ coupon.label }}
+                  </h5>
+                </div>
+              </div>
+
+              <!-- Footer Actions -->
+              <div class="px-6 pb-6 pt-5 border-t border-dashed border-border-color/50 bg-bg-secondary/30">
+                <p class="text-[0.7rem] text-text-tertiary leading-relaxed mb-5">
+                  {{ coupon.desc }}
+                </p>
+
+                <div class="flex items-center justify-between">
+                  <div class="flex flex-col">
+                    <span class="text-[0.6rem] font-black uppercase text-accent-secondary tracking-widest mb-0.5">Berlaku Hingga</span>
+                    <span class="text-xs text-text-secondary font-bold">{{ coupon.expiryDate }}</span>
+                  </div>
+
+                  <button
+                    v-if="discountCode?.toUpperCase() !== coupon.code.toUpperCase()"
+                    @click="$emit('apply-discount', coupon.code); isDiscountSheetOpen = false"
+                    class="px-6 py-2.5 bg-accent-primary text-white text-[0.75rem] font-black rounded-xl active:scale-95 transition-all shadow-lg shadow-accent-primary/10"
+                  >
+                    Pakai
+                  </button>
+                  <div v-else class="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl text-[0.75rem] font-black shadow-lg shadow-emerald-500/20">
+                    <CheckIcon :size="14" />
+                    Terpasang
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ticket Notches -->
+              <div class="absolute -left-3 top-[80px] -translate-y-1/2 w-6 h-6 bg-bg-secondary rounded-full border border-border-color/20 shadow-inner"></div>
+              <div class="absolute -right-3 top-[80px] -translate-y-1/2 w-6 h-6 bg-bg-secondary rounded-full border border-border-color/20 shadow-inner"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="p-8 pb-10 bg-bg-secondary border-t border-border-color/50 flex justify-center">
+          <button
+            @click="isDiscountSheetOpen = false"
+            class="px-10 py-4 bg-bg-primary border border-border-color text-text-secondary text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-bg-tertiary transition-all"
+          >
+            Tutup
+          </button>
+        </div>
+      </template>
+    </BottomSheet>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import {
-  Layout as LayoutIcon,
-  ChevronDown as ChevronDownIcon,
-  Check as CheckIcon,
-  X as XIcon,
   Sparkles as SparklesIcon,
+  Ticket as TicketIcon,
+  Trash2 as TrashIcon,
+  Search as SearchIcon,
 } from "lucide-vue-next";
 import type { Coupon } from "../../../services/couponService";
-import { BaseButton } from "@kangjessy/ui";
+import { BottomSheet, BaseButton } from "@kangjessy/ui";
 
 interface Props {
   currentType: any;
@@ -240,6 +365,7 @@ const props = defineProps<Props>();
 const emit = defineEmits(["next", "apply-discount", "whatsapp"]);
 
 const showBundled = ref(true); // default: terbuka
+const isDiscountSheetOpen = ref(false);
 const localCoupon = ref(props.discountCode);
 
 watch(

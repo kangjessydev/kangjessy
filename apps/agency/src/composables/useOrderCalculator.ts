@@ -279,5 +279,12 @@ export function useOrderCalculator() {
     getEffectiveAddOnPrice,
     getFeatureOriginalPrice,
     effectiveFeatures,
+    reset: () => {
+      selectedType.value = "";
+      selectedStyle.value = "minimalist-luxury";
+      selectedFeatures.value = [];
+      selectedTimeline.value = "";
+      discountCode.value = "";
+    },
   };
 }

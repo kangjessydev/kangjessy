@@ -261,6 +261,7 @@ const {
   getEffectiveAddOnPrice,
   getFeatureOriginalPrice,
   effectiveFeatures,
+  reset: resetCalculator,
 } = useOrderCalculator();
 
 const { openModal } = usePopupManager();
@@ -270,16 +271,25 @@ const isSubmitting = ref(false);
 const showSuccess = ref(false);
 const lastSaved = ref("");
 const createdProjectId = ref("");
-
 const form = reactive({
   name: "",
   email: "",
   phone: "",
   company: "",
-  websiteStatus: "no", // Default to 'no' (Belum punya)
+  websiteStatus: "no",
   domain: "",
   brief: "",
 });
+
+const resetForm = () => {
+  form.name = "";
+  form.email = "";
+  form.phone = "";
+  form.company = "";
+  form.websiteStatus = "no";
+  form.domain = "";
+  form.brief = "";
+};
 
 // --- Lifecycle & Persistence ---
 onMounted(() => {
@@ -454,10 +464,19 @@ const processOrder = async (isWhatsApp = false) => {
 
       showSuccess.value = true;
       localStorage.removeItem(defaultConfig.storageKey);
+      
+      // Reset all data for next order
+      resetCalculator();
+      resetForm();
     } else {
       // Small delay for WA too
       await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("Data terkirim ke sistem! Membuka WhatsApp...");
+      
+      // Reset after WA as well
+      resetCalculator();
+      resetForm();
+      localStorage.removeItem(defaultConfig.storageKey);
     }
     return client;
   } catch (e) {

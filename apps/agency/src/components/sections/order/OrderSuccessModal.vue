@@ -10,7 +10,7 @@
     >
       <div
         v-if="show"
-        class="fixed inset-0 bg-black/90 z-[10001] flex items-center justify-center p-5 backdrop-blur-sm"
+        class="fixed inset-0 bg-black/90 z-10001 flex items-center justify-center p-5 backdrop-blur-sm"
         @click.self="$emit('close')"
       >
         <div

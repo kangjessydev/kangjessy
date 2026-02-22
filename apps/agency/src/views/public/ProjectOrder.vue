@@ -186,6 +186,13 @@
       @apply-discount="(code) => applyDiscount(code)"
       @back="step = 1"
     />
+
+    <!-- Processing Overlay -->
+    <ProcessingOverlay
+      :show="isSubmitting"
+      title="Menyiapkan Penawaran"
+      subtitle="Sistem sedang meninjau brief Anda dan menyiapkan draf invoice terbaik..."
+    />
   </div>
 </template>
 
@@ -201,6 +208,7 @@ import OrderStep2 from "../../components/sections/order/OrderStep2.vue";
 import OrderSummaryCard from "../../components/sections/order/OrderSummaryCard.vue";
 import OrderSuccessModal from "../../components/sections/order/OrderSuccessModal.vue";
 import OrderMobileSummary from "../../components/sections/order/OrderMobileSummary.vue";
+import ProcessingOverlay from "../../components/sections/order/ProcessingOverlay.vue";
 import { Share2 as Share2Icon, Save as SaveIcon } from "lucide-vue-next";
 import { useSEO } from "../../composables/useSEO";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
@@ -441,9 +449,14 @@ const processOrder = async (isWhatsApp = false) => {
       };
       localStorage.setItem("GZ_ORDER_TEMP", JSON.stringify(finalData));
 
+      // Wait a bit to show the premium processing animation
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       showSuccess.value = true;
       localStorage.removeItem(defaultConfig.storageKey);
     } else {
+      // Small delay for WA too
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("Data terkirim ke sistem! Membuka WhatsApp...");
     }
     return client;

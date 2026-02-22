@@ -333,7 +333,6 @@ import {
   Sparkles as SparklesIcon,
   Ticket as TicketIcon,
   Trash2 as TrashIcon,
-  Search as SearchIcon,
 } from "lucide-vue-next";
 import type { Coupon } from "../../../services/couponService";
 import { BottomSheet, BaseButton } from "@kangjessy/ui";

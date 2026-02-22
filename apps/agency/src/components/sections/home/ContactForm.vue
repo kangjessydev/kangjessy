@@ -173,7 +173,7 @@ Contoh: 'Mau bikin web toko online tapi bingung mulai dari mana'"
         <div
           v-if="showToast"
           :class="[
-            'fixed top-[40px] right-[40px] z-[99999] flex items-center gap-3 px-5 py-4 min-w-[320px] bg-bg-secondary border border-border-color rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-xl',
+            'fixed top-[40px] right-[40px] z-99999 flex items-center gap-3 px-5 py-4 min-w-[320px] bg-bg-secondary border border-border-color rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-xl',
             toastType === 'success'
               ? 'border-l-4 border-l-accent-primary'
               : 'border-l-4 border-l-status-error',
@@ -295,8 +295,8 @@ const handleSubmit = async (submitType: "wait" | "instant") => {
       budget: 0, // No budget in consultation form
       source:
         submitType === "wait"
-          ? "web_consultation_wait"
-          : "web_consultation_instant",
+          ? "Konsultasi Proposal"
+          : "Konsultasi WhatsApp",
       type: "general_inquiry" as const,
       project_type: form.service || "Belum Ditentukan",
       brief: form.message || "-",

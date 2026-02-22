@@ -131,6 +131,31 @@
         </div>
       </div>
 
+      <!-- Voucher Section -->
+      <div class="mb-8 pt-6 border-t border-border-color/10">
+        <label class="text-[0.65rem] font-black uppercase tracking-[0.15em] text-text-tertiary mb-3 block px-1">
+          HAVE A VOUCHER CODE?
+        </label>
+        <div class="flex gap-2">
+          <input
+            v-model="localCoupon"
+            type="text"
+            placeholder="KODE PROMO"
+            class="flex-1 bg-bg-primary border border-border-color/60 rounded-xl py-3 px-4 text-xs font-mono font-bold text-text-primary outline-none focus:border-accent-primary transition-all uppercase shadow-inner"
+            @keyup.enter="$emit('apply-discount', localCoupon)"
+          />
+          <button
+            @click="$emit('apply-discount', localCoupon)"
+            class="px-5 py-3 bg-accent-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:shadow-lg hover:shadow-accent-primary/20 active:scale-95 transition-all shrink-0"
+          >
+            Apply
+          </button>
+        </div>
+        <p v-if="discountAmount > 0" class="mt-2 px-1 text-[10px] font-bold text-emerald-500 flex items-center gap-1">
+          <CheckIcon :size="12" /> Kupon berhasil terpasang!
+        </p>
+      </div>
+
       <!-- Total Box -->
       <div class="relative group mb-10">
         <div class="relative bg-bg-primary border-2 border-accent-primary/30 rounded-[32px] p-8 text-center shadow-2xl overflow-hidden">

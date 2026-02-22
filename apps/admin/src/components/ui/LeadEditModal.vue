@@ -125,9 +125,15 @@
                   >
                     <Globe :size="14" />
                   </div>
-                  <span class="text-sm font-bold text-[#1B2559] italic"
-                    >Source: {{ lead.source || "web_contact" }}</span
-                  >
+                  <span class="text-sm font-bold text-[#1B2559] flex items-center gap-1.5"
+                    >Source: 
+                    <span 
+                      class="px-2 py-0.5 rounded-lg text-[10px] uppercase font-black border"
+                      :class="getSourceClass(lead.source)"
+                    >
+                      {{ getSourceLabel(lead.source) }}
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -400,6 +406,7 @@ import {
 } from "lucide-vue-next";
 import { BottomSheet } from "@kangjessy/ui";
 import type { Client } from "../../types";
+import { getSourceLabel, getSourceClass, formatCurrency } from "../../utils/formatters";
 
 const props = defineProps<{
   isOpen: boolean;
@@ -463,10 +470,6 @@ function formatDate(date: string) {
 }
 
 function formatPrice(price: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(price);
+  return formatCurrency(price);
 }
 </script>

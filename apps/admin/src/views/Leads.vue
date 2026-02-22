@@ -323,10 +323,8 @@
           >
             <option value="all">Semua Sumber</option>
             <option value="contact_form">Form Kontak (Lama)</option>
-            <option value="web_consultation_wait">Konsultasi (Tunggu)</option>
-            <option value="web_consultation_instant">
-              Konsultasi (Instan)
-            </option>
+            <option value="Konsultasi Proposal">Konsultasi Proposal</option>
+            <option value="Konsultasi WhatsApp">Konsultasi WhatsApp</option>
           </AdminSelect>
         </div>
       </div>
@@ -501,9 +499,10 @@
               </td>
               <td>
                 <span
-                  class="inline-flex px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-600 border border-slate-200"
+                  class="inline-flex px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all"
+                  :class="getSourceClass(lead.source)"
                 >
-                  {{ lead.source || "Unknown" }}
+                  {{ getSourceLabel(lead.source) }}
                 </span>
               </td>
               <td class="!pr-8">
@@ -703,9 +702,10 @@
 
         <div class="mb-3">
           <span
-            class="inline-flex px-2.5 py-1 rounded-full text-[8px] font-black uppercase tracking-widest bg-slate-100 text-slate-600 border border-slate-200"
+            class="inline-flex px-2.5 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border transition-all"
+            :class="getSourceClass(lead.source)"
           >
-            {{ lead.source || "Unknown" }}
+            {{ getSourceLabel(lead.source) }}
           </span>
         </div>
 
@@ -940,8 +940,8 @@
                 v-for="src in [
                   { id: 'all', l: 'All' },
                   { id: 'contact_form', l: 'Contact (Old)' },
-                  { id: 'web_consultation_wait', l: 'Consul (Wait)' },
-                  { id: 'web_consultation_instant', l: 'Consul (Chat)' },
+                  { id: 'Konsultasi Proposal', l: 'Consul (Proposal)' },
+                  { id: 'Konsultasi WhatsApp', l: 'Consul (Chat)' },
                 ]"
                 :key="src.id"
                 @click="
@@ -1164,6 +1164,7 @@ import LeadEditModal from "../components/ui/LeadEditModal.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";
 import { BottomSheet } from "@kangjessy/ui";
 import { docsService } from "../services/docsService";
+import { getSourceLabel, getSourceClass } from "../utils/formatters";
 
 const router = useRouter();
 
@@ -1520,8 +1521,14 @@ const allFilteredLeads = computed(() => {
     const matchesStatus =
       statusFilter.value === "all" ||
       (l.status || "New") === statusFilter.value;
+
     const matchesSource =
-      sourceFilter.value === "all" || l.source === sourceFilter.value;
+      sourceFilter.value === "all" ||
+      l.source === sourceFilter.value ||
+      (sourceFilter.value === "Konsultasi Proposal" &&
+        l.source === "web_consultation_wait") ||
+      (sourceFilter.value === "Konsultasi WhatsApp" &&
+        l.source === "web_consultation_instant");
 
     return matchesSearch && matchesStatus && matchesSource;
   });

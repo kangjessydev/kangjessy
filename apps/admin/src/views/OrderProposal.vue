@@ -884,8 +884,7 @@ import {
 import { clientsService } from "../services/clientsService";
 import { proposalService } from "../services/proposalService";
 import { couponsService, type Coupon } from "../services/couponsService";
-import { projectTypes } from "../data/order/projects";
-import { availableFeatures } from "../data/order/features";
+import { projectTypes, availableFeatures } from "../../../agency/src/data/landing/order";
 import type { Client } from "../types";
 import { BaseButton } from "@kangjessy/ui";
 import { useBranding } from "../composables/useBranding";

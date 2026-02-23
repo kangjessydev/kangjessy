@@ -1533,10 +1533,13 @@ import { clientsService } from "../services/clientsService";
 import { couponsService, type Coupon } from "../services/couponsService";
 import type { Client } from "../types";
 
-import { serviceCategories } from "../data/order/services";
-import { projectTypes } from "../data/order/projects";
-import { availableFeatures } from "../data/order/features";
-import { timelineOptions, styleOptions } from "../data/order/options";
+import { 
+  serviceCategories, 
+  projectTypes, 
+  availableFeatures, 
+  timelineOptions, 
+  styleOptions 
+} from "../../../agency/src/data/landing/order";
 
 const route = useRoute();
 const router = useRouter();

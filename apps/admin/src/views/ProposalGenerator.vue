@@ -102,20 +102,18 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Sumber Klien / Relasi -->
+            <!-- Sumber Proposal -->
             <div class="space-y-1.5 md:col-span-2">
               <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1"
-                >Sumber Klien / Relasi</label
+                >Sumber Proposal</label
               >
-
-              <!-- Two toggle options -->
               <div class="grid grid-cols-2 gap-3 mt-2">
-                <!-- Option A: Independent -->
+                <!-- Option A: Manual -->
                 <button
                   type="button"
                   :disabled="!!route.query.leadId"
                   @click="setOriginIndependent"
-                  class="flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all"
+                  class="flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   :class="
                     formData.origin_type === 'independent'
                       ? 'border-amber-400 bg-amber-50'
@@ -129,17 +127,17 @@
                     <User :size="16" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-black text-[#1B2559] uppercase tracking-wider">Independent</p>
-                    <p class="text-[9px] text-slate-400 font-bold">Input manual</p>
+                    <p class="text-[10px] font-black text-[#1B2559] uppercase tracking-wider">Manual</p>
+                    <p class="text-[9px] text-slate-400 font-bold">Dibuat langsung</p>
                   </div>
                 </button>
 
-                <!-- Option B: From Lead -->
+                <!-- Option B: From Leads -->
                 <button
                   type="button"
                   :disabled="!!route.query.leadId"
                   @click="setOriginFromLead"
-                  class="flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all"
+                  class="flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   :class="
                     formData.origin_type === 'from_lead'
                       ? 'border-indigo-400 bg-indigo-50'
@@ -153,44 +151,11 @@
                     <Zap :size="16" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-black text-[#1B2559] uppercase tracking-wider">Form Leads</p>
-                    <p class="text-[9px] text-slate-400 font-bold">Dari inbox leads</p>
+                    <p class="text-[10px] font-black text-[#1B2559] uppercase tracking-wider">Dari Leads</p>
+                    <p class="text-[9px] text-slate-400 font-bold">Konversi inbox</p>
                   </div>
                 </button>
               </div>
-
-              <!-- Lead dropdown (only shown when from_lead) -->
-              <div v-if="formData.origin_type === 'from_lead'" class="relative mt-3">
-                <select
-                  v-model="formData.lead_id"
-                  :disabled="!!route.query.leadId"
-                  class="w-full px-5 py-4 bg-white border border-indigo-200 rounded-2xl text-xs font-bold focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all disabled:opacity-60 disabled:bg-slate-50 appearance-none cursor-pointer"
-                  @change="handleLeadSelect"
-                >
-                  <option :value="null">— Pilih Lead —</option>
-                  <option
-                    v-for="lead in availableLeads"
-                    :key="lead.id"
-                    :value="lead.id"
-                  >
-                    {{ lead.name }} ({{ lead.company || "Personal" }})
-                  </option>
-                </select>
-                <div v-if="!!route.query.leadId" class="absolute right-4 top-1/2 -translate-y-1/2">
-                  <Lock :size="14" class="text-slate-300" />
-                </div>
-                <div v-else class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <FlaskConical :size="14" class="text-indigo-300" />
-                </div>
-              </div>
-
-              <p class="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-2 ml-1">
-                {{
-                  !!route.query.leadId
-                    ? "Relasi dikunci karena dibuat dari inbox lead."
-                    : "Pilih sumber data klien untuk proposal ini."
-                }}
-              </p>
             </div>
 
             <div class="space-y-1.5 md:col-span-2">

@@ -912,11 +912,41 @@ const loadProposal = async (id: string) => {
       terms_revision: data.terms_revision || "",
       payment_accounts: data.payment_accounts || [],
     };
-
-    // If loading existing with no selection, or just loaded
-    // Ensure we don't overwrite if it already has data
   } catch (e) {
     console.error("Load failed", e);
+  } finally {
+    fetchingLead.value = false;
+  }
+};
+
+// Prefill a NEW proposal from an existing lead (called when ?leadId= is in URL)
+const prefillFromLead = async (leadId: string) => {
+  if (!leadId || leadId === "undefined" || leadId === "null") return;
+
+  fetchingLead.value = true;
+  try {
+    const lead = await clientsService.getById(leadId);
+    if (!lead) return;
+
+    formData.value = {
+      ...formData.value,
+      client_name: lead.name || "",
+      company: lead.company || "",
+      email: lead.email || "",
+      phone: lead.phone || "",
+      project_type: lead.project_type || "",
+      project_name: lead.project_name || `Proposal untuk ${lead.name}`,
+      lead_id: lead.id,
+      origin_type: "from_lead",
+      status: "draft",
+    };
+
+    // Prefill narrative from lead brief
+    if (lead.brief) {
+      narrative.value.bg = lead.brief;
+    }
+  } catch (e) {
+    console.error("Prefill from lead failed", e);
   } finally {
     fetchingLead.value = false;
   }
@@ -970,7 +1000,7 @@ watch(
   () => [route.query.id, route.query.leadId],
   ([newId, newLeadId]) => {
     if (newId) loadProposal(String(newId));
-    else if (newLeadId) loadProposal(String(newLeadId));
+    else if (newLeadId) prefillFromLead(String(newLeadId));
   },
   { immediate: true },
 );

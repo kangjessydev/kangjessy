@@ -380,14 +380,12 @@
                       formData.visual_style ? 'bg-indigo-50' : 'bg-slate-100'
                     "
                   >
-                    <img
+                    <div
                       v-if="formData.visual_style"
-                      :src="
-                        styleOptions.find((s) => s.id === formData.visual_style)
-                          ?.image
-                      "
-                      class="w-full h-full object-cover"
-                    />
+                      class="w-full h-full bg-indigo-100 flex items-center justify-center text-indigo-400 text-[10px] font-black uppercase tracking-widest"
+                    >
+                      {{ styleOptions.find((s) => s.id === formData.visual_style)?.name }}
+                    </div>
                     <Palette
                       v-else
                       :size="28"
@@ -1117,7 +1115,7 @@
                     : 'bg-slate-50 text-slate-400 border-transparent hover:border-slate-200'
                 "
               >
-                {{ cat.label }}
+                {{ (cat as any).title || (cat as any).label }}
               </button>
             </div>
 
@@ -1157,7 +1155,7 @@
                     <p
                       class="text-[10px] font-black text-[#7029FF] uppercase tracking-widest"
                     >
-                      START FROM Rp {{ type.basePrice.toLocaleString("id-ID") }}
+                      START FROM Rp {{ (type.basePrice || 0).toLocaleString("id-ID") }}
                     </p>
                   </div>
                 </div>
@@ -1454,29 +1452,21 @@
                   : 'border-slate-50 bg-white hover:border-slate-200'
               "
             >
-              <div class="aspect-[16/9] overflow-hidden relative">
-                <img
-                  :src="style.image"
-                  :alt="style.name"
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-[#1B2559]/90 via-transparent to-transparent"
-                ></div>
-                <div
-                  v-if="formData.visual_style === style.id"
-                  class="absolute top-4 right-4 w-8 h-8 bg-[#7029FF] rounded-full flex items-center justify-center text-white shadow-lg z-20"
-                >
-                  <Check :size="16" stroke-width="3" />
-                </div>
-                <div class="absolute bottom-4 left-4 right-4">
-                  <h4 class="font-black text-white text-lg tracking-tight mb-1">
+              <div class="p-6 flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-black text-[#1B2559] text-base tracking-tight">
                     {{ style.name }}
                   </h4>
-                  <p class="text-[10px] text-white/70 font-bold line-clamp-2">
-                    {{ style.desc }}
-                  </p>
+                  <div
+                    v-if="formData.visual_style === style.id"
+                    class="w-6 h-6 bg-[#7029FF] rounded-full flex items-center justify-center text-white shadow-lg"
+                  >
+                    <Check :size="12" stroke-width="3" />
+                  </div>
                 </div>
+                <p class="text-[11px] text-slate-400 font-bold leading-relaxed">
+                  {{ style.desc }}
+                </p>
               </div>
             </button>
           </div>

@@ -323,7 +323,7 @@
                     {{ type.name }}
                   </h4>
                   <p class="text-[10px] opacity-80 font-medium">
-                    Rp {{ type.basePrice.toLocaleString("id-ID") }}
+                    Rp {{ (type.basePrice || 0).toLocaleString("id-ID") }}
                   </p>
                 </button>
               </div>
@@ -388,7 +388,8 @@
                 >
                   <div class="flex items-start justify-between mb-2">
                     <component
-                      :is="feature.icon"
+                      v-if="(feature as any).icon"
+                      :is="(feature as any).icon"
                       :size="18"
                       :class="
                         selectedFeatureIds.includes(feature.id)
@@ -850,8 +851,8 @@ const autoPopulateDeliverables = () => {
   const type = projectTypes.find((t) => t.name === formData.value.project_type);
   if (type) {
     // Only auto-fill if empty to avoid overwriting user edits
-    if (formData.value.deliverables.length === 0 && type.deliverables) {
-      formData.value.deliverables = [...type.deliverables];
+    if (formData.value.deliverables.length === 0 && (type as any).deliverables) {
+      formData.value.deliverables = [...(type as any).deliverables];
     }
   }
 };

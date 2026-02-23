@@ -1,4 +1,4 @@
-import { projectTypes, availableFeatures } from "../../../agency/src/data/landing/order";
+import { projectTypes } from "../../../agency/src/data/landing/order";
 import type { Client } from "../types";
 import type { Proposal } from "../services/proposalService";
 

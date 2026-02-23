@@ -421,9 +421,17 @@
                       <h4 class="text-[11px] font-bold mb-1 leading-tight">
                         {{ feature.name }}
                       </h4>
-                      <p class="text-[10px] opacity-80 font-medium">
-                        Rp {{ feature.price.toLocaleString("id-ID") }}
-                      </p>
+                      <div class="flex items-center gap-1.5 flex-wrap">
+                        <p
+                          v-if="feature.originalPrice"
+                          class="text-[8px] opacity-60 font-medium line-through"
+                        >
+                          Rp {{ feature.originalPrice.toLocaleString("id-ID") }}
+                        </p>
+                        <p class="text-[10px] font-medium text-emerald-600">
+                          + Rp {{ feature.price.toLocaleString("id-ID") }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </button>

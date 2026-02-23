@@ -1202,11 +1202,19 @@
                   >
                     {{ feat.name }}
                   </p>
-                  <p
-                    class="text-[9px] font-black text-[#7029FF] uppercase tracking-widest"
-                  >
-                    + Rp {{ feat.price.toLocaleString("id-ID") }}
-                  </p>
+                  <div class="flex items-center gap-2">
+                    <p
+                      v-if="feat.originalPrice"
+                      class="text-[8px] font-black text-slate-400 line-through"
+                    >
+                      Rp {{ feat.originalPrice.toLocaleString("id-ID") }}
+                    </p>
+                    <p
+                      class="text-[9px] font-black text-[#7029FF] uppercase tracking-widest"
+                    >
+                      + Rp {{ feat.price.toLocaleString("id-ID") }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

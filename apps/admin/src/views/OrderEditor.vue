@@ -1523,6 +1523,7 @@ import { clientsService } from "../services/clientsService";
 import { couponsService, type Coupon } from "../services/couponsService";
 import type { Client } from "../types";
 
+import {
   serviceCategories, 
   projectTypes, 
   availableFeatures, 

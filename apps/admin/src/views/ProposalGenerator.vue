@@ -799,7 +799,7 @@ import {
 import { clientsService } from "../services/clientsService";
 import { couponsService, type Coupon } from "../services/couponsService";
 import type { Client } from "../types";
-import { projectTypes, availableFeatures } from "../../../agency/src/data/landing/order";
+import { projectTypes, availableFeatures } from "../data/catalogData";
 import { BaseButton } from "@kangjessy/ui";
 import Toast from "../components/ui/Toast.vue";
 import ConfirmModal from "../components/ui/ConfirmModal.vue";

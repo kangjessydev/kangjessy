@@ -1523,13 +1523,12 @@ import { clientsService } from "../services/clientsService";
 import { couponsService, type Coupon } from "../services/couponsService";
 import type { Client } from "../types";
 
-import { 
   serviceCategories, 
   projectTypes, 
   availableFeatures, 
   timelineOptions, 
   styleOptions 
-} from "../../../agency/src/data/landing/order";
+} from "../data/catalogData";
 
 const route = useRoute();
 const router = useRouter();
@@ -1549,7 +1548,7 @@ const showBackModal = ref(false);
 const showMobileSummary = ref(false);
 const originalData = ref("");
 
-const selectedCategoryId = ref("web-app");
+const selectedCategoryId = ref("website-high-conversion");
 const selectedFeatureIds = ref<string[]>([]);
 const selectedTimelineId = ref("standard");
 const catalogueMode = ref<

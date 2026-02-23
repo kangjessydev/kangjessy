@@ -1,4 +1,4 @@
-import { siteConfig } from "@/data/config/siteConfig";
+import { siteConfig } from "../siteConfig";
 
 // WhatsApp Configuration
 export const whatsappConfig = {

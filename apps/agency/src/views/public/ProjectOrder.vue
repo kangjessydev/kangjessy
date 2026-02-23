@@ -468,6 +468,8 @@ const processOrder = async (isWhatsApp = false) => {
       // Reset all data for next order
       resetCalculator();
       resetForm();
+      step.value = 1;
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       // Small delay for WA too
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -476,6 +478,8 @@ const processOrder = async (isWhatsApp = false) => {
       // Reset after WA as well
       resetCalculator();
       resetForm();
+      step.value = 1;
+      window.scrollTo({ top: 0, behavior: "smooth" });
       localStorage.removeItem(defaultConfig.storageKey);
     }
     return client;

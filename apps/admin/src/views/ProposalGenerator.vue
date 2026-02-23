@@ -1045,10 +1045,21 @@ const filteredFeatures = computed(() => {
   );
   if (!selectedType) return [];
 
+  const sid = selectedType.serviceId;
+  const tid = selectedType.id;
+  const allRelatedTypeIds = projectTypes.filter(t => t.serviceId === sid).map(t => t.id);
+
   let features = availableFeatures.filter((f) =>
-    f.relevantTo.includes(selectedType.serviceId) ||
-    f.relevantTo.includes(selectedType.id)
+    f.relevantTo.includes(sid) ||
+    f.relevantTo.includes(tid) ||
+    allRelatedTypeIds.some(relId => f.relevantTo.includes(relId))
   );
+
+  // Hide features already included in the selected project type
+  if (selectedType.features) {
+    const includedIds = selectedType.features;
+    features = features.filter((f) => !includedIds.includes(f.id));
+  }
 
   if (searchFeature.value.trim()) {
     features = features.filter(

@@ -1734,10 +1734,21 @@ const filteredFeatures = computed(() => {
 
   let filtered = [];
   if (selectedType) {
+    const sid = selectedType.serviceId;
+    const tid = selectedType.id;
+    const allRelatedTypeIds = projectTypes.filter(t => t.serviceId === sid).map(t => t.id);
+
     filtered = availableFeatures.filter((f) =>
-      f.relevantTo.includes(selectedType.serviceId) ||
-      f.relevantTo.includes(selectedType.id)
+      f.relevantTo.includes(sid) ||
+      f.relevantTo.includes(tid) ||
+      allRelatedTypeIds.some(relId => f.relevantTo.includes(relId))
     );
+
+    // Hide features already included in the selected project type
+    if (selectedType.features) {
+      const includedIds = selectedType.features;
+      filtered = filtered.filter((f) => !includedIds.includes(f.id));
+    }
   } else {
     const relevantProjectTypes = projectTypes.filter(p => p.serviceId === selectedCategoryId.value);
     const relevantProjectIds = relevantProjectTypes.map(p => p.id);

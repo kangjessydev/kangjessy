@@ -331,10 +331,10 @@
                     >
                       {{
                         timelineOptions.find((t) => t.id === selectedTimelineId)
-                          ?.label || "Standar Timeline"
+                          ?.label || "Pilih Opsi"
                       }}
                     </h3>
-                    <div class="flex items-center gap-2 mt-1">
+                    <div class="flex items-center gap-2 mt-1" v-if="selectedTimelineId">
                       <span
                         class="text-xs text-slate-400 font-bold uppercase tracking-widest"
                         >Speed Multiplier:</span
@@ -399,7 +399,7 @@
                     >
                       {{
                         styleOptions.find((s) => s.id === formData.visual_style)
-                          ?.name || "Default Aesthetic"
+                          ?.name || "Pilih Aesthetic"
                       }}
                     </h3>
                     <p
@@ -1551,7 +1551,7 @@ const originalData = ref("");
 
 const selectedCategoryId = ref("website-high-conversion");
 const selectedFeatureIds = ref<string[]>([]);
-const selectedTimelineId = ref("standard");
+const selectedTimelineId = ref("");
 const catalogueMode = ref<
   "type" | "feature" | "status" | "source" | "voucher" | "timeline" | "style"
 >("type");
@@ -1730,9 +1730,24 @@ const filteredProjectTypes = computed(() => {
 });
 
 const filteredFeatures = computed(() => {
-  let filtered = availableFeatures.filter((f) =>
-    f.relevantTo.includes(selectedCategoryId.value),
-  );
+  const selectedType = projectTypes.find((p) => p.name === formData.value.project_type);
+
+  let filtered = [];
+  if (selectedType) {
+    filtered = availableFeatures.filter((f) =>
+      f.relevantTo.includes(selectedType.serviceId) ||
+      f.relevantTo.includes(selectedType.id)
+    );
+  } else {
+    const relevantProjectTypes = projectTypes.filter(p => p.serviceId === selectedCategoryId.value);
+    const relevantProjectIds = relevantProjectTypes.map(p => p.id);
+
+    filtered = availableFeatures.filter((f) =>
+      f.relevantTo.includes(selectedCategoryId.value) || 
+      f.relevantTo.some(id => relevantProjectIds.includes(id))
+    );
+  }
+
   if (catalogueSearch.value) {
     const q = catalogueSearch.value.toLowerCase();
     filtered = filtered.filter((f) => f.name.toLowerCase().includes(q));

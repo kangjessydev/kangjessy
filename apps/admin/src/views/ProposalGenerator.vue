@@ -824,7 +824,7 @@ const formData = ref({
   project_type: "",
   features: [] as string[],
   voucher_code: "",
-  selected_timeline: "Standard",
+  selected_timeline: "",
   status: "draft" as any,
   origin_type: "independent" as any,
   lead_id: null as string | null,
@@ -1046,7 +1046,8 @@ const filteredFeatures = computed(() => {
   if (!selectedType) return [];
 
   let features = availableFeatures.filter((f) =>
-    f.relevantTo.includes(selectedType.serviceId),
+    f.relevantTo.includes(selectedType.serviceId) ||
+    f.relevantTo.includes(selectedType.id)
   );
 
   if (searchFeature.value.trim()) {

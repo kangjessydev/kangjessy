@@ -102,46 +102,93 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div
-              class="space-y-1.5 md:col-span-2 p-6 bg-slate-50/50 rounded-3xl border border-slate-100/50"
-            >
-              <label
-                class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1"
+            <!-- Sumber Klien / Relasi -->
+            <div class="space-y-1.5 md:col-span-2">
+              <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1"
                 >Sumber Klien / Relasi</label
               >
-              <div class="relative mt-2">
+
+              <!-- Two toggle options -->
+              <div class="grid grid-cols-2 gap-3 mt-2">
+                <!-- Option A: Independent -->
+                <button
+                  type="button"
+                  :disabled="!!route.query.leadId"
+                  @click="setOriginIndependent"
+                  class="flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all"
+                  :class="
+                    formData.origin_type === 'independent'
+                      ? 'border-amber-400 bg-amber-50'
+                      : 'border-slate-100 bg-white hover:border-slate-200'
+                  "
+                >
+                  <div
+                    class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                    :class="formData.origin_type === 'independent' ? 'bg-amber-400 text-white' : 'bg-slate-100 text-slate-400'"
+                  >
+                    <User :size="16" />
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-black text-[#1B2559] uppercase tracking-wider">Independent</p>
+                    <p class="text-[9px] text-slate-400 font-bold">Input manual</p>
+                  </div>
+                </button>
+
+                <!-- Option B: From Lead -->
+                <button
+                  type="button"
+                  :disabled="!!route.query.leadId"
+                  @click="setOriginFromLead"
+                  class="flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all"
+                  :class="
+                    formData.origin_type === 'from_lead'
+                      ? 'border-indigo-400 bg-indigo-50'
+                      : 'border-slate-100 bg-white hover:border-slate-200'
+                  "
+                >
+                  <div
+                    class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                    :class="formData.origin_type === 'from_lead' ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-slate-400'"
+                  >
+                    <Zap :size="16" />
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-black text-[#1B2559] uppercase tracking-wider">Form Leads</p>
+                    <p class="text-[9px] text-slate-400 font-bold">Dari inbox leads</p>
+                  </div>
+                </button>
+              </div>
+
+              <!-- Lead dropdown (only shown when from_lead) -->
+              <div v-if="formData.origin_type === 'from_lead'" class="relative mt-3">
                 <select
                   v-model="formData.lead_id"
                   :disabled="!!route.query.leadId"
-                  class="w-full px-5 py-4 bg-white border border-slate-200 rounded-2xl text-xs font-bold focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all disabled:opacity-60 disabled:bg-slate-50 appearance-none cursor-pointer"
+                  class="w-full px-5 py-4 bg-white border border-indigo-200 rounded-2xl text-xs font-bold focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all disabled:opacity-60 disabled:bg-slate-50 appearance-none cursor-pointer"
                   @change="handleLeadSelect"
                 >
-                  <option :value="null">
-                    Independent (Manual Input Below)
-                  </option>
+                  <option :value="null">— Pilih Lead —</option>
                   <option
                     v-for="lead in availableLeads"
                     :key="lead.id"
                     :value="lead.id"
                   >
-                    {{ lead.name }} ({{ lead.company || "Personal" }}) — Link
-                    Data
+                    {{ lead.name }} ({{ lead.company || "Personal" }})
                   </option>
                 </select>
-                <div
-                  v-if="!!route.query.leadId"
-                  class="absolute right-4 top-1/2 -translate-y-1/2"
-                >
+                <div v-if="!!route.query.leadId" class="absolute right-4 top-1/2 -translate-y-1/2">
                   <Lock :size="14" class="text-slate-300" />
                 </div>
+                <div v-else class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <FlaskConical :size="14" class="text-indigo-300" />
+                </div>
               </div>
-              <p
-                class="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-2 ml-1"
-              >
+
+              <p class="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-2 ml-1">
                 {{
                   !!route.query.leadId
                     ? "Relasi dikunci karena dibuat dari inbox lead."
-                    : "Hubungkan dengan lead yang sudah ada atau isi data baru di bawah."
+                    : "Pilih sumber data klien untuk proposal ini."
                 }}
               </p>
             </div>
@@ -857,6 +904,20 @@ const autoPopulateDeliverables = () => {
   }
 };
 
+function setOriginIndependent() {
+  formData.value.origin_type = "independent";
+  formData.value.lead_id = null;
+  // Clear auto-populated client data
+  formData.value.client_name = "";
+  formData.value.company = "";
+  formData.value.email = "";
+  formData.value.phone = "";
+}
+
+function setOriginFromLead() {
+  formData.value.origin_type = "from_lead";
+}
+
 function handleLeadSelect() {
   const selectedLead = availableLeads.value.find(
     (l) => l.id === formData.value.lead_id,
@@ -871,7 +932,10 @@ function handleLeadSelect() {
     if (selectedLead.brief) {
       narrative.value.bg = selectedLead.brief;
     }
-    // Logic auto-populate will trigger via watch
+  } else {
+    // User selected the placeholder "— Pilih Lead —"
+    formData.value.origin_type = "independent";
+    formData.value.lead_id = null;
   }
 }
 

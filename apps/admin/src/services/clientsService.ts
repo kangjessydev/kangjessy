@@ -27,8 +27,19 @@ export const clientsService = {
 
   // Create client
   async create(client: Omit<Client, 'id' | 'created_at'>) {
-    // external_link is not in DB schema, so filter it out
-    const { external_link, ...clientData } = client as any;
+    // Filter out fields that are not in DB schema to prevent Schema Cache errors
+    const {
+      external_link,
+      payment_notes,
+      projects,
+      deliverables,
+      terms,
+      terms_payment,
+      terms_copyright,
+      terms_revision,
+      payment_accounts,
+      ...clientData
+    } = client as any;
 
     const { data, error } = await supabase
       .from('clients')
@@ -42,8 +53,19 @@ export const clientsService = {
 
   // Update client
   async update(id: string, client: Partial<Client>) {
-    // external_link is not in DB schema
-    const { external_link, ...clientData } = client as any;
+    // Filter out fields that are not in DB schema to prevent Schema Cache errors
+    const {
+      external_link,
+      payment_notes,
+      projects,
+      deliverables,
+      terms,
+      terms_payment,
+      terms_copyright,
+      terms_revision,
+      payment_accounts,
+      ...clientData
+    } = client as any;
 
     const { data, error } = await supabase
       .from('clients')

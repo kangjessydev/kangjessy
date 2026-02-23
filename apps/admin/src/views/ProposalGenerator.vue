@@ -786,7 +786,7 @@ import {
   AlertTriangle,
   Eye,
   Trash2,
-  Lock,
+
   FlaskConical,
   Search,
   X,
@@ -883,26 +883,7 @@ function setOriginFromLead() {
   formData.value.origin_type = "from_lead";
 }
 
-function handleLeadSelect() {
-  const selectedLead = availableLeads.value.find(
-    (l) => l.id === formData.value.lead_id,
-  );
-  if (selectedLead) {
-    formData.value.client_name = selectedLead.name;
-    formData.value.company = selectedLead.company || "";
-    formData.value.email = selectedLead.email || "";
-    formData.value.phone = selectedLead.phone || "";
-    formData.value.project_type = selectedLead.project_type || "";
-    formData.value.origin_type = "from_lead";
-    if (selectedLead.brief) {
-      narrative.value.bg = selectedLead.brief;
-    }
-  } else {
-    // User selected the placeholder "— Pilih Lead —"
-    formData.value.origin_type = "independent";
-    formData.value.lead_id = null;
-  }
-}
+
 
 const loadProposal = async (id: string) => {
   if (!id || id === "undefined" || id === "null") return;

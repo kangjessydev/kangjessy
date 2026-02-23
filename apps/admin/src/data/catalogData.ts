@@ -1,11 +1,42 @@
 import { projectTypes as pt, availableFeatures as af, serviceCategories as sc } from "../../../agency/src/data/landing/order";
+import { pricingConfig } from "../../../agency/src/data/config/order/settings";
 
-// Map project types to include basePrice from their service categories
+// Map project types to include basePrice calculated exactly like the Agency (using features market value & tiered discounts)
 export const projectTypes = pt.map(p => {
+  const includedIds = p.features || [];
+  const marketValue = includedIds.reduce((acc, id) => {
+    const cleanId = String(id).trim().toLowerCase();
+    const feat = af.find(f => f.id.trim().toLowerCase() === cleanId);
+    
+    // Fallback for starter-pack if not found in list
+    if (!feat && cleanId === 'starter-pack') {
+      return acc + 1000000; 
+    }
+    return acc + (feat?.price || 0);
+  }, 0);
+
+  let basePrice = marketValue;
+  if (p.id !== 'fitur-rakitan') {
+    const tier = pricingConfig.tieredDiscounts.find(t => marketValue >= t.threshold);
+    const discount = tier ? tier.discount : 0;
+    basePrice = marketValue * (1 - discount);
+  }
+
+  // Fallback for empty packages (prevents Rp 0 for valid packages)
+  if (basePrice === 0 && p.id !== 'fitur-rakitan') {
+    basePrice = marketValue;
+  }
+
+  // Also maintain fallback to category price just in case
   const category = sc.find(c => c.id === p.serviceId);
+  if (basePrice === 0 && category && p.id !== 'fitur-rakitan') {
+    basePrice = category.price;
+  }
+
   return {
     ...p,
-    basePrice: category ? category.price : 0
+    basePrice: Math.round(basePrice),
+    originalPrice: Math.round(marketValue)
   };
 });
 

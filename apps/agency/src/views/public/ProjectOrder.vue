@@ -146,11 +146,11 @@
     <!-- Success Modal -->
     <OrderSuccessModal
       :show="showSuccess"
-      :customerName="form.name"
-      :totalPrice="totalPrice"
+      :customerName="successSnapshot.name"
+      :totalPrice="successSnapshot.total"
       :formatPrice="formatPrice"
       :projectId="createdProjectId"
-      :projectType="currentType?.name"
+      :projectType="successSnapshot.name ? currentType?.name : ''"
       @close="showSuccess = false"
       @view-invoice="router.push(`/portal?id=${createdProjectId}`)"
       @go-home="goHome"
@@ -271,6 +271,8 @@ const isSubmitting = ref(false);
 const showSuccess = ref(false);
 const lastSaved = ref("");
 const createdProjectId = ref("");
+// Snapshot values used by success modal (form & calculator get reset after submit)
+const successSnapshot = ref({ name: "", total: 0 });
 const form = reactive({
   name: "",
   email: "",
@@ -461,6 +463,10 @@ const processOrder = async (isWhatsApp = false) => {
 
       // Wait a bit to show the premium processing animation
       await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Snapshot before reset so modal keeps displaying correct values
+      successSnapshot.value = { name: form.name, total: totalPrice.value };
+      createdProjectId.value = client.id;
 
       showSuccess.value = true;
       localStorage.removeItem(defaultConfig.storageKey);

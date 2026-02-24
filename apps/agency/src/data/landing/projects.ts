@@ -218,7 +218,9 @@ export const projectsData: Project[] = [
     content: "Transformasi layanan kuliner perhotelan melalui platform multi-vendor yang agresif secara UI. Menggabungkan fleksibilitas WordPress dengan kustomisasi logic marketplace untuk menciptakan pengalaman 'App-Like' yang seamless bagi tamu dan vendor.",
     client: "Bogaraya Group",
     date: "Nov 2024",
-    liveUrl: "#",
+    liveUrl: "",
+    demoUrl: "https://bogaraka.vercel.app",
+    demoType: "legacy",
     githubUrl: "#",
     challenge: {
       description: "Membangun platform cloud kitchen di area wisata Lembang yang awalnya direncanakan sebagai aplikasi native. Masalah utama muncul pada keterbatasan standard plugin multi-vendor dalam menangani alur kerja spesifik hotel-to-kitchen dan user interface yang dituntut setara dengan aplikasi food delivery papan atas tanpa biaya pengembangan aplikasi native yang masif."
@@ -324,7 +326,9 @@ export const projectsData: Project[] = [
     content: "Membangun ulang ekosistem web korporat Bank Usaha Rakyat dengan pendekatan 'Clean-Slate'. Fokus utama adalah pembersihan fitur redundan (Ghost Features) dan implementasi WooCommerce sebagai mesin data untuk manajemen katalog layanan perbankan yang terstruktur.",
     client: "Bank Usaha Rakyat",
     date: "Feb 2024",
-    liveUrl: "https://bur.co.id",
+    liveUrl: "",
+    demoUrl: "https://bank-usaha-yayat.vercel.app",
+    demoType: "legacy",
     githubUrl: "#",
     challenge: {
       description: "Infrastruktur digital bank sebelumnya berada dalam kondisi kritis akibat akumulasi 'Technical Debt' bertahun-tahun. Website dipenuhi oleh tumpukan kode kustomisasi yang tidak terdokumentasi dan fitur-fitur redundan (Ghost Features) yang tidak berfungsi, sehingga merusak performa sistem dan menurunkan kepercayaan nasabah terhadap profesionalitas digital bank."
@@ -398,7 +402,9 @@ export const projectsData: Project[] = [
     content: "Menciptakan saluran perbankan alternatif yang memanfaatkan infrastruktur WhatsApp sebagai antarmuka utama. Projek ini lahir sebagai solusi strategis atas batasan regulasi operasional perbankan (BPR) dan kebutuhan akan akses informasi finansial yang instan tanpa hambatan instalasi aplikasi.",
     client: "Bank Usaha Rakyat",
     date: "Feb 2024",
-    liveUrl: "#",
+    liveUrl: "",
+    demoUrl: "https://bawa-banking.vercel.app",
+    demoType: "legacy",
     githubUrl: "#",
     challenge: {
       description: "Adanya restriksi regulasi yang membatasi pengembangan aplikasi native mandiri bagi institusi perbankan lokal, sekaligus tingginya 'Digital Barrier' pada nasabah rural untuk mempelajari aplikasi baru. Bank membutuhkan modul layanan yang aman, legal, namun sangat ringan untuk diakses secara masal."

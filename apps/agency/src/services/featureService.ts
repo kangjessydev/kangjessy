@@ -1,5 +1,4 @@
-
-import { supabase } from '@kangjessy/database';
+import { availableFeatures } from '../data/landing/order';
 import { 
   Languages, 
   Zap, 
@@ -20,7 +19,6 @@ import {
   Users 
 } from 'lucide-vue-next';
 
-// Re-using the Feature interface but making it compatible with DB
 export interface Feature {
   id: string;
   name: string;
@@ -28,9 +26,9 @@ export interface Feature {
   originalPrice?: number;
   desc: string;
   relevantTo: string[];
-  icon?: any; // For carousel
-  deliveryTime?: string; // For carousel transparency
-  serviceName?: string; // For labeling
+  icon?: any;
+  deliveryTime?: string;
+  serviceName?: string;
 }
 
 const iconMap: Record<string, any> = {
@@ -39,27 +37,16 @@ const iconMap: Record<string, any> = {
 
 export const featureService = {
   async getAllActive() {
-    try {
-      const { data, error } = await supabase
-        .from('features')
-        .select('*');
-
-      if (error) throw error;
-
-      return data.map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        price: Number(item.price), // Ensure number
-        originalPrice: item.original_price ? Number(item.original_price) : undefined,
-        desc: item.description,
-        relevantTo: item.relevant_to || [],
-        icon: iconMap[item.icon] || Zap, // Fallback icon
-        deliveryTime: item.delivery_time,
-        serviceName: item.service_name
-      })) as Feature[];
-    } catch (err) {
-      console.error('Error fetching features:', err);
-      return [];
-    }
+    return availableFeatures.map(item => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      originalPrice: item.originalPrice,
+      desc: item.desc,
+      relevantTo: item.relevantTo || [],
+      icon: iconMap[item.id] || Zap, // fallback to Zap
+      deliveryTime: undefined,
+      serviceName: undefined
+    })) as Feature[];
   }
 };

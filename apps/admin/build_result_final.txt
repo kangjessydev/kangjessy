@@ -1,6 +1,0 @@
-
-> kangjessy-admin@0.0.0 build
-> vue-tsc -b && vite build
-
-src/views/ClientDetail.vue(560,1): error TS6133: 'BentoStat' is declared but its value is never read.
-src/views/ClientDetail.vue(636,16): error TS2532: Object is possibly 'undefined'.

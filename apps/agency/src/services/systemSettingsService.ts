@@ -1,20 +1,7 @@
-import { supabase } from '@kangjessy/database'
-
 export const systemSettingsService = {
   async getByKey(key: string): Promise<any | null> {
-    const { data, error } = await supabase
-      .from('system_settings')
-      .select('value')
-      .eq('key', key)
-      .single()
-
-    if (error) {
-      if (error.code !== 'PGRST116') {
-        console.error(`Error fetching system setting [${key}]:`, error)
-      }
-      return null
-    }
-
-    return data?.value
+    console.warn('systemSettingsService called in hardcoded mode. Returning dummy data for key:', key);
+    if (key === 'maintenance_mode') return false;
+    return null;
   }
 }

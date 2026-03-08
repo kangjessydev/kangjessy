@@ -1,18 +1,21 @@
-import { sanityClient, sanityWriteClient } from '@kangjessy/database';
+import { blogPosts, type BlogPost as DummyBlogPost } from '../data/landing/blogs';
+import { marked } from 'marked';
+
+const mdFiles = import.meta.glob('../data/landing/blogs/*.md', { query: '?raw', import: 'default' });
 
 export interface BlogPost {
     _id?: string;
     id?: string;
     slug?: string | { current: string };
     title: string;
-    category?: string; // For backward compatibility or single selector
-    categories?: string[]; // The actual array used in UI
+    category?: string;
+    categories?: string[];
     excerpt: string;
-    content: string; // HTML from RichEditor
-    body?: any[]; // PortableText if needed
+    content: string;
+    body?: any[];
     status: 'draft' | 'published';
     image?: string | null;
-    mainImage?: string | null; // For frontend compatibility
+    mainImage?: string | null;
     tags?: string[];
     views?: number;
     author?: string;
@@ -25,236 +28,119 @@ export interface BlogPost {
     seoKeywords?: string;
 }
 
+const mapPost = (p: DummyBlogPost): BlogPost => ({
+    id: String(p.id),
+    _id: String(p.id),
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    content: '',
+    status: 'published',
+    image: p.image,
+    mainImage: p.image,
+    author: p.author,
+    readTime: p.readTime,
+    publishedAt: p.date,
+    _createdAt: p.date,
+    category: p.category,
+    categories: [p.category],
+    tags: p.tags,
+});
+
 export const blogService = {
     async getPosts() {
-        const query = `*[_type == "post"] | order(_createdAt desc){
-            "id": _id,
-            _id,
-            "slug": slug.current,
-            title,
-            "category": coalesce(categories[0]->title, "General"),
-            "categories": coalesce(categories[]->title, []),
-            "tags": coalesce(tags[]->title, []),
-            excerpt,
-            content,
-            status,
-            "image": mainImage.asset->url,
-            "mainImage": mainImage.asset->url,
-            views,
-            "author": coalesce(authorName, "KangJessy"),
-            readTime,
-            publishedAt,
-            "_createdAt": _createdAt
-        }`;
-        try {
-            const data = await sanityClient.fetch(query);
-            return data.map((p: any) => ({
-                ...p,
-                author: p.author || 'KangJessy',
-                status: p.status || (p.publishedAt ? 'published' : 'draft')
-            })) as BlogPost[];
-        } catch (err) {
-            console.error('Error fetching blog posts:', err);
-            return [];
-        }
+        return Promise.all(blogPosts.map(async p => {
+            const result = mapPost(p);
+            const key = `../data/landing/blogs/${p.fileName}`;
+            if (mdFiles[key]) {
+                 const raw: any = await mdFiles[key]();
+                 result.content = await marked.parse(raw);
+            } else {
+                 result.content = `<p>${p.excerpt}</p>`;
+            }
+            return result;
+        }));
     },
 
     async getPostBySlug(slug: string) {
-        const query = `*[_type == "post" && slug.current == $slug][0]{
-            "id": _id,
-            _id,
-            "slug": slug.current,
-            title,
-            "category": coalesce(categories[0]->title, "General"),
-            "categories": coalesce(categories[]->title, []),
-            "tags": coalesce(tags[]->title, []),
-            excerpt,
-            content,
-            body,
-            status,
-            "image": mainImage.asset->url,
-            "mainImage": mainImage.asset->url,
-            views,
-            "author": coalesce(authorName, "KangJessy"),
-            readTime,
-            publishedAt,
-            "_createdAt": _createdAt,
-            "seoTitle": coalesce(seoTitle, title),
-            "seoDescription": coalesce(seoDescription, excerpt),
-            "seoKeywords": seoKeywords
-        }`;
-        try {
-            const data = await sanityClient.fetch(query, { slug });
-            if (!data) return null;
-            return { 
-                ...data, 
-                author: data.authorName || 'KangJessy',
-                status: data.status || (data.publishedAt ? 'published' : 'draft')
-            } as BlogPost;
-        } catch (err) {
-            console.error(`Error fetching post by slug (${slug}):`, err);
-            throw err;
+        const post = blogPosts.find(p => p.slug === slug);
+        if (!post) return null;
+        
+        const result = mapPost(post);
+        const key = `../data/landing/blogs/${post.fileName}`;
+        if (mdFiles[key]) {
+             const raw: any = await mdFiles[key]();
+             result.content = await marked.parse(raw);
+        } else {
+             result.content = `<p>${post.excerpt}</p>`;
         }
+        return result;
     },
 
     async getPostById(id: string) {
-        const query = `*[_type == "post" && (_id == $id || _id == "drafts." + $id)][0]{
-            "id": _id,
-            _id,
-            "slug": slug.current,
-            title,
-            "category": categories[0]->_id,
-            "categories": categories[]->_id,
-            "tags": tags[]->_id,
-            excerpt,
-            content,
-            status,
-            "image": mainImage.asset->url,
-            "mainImage": mainImage.asset->url,
-            views,
-            "author": coalesce(authorName, "KangJessy"),
-            readTime,
-            publishedAt,
-            "_createdAt": _createdAt
-        }`;
-        try {
-            const data = await sanityClient.fetch(query, { id });
-            if (!data) return null;
-            return { 
-                ...data, 
-                author: data.authorName || 'KangJessy',
-                status: data.status || 'draft' 
-            };
-        } catch (err) {
-            console.error(`Error fetching post by ID (${id}):`, err);
-            return null;
+        const post = blogPosts.find(p => String(p.id) === id);
+        if (!post) return null;
+
+        const result = mapPost(post);
+        const key = `../data/landing/blogs/${post.fileName}`;
+        if (mdFiles[key]) {
+             const raw: any = await mdFiles[key]();
+             result.content = await marked.parse(raw);
+        } else {
+             result.content = `<p>${post.excerpt}</p>`;
         }
+        return result;
     },
 
     // --- CATEGORIES & TAGS ---
     async getCategories() {
-        return await sanityClient.fetch(`*[_type == "blogCategory"] | order(title asc) {
-            "id": _id,
-            _id,
-            title,
-            "slug": slug.current,
-            description,
-            "count": count(*[_type == "post" && references(^._id)])
-        }`);
+        return [
+            { id: '1', _id: '1', title: 'Technology', slug: 'technology', description: 'Tech related', count: 1 },
+            { id: '2', _id: '2', title: 'Marketing', slug: 'marketing', description: 'Marketing related', count: 1 }
+        ];
     },
 
     async addCategory(name: string) {
-        const doc = {
-            _type: 'blogCategory',
-            title: name,
-            slug: { _type: 'slug', current: name.toLowerCase().replace(/[^a-z0-9]+/g, '-') }
-        };
-        return await sanityWriteClient.create(doc);
+        return { _id: 'new-cat', title: name };
     },
 
-    async deleteCategory(id: string) {
-        return await sanityWriteClient.delete(id);
+    async deleteCategory(_id: string) {
+        return true;
     },
 
     async getTags() {
-        return await sanityClient.fetch(`*[_type == "blogTag"] | order(title asc) {
-            "id": _id,
-            _id,
-            title,
-            "slug": slug.current,
-            "count": count(*[_type == "post" && references(^._id)])
-        }`);
+        return [
+            { id: '1', _id: '1', title: 'Web Dev', slug: 'web-dev', count: 1 },
+            { id: '2', _id: '2', title: 'AI', slug: 'ai', count: 1 },
+            { id: '3', _id: '3', title: 'Marketing', slug: 'marketing', count: 1 }
+        ];
     },
 
     async addTag(name: string) {
-        const doc = {
-            _type: 'blogTag',
-            title: name,
-            slug: { _type: 'slug', current: name.toLowerCase().replace(/[^a-z0-9]+/g, '-') }
-        };
-        return await sanityWriteClient.create(doc);
+        return { _id: 'new-tag', title: name };
     },
 
-    async deleteTag(id: string) {
-        return await sanityWriteClient.delete(id);
+    async deleteTag(_id: string) {
+        return true;
     },
 
-    async addPost(post: Partial<BlogPost> & { imageAssetId?: string, categoryIds?: string[], tagIds?: string[], slug?: string }) {
-        const slugValue = post.slug || post.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'post-' + Math.random().toString(36).substring(7);
-
-        const doc: any = {
-            _type: 'post',
-            title: post.title,
-            slug: { _type: 'slug', current: slugValue },
-            excerpt: post.excerpt || '',
-            content: post.content,
-            status: post.status || 'published',
-            authorName: post.author || 'KangJessy',
-            readTime: post.readTime || '5 min',
-            views: post.views || 0,
-            categories: (post.categoryIds || []).filter(id => !!id).map(id => ({ _type: 'reference', _ref: id, _key: Math.random().toString(36).substring(7) })),
-            tags: (post.tagIds || []).filter(id => !!id).map(id => ({ _type: 'reference', _ref: id, _key: Math.random().toString(36).substring(7) }))
-        };
-
-        if (doc.status === 'published') {
-            doc.publishedAt = new Date().toISOString();
-        }
-
-        if (post.imageAssetId) {
-            doc.mainImage = {
-                _type: 'image',
-                asset: { _type: 'reference', _ref: post.imageAssetId }
-            };
-        }
-
-        const result = await sanityWriteClient.create(doc);
-        return { ...result, id: result._id, status: result.status || 'published' } as unknown as BlogPost;
+    async addPost(post: any) {
+        console.warn('Portfolio is currently in hardcoded mode. Add operation ignored.');
+        return { ...post, id: Date.now().toString(), status: 'published' };
     },
 
-    async updatePost(id: string, updates: Partial<BlogPost> & { imageAssetId?: string, categoryIds?: string[], tagIds?: string[], slug?: string }) {
-        const patch: any = {
-            title: updates.title,
-            excerpt: updates.excerpt,
-            content: updates.content,
-            status: updates.status,
-            authorName: updates.author,
-            readTime: updates.readTime,
-            views: updates.views,
-            categories: (updates.categoryIds || []).filter(id => !!id).map(id => ({ _type: 'reference', _ref: id, _key: Math.random().toString(36).substring(7) })),
-            tags: (updates.tagIds || []).filter(id => !!id).map(id => ({ _type: 'reference', _ref: id, _key: Math.random().toString(36).substring(7) }))
-        };
-
-        if (updates.slug) {
-            patch.slug = { _type: 'slug', current: updates.slug };
-        } else if (updates.title) {
-            patch.slug = { 
-                _type: 'slug', 
-                current: updates.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') 
-            };
-        }
-
-        if (updates.status === 'published') {
-            patch.publishedAt = new Date().toISOString();
-        }
-
-        if (updates.imageAssetId) {
-            patch.mainImage = {
-                _type: 'image',
-                asset: { _type: 'reference', _ref: updates.imageAssetId }
-            };
-        }
-
-        const result = await sanityWriteClient.patch(id).set(patch).commit();
-        return { ...result, id: result._id, status: result.status || updates.status } as unknown as BlogPost;
+    async updatePost(id: string, updates: any) {
+        console.warn('Portfolio is currently in hardcoded mode. Update operation ignored.');
+        return { ...updates, id, status: 'published' };
     },
 
-    async deletePost(id: string) {
-        await sanityWriteClient.delete(id);
+    async deletePost(_id: string) {
+        console.warn('Portfolio is currently in hardcoded mode. Delete operation ignored.');
         return true;
     },
 
     async uploadImage(file: File) {
-        const asset = await sanityWriteClient.assets.upload('image', file);
-        return asset;
+        console.warn('Portfolio is currently in hardcoded mode. Upload operation ignored.');
+        return { url: URL.createObjectURL(file) };
     }
 };

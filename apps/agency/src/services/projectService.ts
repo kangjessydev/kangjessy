@@ -1,5 +1,3 @@
-import { supabase } from '@kangjessy/database'
-
 export interface Project {
   id: string
   client_id: string
@@ -18,83 +16,69 @@ export interface Project {
   github_url?: string
 }
 
+const mockProjects: Project[] = [
+  {
+      id: "proj-mock",
+      client_id: "mock-client-1",
+      name: "Mock Project",
+      description: "This is a mock project since DB is disabled.",
+      status: "in_progress",
+      progress: 50,
+      price: 15000000,
+      paid_amount: 5000000,
+      payment_status: "partial",
+      start_date: new Date().toISOString().split('T')[0] || '2026-01-01',
+      deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] || '2026-01-01',
+  }
+];
+
 export const projectService = {
   async getProjectTasks(projectId: string) {
-    const { data, error } = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('project_id', projectId)
-      .order('sort_order', { ascending: true })
-    if (error) throw error
-    return data
+    return [
+        { id: 'task-1', project_id: projectId, title: 'Mock Task 1', completed: true, sort_order: 1 },
+        { id: 'task-2', project_id: projectId, title: 'Mock Task 2', completed: false, sort_order: 2 }
+    ];
   },
 
   // Ambil proyek spesifik untuk Client Portal
   async getClientProjects(clientId: string) {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*, tasks(*)')
-      .eq('client_id', clientId)
-    if (error) throw error
-    return data
+    return mockProjects.filter(p => p.client_id === clientId) || mockProjects;
   },
 
-  // Ambil detail satu project berdasarkan ID (Public Portal)
   async getProjectById(projectId: string) {
     if (!projectId) return null;
-
-    // Cek apakah input berupa UUID valid
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(projectId);
-    
-    let query = supabase
-        .from('projects')
-        .select('*, clients(*), tasks(*)')
-    
-    if (isUUID) {
-        query = query.eq('id', projectId)
-    } else {
-        // Fallback: search by name partial or assume it's a short ID if we ever add one
-        query = query.ilike('name', `%${projectId}%`)
-    }
-
-    const { data, error } = await query
-        .order('sort_order', { foreignTable: 'tasks', ascending: true })
-        .maybeSingle()
-    
-    if (error) throw error
-    return data
+    return {
+        ...mockProjects[0],
+        clients: { name: 'John Doe', email: 'john@example.com', budget: '15000000' },
+        tasks: await this.getProjectTasks(projectId)
+    } as any;
   },
 
   // Buat proyek baru (saat order masuk)
   async createProject(projectData: any) {
-    try {
-      const today = new Date();
-      const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-      
-      const payload = {
-        name: projectData.name || 'Project Baru',
-        client_id: projectData.client_id,
-        description: projectData.description || '-',
-        status: projectData.status || 'pending',
-        progress: projectData.progress || 0,
-        price: projectData.price || 0,
-        paid_amount: 0,
-        payment_status: 'pending',
-        start_date: projectData.start_date || today.toISOString().split('T')[0],
-        deadline: projectData.deadline || nextWeek.toISOString().split('T')[0],
-        preview_url: projectData.preview_url || '-'
-      }
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    const payload = {
+      id: "proj-" + Date.now(),
+      name: projectData.name || 'Project Baru',
+      client_id: projectData.client_id || 'mock-client-1',
+      description: projectData.description || '-',
+      status: projectData.status || 'pending',
+      progress: projectData.progress || 0,
+      price: projectData.price || 0,
+      paid_amount: 0,
+      payment_status: 'pending',
+      start_date: projectData.start_date || today.toISOString().split('T')[0],
+      deadline: projectData.deadline || nextWeek.toISOString().split('T')[0],
+      preview_url: projectData.preview_url || '-'
+    };
 
-      const { data, error } = await supabase
-        .from('projects')
-        .insert([payload])
-        .select('*, clients(*)')
-      
-      if (error) throw error
-      return data[0]
-    } catch (e) {
-      console.error('Gagal membuat project di Supabase:', e)
-      throw e
-    }
+    console.warn('Agency is running in hardcoded mode. Returning mock createProject.');
+    mockProjects.push(payload as any);
+    return {
+        ...payload,
+        clients: { name: 'Mock Client', email: 'mock@example.com' }
+    };
   }
 }

@@ -786,7 +786,6 @@ import {
   Printer,
   X,
 } from "lucide-vue-next";
-import { supabase } from "@kangjessy/database";
 import { projectService } from "../../services/projectService";
 import { BaseButton } from "@kangjessy/ui";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
@@ -942,12 +941,8 @@ const handleLogin = async (manualId?: string | Event) => {
         });
       });
 
-      // Fetch actual payments from transactions
-      const { data: txData } = await supabase
-        .from("transactions")
-        .select("amount")
-        .eq("client_id", project.client_id)
-        .eq("type", "income");
+      // Fetch actual payments from transactions (mocked for hardcoded data)
+      const txData = [{ amount: project.paid_amount || 0 }];
 
       const totalPaid =
         txData?.reduce(

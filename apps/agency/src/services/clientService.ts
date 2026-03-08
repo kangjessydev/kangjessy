@@ -1,13 +1,11 @@
-import { supabase } from '@kangjessy/database'
-
 export interface Client {
   id?: string
   name: string
   email: string
   phone?: string
   company?: string
-  status: string // 'New' | 'Pending' | 'Follow Up' | 'Deal' | 'Cancel' etc.
-  type?: 'project_order' | 'general_inquiry'
+  status: string
+  type?: 'project_order' | 'general_inquiry' | 'proposal'
   project_type?: string
   project_name?: string
   budget?: number
@@ -16,40 +14,35 @@ export interface Client {
   notes?: string
   ref_link?: string
   visual_style?: string
+  timeline?: string
   dream_domain?: string
   features?: string[] | any
   voucher?: string
   created_at?: string
 }
 
-export const clientService = {
-  // Tambah Leads (biasanya dari Contact Form)
-  async addLead(clientData: Partial<Client>) {
-    // 1. Cek apakah klien dengan email ini sudah ada
-    if (clientData.email && clientData.email !== '-') {
-      try {
-        const { data: existingClient } = await supabase
-          .from('clients')
-          .select('*')
-          .eq('email', clientData.email)
-          .maybeSingle();
-        
-        if (existingClient) {
-          console.log('Client already exists, using existing ID:', existingClient.id);
-          return existingClient;
-        }
-      } catch (e) {
-        console.warn('Error checking existing client, proceeding with creation...');
-      }
-    }
+// =====================================================
+//  GANTI INI dengan URL Deploy GAS Web App Anda!
+//  Cara: Apps Script → Deploy → Manage Deployments
+//        → copy URL dari deployment aktif
+// =====================================================
+const GAS_WEBAPP_URL = import.meta.env.VITE_GAS_WEBHOOK_URL || '';
 
-    const payload: any = {
+export const clientService = {
+  async addLead(clientData: Partial<Client>): Promise<Client> {
+    const payload: Client = {
+      id: 'lead-' + Date.now(),
       name: clientData.name || 'Unknown',
-      email: clientData.email || (clientData.phone ? `wa-${clientData.phone.replace(/[^0-9]/g, '')}@client.kangjessy.com` : `guest-${Date.now()}@client.kangjessy.com`),
+      email: clientData.email
+        || (clientData.phone
+          ? `wa-${clientData.phone.replace(/[^0-9]/g, '')}@client.kangjessy.com`
+          : `guest-${Date.now()}@client.kangjessy.com`),
       phone: clientData.phone || '-',
       company: clientData.company || '-',
       status: clientData.status || 'New',
-      notes: clientData.notes || '-',
+      notes: clientData.timeline
+        ? `[Timeline: ${clientData.timeline}]\n\n${clientData.notes || '-'}`
+        : (clientData.notes || '-'),
       type: clientData.type || 'project_order',
       brief: clientData.brief || '-',
       project_type: clientData.project_type || '-',
@@ -58,33 +51,46 @@ export const clientService = {
       source: clientData.source || 'web_contact',
       ref_link: clientData.ref_link || '-',
       visual_style: clientData.visual_style || '-',
+      timeline: clientData.timeline || '-',
       dream_domain: clientData.dream_domain || '-',
       features: clientData.features || [],
-      voucher: clientData.voucher || null
+      voucher: clientData.voucher,
+      created_at: new Date().toISOString()
+    };
+
+    // Kirim ke Google Sheet lewat GAS WebApp
+    if (GAS_WEBAPP_URL) {
+      try {
+        await fetch(GAS_WEBAPP_URL, {
+          method: 'POST',
+          // GAS butuh mode no-cors karena tidak support CORS header
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        console.log('[clientService] ✅ Data sent to Google Sheet.');
+      } catch (err) {
+        // Jangan crash form jika GAS tidak bisa dijangkau
+        console.warn('[clientService] ⚠ GAS webhook failed (non-critical):', err);
+      }
+    } else {
+      console.warn('[clientService] ⚠ VITE_GAS_WEBHOOK_URL not set. Data NOT sent to Google Sheet. Add it to .env file.');
     }
 
-    // Attempt insert
-    try {
-      const { data, error } = await supabase
-        .from('clients')
-        .insert([payload])
-        .select()
-      
-      if (error) throw error
-      return data ? data[0] : null
-    } catch (e) {
-      console.error('Failed to create lead:', e)
-      throw e
-    }
+    return payload;
   },
 
-  async getClientById(id: string) {
-    const { data, error } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('id', id)
-      .maybeSingle()
-    if (error) throw error
-    return data as Client
+  async getById(id: string): Promise<Client> {
+    // GAS one-way write only — kembalikan mock untuk kompatibilitas portal
+    return {
+      id,
+      name: 'Client',
+      email: '-',
+      status: 'New',
+    };
+  },
+
+  async getClientById(id: string): Promise<Client> {
+    return this.getById(id);
   }
-}
+};

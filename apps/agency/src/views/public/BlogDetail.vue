@@ -87,6 +87,27 @@
                 </Transition>
             </Teleport>
 
+            <!-- Image Lightbox -->
+            <Teleport to="body">
+                <Transition
+                    enter-active-class="transition-opacity duration-300"
+                    enter-from-class="opacity-0"
+                    enter-to-class="opacity-100"
+                    leave-active-class="transition-opacity duration-200"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
+                >
+                    <div v-if="lightboxImage" 
+                        class="fixed inset-0 z-[10000] bg-black/95 flex items-center justify-center p-4 md:p-10 cursor-zoom-out"
+                        @click="lightboxImage = null">
+                        <button class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors bg-white/10 p-2 rounded-full backdrop-blur-sm" @click.stop="lightboxImage = null">
+                            <X :size="24" />
+                        </button>
+                        <img :src="lightboxImage" class="max-w-full max-h-full object-contain cursor-default select-none" @click.stop />
+                    </div>
+                </Transition>
+            </Teleport>
+
             <!-- Table of Contents Component -->
             <TableOfContents v-if="enableTableOfContents" :items="tableOfContents" :is-visible="tocVisible"
                 @navigate="scrollToSection" />
@@ -243,7 +264,7 @@ import { ref, onMounted, onUnmounted, h, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import {
     Twitter, Linkedin as LinkedinIcon, Copy, MessageCircle as WhatsAppIcon,
-    Bot as BotIcon, CheckCircle2, Mail, Loader2, List
+    Bot as BotIcon, CheckCircle2, Mail, Loader2, List, X
 } from 'lucide-vue-next';
 import { blogService } from '../../services/blogService';
 import { PortableText } from '@portabletext/vue';
@@ -277,6 +298,7 @@ const toastMessage = ref('');
 const subscriberEmail = ref('');
 const subscribing = ref(false);
 const processedContentHTML = ref('');
+const lightboxImage = ref<string | null>(null);
 
 // SEO Setup
 useSEO({
@@ -416,43 +438,114 @@ const updateProcessedContent = () => {
         const langClass = classes.find(c => c.startsWith('language-'));
         const lang = langClass ? langClass.replace('language-', '') : 'plaintext';
         
+        const rawCode = codeEl.textContent || '';
+        let highlighted;
         try {
-            const rawCode = codeEl.textContent || '';
-            const highlighted = lowlight.highlight(lang, rawCode);
-            codeEl.innerHTML = highlighted.children.map(c => toHTML(c)).join('');
-            codeEl.classList.add('hljs');
+            highlighted = (lang && lang !== 'plaintext') ? lowlight.highlight(lang, rawCode) : lowlight.highlightAuto(rawCode);
         } catch (e) {
-            console.error('Failed to highlight code block:', e);
+            try {
+                highlighted = lowlight.highlightAuto(rawCode);
+            } catch (err) {
+                highlighted = { children: [{ type: 'text', value: rawCode }] };
+            }
         }
+        
+        let numLines = rawCode.split('\n').length;
+        if (rawCode.endsWith('\n')) numLines -= 1;
+        if (numLines < 1) numLines = 1;
+        
+        const linesHTML = Array.from({ length: numLines }).map((_, i) => `<span class="line-number">${i + 1}</span>`).join('');
+        const codeHTML = highlighted.children.map(c => toHTML(c)).join('');
+        
+        codeEl.innerHTML = `<div class="code-wrapper"><div class="line-numbers">${linesHTML}</div><div class="code-content">${codeHTML}</div></div>`;
+        codeEl.classList.add('hljs', 'has-lines');
 
         // 2. Add Copy Button
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-code-btn';
-        copyBtn.innerHTML = 'Copy';
+        copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
         copyBtn.setAttribute('title', 'Salin Kode');
         pre.appendChild(copyBtn);
     });
     
+    // Wrap Tables and Add Copy Button
+    const tables = div.querySelectorAll('table');
+    tables.forEach((table) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper relative group overflow-x-auto rounded-2xl border border-white/5 my-8 bg-[rgba(255,255,255,0.02)]';
+        
+        table.parentNode?.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-table-btn absolute top-3 right-3 bg-bg-primary/90 backdrop-blur-md border border-border-color text-text-tertiary w-8 h-8 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-10 hover:text-white hover:border-accent-primary cursor-pointer shadow-lg';
+        copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+        copyBtn.setAttribute('title', 'Salin Tabel');
+        wrapper.appendChild(copyBtn);
+    });
+
+    // Enhance Images for Lightbox
+    const images = div.querySelectorAll('img');
+    images.forEach(img => {
+        img.classList.add('cursor-zoom-in', 'hover:opacity-90', 'transition-opacity');
+    });
+
     processedContentHTML.value = div.innerHTML;
 };
 
-// Handle Code Copy Globally
-const handleCodeCopy = (e: MouseEvent) => {
+// Handle Interactivity inside rich content
+const handleRichClick = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
+    
+    // 1. Copy Code
     if (target.classList.contains('copy-code-btn')) {
         const pre = target.closest('pre');
-        const code = pre?.querySelector('code')?.innerText || '';
+        const code = (pre?.querySelector('.code-content') as HTMLElement)?.innerText || (pre?.querySelector('code') as HTMLElement)?.innerText || '';
         
         navigator.clipboard.writeText(code).then(() => {
-            target.innerHTML = 'Copied!';
+            const originalIcon = target.innerHTML;
+            target.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none"><polyline points="20 6 9 17 4 12"/></svg>';
             target.classList.add('copied');
             setTimeout(() => {
-                target.innerHTML = 'Copy';
+                target.innerHTML = originalIcon;
                 target.classList.remove('copied');
             }, 2000);
         }).catch(err => {
             console.error('Failed to copy code:', err);
         });
+        return;
+    }
+
+    // 2. Copy Table
+    if (target.closest('.copy-table-btn')) {
+        const btn = target.closest('.copy-table-btn') as HTMLElement;
+        const wrapper = btn.closest('.table-wrapper');
+        const table = wrapper?.querySelector('table');
+        if (!table) return;
+
+        // Convert table exactly to tab-delimited text
+        const rows = Array.from(table.querySelectorAll('tr'));
+        const text = rows.map(row => {
+            const cells = Array.from(row.querySelectorAll('th, td'));
+            return cells.map(cell => (cell as HTMLElement).innerText.trim()).join('\t');
+        }).join('\n');
+
+        navigator.clipboard.writeText(text).then(() => {
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none"><polyline points="20 6 9 17 4 12"/></svg>';
+            btn.classList.add('!text-green-400', '!border-green-400/50');
+            setTimeout(() => {
+                btn.innerHTML = originalIcon;
+                btn.classList.remove('!text-green-400', '!border-green-400/50');
+            }, 2000);
+        });
+        return;
+    }
+
+    // 3. Image Lightbox
+    if (target.tagName.toLowerCase() === 'img' && target.closest('.rich-content')) {
+        lightboxImage.value = (target as HTMLImageElement).src;
+        return;
     }
 };
 
@@ -570,12 +663,12 @@ onMounted(() => {
     window.scrollTo(0, 0);
     fetchPost();
     window.addEventListener('scroll', handleScroll);
-    document.addEventListener('click', handleCodeCopy);
+    document.addEventListener('click', handleRichClick);
 });
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
-    document.removeEventListener('click', handleCodeCopy);
+    document.removeEventListener('click', handleRichClick);
 });
 </script>
 
@@ -649,15 +742,49 @@ onUnmounted(() => {
     box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
-/* PREMIUM Code Window Style */
+/* Table Style */
+.rich-content :deep(.table-wrapper) {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.rich-content :deep(table) {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rich-content :deep(th) {
+    background: rgba(var(--accent-primary-rgb), 0.1);
+    color: var(--text-primary);
+    font-weight: 800;
+    text-align: left;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rich-content :deep(td) {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+.rich-content :deep(tr:last-child td) {
+    border-bottom: none;
+}
+
+.rich-content :deep(tr:hover) {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* VS Code Theme Code Window */
 .rich-content :deep(pre) {
-    background: #0F172A;
+    background: #1E1E1E; /* VS Code Default Dark */
     border-radius: 1.5rem;
     padding: 2.5rem 2rem 1.5rem;
     margin: 3rem 0;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4), 0 18px 36px -18px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), 0 18px 36px -18px rgba(0, 0, 0, 0.7);
     overflow: hidden;
 }
 
@@ -679,14 +806,36 @@ onUnmounted(() => {
     background: transparent;
     padding: 0;
     border-radius: 0;
-    color: #CBD5E1;
+    color: #D4D4D4; /* VS Code Default foreground */
     font-family: 'Fira Code', 'JetBrains Mono', 'Source Code Pro', monospace;
     font-size: 0.9rem;
-    line-height: 1.7;
+    line-height: 1.6;
     display: block;
+    overflow: hidden;
+}
+
+.rich-content :deep(pre) code .code-wrapper {
+    display: flex;
+    overflow: hidden;
+}
+
+.rich-content :deep(pre) code .line-numbers {
+    display: flex;
+    flex-direction: column;
+    padding-right: 1.5rem;
+    margin-right: 1.5rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    color: #858585;
+    text-align: right;
+    user-select: none;
+    min-width: 3rem;
+}
+
+.rich-content :deep(pre) code .code-content {
     overflow-x: auto;
+    width: 100%;
     white-space: pre;
-    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
 }
 
 .rich-content :deep(.copy-code-btn) {
@@ -696,12 +845,12 @@ onUnmounted(() => {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
     color: #64748B;
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 4px 10px;
-    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
     z-index: 20;
@@ -720,14 +869,20 @@ onUnmounted(() => {
     background: rgba(52, 211, 153, 0.1);
 }
 
-/* Syntax Highlighting matching TipTap Editor */
-.rich-content :deep(.hljs-comment) { color: #64748B; font-style: italic; }
-.rich-content :deep(.hljs-keyword) { color: #818CF8; font-weight: 700; }
-.rich-content :deep(.hljs-string) { color: #34D399; }
-.rich-content :deep(.hljs-title) { color: #38BDF8; font-weight: 600; }
-.rich-content :deep(.hljs-variable) { color: #FB923C; }
-.rich-content :deep(.hljs-number) { color: #F59E0B; }
-.rich-content :deep(.hljs-attr) { color: #93C5FD; }
-.rich-content :deep(.hljs-selector-tag) { color: #818CF8; }
-.rich-content :deep(.hljs-type) { color: #FDA4AF; }
+/* Syntax Highlighting matching VS Code (Dark+ Theme) */
+.rich-content :deep(.hljs-comment) { color: #6A9955; font-style: normal; }
+.rich-content :deep(.hljs-keyword) { color: #C586C0; font-weight: 400; }
+.rich-content :deep(.hljs-string) { color: #CE9178; }
+.rich-content :deep(.hljs-title) { color: #DCDCAA; font-weight: 400; }
+.rich-content :deep(.hljs-title.function_) { color: #DCDCAA; }
+.rich-content :deep(.hljs-variable) { color: #9CDCFE; }
+.rich-content :deep(.hljs-number) { color: #B5CEA8; }
+.rich-content :deep(.hljs-attr) { color: #9CDCFE; }
+.rich-content :deep(.hljs-selector-tag) { color: #569CD6; }
+.rich-content :deep(.hljs-type) { color: #4EC9B0; }
+.rich-content :deep(.hljs-literal) { color: #569CD6; }
+.rich-content :deep(.hljs-built_in) { color: #4EC9B0; }
+.rich-content :deep(.hljs-property) { color: #9CDCFE; }
+.rich-content :deep(.hljs-operator) { color: #D4D4D4; }
+.rich-content :deep(.hljs-punctuation) { color: #D4D4D4; }
 </style>

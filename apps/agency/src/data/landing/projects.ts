@@ -30,9 +30,48 @@ export interface Project {
 
 // @ts-ignore - import raw markdown
 import hijiruContent from "./case-studies/hijiru-company-profile.md?raw";
+import herbalInsaniContent from "./case-studies/redesign-wisata-herbal-insani.md?raw";
 
 export const projectsData: Project[] = [
   // --- WORDPRESS & CMS ---
+  {
+    id: 18,
+    slug: "redesign-wisata-herbal-insani",
+    title: "Redesign Wisata Herbal Insani",
+    category: "WordPress",
+    tags: ["WordPress", "UI/UX Redesign", "Custom Post Type", "Elementor"],
+    icon: "Trees",
+    color: "linear-gradient(135deg, #16a34a 0%, #15803d 100%)",
+    image: "/projects/herbal-insani-main.png",
+    description: "Redesign website wisata herbal dari tampilan jadul menjadi modern minimalis dengan sistem paket interaktif.",
+    content: herbalInsaniContent,
+    client: "Wisata Herbal Insani",
+    date: "Mar 2025",
+    liveUrl: "https://wisataherbalinsani.com",
+    githubUrl: "#",
+    challenge: {
+      title: "Text Overload & Legacy UI",
+      description: "Website lama memiliki teks yang terlalu panjang dan navigasi paket yang tidak efisien, membuat pengunjung sulit menyerap informasi penting dengan cepat.",
+      painPoints: ["UI Outdated", "Low Readability", "CMS Inefficiency"]
+    },
+    steps: [
+      { title: "Clean Visual Redesign", desc: "Redesign total fokus pada warna hijau natural dan layout visual-centric yang lega." },
+      { title: "Tab Content Package", desc: "Konsolidasi seluruh paket wisata ke dalam sistem tab interaktif dalam satu halaman." },
+      { title: "Herbal Catalog CPT", desc: "Pembangunan catalog produk herbal dengan Custom Post Type untuk kemudahan manajemen data." }
+    ],
+    metrics: [
+      { label: "Content Economy", value: "-60% Text", icon: "Zap" },
+      { label: "UI Aesthetics", value: "Premium", icon: "Monitor" },
+      { label: "Admin Speed", value: "2x Faster", icon: "Clock" }
+    ],
+    technologies: ["WordPress", "Elementor Pro", "Custom Post Type UI", "Advanced Custom Fields", "PHP 8.2", "Tailwind CSS"],
+    gallery: [
+      "/projects/herbal-insani-mobile.png",
+      "/projects/herbal-insani-catalog.png",
+      "/projects/herbal-insani-packages.png"
+    ],
+    relatedServices: ["website-high-conversion", "maintenance-custom"]
+  },
   {
     id: 1,
     slug: "hijiru-company-profile",
@@ -123,6 +162,7 @@ export const projectsData: Project[] = [
     tags: ["Security", "Firewall", "2FA", "Malware Removal"],
     icon: "ShieldCheck",
     color: "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)",
+    image: "/projects/nur-alam-security.png",
     description: "Proses pembersihan malware tingkat lanjut dan penguatan sistem keamanan server hotel bintang 4.",
     content: `
       <h2>The Breach Analysis</h2>
@@ -214,6 +254,7 @@ export const projectsData: Project[] = [
     tags: ["WordPress", "WCFM", "WooCommerce", "Mobile Optimized"],
     icon: "ShoppingBag",
     color: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+    image: "/projects/bogaraya-kitchen.png",
     description: "Platform Cloud Kitchen & Marketplace dengan arsitektur mobile-first untuk ekosistem mikro-kuliner.",
     content: "Transformasi layanan kuliner perhotelan melalui platform multi-vendor yang agresif secara UI. Menggabungkan fleksibilitas WordPress dengan kustomisasi logic marketplace untuk menciptakan pengalaman 'App-Like' yang seamless bagi tamu dan vendor.",
     client: "Bogaraya Group",
@@ -254,6 +295,7 @@ export const projectsData: Project[] = [
     tags: ["Booking Engine", "Accounting Sync", "API Integration", "Fintech"],
     icon: "Hotel", 
     color: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)",
+    image: "/projects/hotel-booking.png",
     description: "Restrukturisasi booking engine dan integrasi ekosistem keuangan untuk skalabilitas operasional hotel.",
     content: "Modernisasi total sistem reservasi hotel dengan melakukan eliminasi pada infrastruktur yang tidak fleksibel. Fokus pada sinkronisasi otomatis data transaksi ke sistem Payment Gateway, manajemen afiliasi, dan modul akuntansi transaksional.",
     client: "Nur Alam Hotel",
@@ -288,6 +330,7 @@ export const projectsData: Project[] = [
     tags: ["Google Apps Script", "Cloud Analytics", "Business Intelligence", "Automation"],
     icon: "BarChart3",
     color: "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)",
+    image: "/projects/financial-dashboard.png",
     description: "Sistem Business Intelligence semi-otomatis untuk transparansi performa hotel secara real-time.",
     content: "Transformasi proses akuntansi dari spreadsheet manual yang rawan kesalahan menjadi dashboard cloud terpusat. Menggunakan arsitektur input tunggal untuk menghasilkan laporan keuangan komprehensif secara otomatis dan instan.",
     client: "Nur Alam Hotel",
@@ -322,6 +365,7 @@ export const projectsData: Project[] = [
     tags: ["Digital Transformation", "Legacy System Migration", "Information Architecture"],
     icon: "Building2",
     color: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
+    image: "https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?q=80&w=800&auto=format&fit=crop",
     description: "Restrukturisasi total infrastruktur digital perbankan untuk mengeliminasi technical debt dan memulihkan kredibilitas institusi.",
     content: "Membangun ulang ekosistem web korporat Bank Usaha Rakyat dengan pendekatan 'Clean-Slate'. Fokus utama adalah pembersihan fitur redundan (Ghost Features) dan implementasi WooCommerce sebagai mesin data untuk manajemen katalog layanan perbankan yang terstruktur.",
     client: "Bank Usaha Rakyat",
@@ -364,6 +408,7 @@ export const projectsData: Project[] = [
     tags: ["Digital Restoration", "Infrastructure Stability", "Legacy Migration"],
     icon: "Monitor",
     color: "linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)",
+    image: "https://plus.unsplash.com/premium_photo-1661962360741-255d65cedcd1?q=80&w=800&auto=format&fit=crop",
     description: "Restorasi platform digital hotel melalui re-engineering total dari infrastruktur legacy yang sudah tidak didukung vendor.",
     content: "Mengatasi kebuntuan teknis akibat penggunaan tema lama yang ditinggalkan pengembangnya (Abandoned Theme). Proyek ini berfokus pada pemulihan stabilitas ekosistem web hotel melalui audit plugin dan implementasi framework baru yang bersih.",
     client: "Nur Alam Hotel",
@@ -398,6 +443,7 @@ export const projectsData: Project[] = [
     tags: ["FinTech Innovation", "Low-Code Architecture", "Serverless Middleware"],
     icon: "MessageCircle",
     color: "linear-gradient(135deg, #22c55e 0%, #15803d 100%)",
+    image: "/projects/whatsapp-banking.png",
     description: "Inovasi layanan perbankan tanpa aplikasi (App-less) untuk memitigasi hambatan regulasi dan teknis adopsi nasabah.",
     content: "Menciptakan saluran perbankan alternatif yang memanfaatkan infrastruktur WhatsApp sebagai antarmuka utama. Projek ini lahir sebagai solusi strategis atas batasan regulasi operasional perbankan (BPR) dan kebutuhan akan akses informasi finansial yang instan tanpa hambatan instalasi aplikasi.",
     client: "Bank Usaha Rakyat",
@@ -443,6 +489,7 @@ export const projectsData: Project[] = [
     tags: ["Public Branding", "SEO Strategy", "Ticketing System", "Multimedia Management"],
     icon: "UserCheck",
     color: "linear-gradient(135deg, #f43f5e 0%, #be123c 100%)",
+    image: "https://images.unsplash.com/photo-1555421689-3f034debb7a6?q=80&w=800&auto=format&fit=crop",
     description: "Digital Hub komprehensif untuk personal branding dan manajemen interaksi publik tokoh nasional.",
     content: "Membangun portal informasi terpusat yang menggabungkan manajemen arsip multimedia volume tinggi dengan sistem aktivasi pendukung melalui manajemen tiket acara yang terintegrasi.",
     client: "Syarief Hasan",
@@ -474,6 +521,7 @@ export const projectsData: Project[] = [
     tags: ["Laravel", "Vue.js", "State Management", "E-commerce Architecture"],
     icon: "ShoppingCart",
     color: "linear-gradient(135deg, #6366f1 0%, #4338ca 100%)",
+    image: "https://images.unsplash.com/photo-1556740714-a8395b3bf30f?q=80&w=800&auto=format&fit=crop",
     description: "Ekosistem E-commerce modern dengan implementasi arsitektur multi-role yang robust.",
     content: "Konstruksi platform perdagangan digital menggunakan Laravel dan Vue.js yang berfokus pada flow transaksi yang reaktif. Mengimplementasikan manajemen siklus operasional dari sisi penjual hingga pengalaman belanja pembeli.",
     client: "Course Project",
@@ -503,6 +551,7 @@ export const projectsData: Project[] = [
     tags: ["Laravel", "Educational Platform", "UX Flow", "Backend Management"],
     icon: "BookOpen",
     color: "linear-gradient(135deg, #ec4899 0%, #be185d 100%)",
+    image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=800&auto=format&fit=crop",
     description: "Platform manajemen kurikulum bootcamp yang mendepankan efisiensi alur registrasi.",
     content: "Membangun Learning Management System (LMS) minimalis yang berfokus pada kejelasan jalur pembelajaran dan otomasi proses pendaftaran peserta dengan struktur backend yang rapi.",
     client: "Course Project",
@@ -534,6 +583,7 @@ export const projectsData: Project[] = [
     icon: "ShieldAlert",
     status: "IDEA",
     color: "linear-gradient(135deg, #4b5563 0%, #1f2937 100%)",
+    image: "/projects/nur-alam-security.png",
     description: "Portal monitoring keamanan terpusat untuk mengelola 20+ website sekaligus.",
     content: "Konsep portal keamanan enterprise yang memberikan visibilitas penuh atas status keamanan portofolio website. Menampilkan grafik percobaan serangan real-time, status integritas file, dan sistem hardening satu klik.",
     client: "R&D Project",
@@ -551,6 +601,7 @@ export const projectsData: Project[] = [
     icon: "Leaf",
     status: "IDEA",
     color: "linear-gradient(135deg, #059669 0%, #064e3b 100%)",
+    image: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=800&auto=format&fit=crop",
     description: "Dashboard pelacakan jejak karbon dan efisiensi energi berbasis interaksi data premium.",
     content: "Visualisasi data kompleks untuk keberlanjutan lingkungan. Menggunakan bento-grid layout untuk menampilkan konsumsi energi, prediksi penghematan, dan sertifikasi karbon secara intuitif.",
     client: "R&D Project",
@@ -568,6 +619,7 @@ export const projectsData: Project[] = [
     icon: "Boxes",
     status: "IDEA",
     color: "linear-gradient(135deg, #d97706 0%, #78350f 100%)",
+    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
     description: "Landing page e-commerce imersif dengan interaksi 3D explode-view untuk produk mewah.",
     content: "Eksperimen visual menggunakan Three.js untuk menciptakan pengalaman belanja yang imersif. Produk dapat diputar, dibongkar (exploded view), dan materialnya dapat diubah secara real-time di browser.",
     client: "R&D Project",
@@ -585,6 +637,7 @@ export const projectsData: Project[] = [
     icon: "Cpu",
     status: "IDEA",
     color: "linear-gradient(135deg, #6366f1 0%, #312e81 100%)",
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop",
     description: "Agen AI otonom yang melakukan audit website otomatis untuk lead generation agensi.",
     content: "Sistem cerdas yang secara otonom men-scan website calon klien, menganalisis kelemahan, dan menyusun laporan audit profesional yang dipersonalisasi untuk memenangkan deal agensi secara otomatis.",
     client: "R&D Project",
@@ -602,6 +655,7 @@ export const projectsData: Project[] = [
     icon: "MapPinned",
     status: "IDEA",
     color: "linear-gradient(135deg, #f43f5e 0%, #881337 100%)",
+    image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop",
     description: "Platform sumber daya komunitas real-time dengan pemetaan partisipatif untuk respon cepat.",
     content: "Aplikasi komunitas yang memungkinkan warga saling berbagi sumber daya secara real-time pada peta interaktif. Fokus pada kecepatan akses dan kemudahan pelaporan insiden lokal secara kolaboratif.",
     client: "R&D Project",
@@ -618,6 +672,7 @@ export const projectsData: Project[] = [
     tags: ["Mobile First", "Security", "Nuxt.js", "TailwindCSS"],
     icon: "ShieldCheck",
     color: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
+    image: "/projects/financial-dashboard.png",
     description: "Transformasi layanan perbankan konvensional menuju ekosistem digital yang modern dan inklusif.",
     content: `
       <h2>Visi Digitalisasi Ruang Finansial</h2>

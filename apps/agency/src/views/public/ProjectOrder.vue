@@ -280,6 +280,7 @@ const form = reactive({
   company: "",
   websiteStatus: "no",
   domain: "",
+  reference: "",
   brief: "",
 });
 
@@ -290,6 +291,7 @@ const resetForm = () => {
   form.company = "";
   form.websiteStatus = "no";
   form.domain = "";
+  form.reference = "";
   form.brief = "";
 };
 
@@ -416,11 +418,15 @@ const processOrder = async (isWhatsApp = false) => {
       company: form.company,
       type: "project_order",
       status: "New", // Capitalized "New" for Admin Dashboard consistency
-      project_type: currentType.value?.name || selectedType.value,
+      project_type: currentType.value?.id || selectedType.value,
       budget: totalPrice.value,
       source: isWhatsApp ? "order_whatsapp" : "order_form",
       brief: form.brief,
-      features: selectedFeatures.value.map((f) => getFeatureName(f)),
+      features: selectedFeatures.value, // Pass IDs, not names, so Admin can map them
+      visual_style: selectedStyle.value,
+      timeline: selectedTimeline.value,
+      dream_domain: form.domain,
+      ref_link: form.reference,
       voucher: discountCode.value || undefined,
     });
 

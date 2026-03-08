@@ -2,13 +2,14 @@
   <section id="projects" class="bg-bg-primary py-32">
     <div class="container mx-auto px-4">
       <SectionHeader
-        title="Featured Projects"
-        subtitle="A selection of my best work and technical solutions"
+        badge="Selected Work"
+        title="Selected Projects"
+        subtitle="Kumpulan proyek, eksperimen, dan hasil kerja sama yang menunjukkan kemampuan teknis dan estetika desain."
       >
         <template #title>
-          Featured
+          Selected
           <span
-            class="bg-linear-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent"
+            class="bg-linear-to-r from-text-primary to-text-secondary bg-clip-text text-transparent"
             >Projects</span
           >
         </template>
@@ -74,7 +75,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { projectsData } from "../../../data/landing/projects";
+import { portfolioService } from "../../../services/portfolioService";
 import ProjectCard from "../portfolio/ProjectCard.vue";
 import { ArrowRight as ArrowRightIcon } from "lucide-vue-next";
 import SectionHeader from "../../ui/SectionHeader.vue";
@@ -91,12 +92,15 @@ const categories = computed(() => {
     const catName = p.category;
     if (catName && !cats.includes(catName)) cats.push(catName);
   });
-  return cats;
+  return cats.sort((a, b) => (a === 'All' ? -1 : b === 'All' ? 1 : a.localeCompare(b)));
 });
 
 const filteredProjects = computed(() => {
-  if (activeFilter.value === "All") return projects.value;
-  return projects.value.filter((p) => p.category === activeFilter.value);
+  let result = projects.value;
+  if (activeFilter.value !== "All") {
+    result = result.filter((p) => p.category === activeFilter.value);
+  }
+  return result;
 });
 
 const displayedProjects = computed(() => {
@@ -107,26 +111,18 @@ const navigateToProject = (slug: string) => {
   if (slug) router.push(`/project/${slug}`);
 };
 
-onMounted(() => {
+onMounted(async () => {
   try {
-    // Use local data from projects.ts
-    // Sort by ID descending (newest first) assuming higher ID is newer
-    const sortedData = [...projectsData]
-      .filter((p) => p.status !== "IDEA")
-      .sort((a, b) => b.id - a.id);
-
-    projects.value = sortedData.map((p) => ({
-      _id: String(p.id),
-      title: p.title,
-      slug: { current: p.slug || "" },
-      category: p.category,
-      tags: p.tags,
-      description: p.description,
-      localIcon: p.icon,
-      localColor: p.color,
-      date: p.date,
-      client: p.client,
-      status: p.status
+    const sanityProjects = await portfolioService.getProjects();
+    
+    projects.value = sanityProjects
+      .filter(p => p.status !== 'IDEA')
+      .map((p: any) => ({
+      ...p,
+      _id: String(p._id || p.id),
+      slug: typeof p.slug === "string" ? { current: p.slug } : p.slug,
+      technologies: p.technologies || p.tags || [],
+      status: p.status || "SUCCESS",
     }));
   } catch (e) {
     console.error("Error loading projects data", e);

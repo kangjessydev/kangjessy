@@ -1013,25 +1013,32 @@
       >
         <div
           v-if="selectedImage"
-          class="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[10000] flex items-center justify-center p-4 md:p-8 cursor-zoom-out"
+          class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[10000] overflow-y-auto cursor-zoom-out"
           @click="selectedImage = null"
         >
-          <div
-            class="w-full max-w-7xl max-h-[90vh] relative cursor-default outline-none items-center flex justify-center"
-            @click.stop
+          <!-- Fixed Close Button -->
+          <button
+            @click.stop="selectedImage = null"
+            class="fixed top-4 right-4 md:top-8 md:right-8 w-12 h-12 bg-bg-secondary/80 hover:bg-accent-primary backdrop-blur-xl border border-white/10 rounded-full flex items-center justify-center text-white transition-all z-[10001] shadow-2xl"
           >
-            <img
-              :src="selectedImage"
-              alt="Gallery Preview"
-              class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
-            />
-            <button
-              @click="selectedImage = null"
-              class="absolute -top-12 right-0 text-white hover:text-accent-primary transition-colors flex items-center gap-2 font-black uppercase tracking-widest text-xs z-20"
+            <XIcon :size="24" />
+          </button>
+
+          <!-- Image Container with Safe Centering -->
+          <div 
+            class="min-h-screen w-full flex justify-center p-4 md:p-12"
+            style="align-items: safe center;"
+          >
+            <div
+              class="relative w-full max-w-6xl cursor-default outline-none pb-12 pt-4"
+              @click.stop
             >
-              Tutup
-              <XIcon :size="20" />
-            </button>
+              <img
+                 :src="selectedImage"
+                 alt="Gallery Preview"
+                 class="w-full h-auto rounded-xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-white/5"
+              />
+            </div>
           </div>
         </div>
       </Transition>

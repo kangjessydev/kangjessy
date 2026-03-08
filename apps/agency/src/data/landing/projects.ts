@@ -39,36 +39,37 @@ export const projectsData: Project[] = [
     slug: "redesign-wisata-herbal-insani",
     title: "Redesign Wisata Herbal Insani",
     category: "WordPress",
-    tags: ["WordPress", "UI/UX Redesign", "Custom Post Type", "Elementor"],
+    tags: ["WordPress", "Custom Plugin Development", "Native PHP", "UI/UX Redesign", "Custom Post Type"],
     icon: "Trees",
     color: "linear-gradient(135deg, #16a34a 0%, #15803d 100%)",
-    image: "/projects/herbal-insani-main.png",
-    description: "Redesign website wisata herbal dari tampilan jadul menjadi modern minimalis dengan sistem paket interaktif.",
+    image: "/projects/cover_herbal_insani_4_optimized.webp",
+    description: "Transformasi website jadul menjadi Modern Clean Web. Rebuild sistem dari Elementor ke Custom Plugin menggunakan kode Native (Pure PHP/HTML/CSS/JS) untuk performa instan.",
     content: herbalInsaniContent,
     client: "Wisata Herbal Insani",
     date: "Mar 2025",
-    liveUrl: "https://wisataherbalinsani.com",
-    githubUrl: "#",
+    liveUrl: "https://wisataherbal.com/",
+    githubUrl: "",
     challenge: {
-      title: "Text Overload & Legacy UI",
-      description: "Website lama memiliki teks yang terlalu panjang dan navigasi paket yang tidak efisien, membuat pengunjung sulit menyerap informasi penting dengan cepat.",
-      painPoints: ["UI Outdated", "Low Readability", "CMS Inefficiency"]
+      title: "Legacy UI & Information Overload",
+      description: "Website lama memiliki tampilan jadul, berat, dan membosankan dengan puluhan halaman paket yang redundan serta informasi yang tersegmentasi, menyulitkan admin dalam pengelolaan data.",
+      painPoints: ["Inefficient UI", "Heavy Elementor Bloat", "Fragmented UX"]
     },
     steps: [
-      { title: "Clean Visual Redesign", desc: "Redesign total fokus pada warna hijau natural dan layout visual-centric yang lega." },
-      { title: "Tab Content Package", desc: "Konsolidasi seluruh paket wisata ke dalam sistem tab interaktif dalam satu halaman." },
-      { title: "Herbal Catalog CPT", desc: "Pembangunan catalog produk herbal dengan Custom Post Type untuk kemudahan manajemen data." }
+      { title: "UI & UX Consolidation", desc: "Merampingkan puluhan halaman paket menjadi sistem Tab tunggal interaktif dan menyatukan informasi kontak yang sebelumnya terpisah." },
+      { title: "Modern Clean Redesign", desc: "Implementasi desain Modern Nature-centric (Putih/Hijau) dengan tatanan grid galeri baru yang jauh lebih rapi dan profesional." },
+      { title: "Native Engine Rebuild", desc: "Membangun Custom Plugin dari nol menggunakan kode Native (PHP, HTML, CSS, JS) menggantikan page builder untuk performa muat halaman instan." }
     ],
     metrics: [
-      { label: "Content Economy", value: "-60% Text", icon: "Zap" },
-      { label: "UI Aesthetics", value: "Premium", icon: "Monitor" },
-      { label: "Admin Speed", value: "2x Faster", icon: "Clock" }
+      { label: "Page Weight", value: "-75%", icon: "Zap" },
+      { label: "Admin Velocity", value: "3x Faster", icon: "Clock" },
+      { label: "UX Clarity", value: "Optimal", icon: "Monitor" }
     ],
-    technologies: ["WordPress", "Elementor Pro", "Custom Post Type UI", "Advanced Custom Fields", "PHP 8.2", "Tailwind CSS"],
+    technologies: ["WordPress", "Custom Plugin Development", "Native PHP", "HTML5", "Vanilla CSS", "JavaScript", "Custom Post Type", "MySQL"],
     gallery: [
-      "/projects/herbal-insani-mobile.png",
-      "/projects/herbal-insani-catalog.png",
-      "/projects/herbal-insani-packages.png"
+      "/projects/galeri_herbal_insani_1_optimized.webp",
+      "/projects/galeri_herbal_insani_1.png",
+      "/projects/galeri_herbal_insani_3_optimized.webp",
+      "/projects/galeri_herbal_insani_4_optimized.webp"
     ],
     relatedServices: ["website-high-conversion", "maintenance-custom"]
   },

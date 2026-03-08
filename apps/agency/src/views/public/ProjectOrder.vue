@@ -226,6 +226,7 @@ import { defaultConfig } from "../../data/config/orderConfig";
 // Services
 // import { projectService } from "../../services/projectService";
 import { clientService } from "../../services/clientService";
+import { notionService } from "../../services/notionService";
 
 const router = useRouter();
 const route = useRoute();
@@ -410,19 +411,19 @@ const goToStep2 = () => {
 const processOrder = async (isWhatsApp = false) => {
   isSubmitting.value = true;
   try {
-    // 1. CREATE CLIENT / LEAD in Supabase
+    // 1. CREATE CLIENT / LEAD in GAS / GSheets
     const client = await clientService.addLead({
       name: form.name,
       email: form.email,
       phone: form.phone,
       company: form.company,
       type: "project_order",
-      status: "New", // Capitalized "New" for Admin Dashboard consistency
+      status: "New",
       project_type: currentType.value?.id || selectedType.value,
       budget: totalPrice.value,
       source: isWhatsApp ? "order_whatsapp" : "order_form",
       brief: form.brief,
-      features: selectedFeatures.value, // Pass IDs, not names, so Admin can map them
+      features: selectedFeatures.value,
       visual_style: selectedStyle.value,
       timeline: selectedTimeline.value,
       dream_domain: form.domain,
@@ -432,16 +433,33 @@ const processOrder = async (isWhatsApp = false) => {
 
     if (!client?.id) throw new Error("Gagal mengidentifikasi klien.");
 
+    // 2. CREATE PROJECT IN NOTION (Client Portal)
+    let notionProject = null;
+    try {
+      notionProject = await notionService.createProject({
+        name: `${currentType.value?.name || 'New Project'} - ${form.name}`,
+        clientName: form.name,
+        email: form.email,
+        whatsapp: form.phone,
+        budget: totalPrice.value,
+        type: currentType.value?.name,
+        source: isWhatsApp ? "Order WhatsApp" : "Order Form"
+      });
+      console.log("Notion Project Created:", notionProject);
+    } catch (notionErr) {
+      console.error("Failed to create Notion project:", notionErr);
+      // Don't fail the whole order if Notion fails, but maybe log it
+    }
+
     if (!isWhatsApp) {
       // 3. Trigger Transactional Email (Resend)
-      // Note: This might fail locally if not running with 'vercel dev'
       try {
         await fetch("/api/send-invoice", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             order: {
-              id: client.id,
+              id: notionProject?.trackingId || client.id,
               name: form.name,
               email: form.email,
               projectType: currentType.value?.name,
@@ -456,28 +474,25 @@ const processOrder = async (isWhatsApp = false) => {
         console.warn("Email service unavailable (local dev?)", emailErr);
       }
 
-      // Save final result to 'GZ_ORDER_TEMP' for Invoice view compatibility
+      // Save final result to 'GZ_ORDER_TEMP'
       const finalData = {
         selectedType: selectedType.value,
         selectedFeatures: selectedFeatures.value,
         selectedTimeline: selectedTimeline.value,
         selectedStyle: selectedStyle.value,
         form: { ...form },
-        clientId: client.id,
+        clientId: notionProject?.trackingId || client.id,
       };
       localStorage.setItem("GZ_ORDER_TEMP", JSON.stringify(finalData));
 
-      // Wait a bit to show the premium processing animation
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Snapshot before reset so modal keeps displaying correct values
       successSnapshot.value = { name: form.name, total: totalPrice.value };
-      createdProjectId.value = client.id;
+      createdProjectId.value = notionProject?.trackingId || client.id;
 
       showSuccess.value = true;
       localStorage.removeItem(defaultConfig.storageKey);
       
-      // Reset all data for next order
       resetCalculator();
       resetForm();
       step.value = 1;

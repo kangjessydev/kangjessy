@@ -786,7 +786,7 @@ import {
   Printer,
   X,
 } from "lucide-vue-next";
-import { projectService } from "../../services/projectService";
+import { notionService } from "../../services/notionService";
 import { BaseButton } from "@kangjessy/ui";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import { useSEO } from "../../composables/useSEO";
@@ -821,7 +821,6 @@ interface OrderData {
   startDate: string;
   deadline: string;
   timeline: {
-    date: string;
     title: string;
     status: "done" | "in_progress" | "pending";
     icon?: string;
@@ -886,117 +885,31 @@ const handleLogin = async (manualId?: string | Event) => {
   errorMessage.value = "";
 
   try {
-    const project = await projectService.getProjectById(targetId);
-    if (project) {
-      const allTasks = project.tasks || [];
-      const sortedTimeline: any[] = [];
-
-      const parents = allTasks
-        .filter((t: any) => !t.parent_id)
-        .sort(
-          (a: any, b: any) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-        );
-
-      parents.forEach((parent: any) => {
-        const subs = allTasks
-          .filter((t: any) => t.parent_id === parent.id)
-          .sort(
-            (a: any, b: any) =>
-              new Date(a.created_at).getTime() -
-              new Date(b.created_at).getTime(),
-          );
-
-        // Calculate intelligent status for Parent
-        let parentStatus = "pending";
-        if (subs.length > 0) {
-          const doneCount = subs.filter((s: any) => s.status === "done").length;
-          if (doneCount === subs.length) parentStatus = "done";
-          else if (doneCount > 0) parentStatus = "in_progress";
-        } else {
-          parentStatus = parent.status;
-        }
-
-        sortedTimeline.push({
-          date: new Date(parent.created_at).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "short",
-          }),
-          title: parent.title,
-          status: parentStatus,
-          icon: parent.icon,
-          isParent: true,
-        });
-
-        subs.forEach((sub: any) => {
-          sortedTimeline.push({
-            date: new Date(sub.created_at).toLocaleDateString("id-ID", {
-              day: "numeric",
-              month: "short",
-            }),
-            title: sub.title,
-            status: sub.status === "done" ? "done" : "pending",
-            isParent: false,
-          });
-        });
-      });
-
-      // Fetch actual payments from transactions (mocked for hardcoded data)
-      const txData = [{ amount: project.paid_amount || 0 }];
-
-      const totalPaid =
-        txData?.reduce(
-          (acc: number, curr: any) => acc + Number(curr.amount),
-          0,
-        ) || 0;
-      const totalPrice = project.clients?.budget
-        ? parseInt(project.clients.budget.replace(/[^0-9]/g, "")) || 0
-        : 0;
-      const payStatus =
-        totalPaid >= totalPrice
-          ? "paid"
-          : totalPaid > 0
-            ? "partial"
-            : "pending";
-
+    const notionProject = await notionService.getProjectByTrackingId(targetId);
+    
+    if (notionProject) {
       orderData.value = {
-        orderId: project.id.substring(0, 8).toUpperCase(),
-        projectName: project.name,
-        clientName: project.clients?.name || "Client",
-        status: project.status,
-        progress: project.progress || 0,
-        startDate: project.start_date
-          ? new Date(project.start_date).toLocaleDateString("id-ID", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })
-          : "-",
-        deadline: project.deadline
-          ? new Date(project.deadline).toLocaleDateString("id-ID", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })
-          : "-",
-        price: totalPrice,
-        paidAmount: totalPaid,
-        paymentStatus: payStatus,
-        timeline: sortedTimeline,
-        links: {
-          preview: project.preview_url !== "-" ? project.preview_url : "",
-          figma: project.figma_url !== "-" ? project.figma_url : "",
-          github: project.github_url !== "-" ? project.github_url : "",
-          drive: project.drive_url !== "-" ? project.drive_url : "",
-          invoice: "#",
-        },
+        orderId: notionProject.trackingId || notionProject.id.substring(0, 8).toUpperCase(),
+        projectName: notionProject.projectName,
+        clientName: notionProject.clientName,
+        status: notionProject.status,
+        progress: notionProject.progress,
+        startDate: notionProject.startDate !== '-' 
+            ? new Date(notionProject.startDate).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })
+            : "-",
+        deadline: notionProject.deadline !== '-'
+            ? new Date(notionProject.deadline).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })
+            : "-",
+        price: notionProject.price,
+        paidAmount: notionProject.paidAmount,
+        paymentStatus: notionProject.paymentStatus,
+        timeline: notionProject.timeline,
+        links: notionProject.links
       };
-    } else {
-      errorMessage.value = "Tracking ID tidak valid atau belum terdaftar.";
     }
   } catch (e: any) {
     console.error(e);
-    errorMessage.value = "Terjadi gangguan saat menghubungkan ke database.";
+    errorMessage.value = e.message || "Tracking ID tidak valid atau terjadi gangguan koneksi.";
   } finally {
     isLoading.value = false;
   }

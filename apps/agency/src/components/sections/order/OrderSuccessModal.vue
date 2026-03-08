@@ -41,7 +41,7 @@
                 <div class="text-left">
                   <span class="text-[0.65rem] font-black text-text-tertiary uppercase tracking-widest block mb-1">Project ID</span>
                   <span class="text-sm font-black text-text-primary font-mono truncate block">
-                    #{{ projectId ? projectId.substring(0, 8).toUpperCase() : "PENDING" }}
+                    {{ projectId || "PENDING" }}
                   </span>
                 </div>
                 <div class="text-right">
@@ -59,10 +59,10 @@
                 variant="primary"
                 size="lg"
                 class="w-full h-14 rounded-2xl font-bold text-base shadow-xl shadow-accent-primary/20"
-                href="#"
+                @click="$emit('view-invoice')"
               >
                 <FileText :size="18" class="mr-2.5" />
-                Lihat Penawaran (Invoice)
+                Masuk ke Project Portal
               </BaseButton>
 
               <!-- Secondary Actions: WhatsApp & Home -->

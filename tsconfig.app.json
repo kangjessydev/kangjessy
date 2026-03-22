@@ -21,7 +21,7 @@
       "@/*": ["./src/*"],
       "@kangjessy/config": ["./src/lib/config/index.ts"],
       "@kangjessy/database": ["./src/lib/database/index.ts"],
-      "@kangjessy/ui": ["./src/lib/ui/src/index.ts"]
+      "@kangjessy/ui": ["./src/lib/ui/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]

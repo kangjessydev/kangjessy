@@ -40,7 +40,7 @@ export default defineConfig(() => ({
       '@': path.resolve(__dirname, './src'),
       '@kangjessy/config': path.resolve(__dirname, './src/lib/config/index.ts'),
       '@kangjessy/database': path.resolve(__dirname, './src/lib/database/index.ts'),
-      '@kangjessy/ui': path.resolve(__dirname, './src/lib/ui/src/index.ts'),
+      '@kangjessy/ui': path.resolve(__dirname, './src/lib/ui/index.ts'),
     },
   },
   // @ts-ignore - vite-ssg options

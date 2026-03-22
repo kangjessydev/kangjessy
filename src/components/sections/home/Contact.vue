@@ -76,14 +76,11 @@ import { ref } from "vue";
 import SectionHeader from "../../ui/SectionHeader.vue";
 import WhatsAppModal from "../../modals/WhatsAppModal.vue";
 import EmailModal from "../../modals/EmailModal.vue";
-import { BaseButton } from "@kangjessy/ui";
 import { Mail, MapPin, ArrowRight as ArrowRightIcon, Rocket as RocketIcon } from "lucide-vue-next";
 import WhatsappIcon from "../../icons/WhatsappIcon.vue";
 import { useSiteSettings } from "../../../composables/useSiteSettings";
-import { usePopupManager, Popups } from "../../../composables/usePopupManager";
 
 const { settings } = useSiteSettings();
-const popup = usePopupManager();
 
 const isWAModalOpen = ref(false);
 const isEmailModalOpen = ref(false);

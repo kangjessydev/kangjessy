@@ -745,9 +745,7 @@ import { useGlobalTheme } from "../../composables/useTheme";
 import { menuItems, mobileMenuGroups } from "../../data/config/menuConfig";
 import { useSiteSettings } from "../../composables/useSiteSettings";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
 const popup = usePopupManager();
 const { settings } = useSiteSettings();
 

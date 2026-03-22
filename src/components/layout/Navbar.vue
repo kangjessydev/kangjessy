@@ -661,10 +661,7 @@
           <!-- Prime CTA / Start Project -->
           <button
             id="nav-action-order"
-            @click="
-              $router.push('/order');
-              closeMenu();
-            "
+            @click="popup.openModal(Popups.ORDER_CHECKOUT); closeMenu();"
             class="group relative overflow-hidden w-full p-6 bg-linear-to-tr from-accent-primary to-accent-secondary rounded-3xl flex items-center justify-between text-white shadow-xl shadow-accent-primary/20 active:scale-[0.98] transition-all"
           >
             <!-- Shine effect -->
@@ -685,7 +682,7 @@
             <div
               class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center z-10"
             >
-              <ExternalLink :size="20" />
+              <Rocket :size="20" />
             </div>
           </button>
         </div>
@@ -741,6 +738,7 @@ import {
   Globe,
   Wrench,
   ShoppingBag,
+  Rocket,
 } from "lucide-vue-next";
 import { BaseButton, BottomSheet, activeSheet } from "@kangjessy/ui";
 import { useGlobalTheme } from "../../composables/useTheme";
@@ -816,6 +814,8 @@ const handleTrigger = (trigger?: string, props?: any) => {
     popup.openModal(Popups.CHAT_EMAIL, props);
   } else if (trigger === "ai") {
     popup.openModal(Popups.CHAT_AI, props);
+  } else if (trigger === "checkout") {
+    popup.openModal(Popups.ORDER_CHECKOUT);
   } else if (trigger === "link") {
     return false;
   }
@@ -830,7 +830,7 @@ const handleSubItemClick = (sub: any) => {
 
 const handleActionClick = (item: any) => {
   if (handleTrigger(item.trigger, item.triggerProps)) return;
-  router.push("/order");
+  popup.openModal(Popups.ORDER_CHECKOUT);
   closeMenu();
 };
 

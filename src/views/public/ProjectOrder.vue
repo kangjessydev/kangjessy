@@ -338,16 +338,31 @@ const saveDraft = () => {
 const loadDraft = () => {
   // 1. Direct Order from Service Detail (Highest Priority)
   const typeFromUrl = route.query.type;
-  if (typeFromUrl) {
-    selectedType.value = typeFromUrl as string;
+  const planFromUrl = route.query.plan;
+
+  if (typeFromUrl || planFromUrl) {
+    if (typeFromUrl) {
+      selectedType.value = typeFromUrl as string;
+    } else if (planFromUrl) {
+      // Map new standalone plans to existing internal types
+      const planMapping: Record<string, string> = {
+        'starter-essential': 'link-in-bio-pro',
+        'business-growth': 'conversion-landing-page',
+        'elite-custom': 'modern-corporate-profile'
+      };
+      selectedType.value = planMapping[planFromUrl as string] || 'conversion-landing-page';
+      
+      // Pre-select features based on plan if needed
+      if (planFromUrl === 'business-growth') {
+        selectedFeatures.value = ['high-speed-optimization', 'copywriting-framework', 'analytics-tracking'];
+      }
+    }
 
     // Check for specific feature addition from URL (supports multiple comma-separated IDs)
     const featureToAdd = route.query.addFeature;
     if (featureToAdd) {
       const featuresArr = (featureToAdd as string).split(",");
-      selectedFeatures.value = featuresArr;
-    } else {
-      selectedFeatures.value = [];
+      selectedFeatures.value = [...selectedFeatures.value, ...featuresArr];
     }
 
     selectedTimeline.value = defaultConfig.selectedTimeline;

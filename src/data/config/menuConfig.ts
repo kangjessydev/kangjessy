@@ -1,7 +1,6 @@
 import { 
     Monitor, 
-    Globe, 
-    Search, 
+    Search,
     Briefcase,
     BookOpen,
     FileText,
@@ -23,13 +22,13 @@ export interface MenuItem {
     isMegaMenu?: boolean;
     isDropdown?: boolean;
     isAction?: boolean;
-    trigger?: 'whatsapp' | 'email' | 'ai' | 'link';
+    trigger?: 'whatsapp' | 'email' | 'ai' | 'link' | 'checkout';
     triggerProps?: Record<string, any>;
     icon?: any;
-    children?: { text: string; url?: string; trigger?: 'whatsapp' | 'email' | 'ai' | 'link'; icon?: any; comingSoon?: boolean }[];
+    children?: { text: string; url?: string; trigger?: 'whatsapp' | 'email' | 'ai' | 'link' | 'checkout'; icon?: any; comingSoon?: boolean }[];
     groups?: {
         title: string;
-        items: { text: string; desc: string; url?: string; trigger?: 'whatsapp' | 'email' | 'ai' | 'link'; triggerProps?: Record<string, any>; icon?: any; comingSoon?: boolean }[];
+        items: { text: string; desc: string; url?: string; trigger?: 'whatsapp' | 'email' | 'ai' | 'link' | 'checkout'; triggerProps?: Record<string, any>; icon?: any; comingSoon?: boolean }[];
     }[];
 }
 
@@ -41,29 +40,27 @@ export const menuItems: MenuItem[] = [
         isMegaMenu: true,
         groups: [
             {
-                title: 'Core Services',
+                title: 'Layanan Utama',
                 items: [
-                    { text: 'Website High-Conv', desc: 'Landing page & Company Profile.', url: '/service/website-high-conversion', icon: Monitor },
-                    { text: 'Maintenance & Rakitan', desc: 'Update fitur & System care.', url: '/service/maintenance-custom', icon: Settings }
+                    { text: 'Website & Digital', desc: 'Landing page, company profile, sistem kustom.', url: '/services#pricing', icon: Monitor },
+                    { text: 'Maintenance Plan', desc: 'Rawat & kembangkan sistem yang sudah ada.', url: '/services#pricing', icon: Settings }
                 ]
             },
             {
-                title: 'Micro-Services',
+                title: 'Mulai Sekarang',
                 items: [
-                    { text: 'Lihat Semua Fitur', desc: 'Katalog lengkap fitur instan.', url: '/#microservices', icon: Zap },
-                    { text: 'SEO Infrastructure', desc: 'Optimasi ranking Google otomatis.', url: '/order?type=fitur-rakitan&addFeature=seo', icon: Search },
-                ]
-            },
-            {
-                title: 'Strategy & Tools',
-                items: [
-                    { text: 'Cost Calculator', desc: 'Estimasi biaya proyek Anda.', url: '/services#calculator', icon: Calculator },
                     { 
-                        text: 'IT Consultation', 
-                        desc: 'Diskusi strategi teknologi via WA.', 
+                        text: 'Pesan Paket', 
+                        desc: 'Pilih paket & langsung submit via WA.', 
+                        trigger: 'checkout',
+                        icon: Send 
+                    },
+                    { 
+                        text: 'Free Consultation', 
+                        desc: 'Diskusi kebutuhan proyek gratis via WA.', 
                         trigger: 'whatsapp', 
-                        triggerProps: { initialMessage: 'Halo Kang Jessy, saya mau konsultasi tentang strategi teknologi bisnis saya.' },
-                        icon: Globe 
+                        triggerProps: { initialMessage: 'Halo Kang Jessy, saya mau konsultasi tentang kebutuhan proyek saya.' },
+                        icon: MessageSquare 
                     },
                 ]
             }
@@ -143,8 +140,8 @@ export const menuItems: MenuItem[] = [
     },
     {
         text: 'Hire Me',
-        url: '/order',
         isAction: true,
+        trigger: 'checkout',
         icon: Send
     }
 ]

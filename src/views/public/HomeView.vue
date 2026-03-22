@@ -2,9 +2,9 @@
   <div class="home-view bg-bg-primary overflow-x-hidden">
     <HeroSection />
     <WhyChooseMe />
-    <BentoServices />
-    <MicroServices />
-    <CostCalculator />
+    <!-- <BentoServices /> -->
+    <!-- <MicroServices /> -->
+    <PricingSwitcher />
     <Projects />
     <!-- <Testimonials /> -->
     <FAQ />
@@ -26,9 +26,9 @@ useSEO({
 
 // Lazy load below-fold sections
 const WhyChooseMe = defineAsyncComponent(() => import('../../components/sections/home/WhyChooseMe.vue'))
-const BentoServices = defineAsyncComponent(() => import('../../components/sections/home/BentoServices.vue'))
-const MicroServices = defineAsyncComponent(() => import('../../components/sections/home/MicroServices.vue'))
-const CostCalculator = defineAsyncComponent(() => import('../../components/sections/CostCalculator.vue'))
+// const BentoServices = defineAsyncComponent(() => import('../../components/sections/home/BentoServices.vue'))
+// const MicroServices = defineAsyncComponent(() => import('../../components/sections/home/MicroServices.vue'))
+const PricingSwitcher = defineAsyncComponent(() => import('../../components/sections/PricingSwitcher.vue'))
 const Projects = defineAsyncComponent(() => import('../../components/sections/home/Projects.vue'))
 // const Testimonials = defineAsyncComponent(() => import('../../components/sections/home/Testimonials.vue'))
 const FAQ = defineAsyncComponent(() => import('../../components/sections/home/FAQ.vue'))

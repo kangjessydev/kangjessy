@@ -29,10 +29,8 @@
         <!-- Services Grid (Bento Style from Home) -->
         <BentoServices :show-header="false" padding-class="py-[100px]" />
 
-        <!-- Calculator Section -->
-        <div id="calculator">
-            <CostCalculator />
-        </div>
+        <!-- Pricing Section -->
+        <PricingSwitcher @consultation="isConsultationOpen = true" />
 
         <!-- Methodology Section -->
         <section class="py-[100px] bg-bg-primary/30">
@@ -137,7 +135,7 @@ import SectionHeader from '../../components/ui/SectionHeader.vue';
 import BentoServices from '../../components/sections/home/BentoServices.vue';
 import { BaseButton } from "@kangjessy/ui";
 import WhatsAppModal from '../../components/modals/WhatsAppModal.vue';
-import CostCalculator from '../../components/sections/CostCalculator.vue';
+import PricingSwitcher from '../../components/sections/PricingSwitcher.vue';
 import AccordionItem from '../../components/ui/AccordionItem.vue';
 import { useSEO } from '../../composables/useSEO';
 import {

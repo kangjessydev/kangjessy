@@ -41,6 +41,11 @@
       v-bind="popup.getModalProps(Popups.CHAT_AI)"
       @close="popup.closeModal(Popups.CHAT_AI)"
     />
+    <OrderCheckout
+      :isOpen="popup.activeModals[Popups.ORDER_CHECKOUT]"
+      v-bind="popup.getModalProps(Popups.ORDER_CHECKOUT)"
+      @close="popup.closeModal(Popups.ORDER_CHECKOUT)"
+    />
 
     <ToastContainer />
     <SpeedInsights />
@@ -65,6 +70,9 @@ const EmailModal = defineAsyncComponent(
 );
 const AIChatModal = defineAsyncComponent(
   () => import("./components/modals/AIChatModal.vue"),
+);
+const OrderCheckout = defineAsyncComponent(
+  () => import("./components/modals/OrderCheckout.vue"),
 );
 
 import ToastContainer from "./components/ui/ToastContainer.vue";

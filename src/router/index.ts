@@ -96,6 +96,11 @@ export const routes = [
       path: '/p/:id',
       name: 'proposal-view',
       component: () => import('../views/public/ProposalView.vue')
+    },
+    {
+      path: '/get-estimate',
+      name: 'get-estimate',
+      component: () => import('../views/public/EstimateView.vue')
     }
 ]
 

@@ -8,6 +8,7 @@ export const Popups = {
   CHAT_EMAIL: "CHAT_EMAIL",
   PROMO: "PROMO_POPUP",
   ORDER_SUCCESS: "ORDER_SUCCESS",
+  ORDER_CHECKOUT: "ORDER_CHECKOUT",
 } as const;
 
 export type PopupId = typeof Popups[keyof typeof Popups];
@@ -19,6 +20,7 @@ const activeModals = reactive<Record<string, boolean>>({
   [Popups.CHAT_EMAIL]: false,
   [Popups.PROMO]: false,
   [Popups.ORDER_SUCCESS]: false,
+  [Popups.ORDER_CHECKOUT]: false,
 });
 
 const modalProps = ref<Record<string, any>>({});

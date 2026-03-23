@@ -1,8 +1,9 @@
 <template>
     <div class="min-h-screen bg-bg-primary pt-24 pb-20 overflow-hidden relative">
-        <!-- Background Decor -->
-        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-accent-primary/5 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/2 opacity-50"></div>
-        <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent-secondary/5 rounded-full blur-[140px] translate-y-1/2 -translate-x-1/2 opacity-50"></div>
+        <!-- Grid Pattern overlay -->
+        <div class="absolute inset-x-0 top-0 h-[800px] opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 40px 40px;">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-primary"></div>
+        </div>
 
         <div class="max-w-[1240px] mx-auto px-6 relative z-10">
             <!-- Header Section -->
@@ -12,7 +13,7 @@
                     <span class="text-[0.65rem] font-black text-accent-primary uppercase tracking-widest">Growth Success Framework</span>
                 </div>
                 <h1 class="text-[clamp(2.5rem,8vw,4.5rem)] font-black text-text-primary tracking-tighter leading-[1.1] mb-6">
-                    Mulai <span class="bg-linear-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent pr-1">Journey</span><br/>Digital Bisnis Kamu
+                    Mulai Journey <br class="hidden md:block" /> Digital Bisnis Kamu
                 </h1>
                 <p class="text-text-secondary text-lg md:text-xl max-w-3xl mx-auto leading-relaxed opacity-80">
                     Bukan sekadar website, kami merancang peta jalan strategis untuk memastikan setiap rupiah yang kamu investasikan menghasilkan dampak nyata bagi bisnis.
@@ -34,40 +35,42 @@
                 leave-to-class="opacity-0 translate-y-10 scale-95">
                 <div v-if="!selectedStageId && !loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <button v-for="stage in roadmapData" :key="stage.id" @click="selectStage(stage.id)"
-                        class="group relative bg-bg-secondary border border-border-color rounded-[32px] p-6 text-left transition-all duration-500 hover:border-accent-primary hover:shadow-2xl hover:shadow-accent-primary/10 hover:-translate-y-2 flex flex-col h-full">
+                        class="group relative bg-bg-secondary border border-border-color rounded-[24px] p-8 text-left transition-all duration-300 hover:border-accent-primary/50 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 flex flex-col h-full overflow-hidden">
                         
-                        <div class="w-16 h-16 rounded-2xl bg-bg-tertiary flex items-center justify-center text-accent-primary mb-8 group-hover:bg-accent-primary group-hover:text-white transition-all shadow-inner">
-                            <component :is="getIcon(stage.icon)" :size="32" />
+                        <!-- Accent Top Line -->
+                        <div class="absolute top-0 left-8 right-8 h-[2px] bg-accent-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+
+                        <div class="w-14 h-14 rounded-xl bg-bg-primary border border-border-color flex items-center justify-center text-text-secondary group-hover:text-accent-primary transition-all mb-8">
+                            <component :is="getIcon(stage.icon)" :size="28" />
                         </div>
 
                         <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="text-[10px] font-black text-accent-secondary uppercase tracking-widest px-2 py-0.5 bg-accent-secondary/10 rounded-md">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="text-[10px] font-bold text-accent-primary uppercase tracking-widest px-2 py-1 bg-accent-primary/5 border border-accent-primary/10 rounded-md">
                                     {{ stage.steps?.length || 0 }} Langkah
                                 </span>
                             </div>
-                            <h3 class="text-xl font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">{{ stage.name }}</h3>
-                            <p class="text-text-secondary text-xs leading-relaxed opacity-70">
+                            <h3 class="text-xl font-bold text-text-primary mb-3">{{ stage.name }}</h3>
+                            <p class="text-text-secondary text-[0.8rem] leading-relaxed opacity-70">
                                 {{ stage.description }}
                             </p>
                         </div>
 
-                        <div class="mt-8 pt-6 border-t border-border-color/50 flex items-center justify-between">
-                            <span class="text-[11px] font-black text-text-primary uppercase tracking-widest">Start Journey</span>
+                        <div class="mt-8 pt-6 border-t border-border-color flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-text-primary uppercase tracking-widest">Mulai Eksplorasi</span>
                             <ChevronRightIcon :size="16" class="text-accent-primary group-hover:translate-x-1 transition-transform" />
                         </div>
                     </button>
                     
                     <!-- Consultation CTA -->
-                    <div class="lg:col-span-4 p-8 sm:p-12 bg-linear-to-tr from-bg-secondary to-bg-tertiary border border-border-color rounded-[40px] flex flex-col md:flex-row items-center justify-between gap-8 mt-12 relative overflow-hidden group">
-                        <div class="absolute -right-20 -top-20 w-80 h-80 bg-accent-primary/5 blur-[100px] rounded-full group-hover:bg-accent-primary/10 transition-colors"></div>
+                    <div class="lg:col-span-4 p-8 sm:p-12 bg-bg-secondary border border-border-color rounded-[32px] flex flex-col md:flex-row items-center justify-between gap-8 mt-12 relative overflow-hidden group">
                         <div class="relative z-10 text-center md:text-left">
-                            <h4 class="text-2xl sm:text-3xl font-black text-text-primary mb-3">Bingung Mulai dari Mana?</h4>
+                            <h4 class="text-2xl sm:text-3xl font-bold text-text-primary mb-3 tracking-tight">Bingung Mulai dari Mana?</h4>
                             <p class="text-text-secondary text-base sm:text-lg opacity-80 max-w-xl">
-                                Ceritakan masalah bisnis kamu, biar saya bantu susunkan roadmap strategi digital yang paling pas buat kamu. Gratis!
+                                Ceritakan masalah bisnis kamu, biar saya bantu susunkan roadmap strategi digital yang paling pas buat kamu secara personal.
                             </p>
                         </div>
-                        <BaseButton variant="primary" size="lg" icon-right="MessageCircle" class="rounded-2xl! shadow-xl shadow-accent-primary/20 relative z-10" 
+                        <BaseButton variant="primary" size="lg" icon-right="MessageCircle" class="rounded-xl! shadow-lg shadow-accent-primary/10 relative z-10" 
                             @click="popup.openModal(Popups.CHAT_WA, { initialMessage: 'Halo Kang Jessy, saya ingin konsultasi posisi digital bisnis saya.' })">
                             Konsultasi Sekarang
                         </BaseButton>
@@ -102,8 +105,8 @@
                         <component :is="getIcon(currentStage?.icon || '')" :size="14" />
                         {{ currentStage?.subtitle }}
                     </div>
-                    <h2 class="text-[clamp(2rem,6vw,3.5rem)] font-black text-text-primary tracking-tighter leading-[1.2] mb-6">
-                        {{ currentStage?.name }} <span class="bg-linear-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent italic pr-2">Roadmap</span>
+                    <h2 class="text-[clamp(2rem,6vw,4rem)] font-bold text-text-primary tracking-tighter leading-[1.2] mb-6">
+                        {{ currentStage?.name }} Roadmap
                     </h2>
                     <p class="text-text-secondary text-lg leading-relaxed opacity-80">
                         {{ currentStage?.description }}
@@ -130,19 +133,19 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-24 items-start">
                                 <!-- Left side: Card (Alternating logic could be added, but keeping it consistent for now) -->
                                 <div :class="index % 2 === 0 ? 'md:order-1' : 'md:order-2 md:text-left'">
-                                    <div class="bg-bg-secondary border border-border-color rounded-[32px] p-8 md:p-10 shadow-xl group-hover/step:border-accent-primary/40 transition-all duration-500 relative overflow-hidden">
-                                        <!-- Ambient Decor -->
-                                        <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-accent-primary/5 rounded-full blur-3xl group-hover/step:bg-accent-primary/10 transition-all"></div>
+                                    <div class="bg-bg-secondary border border-border-color rounded-[24px] p-8 md:p-12 transition-all duration-300 relative overflow-hidden">
+                                        <!-- Vertical Accent -->
+                                        <div class="absolute top-0 left-0 w-[4px] h-full bg-accent-primary opacity-0 group-hover/step:opacity-100 transition-opacity duration-300"></div>
 
                                         <div class="relative z-10">
-                                            <div class="flex items-center justify-between mb-6">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="w-10 h-10 rounded-xl bg-bg-tertiary flex items-center justify-center text-accent-primary">
-                                                        <component :is="getIcon(step.icon)" :size="20" />
+                                            <div class="flex items-center justify-between mb-8">
+                                                <div class="flex items-center gap-4">
+                                                    <div class="w-12 h-12 rounded-xl bg-bg-primary border border-border-color flex items-center justify-center text-text-secondary group-hover/step:text-accent-primary transition-colors">
+                                                        <component :is="getIcon(step.icon)" :size="24" />
                                                     </div>
                                                     <div class="flex flex-col">
-                                                        <span class="text-[9px] font-black text-text-tertiary uppercase tracking-widest">{{ step.type }}</span>
-                                                        <span class="text-xs font-bold text-text-primary">{{ step.duration }}</span>
+                                                        <span class="text-[10px] font-bold text-accent-primary uppercase tracking-[0.2em] mb-1">{{ step.type }}</span>
+                                                        <span class="text-sm font-bold text-text-primary">{{ step.duration }}</span>
                                                     </div>
                                                 </div>
                                                 <div v-if="step.importance" 
@@ -192,16 +195,14 @@
                         </div>
 
                         <!-- Final Success Milestone -->
-                        <div class="relative pt-12 text-center md:text-left">
-                            <div class="absolute left-6 md:left-1/2 top-12 md:-translate-x-1/2 z-20">
-                                <div class="w-16 h-16 rounded-full bg-linear-to-tr from-accent-primary to-accent-secondary flex items-center justify-center text-white shadow-2xl shadow-accent-primary/50 animate-bounce">
-                                    <RocketIcon :size="28" />
+                        <div class="relative pt-12 text-center">
+                            <div class="flex flex-col items-center">
+                                <div class="w-20 h-20 rounded-[24px] bg-accent-primary flex items-center justify-center text-white shadow-[0_10px_40px_rgba(59,130,246,0.3)] mb-10">
+                                    <RocketIcon :size="32" />
                                 </div>
-                            </div>
-                            <div class="pl-16 md:pl-0 md:pt-32 text-center">
-                                <h4 class="text-2xl font-black text-text-primary mb-3">Goal Reached!</h4>
-                                <p class="text-text-secondary max-w-md mx-auto opacity-70">Kamu telah menyelesaikan fase {{ currentStage?.name }}. Siap untuk level berikutnya atau butuh bantuan eksekusi?</p>
-                                <BaseButton variant="primary" size="lg" class="mt-8 rounded-2xl!" @click="popup.openModal(Popups.CHAT_WA)">Hubungi Kang Jessy</BaseButton>
+                                <h4 class="text-3xl font-bold text-text-primary mb-4 tracking-tight">Kemenangan Terukur!</h4>
+                                <p class="text-text-secondary max-w-md mx-auto leading-relaxed">Kamu telah mengamankan fondasi di fase {{ currentStage?.name }}. Langkah berikutnya adalah eksekusi teknis yang presisi.</p>
+                                <BaseButton variant="primary" size="lg" class="mt-10 rounded-xl shadow-lg shadow-accent-primary/10" @click="popup.openModal(Popups.CHAT_WA)">Hubungi Untuk Eksekusi</BaseButton>
                             </div>
                         </div>
                     </div>

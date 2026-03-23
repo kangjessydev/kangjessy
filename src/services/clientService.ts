@@ -59,22 +59,24 @@ export const clientService = {
     };
 
     // Kirim ke Google Sheet lewat GAS WebApp
+    // PENTING: Harus pakai Content-Type: text/plain agar no-cors tidak di-block browser.
+    // GAS tetap bisa parse body-nya via e.postData.contents.
     if (GAS_WEBAPP_URL) {
       try {
         await fetch(GAS_WEBAPP_URL, {
           method: 'POST',
-          // GAS butuh mode no-cors karena tidak support CORS header
           mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
+          // text/plain adalah satu-satunya Content-Type yang lolos preflight no-cors
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(payload)
         });
-        console.log('[clientService] ✅ Data sent to Google Sheet.');
+        console.log('[clientService] ✅ Payload sent to GAS (no-cors, cannot verify response).');
       } catch (err) {
-        // Jangan crash form jika GAS tidak bisa dijangkau
-        console.warn('[clientService] ⚠ GAS webhook failed (non-critical):', err);
+        // Jangan crash form jika GAS tidak bisa dijangkau (non-critical)
+        console.warn('[clientService] ⚠ GAS webhook failed:', err);
       }
     } else {
-      console.warn('[clientService] ⚠ VITE_GAS_WEBHOOK_URL not set. Data NOT sent to Google Sheet. Add it to .env file.');
+      console.warn('[clientService] ⚠ VITE_GAS_WEBHOOK_URL not set. Tambahkan ke .env dan ke Vercel Environment Variables.');
     }
 
     return payload;

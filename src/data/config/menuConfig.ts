@@ -132,9 +132,8 @@ export const menuItems: MenuItem[] = [
         icon: FileText,
         isDropdown: true,
         children: [
-            // { text: 'Documentation', url: '/docs', icon: FileText },
-            { text: 'Client Portal', url: '/portal', icon: Users },
-            { text: 'Price Calculator', url: '/services#calculator', icon: Calculator },
+            // { text: 'Client Portal', url: '/portal', icon: Users },
+            // { text: 'Price Calculator', url: '/services#calculator', icon: Calculator },
             { text: 'Documentation', url: 'https://kangjessy-docs.vercel.app', icon: FileText, trigger: 'link' }
         ]
     },
@@ -160,7 +159,7 @@ export const mobileNavItems = [
 ];
 
 export const mobileResourceLinks = [
-    { text: 'Price Calculator', url: '/services#calculator', icon: Calculator },
+    // { text: 'Price Calculator', url: '/services#calculator', icon: Calculator },
     // { text: 'Documentation', url: '/docs', icon: FileText },
     // { text: 'Changelog', url: '/changelog', icon: History },
 ];
@@ -184,8 +183,8 @@ export const mobileMenuGroups: {
         title: 'Strategy & Tools',
         items: [
             { text: 'The Blueprint', url: '/blueprint', icon: Rocket },
-            { text: 'Estimator', url: '/services#calculator', icon: Calculator },
-            { text: 'Portal', url: '/portal', icon: Users },
+            // { text: 'Estimator', url: '/services#calculator', icon: Calculator },
+            // { text: 'Portal', url: '/portal', icon: Users },
         ]
     }
 ];

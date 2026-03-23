@@ -26,9 +26,6 @@
             </div>
         </header>
 
-        <!-- Services Grid (Bento Style from Home) -->
-        <BentoServices :show-header="false" padding-class="py-[100px]" />
-
         <!-- Pricing Section -->
         <PricingSwitcher @consultation="isConsultationOpen = true" />
 
@@ -39,26 +36,31 @@
                     subtitle="Proses kerja transparan dan terukur untuk memastikan kualitas terbaik di setiap tahap."
                     align="center" />
 
-                <!-- Timeline -->
-                <div class="flex justify-between mt-20 relative">
+                <!-- Timeline Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-20 relative">
+                    <!-- Base Connector line behind for desktop -->
+                    <div class="hidden lg:block absolute top-14 left-[10%] w-[80%] h-[1px] bg-linear-to-r from-accent-primary/0 via-accent-primary/30 to-accent-primary/0 z-0"></div>
+                    
                     <div v-for="(step, idx) in methodology" :key="step.title"
-                        class="flex-1 flex flex-col items-center text-center relative z-10">
-                        <!-- Number -->
-                        <div
-                            class="w-12 h-12 bg-accent-primary text-white rounded-full flex items-center justify-center font-extrabold text-[clamp(1.1rem,2vw,1.3rem)] mb-6 shadow-[0_0_20px_rgba(59,130,246,0.4)]">
+                        class="group flex flex-col items-start relative z-10 px-8 py-10 rounded-[32px] bg-white/[0.02] border border-border-color hover:bg-gradient-to-b hover:from-white/[0.04] hover:to-transparent hover:border-accent-primary/40 transition-all duration-500 backdrop-blur-xl hover:-translate-y-2 overflow-hidden">
+                        
+                        <!-- Glow effect -->
+                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-accent-primary/10 rounded-full blur-[40px] group-hover:bg-accent-primary/20 transition-all duration-500"></div>
+
+                        <!-- Huge Faded Number -->
+                        <div class="absolute top-4 right-6 text-7xl font-black text-white/[0.02] group-hover:text-accent-primary/[0.05] transition-colors duration-500 select-none">
+                            0{{ idx + 1 }}
+                        </div>
+
+                        <!-- Number Indicator -->
+                        <div class="w-12 h-12 bg-bg-secondary border border-border-color text-text-secondary group-hover:bg-accent-primary group-hover:text-white group-hover:border-accent-primary transition-all duration-500 rounded-2xl flex items-center justify-center font-bold text-lg mb-8 shadow-lg relative z-10">
                             {{ idx + 1 }}
                         </div>
 
                         <!-- Content -->
-                        <div
-                            class="bg-white/[0.02] border border-border-color rounded-[20px] p-6 w-[calc(100%-20px)] backdrop-blur-[10px]">
-                            <h4 class="mb-3 text-text-primary text-[clamp(1rem,1.5vw,1.125rem)] font-semibold">{{ step.title }}</h4>
-                            <p class="text-[0.85rem] text-text-secondary leading-relaxed">{{ step.desc }}</p>
-                        </div>
-
-                        <!-- Connector -->
-                        <div v-if="idx < methodology.length - 1"
-                            class="hidden lg:block absolute top-6 left-[calc(50%+24px)] w-[calc(100%-48px)] h-0.5 bg-linear-to-r from-accent-primary to-border-color opacity-30">
+                        <div class="relative z-10">
+                            <h4 class="mb-3 text-text-primary text-xl font-bold group-hover:text-accent-primary transition-colors">{{ step.title }}</h4>
+                            <p class="text-[0.9rem] text-text-secondary leading-relaxed">{{ step.desc }}</p>
                         </div>
                     </div>
                 </div>
@@ -76,12 +78,18 @@
                             align="left" />
 
                         <div
-                            class="mt-10 p-[30px] bg-white/[0.02] border border-border-color rounded-[20px] text-center backdrop-blur-[10px]">
-                            <p class="mb-5 text-text-primary font-semibold">Punya kebutuhan spesifik?</p>
-                            <BaseButton variant="primary" size="md" @click="isConsultationOpen = true"
-                                class="w-full justify-center">
-                                Diskusi Sekarang
-                            </BaseButton>
+                            class="mt-10 p-8 bg-gradient-to-br from-accent-primary/[0.08] to-transparent border border-accent-primary/20 hover:border-accent-primary/50 transition-all duration-500 rounded-[32px] text-left backdrop-blur-xl relative overflow-hidden group shadow-lg">
+                            <!-- Shine effect -->
+                            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-accent-primary/20 rounded-full blur-[50px] group-hover:bg-accent-primary/40 transition-all duration-500"></div>
+                            
+                            <div class="relative z-10">
+                                <h4 class="mb-3 text-text-primary font-bold text-2xl tracking-tight">Kebutuhan spesifik?</h4>
+                                <p class="text-[0.9rem] text-text-secondary mb-8 leading-relaxed">Jangan ragu menghubungi saya untuk merancang paket atau solusi khusus di luar FAQ.</p>
+                                <BaseButton variant="primary" size="md" @click="isConsultationOpen = true"
+                                    class="w-full justify-center shadow-[0_0_20px_rgba(59,130,246,0.25)] group-hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-shadow">
+                                    Mulai Diskusi
+                                </BaseButton>
+                            </div>
                         </div>
                     </div>
 
@@ -97,25 +105,32 @@
         </section>
 
         <!-- Final CTA -->
-        <section class="py-[100px]">
-            <div class="container">
+        <section class="py-[120px] px-4 md:px-0">
+            <div class="container max-w-[1000px] mx-auto">
                 <div
-                    class="bg-white/[0.03] border border-border-color rounded-[40px] p-20 text-center relative overflow-hidden backdrop-blur-[20px]">
-                    <h2 class="text-[clamp(2rem,5vw,3rem)] font-extrabold mb-5 tracking-[-0.02em] text-text-primary">
-                        Ready to Start Your Next Big Project?
-                    </h2>
-                    <p class="text-[clamp(1.1rem,2vw,1.2rem)] text-text-secondary max-w-[600px] mx-auto mb-10">
-                        Mari bangun sistem digital yang akan membawa bisnis Anda ke level berikutnya.
-                    </p>
-                    <div class="flex justify-center gap-5 flex-wrap">
-                        <BaseButton variant="primary" size="lg" @click="isConsultationOpen = true"
-                            class="inline-flex items-center gap-2">
-                            Book Free Consultation
-                            <ArrowRightIcon :size="18" />
-                        </BaseButton>
-                        <BaseButton variant="secondary" size="lg" @click="$router.push('/projects')">
-                            View Portfolio
-                        </BaseButton>
+                    class="bg-gradient-to-b from-accent-primary/[0.1] to-transparent border border-accent-primary/30 rounded-[48px] p-10 md:p-24 text-center relative overflow-hidden backdrop-blur-3xl shadow-[0_0_80px_rgba(59,130,246,0.15)] group hover:border-accent-primary/50 transition-colors duration-700">
+                    
+                    <!-- Core Glow -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-primary/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-accent-primary/20 transition-all duration-1000"></div>
+
+                    <div class="relative z-10">
+                        <h2 class="text-[clamp(2.5rem,5vw,4rem)] font-black mb-6 tracking-tight text-white leading-[1.1]">
+                            Siap Elevasi Bisnis <br class="hidden md:block" />ke Level Berikutnya?
+                        </h2>
+                        <p class="text-[clamp(1rem,1.5vw,1.15rem)] text-text-secondary max-w-[600px] mx-auto mb-12 leading-relaxed">
+                            Ayo berhenti membuang waktu dengan solusi template generik. Mari rancang dan bangun arsitektur digital memukau yang benar-benar mewakili kualitas bisnis Anda.
+                        </p>
+                        <div class="flex justify-center gap-4 flex-wrap">
+                            <BaseButton variant="primary" size="lg" @click="isConsultationOpen = true"
+                                class="inline-flex items-center gap-2 group/btn shadow-[0_0_40px_rgba(59,130,246,0.4)]">
+                                Jadwalkan Konsultasi
+                                <ArrowRightIcon :size="18" class="group-hover/btn:translate-x-1 transition-transform" />
+                            </BaseButton>
+                            <BaseButton variant="secondary" size="lg" @click="$router.push('/projects')"
+                                class="inline-flex items-center">
+                                Jelajahi Portfolio
+                            </BaseButton>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,7 +147,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { commonServicesFaq } from '../../data/faqs/servicesFaq';
 import SectionHeader from '../../components/ui/SectionHeader.vue';
-import BentoServices from '../../components/sections/home/BentoServices.vue';
 import { BaseButton } from "@kangjessy/ui";
 import WhatsAppModal from '../../components/modals/WhatsAppModal.vue';
 import PricingSwitcher from '../../components/sections/PricingSwitcher.vue';

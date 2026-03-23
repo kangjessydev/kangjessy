@@ -122,8 +122,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
         <!-- WhatsApp Modal -->
         <WhatsAppModal :isOpen="isConsultationOpen"

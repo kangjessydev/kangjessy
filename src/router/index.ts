@@ -93,6 +93,16 @@ export const routes = [
       component: () => import('../views/public/RoadmapView.vue')
     },
     {
+      path: '/industries',
+      name: 'industries',
+      component: () => import('../views/public/IndustryList.vue')
+    },
+    {
+      path: '/industry/:slug',
+      name: 'industry-detail',
+      component: () => import('../views/public/IndustryDetail.vue')
+    },
+    {
       path: '/p/:id',
       name: 'proposal-view',
       component: () => import('../views/public/ProposalView.vue')

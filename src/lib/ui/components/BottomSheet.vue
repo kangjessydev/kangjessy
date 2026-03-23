@@ -26,10 +26,10 @@
         class="fixed z-[10001] bg-bg-secondary border-border-color shadow-[0_-20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 flex flex-col"
         :class="[
           sheetClass,
-          'bottom-0 left-0 right-0 border-t rounded-t-[32px]',
+          'bottom-0 left-0 right-0 border-t rounded-t-[32px] lg:border-t-0 lg:rounded-t-[32px]',
           {
-            'h-[75vh]': !localFullHeight,
-            'h-[97vh] border-t-0 rounded-t-none': localFullHeight,
+            'h-[75vh] lg:h-auto': !localFullHeight,
+            'h-[100dvh] border-t-0 rounded-t-none lg:border-[1px] lg:rounded-[32px]': localFullHeight,
           },
           'lg:inset-auto lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-auto lg:max-h-[85vh] lg:rounded-[32px] lg:border-[1px] lg:border-border-color lg:shadow-2xl !lg:transform',
           maxWidth === 'sm' ? 'lg:w-[384px]' : 
@@ -268,10 +268,12 @@ const handleTouchEnd = () => {
 watch(
   () => [props.modelValue, props.isOpen],
   ([newVal, newIsOpen]: boolean[]) => {
-    if (newVal || newIsOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+    if (typeof document !== "undefined") {
+      if (newVal || newIsOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
     }
   },
   { immediate: true },

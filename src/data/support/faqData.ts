@@ -2,76 +2,59 @@ export interface FAQItem {
     keywords: string[];
     question: string;
     answer: string;
-    category: 'service' | 'pricing' | 'process' | 'general' | 'follow_up';
-    nextSteps?: string[]; // Labels of quickActions to show after this answer
+    category: 'service' | 'pricing' | 'process' | 'general' | 'features' | 'maintenance' | 'addons';
+    nextSteps?: string[]; 
 }
 
 export const faqData: FAQItem[] = [
     {
         category: 'service',
-        keywords: ['buat', 'bikin', 'website', 'layanan', 'service', 'apa saja'],
-        question: 'Layanan apa saja yang ditawarkan?',
-        answer: 'Saya menawarkan layanan pembuatan website premium mulai dari Landing Page, Company Profile, hingga Web App (SaaS). Semua sudah termasuk optimasi SEO, desain modern, dan performa tinggi.',
-        nextSteps: ['💰 Cek Harga', '🚀 Alur Kerja']
+        keywords: ['paket', 'layanan', 'bikin', 'buat', 'website', 'apa saja', 'pilihan'],
+        question: 'Apa saja paket pembuatan website yang tersedia?',
+        answer: 'Kami memiliki 3 kategori paket utama yang disesuaikan dengan skala bisnis Anda:\n\n1. [**Starter Essential**](/#pricing)\nCocok untuk personal branding atau katalog situs web dasar. Termasuk desain framework standar dan optimasi performa dasar.\n\n2. [**Business Growth (Most Popular)**](/#pricing)\nDirancang khusus untuk konversi penjualan dan pertumbuhan bisnis. Termasuk desain UI/UX Custom Premium, strategi sales, dan Panel CMS untuk mengedit sendiri.\n\n3. [**Elite Enterprise (Scale Up)**](/#pricing)\nSistem digital skala besar dengan arsitektur server khusus, integrasi API sistem lain, dan Dashboard Admin Multi-Role.\n\nAnda dapat melihat detail lengkap mengenai fitur di halaman [Layanan Kami](/services).',
+        nextSteps: ['Detail Harga', 'Add-ons Tambahan']
     },
     {
         category: 'pricing',
-        keywords: ['harga', 'biaya', 'price', 'berapa', 'murah', 'biaya'],
-        question: 'Berapa biaya pembuatan website?',
-        answer: 'Untuk memberikan estimasi harga yang akurat, saya perlu tahu dulu nih tipe website seperti apa yang Anda butuhkan? Apakah Landing Page untuk jualan, Company Profile perusahaan, atau Toko Online (Ecommerce)?',
-        nextSteps: ['📄 Landing Page', '🏢 Company Profile', '🛒 Toko Online']
+        keywords: ['harga', 'biaya', 'berapa', 'price', 'budget', 'mahal', 'murah', 'diskon', 'promo'],
+        question: 'Berapa biaya pembuatan website untuk masing-masing paket?',
+        answer: 'Saat ini sedang ada penawaran khusus. Berikut adalah rincian biaya investasi awal:\n\n- [**Starter Essential:**](/#pricing) **Rp 1.500.000** (Diskon 40% dari harga normal ~~Rp 2.500.000~~)\n- [**Business Growth:**](/#pricing) **Rp 4.500.000** (Diskon 60% dari harga normal ~~Rp 11.250.000~~)\n- [**Elite Enterprise:**](/#pricing) **Rp 12.500.000** (Diskon 38% dari harga normal ~~Rp 20.000.000~~)\n\nAnda dapat menumpuk diskon tambahan dengan melakukan konsultasi sekarang, atau pelajari detail paketnya di [Halaman Layanan](/services).',
+        nextSteps: ['Paket Maintenance', 'Konsultasi Sekarang']
     },
     {
-        category: 'pricing',
-        keywords: ['landing page', 'jualan'],
-        question: 'Harga Landing Page',
-        answer: 'Untuk **Starter Landing Page**, biayanya mulai dari **Rp 1.5jt**. Ini sudah termasuk desain high-conversion, mobile friendly, dan integrasi WhatsApp. Cocok untuk validasi produk atau jualan single-product.',
-        nextSteps: ['🚀 Alur Kerja', '👨‍💻 Konsultasi WA']
+        category: 'maintenance',
+        keywords: ['maintenance', 'perawatan', 'update', 'berlangganan', 'rusak', 'error', 'bantu', 'bulanan'],
+        question: 'Apakah menyediakan layanan maintenance atau perawatan?',
+        answer: 'Tentu. Demi kelancaran jangka panjang, kami menyediakan layanan maintenance yang bisa Anda bayarkan secara mingguan, bulanan, atau sekali bayar (seumur hidup).\n\nBerikut daftar harga untuk skema berlangganan **bulanan**:\n- **Basic Care:** **Rp 800.000 / bulan** (Pembaruan keamanan inti, performa minor, pencadangan data bulanan)\n- **Power Support:** **Rp 1.750.000 / bulan** (Audit keamanan mingguan, optimasi lanjutan, pembaruan konten prioritas)\n- **Technical Partner:** **Rp 4.500.000 / bulan** (Konsultasi teknis 24/7, manajemen infrastruktur, dukungan skalabilitas data tinggi)\n\nAnda bisa mengecek paket mingguan dan satu kali bayar di halaman penawaran kami.',
+        nextSteps: ['Konsultasi Perawatan']
     },
     {
-        category: 'pricing',
-        keywords: ['company profile', 'perusahaan'],
-        question: 'Harga Company Profile',
-        answer: 'Untuk **Premium Company Profile**, biayanya mulai dari **Rp 3jt**. Fokusnya adalah branding eksklusif dan kredibilitas bisnis. Sudah termasuk Admin Panel untuk update konten secara mandiri.',
-        nextSteps: ['🚀 Alur Kerja', '👨‍💻 Konsultasi WA']
-    },
-    {
-        category: 'pricing',
-        keywords: ['toko online', 'ecommerce', 'shop'],
-        question: 'Harga Toko Online',
-        answer: 'Untuk **Ecommerce Ecosystem**, biayanya mulai dari **Rp 7.5jt**. Lengkap dengan sistem katalog produk, manajemen stok, dan integrasi Payment Gateway (VA, E-Wallet otomatis).',
-        nextSteps: ['🚀 Alur Kerja', '👨‍💻 Konsultasi WA']
+        category: 'addons',
+        keywords: ['tambah halaman', 'fitur aja', 'addon', 'custom', 'nambah', 'integrasi', 'payment'],
+        question: 'Apakah bisa jika hanya ingin tambah halaman, fitur, atau payment gateway saja?',
+        answer: 'Sangat bisa. Kami menyediakan **Individual Services & Add-ons** bagi Anda yang ingin menambah fungsionalitas tanpa mengambil paket utama.\n\n**Pages & Layout:**\n- Standard Static Page: **Rp 350.000**\n- Dynamic Feature Page: **Rp 750.000**\n- High-Conversion Landing: **Rp 1.250.000**\n\n**Features & Optimization:**\n- Advanced Animation (GSAP): **Rp 1.000.000**\n- Payment Gateway Setup: **Rp 1.500.000**\n- Advanced SEO Engine: **Rp 2.000.000**',
+        nextSteps: ['Konsultasi Add-on']
     },
     {
         category: 'process',
-        keywords: ['lama', 'durasi', 'berapa hari', 'berapa lama', 'waktu'],
-        question: 'Berapa lama proses pengerjaannya?',
-        answer: 'Untuk Landing Page standar biasanya 3-7 hari. Untuk Company Profile atau Web App yang lebih kompleks bisa memakan waktu 2-4 minggu.',
-        nextSteps: ['🚀 Alur Kerja', '👨‍💻 Konsultasi WA']
-    },
-    {
-        category: 'general',
-        keywords: ['anda', 'siapa', 'kang jessy', 'domisili', 'lokasi'],
-        question: 'Siapa itu Kang Jessy?',
-        answer: 'Saya adalah seorang Fullstack Developer & Technical Architect yang berfokus pada pembangunan solusi digital yang tidak hanya estetik, tapi juga cerdas dan impactful.',
-        nextSteps: ['🌐 Layanan', '🚀 Alur Kerja']
+        keywords: ['lama', 'waktu', 'durasi', 'berapa hari', 'berapa lama', 'kapan jadi'],
+        question: 'Berapa estimasi waktu pengerjaan project?',
+        answer: 'Waktu penyelesaian bervariasi berdasarkan paket yang Anda pilih:\n\n- **Starter Essential:** Sangat cepat, 3-7 hari kerja (tergantung kesiapan materi).\n- **Business Growth:** 2-4 minggu, karena memerlukan riset konversi dan pembuatan UI/UX khusus.\n- **Elite Enterprise:** Mulai dari 4 minggu hingga beberapa bulan, sangat bergantung pada cakupan arsitektur sistem dan detail teknis (Sprint planning).',
+        nextSteps: ['Alur Pengerjaan']
     },
     {
         category: 'process',
-        keywords: ['alur', 'cara kerja', 'workflow', 'bagaimana', 'mulai'],
-        question: 'Bagaimana alur kerja pembuatan proyek di sini?',
-        answer: 'Alurnya simpel: 1. Konsultasi (WA) -> 2. Penawaran & Kontrak -> 3. Riset & Desain -> 4. Pengembangan -> 5. Review -> 6. Launching.',
-        nextSteps: ['👨‍💻 Konsultasi WA', '🌐 Layanan']
+        keywords: ['alur', 'cara kerja', 'workflow', 'bagaimana', 'mulai', 'tahapan'],
+        question: 'Bagaimana proses kerjasama dan alur pengerjaannya?',
+        answer: 'Proses kerja kami sistematis untuk memastikan hasil terbaik:\n\n1. Audit & Diskusi Kebutuhan Bisnis\n2. Penawaran Detail & Persetujuan Kontrak\n3. Perancangan Mockup Visual (Wireframing/Design Phase)\n4. Fase Development (Pemrograman Code)\n5. Internal Testing & Revisi\n6. Handover, Pelatihan Penggunaan (Bila ada CMS), & Go Live.',
+        nextSteps: ['Konsultasi Sekarang']
     }
 ];
 
 export const quickActions = [
-    { label: '💰 Cek Harga', icon: 'DollarSign', trigger: 'berapa harga pembuatan website' },
-    { label: '🚀 Alur Kerja', icon: 'Workflow', trigger: 'bagaimana alur kerja' },
-    { label: '🌐 Layanan', icon: 'Globe', trigger: 'layanan apa saja' },
-    { label: '👨‍💻 Siapa KangJessy?', icon: 'User', trigger: 'siapa itu kang jessy' },
-    { label: '📄 Landing Page', icon: 'Zap', trigger: 'harga landing page' },
-    { label: '🏢 Company Profile', icon: 'Layout', trigger: 'harga company profile' },
-    { label: '🛒 Toko Online', icon: 'ShoppingCart', trigger: 'harga toko online' },
-    { label: '👨‍💻 Konsultasi WA', icon: 'MessageCircle', trigger: 'hubungi via whatsapp' }
+    { label: 'Pilihan Paket Layanan', icon: 'Box', trigger: 'apa saja paket pembuatan website yang tersedia' },
+    { label: 'Opsi Perawatan (Maintenance)', icon: 'Settings', trigger: 'apakah menyediakan layanan maintenance atau perawatan' },
+    { label: 'Penambahan Fitur (Add-ons)', icon: 'PlusCircle', trigger: 'apakah bisa jika hanya ingin tambah halaman, fitur, atau payment gateway saja' },
+    { label: 'Estimasi Waktu Pengerjaan', icon: 'Clock', trigger: 'berapa estimasi waktu pengerjaan project' },
+    { label: 'Mulai Konsultasi (WhatsApp)', icon: 'MessageSquare', trigger: 'hubungi staf terkait via whatsapp untuk konsultasi langsung' }
 ];

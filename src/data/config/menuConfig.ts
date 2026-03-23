@@ -4,7 +4,6 @@ import {
     Briefcase,
     BookOpen,
     FileText,
-    Users,
     Calculator,
     Send,
     Info,
@@ -94,6 +93,7 @@ export const menuItems: MenuItem[] = [
         ]
     },
     */
+    { text: 'Industries', url: '/industries', icon: Rocket },
     { text: 'Projects', url: '/projects', icon: Briefcase },
     {
         text: 'The Blueprint',
@@ -149,6 +149,7 @@ export const menuItems: MenuItem[] = [
 export const mobileNavItems = [
     { text: 'Services', url: '/services', icon: Monitor },
     { text: 'Tools', url: 'https://kangjessy-tools.vercel.app', icon: Zap },
+    { text: 'Industries', url: '/industries', icon: Rocket },
     { text: 'Portfolio', url: '/projects', icon: Briefcase },
     // { text: 'Store', url: '/store', icon: ShoppingCart },
     { text: 'Blog', url: '/blog', icon: BookOpen },
@@ -172,6 +173,7 @@ export const mobileMenuGroups: {
         title: 'Daily Business',
         items: [
             { text: 'Services', url: '/services', icon: Monitor },
+            { text: 'Industries', url: '/industries', icon: Rocket },
             { text: 'Portfolio', url: '/projects', icon: Briefcase },
             // { text: 'Store', url: '/store', icon: ShoppingCart },
             { text: 'Blog', url: '/blog', icon: BookOpen },

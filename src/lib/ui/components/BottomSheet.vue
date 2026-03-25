@@ -10,7 +10,7 @@
       <div
         v-if="modelValue || isOpen"
         @click="handleBackdropClick"
-        class="fixed inset-0 bg-black/80 backdrop-blur-md z-[10000]"
+        class="fixed inset-0 bg-black/80 backdrop-blur-md z-10000"
         :class="backdropClass"
       ></div>
     </Transition>
@@ -23,15 +23,15 @@
         @touchstart="handleTouchStart"
         @touchmove="handleTouchMove"
         @touchend="handleTouchEnd"
-        class="fixed z-[10001] bg-bg-secondary border-border-color shadow-[0_-20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 flex flex-col"
+        class="fixed z-10001 bg-bg-secondary border-border-color shadow-[0_-20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 flex flex-col"
         :class="[
           sheetClass,
           'bottom-0 left-0 right-0 border-t rounded-t-[32px] lg:border-t-0 lg:rounded-t-[32px]',
           {
             'h-[75vh] lg:h-auto': !localFullHeight,
-            'h-[100dvh] border-t-0 rounded-t-none lg:border-[1px] lg:rounded-[32px]': localFullHeight,
+            'h-dvh border-t-0 rounded-t-none lg:border lg:rounded-[32px]': localFullHeight,
           },
-          'lg:inset-auto lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-auto lg:max-h-[85vh] lg:rounded-[32px] lg:border-[1px] lg:border-border-color lg:shadow-2xl !lg:transform',
+          'lg:inset-auto lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-auto lg:max-h-[85vh] lg:rounded-[32px] lg:border lg:border-border-color lg:shadow-2xl !lg:transform',
           maxWidth === 'sm' ? 'lg:w-[384px]' : 
           maxWidth === 'md' ? 'lg:w-[448px]' :
           maxWidth === 'lg' ? 'lg:w-[512px]' :
@@ -151,7 +151,6 @@ const handleRef = ref<HTMLElement | null>(null);
 
 const localFullHeight = ref(props.fullHeight);
 const touchStartY = ref(0);
-const touchCurrentY = ref(0);
 const isDragging = ref(false);
 const startedOnHandle = ref(false);
 
@@ -208,57 +207,57 @@ const handleTouchStart = (e: TouchEvent) => {
   if (!props.swipeToClose) return;
   const touch = e.touches[0];
   if (touch) {
-    touchStartY.value = touch.clientY;
-    isDragging.value = true;
-    startedOnHandle.value =
-      handleRef.value?.contains(e.target as Node) || false;
+    // 🔥 PERATURAN KETAT: Hanya izinkan drag jika menyentuh Handle atau Header area
+    const isHandle = handleRef.value?.contains(e.target as Node);
+    const isHeader = (e.target as HTMLElement).closest('.px-6.py-4.border-b');
+    
+    if (isHandle || isHeader) {
+      touchStartY.value = touch.clientY;
+      isDragging.value = true;
+      startedOnHandle.value = true; // Dragging strictly from handle/header
+    } else {
+      // Jika menyentuh area konten, biarkan scroll browser bekerja normal
+      isDragging.value = false;
+      startedOnHandle.value = false;
+    }
   }
 };
 
 const handleTouchMove = (e: TouchEvent) => {
-  if (!props.swipeToClose || !isDragging.value || !sheetRef.value) return;
+  if (!props.swipeToClose || !isDragging.value || !sheetRef.value || !startedOnHandle.value) return;
+  
   const touch = e.touches[0];
   if (!touch) return;
-  touchCurrentY.value = touch.clientY;
 
-  const deltaY = touchCurrentY.value - (touchStartY.value || 0);
-  const isScrollingUp = deltaY < 0;
-  const isPullingDown = deltaY > 0;
+  const deltaY = touch.clientY - (touchStartY.value || 0);
 
-  if (startedOnHandle.value && isScrollingUp && !localFullHeight.value) {
-    if (Math.abs(deltaY) > 5) {
-      e.preventDefault();
-      sheetRef.value.style.transform = `translateY(${deltaY}px)`;
-      sheetRef.value.style.transition = "none";
-    }
-    return;
-  }
-
-  const scrollTop = contentRef.value?.scrollTop || 0;
-  if (isPullingDown && (scrollTop <= 0 || startedOnHandle.value)) {
-    e.preventDefault();
+  // Jika kita menarik via Handle/Header, kita izinkan tarik modal kemanapun (tutup atau full height)
+  if (Math.abs(deltaY) > 0) {
+    e.preventDefault(); // Mencegah scrolling browser karena kita sedang menarik modal
     sheetRef.value.style.transform = `translateY(${deltaY}px)`;
     sheetRef.value.style.transition = "none";
   }
 };
 
-const handleTouchEnd = () => {
-  if (!props.swipeToClose || !isDragging.value) return;
-  const deltaY = touchCurrentY.value - touchStartY.value;
+const handleTouchEnd = (e: TouchEvent) => {
+  if (!props.swipeToClose || !isDragging.value || !startedOnHandle.value) return;
+  
+  const touch = e.changedTouches[0];
+  if (!touch) return;
+  
+  const deltaY = touch.clientY - touchStartY.value;
 
-  if (startedOnHandle.value && deltaY < -80 && !localFullHeight.value) {
+  // Logika tutup atau buka full height (HANYA jika start-nya legal dari handle/header)
+  if (deltaY < -100 && !localFullHeight.value) {
     localFullHeight.value = true;
-  } else if (deltaY > 120) {
-    const scrollTop = contentRef.value?.scrollTop || 0;
-    if (scrollTop <= 0 || startedOnHandle.value) {
-      notifyClose();
-    }
+  } else if (deltaY > 100) {
+    notifyClose();
   }
 
+  // Animasi reset posisi jika tidak jadi nutup
   if (sheetRef.value) {
     sheetRef.value.style.transform = "";
-    sheetRef.value.style.transition =
-      "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+    sheetRef.value.style.transition = "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
   }
 
   isDragging.value = false;

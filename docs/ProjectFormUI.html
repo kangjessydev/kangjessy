@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary:#4f46e5; --slate-950:#0f172a; }
+    * { box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#f8fafc; padding:24px; color:var(--slate-950); }
+    .card { background:white; border-radius:12px; padding:20px; border:1px solid #e2e8f0; margin-bottom:16px; }
+    .label-group { font-size:10px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:12px; border-bottom:1px solid #f1f5f9; padding-bottom:6px; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+    label { display:block; font-size:10px; font-weight:700; color:#475569; margin-bottom:4px; }
+    input, select, textarea { width:100%; padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; font-size:13px; margin-bottom:10px; background:#fcfdfe; }
+    input:focus, select:focus { outline:none; border-color:var(--primary); }
+    .btn { background:var(--primary); color:white; padding:15px; border-radius:10px; border:none; font-weight:800; width:100%; cursor:pointer; }
+    .btn:hover { background:var(--slate-950); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="label-group">Informasi Client</div>
+    <div class="grid-2">
+        <div><label>Nama Client *</label><input id="l-name"></div>
+        <div><label>WhatsApp *</label><input id="l-phone" placeholder="081..."></div>
+    </div>
+    <div class="grid-2">
+        <div><label>Email</label><input id="l-email"></div>
+        <div><label>Brand / Perusahaan</label><input id="l-company"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label-group">Detail Project</div>
+    <div class="grid-3">
+        <div><label>Pilih Paket</label><select id="l-paket"></select></div>
+        <div><label>Tipe Inquiry</label><select id="l-type"></select></div>
+        <div><label>Status Lead</label><select id="l-status"></select></div>
+    </div>
+    <div class="grid-2">
+        <div><label>Nama Proyek</label><input id="l-project_name"></div>
+        <div><label>Budget (Rp)</label><input type="number" id="l-budget"></div>
+    </div>
+    <div class="grid-3">
+        <div><label>Visual Style</label><select id="l-visual"></select></div>
+        <div><label>Timeline</label><select id="l-timeline"></select></div>
+        <div><label>Domain</label><input id="l-domain"></div>
+    </div>
+    <label>Fitur / Kebutuhan</label><input id="l-features">
+  </div>
+  <div class="card">
+    <div class="label-group">Brief & Catatan</div>
+    <label>Brief Project *</label><textarea id="l-brief" rows="2"></textarea>
+    <div class="grid-2">
+        <div><label>Referal / Link</label><input id="l-ref"></div>
+        <div><label>Info Promo / Voucher</label><input id="l-info"></div>
+    </div>
+  </div>
+  <button class="btn" onclick="submit()">💾 SIMPAN PROYEK BARU</button>
+  <script>
+    google.script.run.withSuccessHandler(cfg => {
+        const fill = (id, arr) => { 
+            const s = document.getElementById(id); arr.forEach(v => s.add(new Option(v, v))); 
+        };
+        fill('l-status', cfg.status); fill('l-type', cfg.tipe);
+        fill('l-paket', cfg.paket); fill('l-visual', cfg.visual);
+        fill('l-timeline', cfg.timeline);
+    }).getAllConfigs();
+
+    function submit() {
+      const d = {
+        name: document.getElementById('l-name').value, phone: document.getElementById('l-phone').value,
+        email: document.getElementById('l-email').value, company: document.getElementById('l-company').value,
+        project_type: document.getElementById('l-paket').value, type: document.getElementById('l-type').value,
+        status: document.getElementById('l-status').value, budget: document.getElementById('l-budget').value,
+        project_name: document.getElementById('l-project_name').value, visual_style: document.getElementById('l-visual').value,
+        timeline: document.getElementById('l-timeline').value, domain: document.getElementById('l-domain').value,
+        features: document.getElementById('l-features').value, brief: document.getElementById('l-brief').value,
+        ref_link: document.getElementById('l-ref').value, info_promo: document.getElementById('l-info').value
+      };
+      if(!d.name || !d.phone || !d.brief) return alert('Nama, WA, Brief wajib isi!');
+      google.script.run.withSuccessHandler(() => google.script.host.close()).submitLeadFromDashboard(d);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
+    .page-transition { animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  </style>
+</head>
+<body class="text-gray-900">
+
+  <div id="loader" class="loader">
+    <div class="flex flex-col items-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 mb-4"></div>
+      <p class="font-bold text-blue-900">Sedang Sinkronisasi...</p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="bg-blue-950 text-white p-4 shadow-xl">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="bg-blue-600 p-2 rounded-lg font-black italic">KJ</div>
+        <h1 class="text-lg font-extrabold tracking-tight">CRM COMMAND CENTER</h1>
+      </div>
+      <div class="flex items-center gap-6 font-semibold text-sm">
+        <button onclick="showPage('dashboard')" class="hover:text-blue-400">📊 Dashboard</button>
+        <button onclick="showPage('leads')" class="hover:text-blue-400">📂 Data Leads</button>
+        <button onclick="openModal()" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-xl shadow-lg">+ Input Project</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mx-auto p-8">
+    
+    <!-- PAGE 1: DASHBOARD -->
+    <div id="page-dashboard" class="page-transition">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Leads</p><h2 id="st-leads" class="text-3xl font-black">0</h2></div>
+        <div class="bg-green-50 p-6 rounded-2xl shadow-sm border border-green-100"><p class="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">Won Rate (Deal)</p><h2 id="st-won" class="text-3xl font-black text-green-700">0</h2></div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Cash In</p><h2 id="st-income" class="text-3xl font-black">Rp 0</h2></div>
+        <div class="bg-red-50 p-6 rounded-2xl shadow-sm border border-red-100"><p class="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">Piutang Klien Deal</p><h2 id="st-sisa" class="text-3xl font-black text-red-700">Rp 0</h2></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+          <h3 class="font-black text-gray-700 mb-6 flex justify-between">Pipeline Funnel 🎯</h3>
+          <canvas id="chartStatus" height="200"></canvas>
+        </div>
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+          <h3 class="font-black text-gray-700 mb-6">Smart Insights 💡</h3>
+          <div class="space-y-4">
+             <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100"><p class="text-xs font-bold text-blue-600 mb-1">TIPS #1</p><p class="text-sm font-medium">Klien Deal hari ini? Jangan lupa catat Pembayaran DP di Tab Log Pembayaran agar Piutang terupdate.</p></div>
+             <div class="p-4 bg-orange-50 rounded-2xl border border-orange-100"><p class="text-xs font-bold text-orange-600 mb-1">TIPS #2</p><p class="text-sm font-medium">Ubah Status ke <b>Won ✅</b> untuk memicu kalkulasi tagihan sisa otomatis di sistem.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: TABLE LEADS -->
+    <div id="page-leads" class="hidden page-transition">
+      <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-400 font-bold text-left uppercase text-xs tracking-widest">
+              <th class="p-6">Tgl Masuk</th><th class="p-6">Client / Brand</th><th class="p-6">Status </th><th class="p-6">WhatsApp</th><th class="p-6">Budget</th><th class="p-6">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="leads-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: ADD LEAD -->
+  <div id="modal-lead" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-filter blur-sm">
+    <div class="bg-white rounded-3xl w-full max-w-4xl p-10 max-h-screen overflow-y-auto page-transition shadow-2xl">
+      <div class="flex justify-between items-center mb-10">
+        <h2 class="text-2xl font-black text-blue-950 italic">INPUT PROJECT BARU</h2>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 font-bold">TUTUP X</button>
+      </div>
+
+      <form onsubmit="handleLeadSubmit(event)" id="f-lead" class="space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <h4 class="text-xs font-black text-blue-600 uppercase tracking-widest">A. Identitas Client</h4>
+            <input name="name" placeholder="Nama Client*" required class="w-full bg-gray-50 p-4 rounded-2xl border-none focus:ring-2 focus:ring-blue-500">
+            <input name="phone" placeholder="WhatsApp (081...)*" required class="w-full bg-gray-50 p-4 rounded-2xl border-none">
+            <div class="grid grid-cols-2 gap-4"><input name="email" placeholder="Email" class="w-full bg-gray-50 p-4 rounded-xl border-none"><input name="company" placeholder="Perusahaan" class="w-full bg-gray-50 p-4 rounded-xl border-none"></div>
+          </div>
+          <div class="space-y-4">
+            <h4 class="text-xs font-black text-blue-600 uppercase tracking-widest">B. Project Detail</h4>
+            <div class="grid grid-cols-2 gap-4">
+              <select name="paket" id="sel-paket" class="w-full bg-gray-50 p-4 rounded-xl border-none"><option value="">Pilih Paket...</option></select>
+              <select name="status" id="sel-status" class="w-full bg-gray-50 p-4 rounded-xl border-none"></select>
+            </div>
+            <input name="proyek" placeholder="Nama Proyek (Misal: Web XYZ)" class="w-full bg-gray-50 p-4 rounded-xl border-none">
+            <div class="grid grid-cols-2 gap-4">
+               <input name="budget" type="number" placeholder="Budget (Rp)" class="w-full bg-gray-50 p-4 rounded-xl border-none">
+               <select name="visual" id="sel-visual" class="w-full bg-gray-50 p-4 rounded-xl border-none"></select>
+            </div>
+            <select name="timeline" id="sel-timeline" class="w-full bg-gray-50 p-4 rounded-xl border-none"></select>
+          </div>
+        </div>
+        
+        <div class="space-y-4">
+          <h4 class="text-xs font-black text-blue-600 uppercase tracking-widest">C. Kebutuhan & Brief</h4>
+          <input name="fitur" placeholder="Fitur Utama (SEO, E-commerce, Chat WA, dll)" class="w-full bg-gray-50 p-4 rounded-2xl border-none">
+          <textarea name="brief" placeholder="Project Brief & Deskripsi Detail*" required class="w-full bg-gray-50 p-4 rounded-2xl border-none h-24"></textarea>
+          <textarea name="catatan" placeholder="Catatan Internal" class="w-full bg-gray-100 p-4 rounded-2xl border-none h-16"></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black text-lg hover:bg-blue-700 transition shadow-lg">SIMPAN PROJECT SEKARANG</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let globalConfig = null;
+
+    function toggleLoader(s) { document.getElementById('loader').style.display = s?'flex':'none'; }
+    function openModal() { document.getElementById('modal-lead').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('modal-lead').classList.add('hidden'); }
+
+    function showPage(id) {
+       document.getElementById('page-dashboard').classList.add('hidden');
+       document.getElementById('page-leads').classList.add('hidden');
+       document.getElementById('page-' + id).classList.remove('hidden');
+       if(id === 'dashboard') loadStats();
+       if(id === 'leads') loadLeads();
+    }
+
+    function syncConfigs() {
+      google.script.run.withSuccessHandler(cfg => {
+        globalConfig = cfg;
+        fillSelect('sel-status', cfg.status);
+        fillSelect('sel-paket', cfg.paket);
+        fillSelect('sel-visual', cfg.visual);
+        fillSelect('sel-timeline', cfg.timeline);
+      }).getAllConfigs();
+    }
+
+    function fillSelect(id, arr) {
+      const s = document.getElementById(id);
+      s.innerHTML = '';
+      arr.forEach(v => { s.add(new Option(v, v)); });
+    }
+
+    function loadStats() {
+      toggleLoader(true);
+      google.script.run.withSuccessHandler(s => {
+        document.getElementById('st-leads').innerText = s.totalLeads;
+        document.getElementById('st-won').innerText = s.wonLeads;
+        document.getElementById('st-income').innerText = 'Rp ' + s.totalIncome.toLocaleString();
+        document.getElementById('st-sisa').innerText = 'Rp ' + s.totalReceivables.toLocaleString();
+        renderChart(s.pipelineData);
+        toggleLoader(false);
+      }).getDashboardStats();
+    }
+
+    function loadLeads() {
+       toggleLoader(true);
+       google.script.run.withSuccessHandler(leads => {
+         const tb = document.getElementById('leads-table');
+         tb.innerHTML = '';
+         leads.forEach(l => {
+           tb.innerHTML += `<tr class="border-b border-gray-50 hover:bg-blue-50 transition">
+              <td class="p-6 text-gray-400 font-medium">${l.timestamp}</td>
+              <td class="p-6"><div class="font-black text-blue-950">${l.nama}</div><div class="text-xs text-gray-400">${l.id}</div></td>
+              <td class="p-6"><span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-black uppercase">${l.status}</span></td>
+              <td class="p-6 font-bold text-blue-600"><a href="https://wa.me/${l.wa}" target="_blank">📲 ${l.wa}</a></td>
+              <td class="p-6 font-black">Rp ${l.budget.toLocaleString()}</td>
+              <td class="p-6"><button class="text-xs font-bold text-gray-400 hover:text-blue-600">DETAIL</button></td>
+           </tr>`;
+         });
+         toggleLoader(false);
+       }).getAllLeads();
+    }
+
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      toggleLoader(true);
+      const data = Object.fromEntries(new FormData(e.target));
+      google.script.run.withSuccessHandler(r => {
+        toggleLoader(false);
+        if(r.success) {
+           closeModal(); e.target.reset(); showPage('dashboard');
+        } else alert(r.error);
+      }).submitLead(data);
+    }
+
+    let myChart = null;
+    function renderChart(pData) {
+      const ctx = document.getElementById('chartStatus').getContext('2d');
+      if(myChart) myChart.destroy();
+      myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: pData.map(d => d.label),
+          datasets: [{ label: 'Jumlah Lead', data: pData.map(d => d.count), backgroundColor: '#4f46e5', borderRadius: 10 }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+      });
+    }
+
+    window.onload = () => { syncConfigs(); loadStats(); };
+  </script>
+</body>
+</html>

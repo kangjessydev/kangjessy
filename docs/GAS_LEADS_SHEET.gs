@@ -1,293 +1,165 @@
 /**
  * ============================================================
- *  KANGJESSY LEADS COLLECTOR — Google Apps Script
- *  Version: 2.0 (Compatible with OrderCheckout + ProjectOrder + ContactForm)
- *  Last Updated: 2026-03-23
- * ============================================================
- *
- *  CARA INSTALL:
- *  1. Buka https://script.google.com
- *  2. Buat project baru → paste seluruh kode ini
- *  3. Simpan (Ctrl+S)
- *  4. Klik tombol RUN pada fungsi `setupSheet` SATU KALI untuk buat kolom header
- *  5. Klik Deploy → New Deployment
- *     - Type: Web App
- *     - Execute as: Me
- *     - Who has access: Anyone
- *  6. Copy URL deployment → paste ke .env sebagai VITE_GAS_WEBHOOK_URL
+ *  KANGJESSY CRM STRUCTURED (Ironclad Loop Guard)
+ *  Version: 19.2 (Zero Loop Guarantee)
+ *  Last Updated: 2026-03-24
  * ============================================================
  */
 
-// ── KONFIGURASI ──────────────────────────────────────────────
-const SHEET_NAME = "Leads";         // Nama sheet tab
-const LOG_SHEET  = "Error Logs";    // Sheet untuk log error
+const LEADS_SHEET_NAME       = "Leads";
+const TRANSACTIONS_SHEET_NAME = "Transactions";
+const SETTINGS_SHEET_NAME     = "Settings";
 
-// Kolom header yang akan dibuat otomatis (URUTAN PENTING)
-const COLUMNS = [
-  "Timestamp",        // A - Waktu masuk (server time)
-  "ID",               // B - Auto-generated ID dari frontend
-  "Nama",             // C - name
-  "Email",            // D - email
-  "WhatsApp",         // E - phone
-  "Perusahaan",       // F - company
-  "Status",           // G - status (New, Hot, dll)
-  "Tipe Inquiry",     // H - type (project_order / general_inquiry / proposal)
-  "Paket / Layanan",  // I - project_type (starter-essential, dll)
-  "Nama Proyek",      // J - project_name
-  "Budget (Rp)",      // K - budget (angka)
-  "Sumber",           // L - source (Direct Checkout, order_whatsapp, dll)
-  "Brief",            // M - brief
-  "Fitur Dipilih",    // N - features (array → joined string)
-  "Gaya Visual",      // O - visual_style
-  "Timeline",         // P - timeline
-  "Domain Impian",    // Q - dream_domain
-  "Link Referensi",   // R - ref_link
-  "Voucher",          // S - voucher
-  "Catatan",          // T - notes
-  "Created At",       // U - created_at (ISO timestamp dari frontend)
-];
+const COLUMN = {
+  TIMESTAMP: 1, ID: 2, NAMA: 3, EMAIL: 4, WA: 5, PERUSAHAAN: 6,
+  STATUS_LEAD: 7, TIPE_INQUIRY: 8, PAKET: 9, BUDGET: 10,
+  SUMBER: 11, BRIEF: 12, PROYEK: 13, VISUAL_STYLE: 14, TIMELINE: 15,
+  FITUR_PROYEK: 16, DOMAIN: 17, REFERAL_LINK: 18, INFO_PROMO: 19, CATATAN: 20,
+  INTERNAL_CREATED: 21
+};
 
-// ── ENTRY POINT: Terima POST dari website ───────────────────
-function doPost(e) {
-  try {
-    var rawBody = e.postData ? e.postData.contents : null;
-    if (!rawBody) {
-      return jsonResponse({ success: false, error: "Empty body" }, 400);
+const TRX_COLUMN = {
+  TANGGAL: 1, LEAD_ID: 2, NAMA: 3, TIPE_BAYAR: 4, JUMLAH: 5, METODE: 6, KETERANGAN: 7
+};
+
+// ── TRIGGER ──────────────────────────────────────────────────
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("🚀 CRM ULTIMATE")
+    .addItem("⚙️ Setup Sistem", "setupStructuredSystem")
+    .addItem("🔄 Sync Semua Dropdown", "syncAllSettings")
+    .addToUi();
+}
+
+function onEdit(event) {
+  var activeSheet = event.source.getActiveSheet();
+  var sheetName = activeSheet.getName();
+  var row = event.range.getRow();
+  var col = event.range.getColumn();
+  if (row < 2) return;
+
+  // 🛡️ GUARD UTAMA: Jika mengedit kolom sistem di sheet Leads, BERHENTI (Anti-Loop)
+  if (sheetName === LEADS_SHEET_NAME) {
+    if ([COLUMN.TIMESTAMP, COLUMN.ID, COLUMN.INTERNAL_CREATED].includes(col)) return;
+
+    // 1. Jika Input Nama Client
+    if (col === COLUMN.NAMA && event.value && !event.oldValue) {
+      if (!activeSheet.getRange(row, COLUMN.ID).getValue()) {
+        activeSheet.getRange(row, COLUMN.TIMESTAMP).setValue(new Date()).setNumberFormat("dd/mm/yyyy HH:mm");
+        activeSheet.getRange(row, COLUMN.ID).setValue("KJ-" + new Date().getTime());
+        activeSheet.getRange(row, COLUMN.INTERNAL_CREATED).setValue(new Date().toISOString());
+        activeSheet.getRange(row, 1, 1, 21).setBackground(row % 2 === 0 ? "#f8fafc" : "#ffffff");
+        activeSheet.getRange(row, COLUMN.BUDGET) .setNumberFormat('"Rp "#,##0');
+      }
     }
-
-    var data = JSON.parse(rawBody);
-    saveLead(data);
-
-    return jsonResponse({ success: true, message: "Lead saved!" });
-
-  } catch (err) {
-    logError("doPost", err.toString(), e ? (e.postData ? e.postData.contents : "no body") : "no event");
-    return jsonResponse({ success: false, error: err.toString() }, 500);
-  }
-}
-
-// ── ENTRY POINT: Terima GET (untuk test ping) ───────────────
-function doGet(e) {
-  return jsonResponse({ success: true, message: "KangJessy GAS Webhook is ALIVE 🟢", version: "2.0" });
-}
-
-// ── FUNGSI SIMPAN DATA ───────────────────────────────────────
-function saveLead(data) {
-  var ss    = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_NAME);
-
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-    setupHeaders(sheet);
-  }
-
-  // Pastikan header ada
-  if (sheet.getLastRow() === 0) {
-    setupHeaders(sheet);
-  }
-
-  // Bersihkan dan format features array
-  var featuresStr = "-";
-  if (data.features) {
-    if (Array.isArray(data.features)) {
-      // Array of strings atau array of objects
-      featuresStr = data.features.map(function(f) {
-        if (typeof f === "string") return f;
-        if (typeof f === "object") return f.name || f.text || JSON.stringify(f);
-        return String(f);
-      }).filter(Boolean).join(", ") || "-";
-    } else if (typeof data.features === "string") {
-      featuresStr = data.features;
+    
+    // 2. Jika Klik Kolom Fitur Proyek
+    if (col === COLUMN.FITUR_PROYEK) {
+      showFiturMultipleChoice();
     }
   }
-
-  // Format budget ke angka
-  var budget = 0;
-  if (data.budget) {
-    budget = typeof data.budget === "number"
-      ? data.budget
-      : parseInt(String(data.budget).replace(/[^0-9]/g, "")) || 0;
-  }
-
-  // Susun baris sesuai urutan COLUMNS
-  var row = [
-    new Date(),                                       // A: Timestamp (server)
-    data.id          || "lead-" + Date.now(),         // B: ID
-    data.name        || "-",                          // C: Nama
-    data.email       || "-",                          // D: Email
-    data.phone       || "-",                          // E: WhatsApp
-    data.company     || "-",                          // F: Perusahaan
-    data.status      || "New",                        // G: Status
-    data.type        || "project_order",              // H: Tipe Inquiry
-    data.project_type || "-",                         // I: Paket / Layanan
-    data.project_name || "-",                         // J: Nama Proyek
-    budget,                                           // K: Budget (Rp)
-    data.source      || "-",                          // L: Sumber
-    data.brief       || "-",                          // M: Brief
-    featuresStr,                                      // N: Fitur Dipilih
-    data.visual_style || "-",                         // O: Gaya Visual
-    data.timeline    || "-",                          // P: Timeline
-    data.dream_domain || "-",                         // Q: Domain Impian
-    data.ref_link    || "-",                          // R: Link Referensi
-    data.voucher     || "-",                          // S: Voucher
-    data.notes       || "-",                          // T: Catatan
-    data.created_at  || new Date().toISOString(),     // U: Created At
-  ];
-
-  sheet.appendRow(row);
-
-  // Auto-format kolom baru
-  var lastRow = sheet.getLastRow();
-  autoFormatRow(sheet, lastRow);
-
-  Logger.log("Lead saved: " + (data.name || "Unknown"));
 }
 
-// ── SETUP: Buat / Reset Header ───────────────────────────────
-function setupHeaders(sheet) {
-  var headerRange = sheet.getRange(1, 1, 1, COLUMNS.length);
-  headerRange.setValues([COLUMNS]);
-
-  // Style header
-  headerRange
-    .setBackground("#1a1a2e")
-    .setFontColor("#ffffff")
-    .setFontWeight("bold")
-    .setFontSize(10)
-    .setHorizontalAlignment("center")
-    .setVerticalAlignment("middle")
-    .setWrap(true);
-
-  sheet.setRowHeight(1, 40);
-
-  // Lebar kolom optimal
-  var colWidths = [130, 180, 150, 200, 130, 150, 80, 130, 160, 180, 120, 160, 250, 250, 120, 100, 150, 200, 100, 250, 160];
-  for (var i = 0; i < colWidths.length; i++) {
-    sheet.setColumnWidth(i + 1, colWidths[i]);
-  }
-
-  // Freeze header row
-  sheet.setFrozenRows(1);
-
-  Logger.log("Headers created on sheet: " + sheet.getName());
+// ── FITUR PICKER (MULTIPLE CHOICE) ──────────────────────────
+function showFiturMultipleChoice() {
+  var html = HtmlService.createHtmlOutput(
+    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">' +
+    '<div class="p-6 font-sans"><h3 class="font-bold mb-4 text-blue-900">Pilih Fitur Proyek:</h3>' +
+    '<div id="container" class="space-y-1 mb-6 text-sm overflow-y-auto max-h-48 border p-3 rounded-xl bg-gray-50 uppercase tracking-tighter"></div>' +
+    '<button onclick="save()" class="w-full bg-blue-800 text-white p-3 rounded-xl font-black shadow-xl">SIMPAN</button></div>' +
+    '<script>' +
+    ' google.script.run.withSuccessHandler(options => {' +
+    '   const c = document.getElementById("container");' +
+    '   options.forEach(opt => c.innerHTML += `<label class="flex items-center gap-3 p-1 hover:bg-white rounded cursor-pointer border-b border-gray-100 last:border-0"><input type="checkbox" class="w-4 h-4 text-blue-800" value="${opt}"> <span class="text-xs font-bold leading-none">${opt}</span></label>`);' +
+    ' }).getFiturOptionsFromSettings();' +
+    ' function save() {' +
+    '   const sel = Array.from(document.querySelectorAll("input:checked")).map(i => i.value).join(", ");' +
+    '   google.script.run.withSuccessHandler(() => google.script.host.close()).saveFiturToActiveCell(sel);' +
+    ' }' +
+    '</script>'
+  ).setWidth(350).setHeight(400);
+  SpreadsheetApp.getUi().showModalDialog(html, "📊 Multiple Choice Fitur");
 }
 
-// ── FORMAT: Style baris data ─────────────────────────────────
-function autoFormatRow(sheet, rowIndex) {
-  var range = sheet.getRange(rowIndex, 1, 1, COLUMNS.length);
-
-  // Alternating row colors
-  if (rowIndex % 2 === 0) {
-    range.setBackground("#f8f9fa");
-  } else {
-    range.setBackground("#ffffff");
-  }
-
-  range
-    .setFontSize(10)
-    .setVerticalAlignment("middle")
-    .setWrap(false);
-
-  // Kolom Budget (K) → format angka Rupiah
-  var budgetCell = sheet.getRange(rowIndex, 11); // Column K = index 11
-  budgetCell.setNumberFormat("\"Rp \"#,##0");
+function getFiturOptionsFromSettings() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SETTINGS_SHEET_NAME);
+  if (!ss || ss.getLastRow() < 2) return ["Opsi Belum Diatur"];
+  return ss.getRange(2, 8, ss.getLastRow() - 1, 1).getValues().flat().filter(function(v) { return v !== ""; });
 }
 
-// ── SETUP SHEET: Jalankan sekali untuk init ──────────────────
-/**
- * JALANKAN FUNGSI INI SATU KALI dari menu Apps Script Editor
- * untuk membuat sheet dengan header yang sudah diformat.
- */
-function setupSheet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-
-  // Buat/reset Leads Sheet
-  var leadsSheet = ss.getSheetByName(SHEET_NAME);
-  if (!leadsSheet) {
-    leadsSheet = ss.insertSheet(SHEET_NAME);
-    Logger.log("Created new sheet: " + SHEET_NAME);
-  } else {
-    // Clear existing jika sudah ada (HATI-HATI: ini hapus semua data!)
-    // leadsSheet.clearContents();
-    Logger.log("Sheet already exists: " + SHEET_NAME);
-  }
-
-  setupHeaders(leadsSheet);
-
-  // Buat Error Log sheet
-  var logSheet = ss.getSheetByName(LOG_SHEET);
-  if (!logSheet) {
-    logSheet = ss.insertSheet(LOG_SHEET);
-    logSheet.getRange(1, 1, 1, 4).setValues([["Timestamp", "Function", "Error", "Raw Body"]]);
-    logSheet.getRange(1, 1, 1, 4).setBackground("#b91c1c").setFontColor("#ffffff").setFontWeight("bold");
-    Logger.log("Created Error Log sheet");
-  }
-
-  // Tampilkan konfirmasi di UI
-  SpreadsheetApp.getUi().alert(
-    "✅ Setup Berhasil!\n\n" +
-    "Sheet \"" + SHEET_NAME + "\" sudah siap dengan " + COLUMNS.length + " kolom.\n\n" +
-    "Langkah selanjutnya:\n" +
-    "1. Deploy → New Deployment → Web App\n" +
-    "2. Execute as: Me\n" +
-    "3. Who has access: Anyone\n" +
-    "4. Copy URL → paste ke VITE_GAS_WEBHOOK_URL di .env"
-  );
+function saveFiturToActiveCell(val) {
+  SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getActiveCell().setValue(val);
 }
 
-// ── HELPER: Error Logger ─────────────────────────────────────
-function logError(fnName, errorMsg, rawBody) {
-  try {
-    var ss       = SpreadsheetApp.getActiveSpreadsheet();
-    var logSheet = ss.getSheetByName(LOG_SHEET);
-    if (!logSheet) {
-      logSheet = ss.insertSheet(LOG_SHEET);
-      logSheet.getRange(1, 1, 1, 4).setValues([["Timestamp", "Function", "Error", "Raw Body"]]);
-    }
-    logSheet.appendRow([new Date(), fnName, errorMsg, rawBody ? rawBody.substring(0, 500) : "-"]);
-  } catch (e) {
-    Logger.log("Error Logger failed: " + e.toString());
-  }
-}
+// ── SYNC SETTINGS ───────────────────────────────────────────
+function syncAllSettings() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetSettings = spreadsheet.getSheetByName(SETTINGS_SHEET_NAME);
+  var sheetLeads    = spreadsheet.getSheetByName(LEADS_SHEET_NAME);
+  var sheetTrx      = spreadsheet.getSheetByName(TRANSACTIONS_SHEET_NAME);
+  
+  if (!sheetSettings || !sheetLeads || !sheetTrx) return;
+  if (sheetSettings.getLastRow() < 2) return;
 
-// ── HELPER: JSON Response ────────────────────────────────────
-function jsonResponse(obj, statusCode) {
-  var output = ContentService.createTextOutput(JSON.stringify(obj));
-  output.setMimeType(ContentService.MimeType.JSON);
-  return output;
-}
+  var settingsData = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, 8).getValues();
+  var config = { status:[], tipe:[], paket:[], visual:[], timeline:[], metode:[], sumber:[] };
+  
+  settingsData.forEach(function(row) {
+    if(row[0]) config.status.push(row[0]); if(row[1]) config.tipe.push(row[1]); if(row[2]) config.paket.push(row[2]);
+    if(row[3]) config.visual.push(row[3]); if(row[4]) config.timeline.push(row[4]); if(row[5]) config.metode.push(row[5]);
+    if(row[6]) config.sumber.push(row[6]);
+  });
 
-// ── TEST MANUAL: Simulasi kiriman dari website ───────────────
-/**
- * Jalankan fungsi ini untuk test tanpa harus deploy dulu.
- * Cek Google Sheet setelah run apakah baris baru masuk.
- */
-function testSendLead() {
-  var fakePayload = {
-    id: "lead-" + Date.now(),
-    name: "Budi Santoso",
-    email: "budi@example.com",
-    phone: "081234567890",
-    company: "Toko Budi Digital",
-    status: "New",
-    type: "project_order",
-    project_type: "business-growth",
-    project_name: "Landing Page Toko Budi",
-    budget: 4500000,
-    source: "Direct Checkout",
-    brief: "Ingin bikin landing page untuk jualan produk skincare",
-    features: ["Payment Gateway", "Advanced SEO", "WhatsApp Chat Integration"],
-    visual_style: "Modern Dark",
-    timeline: "7-14 Hari",
-    dream_domain: "tokobudi.com",
-    ref_link: "https://example-ref.com",
-    voucher: "PROMO2026",
-    notes: "[Timeline: 7-14 Hari]\nSudah siap bayar DP",
-    created_at: new Date().toISOString()
+  const applyV = (sheet, col, list) => {
+    if (!list || list.length === 0) return;
+    var rule = SpreadsheetApp.newDataValidation().requireValueInList(list).setAllowInvalid(false).build();
+    sheet.getRange(2, col, sheet.getMaxRows() - 1, 1).setDataValidation(rule);
   };
 
-  saveLead(fakePayload);
+  applyV(sheetLeads, COLUMN.STATUS_LEAD, config.status);
+  applyV(sheetLeads, COLUMN.TIPE_INQUIRY, config.tipe);
+  applyV(sheetLeads, COLUMN.PAKET, config.paket);
+  applyV(sheetLeads, COLUMN.VISUAL_STYLE, config.visual);
+  applyV(sheetLeads, COLUMN.TIMELINE, config.timeline);
+  applyV(sheetLeads, COLUMN.SUMBER, config.sumber);
+  applyV(sheetTrx, TRX_COLUMN.METODE, config.metode);
+  applyV(sheetTrx, TRX_COLUMN.TIPE_BAYAR, ["DP", "Lunas", "Diskon"]);
 
-  SpreadsheetApp.getUi().alert("✅ Test berhasil! Cek sheet \"" + SHEET_NAME + "\" untuk melihat data dummy.");
-  Logger.log("Test lead inserted.");
+  syncLeadsDataToTransactions(sheetLeads, sheetTrx);
+}
+
+function syncLeadsDataToTransactions(sheetLeads, sheetTrx) {
+  if (sheetLeads.getLastRow() < 2) return;
+  var leadsData = sheetLeads.getRange(2, COLUMN.ID, sheetLeads.getLastRow() - 1, 2).getValues();
+  var clientList = leadsData.map(function(row) { return row[1] + " (" + row[0] + ")"; }).filter(function(v) { return v !== " ()"; });
+  
+  if (clientList.length > 0) {
+    var rule = SpreadsheetApp.newDataValidation().requireValueInList(clientList).setAllowInvalid(false).build();
+    sheetTrx.getRange(2, TRX_COLUMN.NAMA, sheetTrx.getMaxRows() - 1, 1).setDataValidation(rule);
+  }
+}
+
+// ── SETUP ────────────────────────────────────────────────────
+function setupStructuredSystem() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  
+  var sheetLeads = spreadsheet.getSheetByName(LEADS_SHEET_NAME) || spreadsheet.insertSheet(LEADS_SHEET_NAME);
+  var leadsHeaders = [['Timestamp','ID','Nama Client','Email','WhatsApp','Perusahaan','Status Lead','Tipe Inquiry','Paket','Budget','Sumber','Brief','Proyek','Visual Style','Timeline','Fitur Proyek','Domain','Referal Link','Info Promo','Catatan','Internal Created']];
+  sheetLeads.clear().getRange(1, 1, 1, 21).setValues(leadsHeaders).setBackground('#0f172a').setFontColor('#fff').setFontWeight('bold');
+  sheetLeads.setFrozenRows(1);
+  
+  var sheetTrx = spreadsheet.getSheetByName(TRANSACTIONS_SHEET_NAME) || spreadsheet.insertSheet(TRANSACTIONS_SHEET_NAME);
+  var trxHeaders = [['Tanggal','ID Lead','Nama Client (Dropdown)','Tipe Bayar','Jumlah','Metode Bayar','Keterangan']];
+  sheetTrx.clear().getRange(1, 1, 1, 7).setValues(trxHeaders).setBackground('#1e40af').setFontColor('#fff').setFontWeight('bold');
+  sheetTrx.setFrozenRows(1);
+  sheetTrx.getRange("A2:A").setNumberFormat("dd/mm/yyyy");
+  sheetTrx.getRange("E2:E").setNumberFormat('"Rp "#,##0');
+
+  var sheetSettings = spreadsheet.getSheetByName(SETTINGS_SHEET_NAME) || spreadsheet.insertSheet(SETTINGS_SHEET_NAME);
+  var settingsHeaders = [['Status Lead','Tipe Inquiry','Daftar Paket','Visual Style','Timeline','Metode Bayar','Sumber','Daftar Fitur']];
+  sheetSettings.clear().getRange(1, 1, 1, 8).setValues(settingsHeaders).setBackground('#4f46e5').setFontColor('#fff');
+  sheetSettings.getRange(2, 1, 3, 8).setValues([["New","Project","Starter","Modern","1 Minggu","BCA","IG","SEO"],["Won ✅","Proposal","Elite","Bold","2-4 Minggu","QRIS","Referral","CMS"],["Lost ❌","Inquiry","Custom","Minimalist","1 Bulan","Cash","Web","Shop"]]);
+  
+  syncAllSettings();
+  SpreadsheetApp.getUi().alert("✅ Sistem Structured 19.2 FIXED BERHASIL! Looping telah dimatikan selamanya.");
 }

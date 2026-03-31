@@ -821,13 +821,7 @@ const projectFAQs = [
   },
 ];
 
-const displayFAQs = computed(() => {
-  const raw = project.value?.faqs?.length ? project.value.faqs : projectFAQs;
-  return raw.map((f: any) => ({
-    q: f.q || f.question || "",
-    a: f.a || f.answer || "",
-  }));
-});
+
 
 const openLightbox = (url: string) => {
   selectedImage.value = url;

@@ -339,7 +339,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted, nextTick } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import SectionHeader from '../ui/SectionHeader.vue';
 import { BaseButton, BottomSheet } from "@kangjessy/ui";
 import { 

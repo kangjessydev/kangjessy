@@ -696,11 +696,10 @@ import {
   Palette,
   CreditCard,
   Printer,
-  X,
   ChevronDown,
   ArrowUpRight,
 } from "lucide-vue-next";
-import { notionService } from "../../services/notionService";
+
 import { BaseButton } from "@kangjessy/ui";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 import { useSEO } from "../../composables/useSEO";

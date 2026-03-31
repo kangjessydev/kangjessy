@@ -802,24 +802,7 @@ const setupScrollObserver = () => {
   observer.observe(deepDiveSection);
 };
 
-const projectFAQs = [
-  {
-    q: "Berapa lama waktu pengerjaan proyek serupa?",
-    a: "Tergantung kompleksitas fitur. Untuk website premium biasanya 2-4 minggu, sedangkan sistem custom bisa memakan waktu 1-3 bulan untuk hasil maksimal.",
-  },
-  {
-    q: "Apakah saya mendapatkan akses ke source code?",
-    a: "Ya, setelah proyek selesai dan serah terima dilakukan, source code sepenuhnya menjadi milik Anda (kecuali ada perjanjian khusus).",
-  },
-  {
-    q: "Bagaimana dengan dukungan setelah proyek rilis?",
-    a: "Saya memberikan garansi maintenance dan bug fixing gratis selama 30 hari pertama untuk memastikan transisi berjalan mulus.",
-  },
-  {
-    q: "Apakah platform ini bisa di-scale di masa depan?",
-    a: "Tentu. Saya membangun arsitektur kode yang modular dan terdokumentasi dengan baik agar mudah dikembangkan oleh tim developer lain nantinya.",
-  },
-];
+
 
 
 

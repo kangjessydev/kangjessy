@@ -87,7 +87,6 @@
 
         <!-- Content Area -->
         <div
-          ref="contentRef"
           class="overflow-y-auto overflow-x-hidden flex-1 custom-scrollbar pb-20 lg:pb-0"
           :class="contentClass"
         >
@@ -146,7 +145,7 @@ const sheetId = ref(`bottomsheet-${Math.random().toString(36).substr(2, 9)}`);
 const sheetManager = useBottomSheetManager(sheetId.value);
 
 const sheetRef = ref<HTMLElement | null>(null);
-const contentRef = ref<HTMLElement | null>(null);
+
 const handleRef = ref<HTMLElement | null>(null);
 
 const localFullHeight = ref(props.fullHeight);

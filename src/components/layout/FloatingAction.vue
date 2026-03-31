@@ -19,12 +19,11 @@
                             <MailIcon :size="18" />
                         </button>
                     </div>
-                    <div v-if="isExpanded" key="ai" class="flex items-center gap-3 group">
+                    <div v-if="isExpanded" key="smart-support" class="flex items-center gap-3 group">
                         <span
-                            class="bg-bg-secondary border border-border-color px-3 py-1.5 rounded-xl text-[0.8rem] font-semibold text-text-primary shadow-lg opacity-0 translate-x-3 transition-all group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap">Tanya
-                            AI (Beta)</span>
+                            class="bg-bg-secondary border border-border-color px-3 py-1.5 rounded-xl text-[0.8rem] font-semibold text-text-primary shadow-lg opacity-0 translate-x-3 transition-all group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap">Smart Support</span>
                         <button @click="emit('open-ai')"
-                            class="w-12 h-12 rounded-full bg-linear-to-tr from-[#0088cc] to-[#00aaff] text-white flex items-center justify-center shadow-xl hover:-translate-y-1 hover:scale-110 transition-all">
+                            class="w-12 h-12 rounded-full bg-linear-to-tr from-accent-primary to-accent-secondary text-white flex items-center justify-center shadow-xl hover:-translate-y-1 hover:scale-110 transition-all">
                             <BotIcon :size="18" />
                         </button>
                     </div>

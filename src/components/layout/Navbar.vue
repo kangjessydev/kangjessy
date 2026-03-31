@@ -38,7 +38,7 @@
           </router-link>
 
           <!-- Ecosystem Dropdown (Desktop Only) -->
-          <div class="hidden md:block relative" ref="ecosystemDropdownRef">
+          <!-- <div class="hidden md:block relative" ref="ecosystemDropdownRef">
             <button
               @click="toggleEcosystemDropdown"
               aria-label="Toggle ecosystem dropdown"
@@ -64,7 +64,6 @@
                 v-if="isEcosystemDropdownOpen"
                 class="absolute top-full left-0 mt-2 w-56 bg-bg-secondary border border-border-color rounded-xl shadow-xl overflow-hidden py-1 z-50"
               >
-                <!-- Main Agency (Active) -->
                 <router-link
                   to="/"
                   class="flex items-center gap-3 px-4 py-3 bg-accent-primary/5 border-l-2 border-accent-primary"
@@ -120,7 +119,7 @@
                 </a>
               </div>
             </Transition>
-          </div>
+          </div> -->
         </div>
 
         <!-- Desktop Links -->
@@ -453,7 +452,7 @@
           </div>
 
           <!-- Theme Toggle -->
-          <button
+          <!-- <button
             @click="toggleTheme"
             :aria-label="
               isDark ? 'Switch to light mode' : 'Switch to dark mode'
@@ -461,12 +460,13 @@
             class="w-[38px] h-[38px] rounded-xl bg-white/5 border border-border-color text-text-primary flex items-center justify-center cursor-pointer hover:bg-border-color hover:text-accent-primary transition-all hover:-translate-y-0.5 active:scale-95"
           >
             <component :is="isDark ? Moon : Sun" :size="18" />
-          </button>
+          </button> -->
         </div>
 
         <!-- Mobile Actions -->
         <div class="flex md:hidden items-center gap-2 z-1001">
-          <button
+          <!-- Theme Toggle -->
+          <!-- <button
             @click="toggleTheme"
             :aria-label="
               isDark ? 'Switch to light mode' : 'Switch to dark mode'
@@ -474,7 +474,7 @@
             class="w-9 h-9 rounded-xl bg-white/5 border border-border-color text-text-primary flex items-center justify-center active:scale-95"
           >
             <component :is="isDark ? Moon : Sun" :size="18" />
-          </button>
+          </button> -->
           <button
             @click="toggleMobileMenu"
             aria-label="Toggle mobile menu"
@@ -507,7 +507,7 @@
     >
       <div class="p-6">
         <!-- Ecosystem Switcher (Mobile) -->
-        <div
+        <!-- <div
           class="mb-8 p-1.5 bg-bg-secondary border border-border-color rounded-2xl flex gap-1"
         >
           <button
@@ -534,7 +534,7 @@
             <ShoppingBag :size="16" />
             Store
           </a>
-        </div>
+        </div> -->
 
         <!-- Main Nav Links Groups (3 Columns Pattern) -->
         <div class="space-y-10 mb-10 mt-2">
@@ -725,19 +725,16 @@ import { isExternalLink, ensureProtocol } from "@kangjessy/config";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import {
   ChevronDown,
-  Moon,
-  Sun,
   Github,
   Linkedin,
   Youtube,
   Instagram,
   Hash,
+  AtSign,
   ExternalLink,
   Users,
   ChevronRight,
   Globe,
-  Wrench,
-  ShoppingBag,
   Rocket,
 } from "lucide-vue-next";
 import { BaseButton, BottomSheet, activeSheet } from "@kangjessy/ui";
@@ -755,7 +752,7 @@ const getSocialIcon = (iconName: string) => {
     Linkedin: Linkedin,
     Youtube: Youtube,
     Instagram: Instagram,
-    Thread: Hash,
+    Thread: AtSign,
     Hash: Hash,
     Twitter: Hash,
     Globe: Globe,
@@ -763,7 +760,8 @@ const getSocialIcon = (iconName: string) => {
   return icons[iconName] || ExternalLink;
 };
 
-const { isDark, toggleTheme } = useGlobalTheme();
+// Theme composable kept for future use
+useGlobalTheme();
 const isScrolled = ref(false);
 const isMobileMenuOpen = ref(false);
 const activeDropdown = ref<string | null>(null);
@@ -792,9 +790,9 @@ const toggleDropdown = (itemText: string) => {
   activeDropdown.value = activeDropdown.value === itemText ? null : itemText;
 };
 
-const toggleEcosystemDropdown = () => {
-  isEcosystemDropdownOpen.value = !isEcosystemDropdownOpen.value;
-};
+// const toggleEcosystemDropdown = () => {
+//   isEcosystemDropdownOpen.value = !isEcosystemDropdownOpen.value;
+// };
 
 const closeMenu = () => {
   isMobileMenuOpen.value = false;

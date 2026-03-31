@@ -214,38 +214,215 @@
                             </p>
                         </div>
 
-                        <!-- CTA Newsletter Custom -->
-                        <div class="bg-gradient-to-r from-accent-primary to-accent-secondary p-[2px] rounded-[32px]">
-                            <div class="bg-bg-primary px-8 py-10 md:px-10 md:py-16 rounded-[30px] text-center">
+                        <!-- CTA Ebook Vibe Coding -->
+                        <div v-if="showLeadMagnet" class="bg-gradient-to-r from-accent-primary to-accent-secondary p-[2px] rounded-[32px] relative overflow-hidden mt-8">
+                            <!-- Background accent -->
+                            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)]" style="background-size: 20px 20px;"></div>
+                            
+                            <div class="bg-bg-primary px-8 py-10 md:px-10 md:py-16 rounded-[30px] text-center relative z-10">
                                 <div
-                                    class="w-16 h-16 bg-accent-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-accent-primary">
-                                    <Mail :size="32" class="shrink-0" />
+                                    class="w-16 h-16 bg-accent-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-accent-primary shadow-[0_0_20px_rgba(var(--accent-primary-rgb),0.3)]">
+                                    <BookOpen :size="32" class="shrink-0" />
                                 </div>
-                                <h2 class="text-2xl md:text-[2rem] font-bold mb-4 text-text-primary tracking-tight">
-                                    Jangan Sampai Ketinggalan!</h2>
-                                <p class="text-text-secondary mb-8 max-w-lg mx-auto text-base md:text-lg">
-                                    Dapatkan tips coding praktis, strategi digital marketing, dan tren agency terbaru
-                                    langsung di inboxmu.
-                                    <span class="font-bold text-accent-primary">Gratis & Tanpa Spam.</span>
+                                <div class="inline-flex items-center gap-2 bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-3 py-1.5 rounded-lg text-xs font-bold mb-4 max-w-fit uppercase tracking-wider mx-auto">
+                                    <BotIcon :size="14" class="text-accent-primary" /> Khusus 100 Pengunduh Pertama
+                                </div>
+                                <h2 class="text-2xl md:text-[2rem] font-bold mb-4 text-text-primary tracking-tight leading-tight">
+                                    Gratis: E-Book Vibe Coding Masterclass 2026</h2>
+                                <p class="text-text-secondary mb-8 max-w-xl mx-auto text-[0.95rem] md:text-lg leading-relaxed">
+                                    Pelajari cara bikin website sampai punya dashboard mandiri & deploy tanpa bayar hosting sepeserpun. Menggunakan Antigravity IDE dipadukan dengan Gemini & Claude AI.
                                 </p>
 
-                                <form @submit.prevent="handleSubscribe"
-                                    class="max-w-md mx-auto relative flex items-center">
-                                    <Mail class="absolute left-4 text-text-tertiary" :size="20" />
-                                    <input v-model="subscriberEmail" type="email"
-                                        placeholder="Masukkan alamat email kamu..." required
-                                        class="w-full pl-12 pr-32 py-4 bg-bg-secondary border border-border-color rounded-2xl outline-none text-text-primary placeholder:text-text-tertiary focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20 transition-all font-medium" />
-                                    <button type="submit" :disabled="subscribing"
-                                        class="absolute right-2 top-2 bottom-2 px-6 bg-accent-primary hover:bg-accent-secondary text-white font-bold rounded-xl transition-all hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2">
-                                        <Loader2 v-if="subscribing" class="animate-spin" :size="18" />
-                                        <span v-else>Gabung</span>
+                                <form @submit.prevent="handleLeadMagnet"
+                                    class="max-w-md mx-auto relative flex flex-col items-center">
+                                    <div class="relative w-full flex items-center drop-shadow-xl">
+                                        <Mail class="absolute left-4 text-text-tertiary" :size="20" />
+                                        <input v-model="leadEmail" type="email"
+                                            placeholder="Masukkan email untuk download..." required
+                                            class="w-full pl-12 pr-40 py-4 bg-bg-secondary border border-border-color rounded-2xl outline-none text-text-primary placeholder:text-text-tertiary focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20 transition-all font-medium shadow-inner" />
+                                        <button type="submit" :disabled="submittingLead"
+                                            class="absolute right-2 top-2 bottom-2 px-6 bg-accent-primary hover:bg-accent-secondary text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2">
+                                            <Loader2 v-if="submittingLead" class="animate-spin" :size="18" />
+                                            <template v-else>
+                                                <Download :size="16" />
+                                                <span>Download</span>
+                                            </template>
+                                        </button>
+                                    </div>
+                                    <button @click.prevent="showEbookPreview = true" type="button" class="mt-5 text-sm font-bold text-accent-primary hover:text-white transition-colors cursor-pointer border-b border-dashed border-accent-primary/50 pb-0.5">
+                                        Intip Cover & Daftar Isi E-book →
                                     </button>
                                 </form>
-                                <p class="mt-4 text-xs text-text-tertiary">
-                                    Bergabung dengan 1,200+ developer & kreator lainnya.
-                                </p>
                             </div>
                         </div>
+
+                        <!-- E-Book Preview Popup via BottomSheet -->
+                        <BottomSheet
+                            :modelValue="showEbookPreview"
+                            title="Preview E-Book"
+                            :icon="BookOpen"
+                            maxWidth="5xl"
+                            contentClass="!overflow-hidden !p-0"
+                            fullHeight
+                            @update:modelValue="showEbookPreview = $event"
+                            @close="showEbookPreview = false"
+                        >
+                            <!-- Content Modal Split -->
+                            <div class="flex flex-col md:grid md:grid-cols-12 bg-bg-primary h-[calc(100dvh-120px)] md:h-[700px] md:max-h-[85vh] overflow-y-auto md:overflow-hidden custom-scrollbar">
+                                
+                                <!-- Left Column: Cover & Form (Sticky in desktop) -->
+                                <div class="md:col-span-5 lg:col-span-4 bg-bg-secondary/40 md:border-r border-b md:border-b-0 border-border-color p-8 pb-16 md:pb-24 flex flex-col gap-6 md:h-full md:overflow-y-auto custom-scrollbar shrink-0">
+                                    
+                                    <!-- Cover Design -->
+                                    <div class="w-full max-w-[280px] md:max-w-full mx-auto aspect-[3/4] shrink-0 rounded-2xl relative overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.5)] border border-white/10 group">
+                                        <!-- Dark Tech Background Image -->
+                                        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Cover Background" />
+                                        <div class="absolute inset-0 bg-gradient-to-b from-bg-primary/80 via-accent-primary/30 to-black z-10"></div>
+                                        
+                                        <!-- Text Overlay -->
+                                        <div class="absolute inset-0 z-20 flex flex-col p-6 items-center text-center">
+                                            <div class="w-full text-left pt-2">
+                                                <div class="inline-block bg-accent-primary text-white text-[0.6rem] font-bold uppercase tracking-widest px-2 py-1 rounded-sm">Masterclass</div>
+                                            </div>
+                                            <div class="flex-1 flex flex-col items-center justify-center -mt-6">
+                                                <BotIcon :size="56" class="text-white drop-shadow-[0_0_15px_rgba(var(--accent-primary-rgb),0.8)] mb-4"/>
+                                                <h4 class="text-white font-black text-4xl leading-[0.9] tracking-tighter drop-shadow-lg">VIBE<br/>CODING</h4>
+                                                <div class="w-12 h-1 bg-accent-primary mt-6 mb-4 shadow-[0_0_10px_var(--accent-primary)]"></div>
+                                                <span class="text-[0.7rem] text-white/80 font-semibold uppercase tracking-[0.2em] px-4 leading-relaxed">Website & Dashboard<br/>Deployment Playbook</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Rating/Downloads -->
+                                    <div class="flex items-center justify-between mx-1 pb-4 border-b border-border-color/50">
+                                        <div class="flex items-center gap-1.5 text-yellow-400">
+                                            <span class="text-sm">⭐️⭐️⭐️⭐️⭐️</span>
+                                            <span class="text-xs text-text-tertiary ml-1">(4.9/5)</span>
+                                        </div>
+                                        <div class="flex items-center gap-1.5 text-text-secondary">
+                                            <Users :size="14"/>
+                                            <span class="text-[0.8rem] font-bold">4,850+ Unduhan</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Form Insight -->
+                                    <div class="flex flex-col gap-4">
+                                        <div>
+                                            <span class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-accent-primary mb-2 block">Dapatkan Secara Gratis</span>
+                                            <h4 class="text-white font-bold leading-tight mb-2">Akses PDF Sekarang</h4>
+                                        </div>
+                                        <form @submit.prevent="handleLeadMagnet" class="flex flex-col gap-3">
+                                            <div class="relative w-full text-left">
+                                                <Mail class="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary" :size="18" />
+                                                <input v-model="leadEmail" type="email" placeholder="Email aktif kamu..." required
+                                                    class="w-full pl-11 pr-4 py-3.5 bg-bg-primary/80 border border-border-color rounded-xl outline-none text-text-primary text-sm placeholder:text-text-tertiary focus:border-accent-primary focus:ring-1 focus:ring-accent-primary" />
+                                            </div>
+                                            <button type="submit" :disabled="submittingLead"
+                                                class="w-full py-3.5 bg-accent-primary hover:bg-accent-secondary text-white font-bold rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-accent-primary/20 flex justify-center items-center gap-2">
+                                                <Loader2 v-if="submittingLead" class="animate-spin" :size="18" />
+                                                <span v-else>Kirim ke Email Saya</span>
+                                            </button>
+                                        </form>
+                                        <p class="text-[0.65rem] text-text-tertiary text-center leading-relaxed">Pesan dikirim aman tanpa SPAM. Pastikan inbox/promosi di cek ya.</p>
+                                    </div>
+                                    <!-- Spacer Support -->
+                                    <div class="h-8 md:h-12 w-full shrink-0"></div>
+                                </div>
+
+                                <!-- Right Column: Details & Syllabus (Scrollable) -->
+                                <div class="md:col-span-7 lg:col-span-8 p-6 md:p-10 flex flex-col gap-8 flex-1 md:h-full md:overflow-y-auto custom-scrollbar pb-20 md:pb-24">
+                                    
+                                    <!-- Main Heading -->
+                                    <div class="shrink-0 relative">
+                                        <div class="flex flex-wrap items-end gap-3 mb-3">
+                                            <span class="text-[2rem] md:text-[2.5rem] font-black text-accent-primary leading-none">GRATIS</span>
+                                            <span class="text-lg text-text-tertiary line-through font-bold mb-1.5">Rp 200.000</span>
+                                        </div>
+                                        <div class="inline-flex items-center gap-2 bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-3 py-1.5 rounded-lg text-xs font-bold mb-5 max-w-fit uppercase tracking-wider">
+                                            <BotIcon :size="14" class="text-accent-primary" /> Khusus 100 Pengunduh Pertama
+                                        </div>
+                                        <h3 class="text-3xl font-black text-white leading-tight mb-4 tracking-tight">Membangun Web & Dashboard Tanpa Modal Hosting</h3>
+                                        <p class="text-[0.95rem] md:text-base text-text-secondary leading-relaxed mb-6">Buku panduan revolusioner yang akan mengubah cara kamu mendevelop sistem. Pemula sekalipun dapat merancang, coding, dan merilis produk digital berstandar industri dengan bantuan "AI Engineers" cerdas, sepenuhnya gratis tanpa cicilan hosting per bulan.</p>
+                                    </div>
+
+                                    <!-- Tech Stack Badges -->
+                                    <div class="shrink-0 flex flex-col gap-3">
+                                        <span class="text-[0.65rem] font-black text-text-tertiary uppercase tracking-[0.2em]">Tech Stack yang Digunakan:</span>
+                                        <div class="flex flex-wrap gap-2">
+                                            <span class="bg-bg-secondary border border-border-color text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2"><BotIcon :size="12" class="text-accent-primary"/> Antigravity IDE</span>
+                                            <span class="bg-bg-secondary border border-border-color text-white px-3 py-1.5 rounded-lg text-xs font-semibold">Supabase</span>
+                                            <span class="bg-bg-secondary border border-border-color text-white px-3 py-1.5 rounded-lg text-xs font-semibold">Sanity CMS</span>
+                                            <span class="bg-bg-secondary border border-border-color text-white px-3 py-1.5 rounded-lg text-xs font-semibold">Vue/React</span>
+                                            <span class="bg-bg-secondary border border-border-color text-white px-3 py-1.5 rounded-lg text-xs font-semibold">GitHub</span>
+                                            <span class="bg-bg-secondary border border-border-color text-white px-3 py-1.5 rounded-lg text-xs font-semibold">Vercel</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Syllabus Accordion / LMS List -->
+                                    <div class="shrink-0 pt-4 border-t border-border-color">
+                                        <h5 class="text-[0.8rem] font-black text-white uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                                            <List :size="16" class="text-accent-primary"/> Silabus & Kurikulum (5 Bab)
+                                        </h5>
+                                        
+                                        <div class="flex flex-col gap-4">
+                                            <!-- Module 1 -->
+                                            <div class="bg-bg-secondary/50 rounded-2xl border border-border-color p-5 hover:border-accent-primary/50 transition-colors">
+                                                <div class="flex items-start gap-4">
+                                                    <div class="w-8 h-8 rounded-full bg-accent-primary/10 text-accent-primary font-black flex items-center justify-center shrink-0">1</div>
+                                                    <div>
+                                                        <h6 class="text-white font-bold mb-1">Pondasi Vibe Coding & Setup Lingkungan</h6>
+                                                        <p class="text-[0.8rem] text-text-tertiary leading-[1.6]">Pengenalan paradigma "Vibe Coding" dan instalasi Antigravity IDE. Setup awal sistem operasi dan integrasi bersama Claude serta Gemini secara seamless.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Module 2 -->
+                                            <div class="bg-bg-secondary/50 rounded-2xl border border-border-color p-5 hover:border-accent-primary/50 transition-colors">
+                                                <div class="flex items-start gap-4">
+                                                    <div class="w-8 h-8 rounded-full bg-accent-primary/10 text-accent-primary font-black flex items-center justify-center shrink-0">2</div>
+                                                    <div>
+                                                        <h6 class="text-white font-bold mb-1">Membangun Struktur Frontend & UI Layouting</h6>
+                                                        <p class="text-[0.8rem] text-text-tertiary leading-[1.6]">Pemahaman arsitektur komponen modern (Vue/React). Mendesain UI yang estetik dalam hitungan menit menggunakan command prompts canggih.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Module 3 -->
+                                            <div class="bg-bg-secondary/50 rounded-2xl border border-border-color p-5 hover:border-accent-primary/50 transition-colors">
+                                                <div class="flex items-start gap-4">
+                                                    <div class="w-8 h-8 rounded-full bg-accent-primary/10 text-accent-primary font-black flex items-center justify-center shrink-0">3</div>
+                                                    <div>
+                                                        <h6 class="text-white font-bold mb-1">Mengokohkan Backend dengan Supabase & Sanity</h6>
+                                                        <p class="text-[0.8rem] text-text-tertiary leading-[1.6]">Tidak perlu repot menulis SQL rumit. Implementasi database realtime dengan Supabase, Authentication, dan CMS dinamis menggunakan Sanity.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Module 4 -->
+                                            <div class="bg-bg-secondary/50 rounded-2xl border border-border-color p-5 hover:border-accent-primary/50 transition-colors">
+                                                <div class="flex items-start gap-4">
+                                                    <div class="w-8 h-8 rounded-full bg-accent-primary/10 text-accent-primary font-black flex items-center justify-center shrink-0">4</div>
+                                                    <div>
+                                                        <h6 class="text-white font-bold mb-1">Menciptakan Dashboard Admin Eksklusif</h6>
+                                                        <p class="text-[0.8rem] text-text-tertiary leading-[1.6]">Membangun panel kendali admin untuk melihat data pelanggan, form submissions, dan analytic, divalidasi dengan role access.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Module 5 -->
+                                            <div class="bg-bg-secondary/50 rounded-2xl border border-border-color p-5 hover:border-accent-primary/50 transition-colors">
+                                                <div class="flex items-start gap-4">
+                                                    <div class="w-8 h-8 rounded-full bg-accent-primary/10 text-accent-primary font-black flex items-center justify-center shrink-0">5</div>
+                                                    <div>
+                                                        <h6 class="text-white font-bold mb-1">Deploy Otomatis ke Vercel via GitHub</h6>
+                                                        <p class="text-[0.8rem] text-text-tertiary leading-[1.6]">Mendorong kode lokal kamu ke repository GitHub dan menghubungkannya dengan Vercel Edge Server agar live 24/7 selamanya tanpa bayar biaya bulanan.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Spacer Support -->
+                                    <div class="h-12 w-full shrink-0"></div>
+                                </div>
+                            </div>
+                        </BottomSheet>
                     </footer>
                 </div>
             </main>
@@ -264,11 +441,12 @@ import { ref, onMounted, onUnmounted, h, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import {
     Twitter, Linkedin as LinkedinIcon, Copy, MessageCircle as WhatsAppIcon,
-    Bot as BotIcon, CheckCircle2, Mail, Loader2, List, X
+    Bot as BotIcon, CheckCircle2, Mail, Loader2, List, X, BookOpen, Download, Users
 } from 'lucide-vue-next';
 import { blogService } from '../../services/blogService';
 import { PortableText } from '@portabletext/vue';
 import { usePopupManager, Popups } from '../../composables/usePopupManager';
+import { BottomSheet } from '@kangjessy/ui';
 import CodeBlock from '../../components/ui/CodeBlock.vue';
 import TableOfContents from '../../components/ui/TableOfContents.vue';
 import { useSEO } from '../../composables/useSEO';
@@ -295,8 +473,17 @@ const loading = ref(true);
 const readingProgress = ref(0);
 const showToast = ref(false);
 const toastMessage = ref('');
-const subscriberEmail = ref('');
-const subscribing = ref(false);
+const showLeadMagnet = ref(true); // Aktifkan supaya user bisa lihat desainnya
+const showEbookPreview = ref(false); // Modal preview Ebook state
+const leadEmail = ref('');
+
+// Scroll lock ketika modal preview terbuka
+watch(showEbookPreview, (isOpen) => {
+    if (typeof document !== 'undefined') {
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+});
+const submittingLead = ref(false);
 const processedContentHTML = ref('');
 const lightboxImage = ref<string | null>(null);
 
@@ -315,16 +502,31 @@ const tableOfContents = ref<any[]>([]);
 const tocVisible = ref(false);
 const inlineTocRef = ref<HTMLElement | null>(null);
 
-const handleSubscribe = async () => {
-    if (!subscriberEmail.value) return;
-    subscribing.value = true;
+const handleLeadMagnet = async () => {
+    if (!leadEmail.value) return;
+    submittingLead.value = true;
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    triggerToast('Terima kasih! Kamu sudah terdaftar di newsletter kami.');
-    subscriberEmail.value = '';
-    subscribing.value = false;
+    try {
+        // [SIMULATION ATAU FETCH REALN-NYA DISINI]
+        // Nanti tinggal buka comment fetch ini jika endpoint Google Apps Script doPost() sudah ada:
+        
+        const GOOGLE_SCRIPT_WEBHOOK = "https://script.google.com/macros/s/AKfycby1cuNcZ2xAAdg1yIR8b6zdigtYXQk7NKCrRzp9YY5TRN_trR1TplhnTsPbBhmiIyNo/exec";
+        
+        // Kita lemparkan fetch ke backend Google Script untuk kirim email.
+        await fetch(GOOGLE_SCRIPT_WEBHOOK, {
+            method: 'POST',
+            body: JSON.stringify({ email: leadEmail.value, info: 'E-Book Vibe Coding' })
+        }).catch(() => console.log('Network error connecting to webhook'));
+        
+        triggerToast('Terkirim! Silakan periksa kotak masuk e-mail kamu.');
+        
+        leadEmail.value = '';
+        showEbookPreview.value = false;
+    } catch (error) {
+        triggerToast('Gagal memproses unduhan, coba lagi.');
+    } finally {
+        submittingLead.value = false;
+    }
 };
 
 // Portable Text Custom Components (Matching Reference Design with Optimized Typography)

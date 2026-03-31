@@ -64,12 +64,20 @@
               Services
             </h4>
             <ul class="flex flex-col gap-3.5">
-              <li v-for="service in servicesData" :key="service.id">
+              <li>
                 <router-link
-                  :to="`/service/${service.id}`"
+                  to="/services#development"
                   class="nav-link text-[0.95rem] font-medium"
                 >
-                  {{ service.title }}
+                  Digital Development
+                </router-link>
+              </li>
+              <li>
+                <router-link
+                  to="/services#maintenance"
+                  class="nav-link text-[0.95rem] font-medium"
+                >
+                  Maintenance Plans
                 </router-link>
               </li>
             </ul>
@@ -112,13 +120,7 @@
                   >Palette Generator</a
                 >
               </li>
-              <li>
-                <router-link
-                  to="/services#calculator"
-                  class="nav-link text-[0.95rem] font-medium"
-                  >Cost Calculator</router-link
-                >
-              </li>
+              <!-- Cost calc removed -->
             </ul>
           </div>
 
@@ -280,23 +282,15 @@ import {
   Youtube,
   Instagram,
   Hash,
+  AtSign,
   ExternalLink,
 } from "lucide-vue-next";
 import { useSiteSettings } from "../../composables/useSiteSettings";
-import {
-  pricingService,
-  type ServiceData,
-} from "../../services/pricingService";
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
 
 const popup = usePopupManager();
 const { settings } = useSiteSettings();
 const currentYear = computed(() => new Date().getFullYear());
-const servicesData = ref<ServiceData[]>([]);
-
-onMounted(async () => {
-  servicesData.value = await pricingService.getAllServices();
-});
 
 const getSocialIcon = (iconName: string) => {
   const icons: Record<string, any> = {
@@ -304,7 +298,7 @@ const getSocialIcon = (iconName: string) => {
     Linkedin: Linkedin,
     Youtube: Youtube,
     Instagram: Instagram,
-    Thread: Hash,
+    Thread: AtSign,
     Hash: Hash,
     Twitter: Hash,
     Globe: ExternalLink,

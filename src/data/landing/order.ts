@@ -365,7 +365,7 @@ export const styleOptions: StyleOption[] = [
 export const serviceCategories = [
   {
     id: "website-high-conversion",
-    title: "Website High-Conversion",
+    title: "Digital Development",
     tagline: "Website premium untuk konversi & branding.",
     icon: "Globe",
     price: 3000000,
@@ -387,7 +387,7 @@ export const serviceCategories = [
   },
   {
     id: "maintenance-custom",
-    title: "Maintenance & Fitur Rakitan",
+    title: "Maintenance Plans",
     tagline: "Rawat sistem Anda atau tambahkan fitur baru sesuai kebutuhan.",
     icon: "Settings",
     price: 0,

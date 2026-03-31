@@ -57,14 +57,14 @@
       </div>
 
       <!-- Development Plans Grid -->
-      <div v-if="activeCategory === 'development'" ref="devSliderRef" @scroll="handleScrollDev" class="flex md:grid md:grid-cols-3 overflow-x-auto snap-x snap-mandatory gap-6 animate-in fade-in zoom-in-95 duration-700 pb-8 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div v-if="activeCategory === 'development'" ref="devSliderRef" @scroll="handleScrollDev" class="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-6 animate-in fade-in zoom-in-95 duration-700 pt-16 pb-16 -mt-12 md:-mt-16 -mb-12 md:-mb-16 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar">
         <div 
-          v-for="plan in developmentPlans" 
+          v-for="(plan, planIndex) in developmentPlans" 
           :key="plan.id"
-          class="relative group shrink-0 w-[85vw] md:w-auto snap-center"
+          class="relative group shrink-0 w-[85vw] md:w-auto snap-center hover:z-50"
         >
           <div 
-            class="h-full rounded-[32px] p-8 flex flex-col transition-all duration-500 backdrop-blur-xl group-hover:-translate-y-2 relative overflow-hidden"
+            class="h-full rounded-[32px] p-8 flex flex-col transition-all duration-500 backdrop-blur-xl group-hover:-translate-y-2 relative"
             :class="plan.isPopular 
               ? 'bg-gradient-to-b from-accent-primary/[0.08] to-transparent border border-accent-primary shadow-[0_0_40px_rgba(59,130,246,0.2)]' 
               : 'bg-white/[0.03] border border-border-color hover:bg-white/[0.05] hover:border-accent-primary/50'"
@@ -100,10 +100,10 @@
                 v-for="(feature, index) in plan.features" 
                 :key="feature.text"
                 v-show="index < 5 || isFeaturesExpanded"
-                class="flex items-start gap-3 group/item relative"
+                class="flex items-center gap-3 group/item relative"
                 :class="feature.included ? 'text-text-primary' : 'text-text-secondary opacity-40'"
               >
-                <div class="mt-1 shrink-0">
+                <div class="shrink-0">
                   <CheckCircle v-if="feature.included" :size="18" class="text-accent-primary transition-transform group-hover/item:scale-110" />
                   <XCircle v-else :size="18" class="text-text-secondary shrink-0" />
                 </div>
@@ -112,12 +112,16 @@
                     <span class="mr-1">{{ feature.text }}</span>
                     <!-- Info Icon Trigger -->
                     <div v-if="feature.tooltip" class="relative inline-flex items-center top-0.5 group/tooltip w-4 h-4 cursor-help text-text-tertiary hover:text-accent-primary transition-colors shrink-0">
-                      <Info :size="14" />
-                      <!-- Tooltip Box -->
-                      <div class="absolute bottom-[calc(100%+0.5rem)] left-0 md:left-1/2 md:-translate-x-1/2 min-w-[200px] sm:min-w-[240px] max-w-[260px] p-3.5 rounded-2xl bg-[#0f1117] border border-border-color shadow-xl text-[0.75rem] text-text-secondary font-medium leading-relaxed opacity-0 invisible pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:visible group-hover/tooltip:pointer-events-auto transition-all duration-300 z-50">
+                      <div @click="openMobileTooltip(feature.text, feature.tooltip)" class="w-full h-full flex items-center justify-center">
+                        <Info :size="14" />
+                      </div>
+                      <!-- Tooltip Box (Desktop Only) -->
+                      <div class="hidden md:block absolute bottom-[calc(100%+0.5rem)] p-3.5 rounded-2xl bg-[#0f1117] border border-border-color shadow-xl text-[0.75rem] text-text-secondary font-medium leading-relaxed opacity-0 invisible pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:visible group-hover/tooltip:pointer-events-auto transition-all duration-300 z-50 min-w-[200px] sm:min-w-[240px] max-w-[260px]"
+                           :class="planIndex === developmentPlans.length - 1 ? 'right-0 md:right-0 md:left-auto md:translate-x-0' : 'left-0 md:left-1/2 md:-translate-x-1/2'">
                         {{ feature.tooltip }}
                         <!-- Arrow -->
-                        <div class="absolute -bottom-1.5 left-2 md:left-1/2 md:-translate-x-1/2 w-3 h-3 bg-[#0f1117] border-b border-r border-border-color rotate-45"></div>
+                        <div class="absolute -bottom-1.5 w-3 h-3 bg-[#0f1117] border-b border-r border-border-color rotate-45"
+                             :class="planIndex === developmentPlans.length - 1 ? 'right-3 md:right-3 md:left-auto md:translate-x-0' : 'left-2 md:left-1/2 md:-translate-x-1/2'"></div>
                       </div>
                     </div>
                   </span>
@@ -162,6 +166,19 @@
         ></span>
       </div>
 
+      <!-- Strategy Note (Development) -->
+      <div v-if="activeCategory === 'development'" class="max-w-3xl mx-auto mt-10 md:mt-16 mb-4 p-5 md:p-6 rounded-[24px] bg-accent-primary/5 border border-accent-primary/10 flex items-start gap-4 animate-in fade-in duration-500">
+        <div class="mt-0.5 w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center text-accent-primary shrink-0">
+          <Info :size="16" />
+        </div>
+        <div>
+          <h4 class="text-sm font-bold text-text-primary mb-1">Catatan Penting</h4>
+          <p class="text-[0.85rem] text-text-secondary leading-relaxed">
+            Paket di atas tidak ditentukan dari <strong>jenis website</strong> (Toko Online, Profil Bisnis, dll), melainkan murni dari <strong>skala pendataan dan kompleksitas teknisnya</strong>. Segala jenis website bisa dimulai dari <span class="text-text-primary font-semibold">Starter</span>. Masih ragu menentukan skala? <a href="#" @click.prevent="openConsultation" class="text-accent-primary font-semibold hover:underline">Mari diskusikan gratis!</a>
+          </p>
+        </div>
+      </div>
+
       <!-- Mobile Controls (Maintenance) -->
       <div v-else-if="activeCategory === 'maintenance'" class="md:hidden flex justify-end gap-2.5 mb-4 px-4">
         <button
@@ -181,7 +198,7 @@
       </div>
 
       <!-- Maintenance Plans Grid -->
-      <div v-if="activeCategory === 'maintenance'" ref="maintSliderRef" @scroll="handleScrollMaint" class="flex md:grid md:grid-cols-3 overflow-x-auto snap-x snap-mandatory gap-6 animate-in fade-in zoom-in-95 duration-700 pb-8 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div v-if="activeCategory === 'maintenance'" ref="maintSliderRef" @scroll="handleScrollMaint" class="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-6 animate-in fade-in zoom-in-95 duration-700 pt-16 pb-16 -mt-12 md:-mt-16 -mb-12 md:-mb-16 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar">
         <div 
           v-for="plan in maintenancePlans" 
           :key="plan.id"
@@ -204,8 +221,8 @@
           </div>
 
           <ul class="flex-grow space-y-4 mb-10">
-            <li v-for="feat in plan.features" :key="feat" class="flex items-start gap-3">
-              <div class="mt-1 shrink-0">
+            <li v-for="feat in plan.features" :key="feat" class="flex items-center gap-3">
+              <div class="shrink-0">
                 <ShieldCheck :size="18" class="text-accent-secondary" />
               </div>
               <span class="text-[0.9rem] text-text-primary leading-tight">{{ feat }}</span>
@@ -233,11 +250,24 @@
         ></span>
       </div>
 
+      <!-- Strategy Note (Maintenance) -->
+      <div v-if="activeCategory === 'maintenance'" class="max-w-3xl mx-auto mt-10 md:mt-16 mb-4 p-5 md:p-6 rounded-[24px] bg-accent-secondary/5 border border-accent-secondary/10 flex items-start gap-4 animate-in fade-in duration-500">
+        <div class="mt-0.5 w-8 h-8 rounded-full bg-accent-secondary/10 flex items-center justify-center text-accent-secondary shrink-0">
+          <Info :size="16" />
+        </div>
+        <div>
+          <h4 class="text-sm font-bold text-text-primary mb-1">Penting Diketahui</h4>
+          <p class="text-[0.85rem] text-text-secondary leading-relaxed">
+            Layanan <strong>Maintenance</strong> bersifat satu kesatuan paket dan tidak dapat dipesan per fitur terpisah (no pick-and-choose). Saya akan melakukan <strong>evaluasi teknis awal</strong> terhadap infrastruktur web Anda sebelum servis dimulai untuk memastikan standar kualitas saya terpenuhi. Punya kendala mendesak? <a href="#" @click.prevent="openConsultation" class="text-accent-secondary font-semibold hover:underline border-b border-accent-secondary/30">Mari kita bicarakan!</a>
+          </p>
+        </div>
+      </div>
+
       <!-- Add-on Extras Grid -->
       <div class="mt-24">
         <div class="flex items-center gap-4 mb-12">
           <div class="h-px bg-linear-to-r from-accent-primary/50 to-transparent flex-grow"></div>
-          <h3 class="text-xl font-bold text-text-primary uppercase tracking-widest px-4">Individual Services & Add-ons</h3>
+          <h3 class="text-xl font-bold text-text-primary uppercase tracking-widest px-4 text-center">Individual Services & Add-ons</h3>
           <div class="h-px bg-linear-to-l from-accent-primary/50 to-transparent flex-grow"></div>
         </div>
 
@@ -255,14 +285,29 @@
                 <h5 class="text-text-primary font-semibold group-hover:text-accent-primary transition-colors">{{ item.name }}</h5>
                 <p class="text-[0.85rem] text-text-secondary mt-1">{{ item.desc }}</p>
               </div>
-              <div class="text-right">
-                <span class="text-text-primary font-bold text-[1rem]">Rp {{ item.price }}</span>
+              <div class="text-right shrink-0">
+                <div v-if="item.originalPrice" class="text-[0.7rem] text-text-secondary line-through opacity-50 mb-0.5">
+                  Rp {{ item.originalPrice }}
+                </div>
+                <div class="flex items-center justify-end gap-1.5">
+                  <span v-if="item.originalPrice" class="text-[0.65rem] font-black text-accent-primary bg-accent-primary/10 px-1.5 py-0.5 rounded-md leading-none">
+                    -{{ calculateDiscount(item.originalPrice, item.price) }}%
+                  </span>
+                  <span class="text-text-primary font-bold text-[1rem]">Rp {{ item.price }}</span>
+                </div>
                 <button class="block w-full text-[0.7rem] text-accent-primary mt-2 font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
                    + Add Service
                 </button>
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Addon Note -->
+        <div class="max-w-3xl mx-auto mt-12 text-center px-4">
+          <p class="text-[0.85rem] text-text-secondary italic opacity-80">
+            *Perlu diketahui: Penambahan fitur satuan atau custom module tetap memerlukan evaluasi dari saya untuk memastikan 100% kompatibilitas sistem dengan infrastruktur eksisting proyek Anda.
+          </p>
         </div>
 
         <!-- Consultation Banner -->
@@ -282,13 +327,21 @@
         </div>
       </div>
     </div>
+
+    <!-- Mobile Tooltip BottomSheet -->
+    <BottomSheet v-model="isMobileTooltipOpen" :title="mobileTooltipTitle" :showClose="true">
+      <div class="px-6 py-8 text-text-secondary leading-relaxed text-sm">
+        {{ mobileTooltipText }}
+      </div>
+    </BottomSheet>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch, onMounted, nextTick } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import SectionHeader from '../ui/SectionHeader.vue';
-import { BaseButton } from "@kangjessy/ui";
+import { BaseButton, BottomSheet } from "@kangjessy/ui";
 import { 
   developmentPlans, 
   maintenancePlans, 
@@ -318,6 +371,21 @@ const openConsultation = () => {
   });
 };
 
+// Mobile Tooltip State
+const isMobileTooltipOpen = ref(false);
+const mobileTooltipTitle = ref('');
+const mobileTooltipText = ref('');
+
+const openMobileTooltip = (title: string, text: string) => {
+  // Only trigger on mobile sizes if we restrict it, but relying on BottomSheet behavior is fine
+  // We'll just open it if window width is mobile, or we let it open on click anywhere since desktop has hover anyway.
+  if (window.innerWidth < 768) {
+    mobileTooltipTitle.value = title;
+    mobileTooltipText.value = text;
+    isMobileTooltipOpen.value = true;
+  }
+};
+
 const categories = [
   { id: 'development', name: 'Digital Development' },
   { id: 'maintenance', name: 'Maintenance Plans' }
@@ -329,7 +397,37 @@ const frequencies = [
   { id: 'one-time', name: 'One-time' }
 ];
 
-const activeCategory = ref('development');
+const route = useRoute();
+const activeCategory = ref(route.hash === '#maintenance' ? 'maintenance' : 'development');
+
+const scrollToSection = () => {
+  nextTick(() => {
+    const el = document.getElementById('pricing');
+    if (el) {
+      // smooth scroll with an offset for any sticky navbar
+      const yOffset = -80; 
+      const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  });
+};
+
+watch(() => route.hash, (newHash) => {
+  if (newHash === '#maintenance') {
+    activeCategory.value = 'maintenance';
+    scrollToSection();
+  } else if (newHash === '#development') {
+    activeCategory.value = 'development';
+    scrollToSection();
+  }
+});
+
+onMounted(() => {
+  if (route.hash === '#maintenance' || route.hash === '#development') {
+    setTimeout(scrollToSection, 300); // allow DOM to settle for initial load
+  }
+});
+
 const activeFrequency = ref('monthly');
 const isFeaturesExpanded = ref(false);
 
@@ -401,7 +499,8 @@ const handleAddonOrder = (item: any, categoryName: string) => {
       badge: categoryName,
       features: [],
       ctaText: 'Pesan Layanan',
-      isPopular: false
+      isPopular: false,
+      billingCycle: 'one-time'
     }
   });
 };
@@ -421,6 +520,9 @@ const handleOrder = (planId: string) => {
   const planData = { ...selectedPlan };
   if (activeCategory.value === 'maintenance') {
     planData.price = getMaintenancePrice(selectedPlan as MaintenancePlan);
+    planData.billingCycle = activeFrequency.value;
+  } else {
+    planData.billingCycle = 'project';
   }
 
   popup.openModal(Popups.ORDER_CHECKOUT, { 

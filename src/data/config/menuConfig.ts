@@ -1,16 +1,12 @@
 import { 
     Monitor, 
-    Search,
     Briefcase,
     BookOpen,
-    FileText,
-    Calculator,
     Send,
     Info,
     Mail,
     Zap,
     Rocket,
-    Palette,
     MessageSquare,
     Settings
 } from 'lucide-vue-next';
@@ -41,8 +37,8 @@ export const menuItems: MenuItem[] = [
             {
                 title: 'Layanan Utama',
                 items: [
-                    { text: 'Website & Digital', desc: 'Landing page, company profile, sistem kustom.', url: '/services#pricing', icon: Monitor },
-                    { text: 'Maintenance Plan', desc: 'Rawat & kembangkan sistem yang sudah ada.', url: '/services#pricing', icon: Settings }
+                    { text: 'Digital Development', desc: 'Pembuatan landing page, web app & custom.', url: '/services#development', icon: Monitor },
+                    { text: 'Maintenance Plans', desc: 'Rawat & kembangkan sistem yang sudah ada.', url: '/services#maintenance', icon: Settings }
                 ]
             },
             {
@@ -95,6 +91,7 @@ export const menuItems: MenuItem[] = [
     */
     { text: 'Industries', url: '/industries', icon: Rocket },
     { text: 'Projects', url: '/projects', icon: Briefcase },
+    /*
     {
         text: 'The Blueprint',
         url: '/blueprint',
@@ -125,7 +122,9 @@ export const menuItems: MenuItem[] = [
             }
         ]
     },
+    */
     { text: 'Blog', url: '/blog', icon: BookOpen },
+    /*
     {
         text: 'Resources',
         url: '#',
@@ -137,6 +136,7 @@ export const menuItems: MenuItem[] = [
             { text: 'Documentation', url: 'https://kangjessy-docs.vercel.app', icon: FileText, trigger: 'link' }
         ]
     },
+    */
     {
         text: 'Hire Me',
         isAction: true,
@@ -147,7 +147,7 @@ export const menuItems: MenuItem[] = [
 
 // Specialized menu for Mobile BottomSheet (Flat Structure)
 export const mobileNavItems = [
-    { text: 'Services', url: '/services', icon: Monitor },
+    { text: 'Services', url: '/services#development', icon: Monitor },
     { text: 'Tools', url: 'https://kangjessy-tools.vercel.app', icon: Zap },
     { text: 'Industries', url: '/industries', icon: Rocket },
     { text: 'Portfolio', url: '/projects', icon: Briefcase },
@@ -172,7 +172,7 @@ export const mobileMenuGroups: {
     {
         title: 'Daily Business',
         items: [
-            { text: 'Services', url: '/services', icon: Monitor },
+            { text: 'Services', url: '/services#development', icon: Monitor },
             { text: 'Industries', url: '/industries', icon: Rocket },
             { text: 'Portfolio', url: '/projects', icon: Briefcase },
             // { text: 'Store', url: '/store', icon: ShoppingCart },
@@ -184,7 +184,7 @@ export const mobileMenuGroups: {
     {
         title: 'Strategy & Tools',
         items: [
-            { text: 'The Blueprint', url: '/blueprint', icon: Rocket },
+            // { text: 'The Blueprint', url: '/blueprint', icon: Rocket },
             // { text: 'Estimator', url: '/services#calculator', icon: Calculator },
             // { text: 'Portal', url: '/portal', icon: Users },
         ]

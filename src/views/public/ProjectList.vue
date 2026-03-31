@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="min-h-screen bg-bg-primary pt-36 pb-20">
-      <div class="container mx-auto px-6 max-w-6xl">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16 xl:px-20">
         <!-- Header -->
         <header class="text-center mb-10">
           <SectionHeader badge="Full Portfolio" align="center">
@@ -299,20 +299,35 @@
           </Transition>
         </Teleport>
 
-        <!-- Loading State -->
-        <div
-          v-if="loading"
-          class="flex flex-col items-center justify-center py-40"
-        >
-          <Loader2
-            :size="48"
-            class="text-accent-primary animate-spin mb-4 shrink-0"
-          />
-          <p
-            class="text-text-secondary animate-pulse uppercase tracking-[0.2em] font-black text-[clamp(0.7rem,1.5vw,0.75rem)]"
-          >
-            Loading Portfolio...
-          </p>
+        <!-- Loading State: Skeleton Cards -->
+        <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 animate-pulse mt-8">
+          <div v-for="i in 6" :key="i" class="flex flex-col gap-5">
+            <!-- Image Placeholder -->
+            <div class="w-full aspect-4/3 rounded-[24px] bg-white/5 border border-border-color/50"></div>
+            
+            <!-- Content Info Placeholder -->
+            <div class="flex flex-col gap-3 px-1">
+              <div class="flex justify-between items-start gap-4">
+                <div class="space-y-3 w-full">
+                  <div class="h-6 w-3/4 rounded-md bg-white/5"></div>
+                  <div class="h-3 w-1/2 rounded-md bg-white/5"></div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-white/5 border border-white/5 shrink-0"></div>
+              </div>
+
+              <!-- Description Placeholder (Desktop) -->
+              <div class="space-y-2 mt-1 hidden md:block w-full">
+                <div class="h-2.5 w-full rounded bg-white/5"></div>
+                <div class="h-2.5 w-5/6 rounded bg-white/5"></div>
+              </div>
+
+              <!-- Tags Placeholder -->
+              <div class="flex flex-wrap gap-2 mt-2">
+                <div class="h-5 w-16 rounded-full bg-white/5"></div>
+                <div class="h-5 w-20 rounded-full bg-white/5"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <template v-else>
@@ -540,7 +555,6 @@ import {
   ChevronDown as ChevronDownIcon,
   X as XIcon,
   SlidersHorizontal as SlidersIcon,
-  Loader2,
   FolderX as FolderXIcon,
 } from "lucide-vue-next";
 

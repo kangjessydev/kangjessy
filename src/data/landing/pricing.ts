@@ -15,6 +15,7 @@ export interface PricingPlan {
   ctaText: string;
   badge?: string;
   isPopular?: boolean;
+  billingCycle?: string;
 }
 
 export interface MaintenancePlan {
@@ -34,70 +35,67 @@ export const developmentPlans: PricingPlan[] = [
     id: 'starter-essential',
     name: 'Starter Essential',
     price: '1.500.000',
-    originalPrice: '2.500.000',
-    description: 'Solusi cepat & profesional untuk personal branding atau katalog produk sederhana.',
+    originalPrice: '3.000.000',
+    description: 'Kapasitas tepat untuk memulai visibilitas brand atau tahap awal bisnis.',
     badge: 'Best for Beginners',
     ctaText: 'Start Your Brand',
     features: [
-      { text: 'Desain Standar Framework', included: true, tooltip: 'UI bersih & elegan yang dirakit dari komponen best-practice untuk menjaga stabilitas & fungsionalitas.' },
-      { text: 'Tampilan Auto-Responsif', included: true, tooltip: 'Struktur grid rapi secara otomatis di PC, tablet, maupun perangkat mobile.' },
-      { text: 'Setup SEO & Performa Dasar', included: true, tooltip: 'Fondasi teknis disiapkan agar web cepat dimuat dan terindeks Google dengan baik, tanpa riset keyword khusus.' },
-      { text: 'Waktu Pengerjaan Cepat', included: true, tooltip: 'Karena menggunakan best-practice arsitektur tanpa kustomisasi logic rumit, website lebih cepat rilis.' },
-      { text: 'Kapasitas Server Standar', included: true, tooltip: 'Lingkungan cloud hosting yang disetting siap pakai untuk lalu lintas (traffic) normal pengunjung harian.' },
-      { text: 'Panel Edit Mandiri (CMS)', included: true, tooltip: 'Instalasi CMS standar (seperti WordPress) apabila Anda butuh akses mengubah konten dasar secara mandiri.' },
-      { text: 'Strategi Konversi Sales Khusus', included: false, tooltip: 'Belum termasuk setup khusus analitik mendalam atau tracking user behavior untuk optimasi iklan.' },
-      { text: 'Animasi Interaktif Mewah GSAP', included: false, tooltip: 'Belum mendapatkan animasi & micro-interactions kompleks standar branding mewah.' },
-      { text: 'Otomatisasi Engine SEO', included: false, tooltip: 'Belum termasuk schema generator otomatis tingkat lanjut untuk memicu Rich Snippet eksklusif di Google.' },
-      { text: 'Sistem Backend Multi-Fungsi', included: false, tooltip: 'Basis kode tidak disusun untuk sistem login ribuan aset atau kerangka logika e-commerce berat.' },
-      { text: 'Integrasi API Pihak Ketiga', included: false, tooltip: 'Tidak dilingkupi setup penyambungan ke API luar seperti Payment Gateway Bank khusus, sistem Kasir, ERP.' },
-      { text: 'Multi-Role Staff Dashboard', included: false, tooltip: 'Sistem belum menyediakan fitur multi-akun dengan berbagai izin hak akses yang berbeda (Admin/User).' },
+      { text: 'Kapasitas Layanan Dasar', included: true, tooltip: 'Ruang lingkup optimal untuk memulai bisnis baru atau profil perusahaan standar.' },
+      { text: 'Maksimal 5 Halaman General', included: true, tooltip: 'Termasuk halaman esensial seperti Beranda, Tentang Kami, Layanan, Kontak, dan sejenisnya.' },
+      { text: 'Akses Admin & Administrator', included: true, tooltip: 'Hak akses untuk mengontrol isi konten website secara penuh dan mandiri.' },
+      { text: 'Sistem Terpusat Sederhana', included: true, tooltip: 'Tipe arsitektur dasar yang mudah dikelola, tanpa kerumitan interaksi data silang.' },
+      { text: 'Notifikasi Kontak Otomatis', included: true, tooltip: 'Pesan dari pengunjung langsung diteruskan ke Email atau ponsel Anda seketika.' },
+      { text: 'Performa Infrastruktur Standar', included: true, tooltip: 'Menggunakan ruang server responsif yang memadai untuk kelancaran lalu lintas bisnis harian.' },
+      { text: 'Sistem Keamanan SSL Dasar', included: true, tooltip: 'Situs web Anda sudah otomatis memiliki enkripsi gembok pengaman hijau di peramban.' },
+      { text: 'Halaman Ekstra & Data Dinamis', included: false, tooltip: 'Belum termasuk halaman statis promo tambahan atau halaman data bersistem filter dinamis.' },
+      { text: 'Bonus Artikel SEO Tematik', included: false, tooltip: 'Tidak mendapatkan paket artikel penunjang SEO gratis.' },
+      { text: 'Integrasi Gerbang Pembayaran', included: false, tooltip: 'Belum terhubung secara instan ke sistem bank atau e-wallet otomatis untuk transaksi.' },
+      { text: 'Integrasi Kecerdasan Buatan (AI)', included: false, tooltip: 'Tidak termasuk perancangan bot asisten AI pintar untuk website Anda.' },
     ]
   },
   {
     id: 'business-growth',
     name: 'Business Growth',
-    price: '4.500.000',
-    originalPrice: '11.250.000',
-    description: 'Website berkinerja tinggi yang dirancang untuk konversi dan pertumbuhan bisnis.',
+    price: '3.000.000',
+    originalPrice: '6.000.000',
+    description: 'Skalabilitas tinggi dan logic kustomisasi ekstensif untuk sistem konversi bisnis.',
     badge: 'Most Popular',
     isPopular: true,
     ctaText: 'Grow Your Business',
     features: [
-      { text: '✨ Semua fitur Starter Essential', included: true, isPopular: true, tooltip: 'Seluruh kapabilitas dasar yang ada pada paket sebelumnya otomatis Anda dapatkan.' },
-      { text: 'Desain Custom UI/UX Premium', included: true, tooltip: 'Secara khusus UI digambar ulang berdasarkan target audiens dan psikologi pembeli produk Anda.' },
-      { text: 'Strategi Konversi Sales Khusus', included: true, tooltip: 'Dilengkapi pelacakan event (klick, scroll, waktu tayang) agar Anda paham perilaku pengunjung untuk evaluasi iklan.' },
-      { text: 'Panel Edit Mandiri (CMS)', included: true, tooltip: 'Dashboard admin kustom terenkripsi (bukan sekedar template WP biasa) untuk memanajemen data website dengan level keamanan & fleksibilitas ekstra.' },
-      { text: 'Animasi Interaktif Mewah GSAP', included: true, tooltip: 'Smooth scrolling & micro-interactions eksklusif yang memikat pengunjung layaknya website brand ternama (Apple-like).' },
-      { text: 'Otomatisasi Engine SEO', included: true, tooltip: 'Dibekali schema automation untuk memicu cuplikan interaktif di Google dan pengejaran skor rasio aksesibilitas mutlak 90+.' },
-      { text: 'Sistem Backend Multi-Fungsi', included: true, tooltip: 'Arsitektur modular di backend yang memungkinkan filter data dinamis, search canggih, dan logic kompleks siap dieksekusi.' },
-      { text: 'Aplikasi Web Kecepatan Tinggi', included: true, tooltip: 'Dibangun layaknya aplikasi mutakhir Single-Page, sehingga pindah halaman terasa instan tanpa loading siklus ulang.' },
-      { text: 'Arsitektur Server Skala Ekstrem', included: false, tooltip: 'Belum dirancang khusus load balancer untuk menanggung beban super konstan dari traffic jutaan klik masif real-time.' },
-      { text: 'Integrasi API Pihak Ketiga', included: false, tooltip: 'Tidak dilingkupi setup penyambungan ke API luar seperti Payment Gateway Bank khusus, sistem Kasir, ERP.' },
-      { text: 'Multi-Role Staff Dashboard', included: false, tooltip: 'Sistem belum menyediakan fitur multi-akun dengan berbagai izin hak akses yang berbeda (Mis: Akuntan vs Admin).' },
-      { text: 'Audit Keamanan Pentesting', included: false, tooltip: 'Lingkup web untuk public facing logic, belum diperiksa via simulasi peretasan ekstrem setingkat institusi perbankan.' },
+      { text: '✨ Semua Fitur Starter Essential', included: true, isPopular: true, tooltip: 'Kapasitas dasar, SSL, dan kemudahan manajemen sudah otomatis Anda miliki.' },
+      { text: 'Maksimal 5 Halaman General', included: true, tooltip: 'Termasuk halaman esensial perusahaan yang menjadi pilar identitas web.' },
+      { text: 'Gratis 2 Halaman Statis & 1 Dinamis', included: true, tooltip: 'Extra halaman spesifik untuk promo, dan 1 halaman pintar (misal: katalog berfilter).' },
+      { text: 'Gratis 10 Artikel SEO Tematik', included: true, tooltip: 'Penerbitan 10 artikel SEO profesional sesuai industri Anda untuk memancing kunjungan Google.' },
+      { text: 'Akses Admin & Administrator', included: true, tooltip: 'Akses tingkat pengelola utama atas seluruh aset konten website dan arsitektur data.' },
+      { text: 'Struktur Data Relasional Custom', included: true, tooltip: 'Data saling merajut dan terintegrasi akurat (Misal: Ulasan pelanggan tersambung ke halaman Produk terkait).' },
+      { text: 'Integrasi Gerbang Pembayaran', included: true, tooltip: 'Terkoneksi resmi dengan platform transaksi pembayaran real-time secara legal.' },
+      { text: 'Automasi Lembar Kerja Prospek', included: true, tooltip: 'Data prospek pelanggan yang masuk langsung terekam rapi ke layanan spreadsheet sentral.' },
+      { text: 'Performa Skala Ekspansif', included: true, tooltip: 'Kapasitas infrastruktur dioptimalkan sanggup menahan lonjakan pengunjung dari iklan berbayar secara mulus.' },
+      { text: 'Proteksi Pencadangan Lanjutan', included: true, tooltip: 'Media penyimpanan terstruktur untuk menjamin kestabilan dan pemulihan data.' },
+      { text: 'Integrasi Kecerdasan Buatan (AI)', included: false, tooltip: 'Sistem belum menyertakan modul asisten AI terpadu untuk pelayanan otomatis pelanggan.' },
     ]
   },
   {
     id: 'elite-custom',
     name: 'Elite Enterprise',
-    price: '12.500.000',
-    originalPrice: '20.000.000',
-    description: 'Sistem digital kustom skala besar untuk kebutuhan bisnis yang kompleks & spesifik.',
-    badge: 'Scale Up',
+    price: '8.000.000',
+    originalPrice: '10.000.000',
+    description: 'Platform khusus tanpa batas kapabilitas. Multi-Sistem, Cepat, dan Tersentralisasi.',
+    badge: 'Unlimited Scale',
     ctaText: 'Start Custom Project',
     features: [
-      { text: '✨ Semua fitur Business Growth', included: true, tooltip: 'Segala kenyamanan analitik & kapabilitas kecepatan di Business Growth 100% Anda miliki.' },
-      { text: 'Arsitektur Server Skala Ekstrem', included: true, tooltip: 'Node server khusus dengan Kubernetes/Auto-scale siap menghalau interupsi lonjakan jutaan load tanpa downtime.' },
-      { text: 'Integrasi API Pihak Ketiga', included: true, tooltip: 'Bisa disambungkan secara real-time dua-arah ke sistem perangkat Kasir (POS), ERP Internal, CRM, maupun integrasi Midtrans khusus.' },
-      { text: 'Multi-Role Staff Dashboard', included: true, tooltip: 'Dashboard internal khusus karyawan. Bisa membuat peran kombinasi hak akses spesifik (Contoh: Admin Pemasaran tidak bisa ubah setting sistem).' },
-      { text: 'Audit Keamanan Pentesting', included: true, tooltip: 'Infrastruktur database diisolasi multi-lapis. Termasuk stress-test DDOS untuk pertahanan data super rahasia (grade perbankan).' },
-      { text: 'Skema Pemrosesan Data Real-time', included: true, tooltip: 'Komunikasi data sangat kencang menggunakan websocket/events untuk menunjang fitur pelacakan live, chat engine, sistem antrian atau bidding lelang.' },
-      { text: 'Sistem Multi-bahasa & Mata Uang', included: true, tooltip: 'Mendeteksi dan menerjemahkan otomatis konten & hitungan kurs sesuai IP pengunjung untuk target dominasi mancanegara global.' },
-      { text: 'Kepemilikan Akses Repository Code', included: true, tooltip: 'Hak penuh (100% Owner) atas root-directory dan private codebase system bilamana Anda ingin membawa developer in-house di masa depan.' },
-      { text: 'Infrastruktur DB Regional Tersebar', included: true, tooltip: 'Data terpecah di berbagai belahan dunia (CDN & Replicas), pengunjung luar negeripun tetap merasakan load seakan dari server lokal negaranya.' },
-      { text: 'Perlindungan Uptime Resolusi SLA', included: true, tooltip: 'Proteksi layanan ketersediaan prioritas satu di mana kendala minor apapun diselesaikan dengan jalur respon teknis nomor antrean terdepan.' },
-      { text: 'Konsultasi Privat Level CTO', included: true, tooltip: 'Akses khusus ruang percakapan untuk Anda sebagai owner langsung ke saya (Lead Tech) dalam mendrive instrumen pengambilan keputusan teknologi perusahaan.' },
-      { text: 'Garansi Ekspansi (Roadmapping)', included: true, tooltip: 'Bantuan merancang Blueprint jangka panjang (1-5 Tahun) untuk pengembangan modul fitur tambahan sejalan perkembangan korporasi, aplikasinya tak perlu dirombak ulang!' },
+      { text: '✨ Semua Fitur Business Growth', included: true, tooltip: 'Sudah mutlak mencakup otomasi prospek data, struktur relasional, serta optimasi SEO harian.' },
+      { text: 'Maksimal 5 Halaman General', included: true, tooltip: 'Pondasi utama perusahaan dengan jaminan kualitas pengembangan tertinggi.' },
+      { text: 'Gratis 5 Halaman Statis & 3 Dinamis', included: true, tooltip: 'Leluasa mengeksekusi ide fitur spesifik secara bersamaan tanpa batasan konsep arsitektur.' },
+      { text: 'Gratis 10 Artikel SEO Tematik', included: true, tooltip: 'Strategi rilis konten mumpuni untuk supremasi peringkat jangka panjang di pasaran Anda.' },
+      { text: 'Akses Tingkat Akar (Root/Owner)', included: true, tooltip: 'Kendali murni tak ternilai di atas otoritas pengelola sistem manapun terhadap semua log.' },
+      { text: 'Arsitektur Terpisah Kelas Industri', included: true, tooltip: 'Fondasi antarmuka dan panel pengolah data dipisah secara brutal agar anti-lambat dan terproteksi maksimal dari serangan retas.' },
+      { text: 'Sinkronisasi Perangkat Lunak Lama', included: true, tooltip: 'Mendukung penyelarasan integrasi dengan software gudang/kasir/toko offline lama Anda melalui API penghubung.' },
+      { text: 'Dashboard Otorisasi Multi-Level', included: true, tooltip: 'Otoritas berjenjang. Karyawan Gudang hanya bisa catat data, Manager baca rekap, Direksi pantau segalanya.' },
+      { text: 'Skala Beban Trafik Tak Terbatas', included: true, tooltip: 'Ketahanan infrastruktur adaptif yang siap bergulir otomatis meredam gempuran berapapun besarnya jumlah pengunjung.' },
+      { text: 'Sistem Keamanan Terisolasi Total', included: true, tooltip: 'Penyimpanan enkripsi kelas atas dengan sistem pelacakan (logging) transparan untuk memantau gerak-gerik setiap staf.' },
+      { text: 'Fasilitas Kecerdasan Buatan (AI)', included: true, tooltip: 'Hadirkan Bot Asisten AI interaktif & cerdas untuk menjawab klien atau melakukan analisis terotomatisasi secara instan.' },
     ]
   }
 ];
@@ -106,51 +104,49 @@ export const maintenancePlans: MaintenancePlan[] = [
   {
     id: 'basic-care',
     name: 'Basic Care',
-    weeklyPrice: '250.000',
-    monthlyPrice: '800.000',
-    oneTimePrice: '500.000',
-    description: 'Pemeliharaan rutin untuk menjaga website Anda tetap aman dan berjalan lancar.',
+    weeklyPrice: '150.000',
+    monthlyPrice: '300.000',
+    oneTimePrice: '250.000',
+    description: 'Menjaga website Anda tetap "sehat" dan aman dengan pengecekan teknis berkala.',
     features: [
-      'Pembaruan Keamanan Inti',
-      'Pembaruan Performa Minor',
-      'Pencadangan Data Bulanan',
-      'Pemantauan Uptime Dasar',
-      'Dukungan via WhatsApp'
+      'Pengecekan Kesehatan (Monthly)',
+      'Cadangan Data Khusus Cloud (Monthly)',
+      'Filter Anti-Spam & Kebersihan Form',
+      'Pembaruan Keamanan Sesuai Patch',
+      'Bantuan Teknis via WhatsApp'
     ],
     ctaText: 'Get Basic Care'
   },
   {
     id: 'power-support',
     name: 'Power Support',
-    weeklyPrice: '500.000',
-    monthlyPrice: '1.750.000',
-    oneTimePrice: '1.200.000',
-    description: 'Dukungan prioritas dengan optimasi berkala untuk hasil bisnis yang konstan.',
+    weeklyPrice: '350.000',
+    monthlyPrice: '800.000',
+    oneTimePrice: '600.000',
+    description: 'Pendampingan aktif untuk performa bisnis yang lebih optimal dan stabil setiap saat.',
     isPopular: true,
     features: [
-      'Audit Keamanan Mingguan',
-      'Optimalisasi Performa Lanjutan',
-      'Pembaruan Konten Prioritas',
-      'Peringatan Uptime Real-time',
-      'Pencadangan Data Mingguan',
-      'Pelacakan Performa SEO'
+      'Pengecekan Kesehatan (Weekly)',
+      'Keamanan & Optimasi Lanjutan',
+      'Cadangan Data & Cloud Sync (Weekly)',
+      'Bantuan Edit Konten & Tata Letak',
+      'Support Teknis Jalur Prioritas'
     ],
     ctaText: 'Start Power Support'
   },
   {
     id: 'technical-partner',
     name: 'Technical Partner',
-    weeklyPrice: '1.250.000',
-    monthlyPrice: '4.500.000',
-    oneTimePrice: '3.500.000',
-    description: 'Saya menjadi CTO/Partner teknis Anda untuk mengawal pertumbuhan produk.',
+    weeklyPrice: '800.000',
+    monthlyPrice: '2.000.000',
+    oneTimePrice: '1.500.000',
+    description: 'Saya menjadi CTO/Partner teknis Anda untuk mengawal pertumbuhan teknis ekosistem bisnis.',
     features: [
-      'Konsultasi Teknis 24/7',
-      'Pengembangan Fitur Berkelanjutan',
-      'Manajemen Infrastruktur',
-      'Dukungan Peningkatan Skala (Traffic/Data)',
-      'Pengujian Keamanan (Pentesting)',
-      'Tim Pendamping (Team Lead Collaboration)'
+      'Pemantauan 24/7 & Alert Insiden',
+      'Manajemen Infrastruktur & Database',
+      'Perbaikan Bug & Perubahan Minor Tanpa Batas',
+      'Konsultasi Strategi Teknologi (Monthly)',
+      'Respon Darurat & Prioritas Utama'
     ],
     ctaText: 'Partner With Me'
   }
@@ -160,17 +156,17 @@ export const addonServices = [
   {
     category: 'Pages & Layout',
     items: [
-      { name: 'Standard Static Page', price: '350.000', desc: 'Halaman informasi tambahan (About, FAQ, etc)' },
-      { name: 'Dynamic Feature Page', price: '750.000', desc: 'Halaman dengan data dinamis (Filter, API Integration)' },
-      { name: 'High-Conversion Landing', price: '1.250.000', desc: 'Halaman promosi khusus dengan copywriting persuasif' }
+      { name: 'Standard Static Page', price: '100.000', originalPrice: '200.000', desc: 'Halaman informasi tambahan (About, FAQ, etc)' },
+      { name: 'Dynamic Feature Page', price: '350.000', originalPrice: '500.000', desc: 'Halaman dengan data dinamis (Filter, API Integration)' },
+      { name: 'High-Conversion Landing', price: '1.000.000', originalPrice: '1.500.000', desc: 'Halaman promosi khusus dengan copywriting persuasif' }
     ]
   },
   {
     category: 'Features & Optimization',
     items: [
       { name: 'Advanced Animation (GSAP)', price: '1.000.000', desc: 'Animasi interaktif premium untuk kesan WOW' },
-      { name: 'Payment Gateway Setup', price: '1.500.000', desc: 'Integrasi Midtrans/Xendit untuk pembayaran otomatis' },
-      { name: 'Advanced SEO Engine', price: '2.000.000', desc: 'Setup SEO technical & Content Strategy mendalam' }
+      { name: 'Payment Gateway Setup', price: '1.000.000', originalPrice: '1.500.000', desc: 'Integrasi Midtrans/Xendit untuk pembayaran otomatis' },
+      { name: 'Advanced SEO Engine', price: '1.000.000', originalPrice: '2.000.000', desc: 'Setup SEO technical & Content Strategy mendalam' }
     ]
   }
 ];

@@ -20,89 +20,71 @@
   <div class="min-h-screen bg-bg-primary" v-else-if="project">
     <!-- Hero Section -->
     <header
-      class="relative pt-32 pb-16 md:pt-48 md:pb-24 overflow-hidden border-b border-white/5"
+      class="relative pt-28 pb-14 md:pt-44 md:pb-20 border-b border-white/5"
     >
-      <!-- Dynamic Background Glow -->
-      <div
-        class="absolute -top-1/2 -right-[10%] w-[60%] h-[200%] blur-[120px] opacity-15 z-0 pointer-events-none rounded-full"
-        :style="{ background: 'var(--accent-primary)' }"
-      ></div>
-
-      <div class="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
+      <div class="container mx-auto px-4 sm:px-6 max-w-6xl">
+        <!-- Back link -->
         <router-link
           to="/projects"
-          class="inline-flex items-center gap-2 text-text-secondary text-sm mb-10 transition-all hover:text-accent-primary hover:-translate-x-1 group"
+          class="inline-flex items-center gap-1.5 text-text-tertiary text-[0.72rem] font-semibold mb-10 transition-colors hover:text-text-primary group"
         >
-          <ArrowLeftIcon
-            :size="18"
-            class="transition-transform group-hover:-translate-x-1"
-          />
-          <span>Kembali ke Portofolio</span>
+          <ArrowLeftIcon :size="14" class="transition-transform group-hover:-translate-x-0.5" />
+          Semua Proyek
         </router-link>
 
-        <div class="hero-content">
-          <SectionHeader :badge="project.category" align="left">
-            <template #title>
-              <h1
-                class="text-[clamp(2rem,8vw,4.5rem)] font-black m-0 bg-linear-to-r from-white to-text-secondary bg-clip-text text-transparent leading-[1.1] tracking-tighter"
-              >
-                {{ project.title }}
-              </h1>
-            </template>
-          </SectionHeader>
+        <!-- Eyebrow: category + live badge -->
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-7 h-px bg-accent-primary/60 block"></span>
+          <span class="text-[0.58rem] font-black uppercase tracking-[0.2em] text-accent-primary">
+            {{ project.category }}
+          </span>
+          <span class="text-[0.58rem] font-black uppercase tracking-[0.2em] text-accent-primary">
+            {{ project.category }}
+          </span>
+        </div>
 
-          <div
-            class="flex flex-wrap gap-4 sm:gap-8 md:gap-12 items-center mt-10"
-          >
-            <div class="flex flex-col gap-2">
-              <span
-                class="text-[0.6rem] text-text-tertiary uppercase tracking-[0.25em] font-bold"
-                >Klien</span
-              >
-              <span
-                class="text-[clamp(0.95rem,2vw,1.1rem)] font-bold text-text-primary"
-                >{{ project.client || "Proyek Internal" }}</span
-              >
+        <!-- Title -->
+        <h1
+          class="text-[clamp(2.2rem,8vw,4rem)] font-black m-0 text-white leading-[1.04] tracking-tighter mb-5"
+        >
+          {{ project.title }}
+        </h1>
+
+        <!-- Lead / description -->
+        <p class="text-[clamp(0.95rem,1.8vw,1.05rem)] text-text-secondary leading-relaxed max-w-[580px] mb-10">
+          {{ project.description || project.excerpt }}
+        </p>
+
+        <!-- Meta strip: 3 universal fields with icons -->
+        <div class="flex flex-wrap items-center gap-0">
+          <!-- Klien -->
+          <div class="flex items-center gap-2.5 pr-6 mr-6 border-r border-white/8">
+            <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-text-tertiary shrink-0">
+              <Building2Icon :size="13" />
             </div>
-            <div class="hidden sm:block w-px h-8 bg-white/10"></div>
-            <div class="flex flex-col gap-2">
-              <span
-                class="text-[0.6rem] text-text-tertiary uppercase tracking-[0.25em] font-bold"
-                >Status</span
-              >
-              <div class="flex items-center gap-2">
-                <span
-                  v-if="project?.status === 'IDEA'"
-                  class="flex items-center gap-1.5 px-2.5 py-0.5 bg-accent-primary/10 border border-accent-primary/20 rounded-md text-[9px] text-accent-primary font-black uppercase tracking-wider"
-                  >Concept</span
-                >
-                <span
-                  v-else-if="
-                    project?.status?.toLowerCase() === 'success' ||
-                    project?.status?.toLowerCase() === 'completed'
-                  "
-                  class="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[0.8rem] text-emerald-400 font-bold capitalize tracking-wide"
-                >
-                  <ShieldCheck :size="14" />
-                  {{ project?.status?.toLowerCase() }}
-                </span>
-                <span
-                  v-else
-                  class="text-[clamp(0.95rem,2vw,1.1rem)] font-bold text-text-primary capitalize"
-                  >{{ project?.status || "Selesai" }}</span
-                >
-              </div>
+            <div>
+              <div class="text-[0.5rem] font-bold uppercase tracking-[0.14em] text-text-tertiary mb-0.5">Klien</div>
+              <div class="text-[0.8rem] font-bold text-text-primary leading-none">{{ project.client || 'Internal' }}</div>
             </div>
-            <div class="hidden sm:block w-px h-8 bg-white/10"></div>
-            <div class="flex flex-col gap-2">
-              <span
-                class="text-[0.6rem] text-text-tertiary uppercase tracking-[0.25em] font-bold"
-                >Tanggal</span
-              >
-              <span
-                class="text-[clamp(0.95rem,2vw,1.1rem)] font-bold text-text-primary"
-                >{{ project.date || "-" }}</span
-              >
+          </div>
+          <!-- Selesai -->
+          <div class="flex items-center gap-2.5 pr-6 mr-6 border-r border-white/8">
+            <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-text-tertiary shrink-0">
+              <CalendarIcon :size="13" />
+            </div>
+            <div>
+              <div class="text-[0.5rem] font-bold uppercase tracking-[0.14em] text-text-tertiary mb-0.5">Selesai</div>
+              <div class="text-[0.8rem] font-bold text-text-primary leading-none">{{ project.date || '-' }}</div>
+            </div>
+          </div>
+          <!-- Industri -->
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-text-tertiary shrink-0">
+              <PackageIcon :size="13" />
+            </div>
+            <div>
+              <div class="text-[0.5rem] font-bold uppercase tracking-[0.14em] text-text-tertiary mb-0.5">Industri</div>
+              <div class="text-[0.8rem] font-bold text-text-primary leading-none">{{ project.category }}</div>
             </div>
           </div>
         </div>
@@ -110,667 +92,203 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 sm:px-6 max-w-6xl py-12 md:py-24">
-      <!-- Galeri Proyek -->
-      <section
-        v-if="project.gallery && project.gallery.length"
-        class="mb-16 md:mb-24 relative"
-      >
-        <div
-          class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6"
-        >
-          <div class="space-y-2">
-            <h3
-              class="text-[clamp(1.5rem,4vw,2.25rem)] font-black text-white tracking-tight"
-            >
-              Galeri Proyek
-            </h3>
-            <p
-              class="text-[clamp(0.7rem,1.5vw,0.8rem)] text-text-tertiary uppercase tracking-[0.2em] font-bold"
-            >
-              Eksplorasi visual solusi
-            </p>
-          </div>
-          <!-- Navigation Buttons -->
-          <div class="flex gap-3 self-end md:self-auto group/nav">
-            <button
-              class="w-12 h-12 rounded-2xl bg-bg-secondary border border-white/5 text-text-primary flex items-center justify-center cursor-pointer transition-all hover:border-accent-primary hover:text-accent-primary group active:scale-95 shadow-sm"
-              aria-label="Previous image"
-              @click="scrollGallery('left')"
-            >
-              <ChevronLeft
-                :size="20"
-                class="transition-transform group-hover:-translate-x-0.5 shrink-0"
-              />
-            </button>
-            <button
-              class="w-12 h-12 rounded-2xl bg-bg-secondary border border-white/5 text-text-primary flex items-center justify-center cursor-pointer transition-all hover:border-accent-primary hover:text-accent-primary group active:scale-95 shadow-sm"
-              aria-label="Next image"
-              @click="scrollGallery('right')"
-            >
-              <ChevronRight
-                :size="20"
-                class="transition-transform group-hover:translate-x-0.5 shrink-0"
-              />
-            </button>
-          </div>
-        </div>
+    <main>
 
-        <div class="relative group/gallery">
-          <div
-            class="overflow-x-auto scroll-auto no-scrollbar py-2 mask-linear"
-            ref="scrollContainer"
-          >
-            <div class="flex gap-4 md:gap-6 w-max pb-4">
-              <div
-                v-for="(img, idx) in project.gallery"
-                :key="idx"
-                class="w-[280px] md:w-[520px] aspect-video bg-bg-secondary rounded-[32px] border border-white/5 cursor-pointer group transition-all duration-500 hover:border-accent-primary hover:shadow-2xl overflow-hidden shadow-xs relative"
-                @click="openLightbox(urlFor(img).url())"
-              >
-                <img
-                  :src="urlFor(img).url()"
-                  :alt="project.title + ' Showcase ' + (Number(idx) + 1)"
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div
-                  class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- ═══ COVER IMAGE ═══ -->
+      <div v-if="project.mainImage" class="px-4 sm:px-6 max-w-6xl mx-auto pt-10 md:pt-14">
+        <img
+          :src="project.mainImage"
+          :alt="project.title"
+          class="w-full aspect-[16/7] object-cover rounded-2xl md:rounded-3xl border border-white/5 block"
+          loading="eager"
+        />
+      </div>
 
-      <!-- Two Column Layout -->
-      <div
-        class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-16 lg:gap-24 relative"
-      >
-        <div class="space-y-8">
-          <!-- Fase 00: Concept Discovery (IDEAS) -->
-          <section v-if="isIdea">
-            <div
-              class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-6 flex items-center gap-3"
-            >
-              <div class="w-8 h-px bg-emerald-400/50"></div>
-              Fase 00 / Concept Discovery
-            </div>
-            <h2
-              class="text-[clamp(2rem,5vw,2.5rem)] font-black text-white mb-8 tracking-tight leading-tight"
-            >
-              Visi & Hipotesis Solusi
-            </h2>
+      <!-- ═══ BODY: Prose + Sidebar ═══ -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12 lg:gap-20 items-start">
 
-            <div
-              class="bg-bg-secondary/40 border border-white/5 rounded-[32px] p-6 sm:p-8 md:p-12 space-y-12 relative overflow-hidden group"
-            >
-              <div
-                class="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-500/5 blur-[120px] rounded-full"
-              ></div>
+          <!-- LEFT: Prose -->
+          <div id="deep-dive-section">
 
-              <div class="relative z-10 space-y-12">
-                <div class="flex flex-col md:flex-row gap-8 md:items-start">
-                  <div
-                    class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0"
-                  >
-                    <Target :size="28" />
-                  </div>
-                  <div class="space-y-4">
-                    <h3 class="text-white font-bold text-xl tracking-tight">
-                      The Core Idea
-                    </h3>
-                    <p
-                      class="text-white/60 leading-relaxed text-[0.95rem] max-w-2xl"
-                    >
-                      Proyek concept ini dirancang untuk menjawab tantangan
-                      industri di masa depan. Fokus utama adalah pada
-                      <span class="text-white font-bold"
-                        >efisiensi yang didorong oleh data</span
-                      >
-                      dan
-                      <span class="text-white font-bold"
-                        >pengalaman pengguna yang imersif</span
-                      >. Saat ini dalam tahap pematangan arsitektur teknis.
-                    </p>
-                  </div>
-                </div>
+            <!-- Rich Prose Content (one rich-text field from CMS) -->
+            <div v-if="project.content" class="rich-content" v-html="renderedContent"></div>
 
-                <div class="w-full h-px bg-white/5 md:block hidden"></div>
-
-                <div class="flex flex-col md:flex-row gap-8 md:items-start">
-                  <div
-                    class="w-14 h-14 rounded-2xl bg-accent-primary/10 flex items-center justify-center text-accent-primary shrink-0"
-                  >
-                    <Zap :size="28" />
-                  </div>
-                  <div class="space-y-4">
-                    <h3 class="text-white font-bold text-xl tracking-tight">
-                      Future Stack Readiness
-                    </h3>
-                    <p
-                      class="text-white/60 leading-relaxed text-[0.95rem] max-w-2xl"
-                    >
-                      Direncanakan menggunakan modern stack 2025-2026, termasuk
-                      optimasi <span class="text-white font-bold">WebGPU</span>,
-                      integrasi
-                      <span class="text-white font-bold">AI-Agent otonom</span>,
-                      dan efisiensi render tingkat tinggi untuk performa
-                      maksimal di semua perangkat.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <!-- Fase 01: Konteks (Challenge) -->
-          <!-- Fase 01: Konteks (Challenge) -->
-          <section
-            v-if="project.challenge || project.summary || project.description"
-          >
-            <div
-              class="text-[10px] font-black text-accent-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-3"
-            >
-              <div class="w-8 h-px bg-accent-primary/50"></div>
-              Fase 01 / Konteks
-            </div>
-            <h2
-              class="text-[clamp(2rem,5vw,2.5rem)] font-black text-white mb-8 tracking-tight leading-tight"
-            >
-              Latar Belakang Proyek
-            </h2>
-            <div
-              class="text-[clamp(1.1rem,2vw,1.25rem)] leading-[1.8] text-text-secondary space-y-6 max-w-3xl font-medium"
-            >
-              <div
-                v-if="project.challenge?.description"
-                v-html="project.challenge.description"
-              ></div>
-              <p v-else class="whitespace-pre-line">
+            <!-- Fallback jika belum ada content field -->
+            <div v-else-if="project.challenge || project.description || project.excerpt" class="rich-content">
+              <p class="text-text-secondary leading-relaxed text-[clamp(1rem,2vw,1.1rem)]">
                 {{
-                  (typeof project.challenge === "string"
-                    ? project.challenge
-                    : null) ||
-                  project.summary ||
+                  (typeof project.challenge === 'string' ? project.challenge : project.challenge?.description) ||
                   project.description ||
                   project.excerpt
                 }}
               </p>
             </div>
-          </section>
 
-          <!-- Fase 01.5: Dynamic Pivot/Investigation (Show only if data exists) -->
-          <section
-            v-if="
-              project.pivot &&
-              (project.pivot.title ||
-                (project.pivot.items && project.pivot.items.length > 0))
-            "
-          >
+            <!-- Metrics Strip -->
             <div
-              class="text-[10px] font-black text-amber-400 uppercase tracking-[0.3em] mb-6 flex items-center gap-3"
-            >
-              <div class="w-8 h-px bg-amber-400/50"></div>
-              <span
-                v-text="project.pivot.subtitle || 'Fase 01.5 / Investigasi'"
-              ></span>
-            </div>
-            <h2
-              class="text-[clamp(2rem,5vw,2.5rem)] font-black text-white mb-8 tracking-tight leading-tight"
-            >
-              {{ project.pivot.title }}
-            </h2>
-
-            <div
-              class="bg-bg-secondary/40 border border-white/5 rounded-[32px] p-8 md:p-12 space-y-12 relative overflow-hidden group"
+              v-if="project.metrics && project.metrics.length"
+              class="grid grid-cols-2 sm:grid-cols-3 gap-3 my-10 p-6 md:p-8 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl"
             >
               <div
-                class="absolute -right-20 -bottom-20 w-80 h-80 bg-amber-500/5 blur-[120px] rounded-full"
-              ></div>
-
-              <div class="relative z-10 space-y-12">
-                <div v-for="(item, idx) in project.pivot.items" :key="idx">
-                  <div class="flex flex-col md:flex-row gap-8 md:items-start">
-                    <div
-                      class="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 shrink-0 group-hover:bg-amber-500/20 transition-colors"
-                    >
-                      <component :is="getIcon(item.icon)" :size="28" />
-                    </div>
-                    <div class="space-y-4">
-                      <h3 class="text-white font-bold text-xl tracking-tight">
-                        {{ item.title }}
-                      </h3>
-                      <p
-                        class="text-white/60 leading-relaxed text-[0.95rem] max-w-2xl"
-                      >
-                        {{ item.desc }}
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    v-if="Number(idx) < Number(project.pivot.items.length) - 1"
-                    class="w-full h-px bg-white/5 md:block hidden mt-12"
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Fase 02: Strategi (Process/Solution) -->
-          <section>
-            <div
-              class="text-[10px] font-black text-accent-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-3"
-            >
-              <div class="w-8 h-px bg-accent-primary/50"></div>
-              Fase 02 / Strategi
-            </div>
-            <h2
-              class="text-[clamp(2rem,5vw,2.5rem)] font-black text-white mb-10 tracking-tight leading-tight"
-            >
-              Solusi & Implementasi
-            </h2>
-
-            <div class="space-y-4">
-              <div
-                v-for="(step, i) in displaySteps"
+                v-for="(metric, i) in project.metrics"
                 :key="i"
-                class="p-6 sm:p-8 bg-bg-secondary/30 border border-white/5 rounded-3xl group transition-all duration-300 hover:bg-bg-secondary hover:border-accent-primary/30 flex gap-4 sm:gap-6 md:gap-8 items-start relative overflow-hidden"
+                class="text-center"
+                :class="metric.proofImage ? 'cursor-zoom-in' : ''"
+                @click="metric.proofImage ? openLightbox(metric.proofImage) : null"
               >
-                <div
-                  class="w-12 h-12 rounded-2xl bg-accent-primary/10 flex items-center justify-center text-accent-primary text-lg font-black shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-inner ring-1 ring-white/5"
-                >
-                  {{ Number(i) + 1 }}
-                </div>
-                <div class="space-y-3 relative z-10">
-                  <h3
-                    class="text-[clamp(1.1rem,2.5vw,1.25rem)] font-bold text-white tracking-tight leading-snug group-hover:text-accent-primary transition-colors"
-                  >
-                    {{ step.title }}
-                  </h3>
-                  <p
-                    class="text-[clamp(0.9rem,1.5vw,1rem)] text-text-secondary leading-relaxed opacity-80"
-                  >
-                    {{ step.desc }}
-                  </p>
-                </div>
+                <div class="text-[clamp(1.8rem,5vw,2.4rem)] font-black text-white leading-none tracking-tight mb-1.5">{{ metric.value }}</div>
+                <div class="text-[0.58rem] font-black text-emerald-400/70 uppercase tracking-[0.18em]">{{ metric.label }}</div>
               </div>
             </div>
 
-            <!-- Dynamic Steps for other projects -->
-          </section>
-
-          <!-- Fase 03: Dampak (Impact/Results) -->
-          <section v-if="project.impact || project.metrics">
-            <div
-              class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-6 flex items-center gap-3"
-            >
-              <div class="w-8 h-px bg-emerald-400/50"></div>
-              Fase 03 / Dampak
-            </div>
-            <h2
-              class="text-[clamp(2rem,5vw,2.5rem)] font-black text-white mb-10 tracking-tight leading-tight"
-            >
-              Hasil Akhir
-            </h2>
-
-            <!-- Impact Quote Card -->
-            <div
-              class="bg-emerald-500/5 border border-emerald-500/10 rounded-[32px] p-8 md:p-14 mb-12 relative overflow-hidden group transition-all hover:bg-emerald-500/[0.08]"
-            >
-              <!-- Ambient Glow -->
-              <div
-                class="absolute -right-20 -top-20 w-80 h-80 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none transition-all group-hover:bg-emerald-500/15"
-              ></div>
-              <div class="relative z-10">
-                <p
-                  class="text-[clamp(1.1rem,2vw,1.35rem)] leading-relaxed text-text-primary font-medium italic opacity-90"
-                >
-                  "{{ impactQuote }}"
-                </p>
+            <!-- Tech Stack Chips -->
+            <div v-if="project.technologies && project.technologies.length" class="mt-10 pt-8 border-t border-white/5">
+              <div class="text-[0.58rem] font-black uppercase tracking-[0.16em] text-text-tertiary mb-4">Tech &amp; Tools</div>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  v-for="tag in project.technologies"
+                  :key="tag"
+                  class="px-4 py-2 bg-bg-secondary border border-white/5 rounded-full text-[0.78rem] text-text-secondary font-bold hover:text-white hover:border-white/15 transition-all cursor-default"
+                >{{ tag }}</span>
               </div>
             </div>
 
-            <!-- Metrics Bento Grid -->
-            <div
-              v-if="project.metrics"
-              class="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-6 gap-5 md:gap-6"
-            >
-              <div
-                v-for="(metric, mIdx) in project.metrics"
-                :key="mIdx"
-                class="p-8 bg-bg-secondary/40 border border-white/5 rounded-[24px] flex flex-col items-center text-center gap-6 transition-all group/metric shadow-sm hover:shadow-lg hover:-translate-y-1 relative overflow-hidden"
-                :class="[
-                  metric.proofImage
-                    ? 'cursor-zoom-in hover:bg-bg-secondary hover:border-emerald-500/30'
-                    : 'cursor-default',
-                  mIdx === 0
-                    ? 'sm:col-span-3 lg:col-span-3'
-                    : 'sm:col-span-3 lg:col-span-3',
-                ]"
-                @click="
-                  metric.proofImage ? openLightbox(metric.proofImage) : null
-                "
-              >
-                <div
-                  v-if="metric.proofImage"
-                  class="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full opacity-0 group-hover/metric:opacity-100 transition-opacity"
-                >
-                  <ShieldCheck :size="12" class="text-emerald-400 shrink-0" />
-                  <span
-                    class="text-[9px] font-black text-emerald-400 uppercase tracking-wider"
-                    >Verified</span
-                  >
-                </div>
-
-                <div
-                  class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0 group-hover/metric:scale-110 transition-transform duration-300"
-                >
-                  <component
-                    :is="getIcon(metric.icon)"
-                    :size="32"
-                    class="shrink-0"
-                  />
-                </div>
-                <div class="space-y-2">
-                  <div
-                    class="text-[clamp(1.75rem,5vw,2.75rem)] font-black text-white leading-none tracking-tight"
-                  >
-                    {{ metric.value }}
-                  </div>
-                  <div
-                    class="text-[10px] md:text-xs text-text-tertiary uppercase tracking-[0.2em] font-bold opacity-80"
-                  >
-                    {{ metric.label }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Technologies Used -->
-          <section v-if="project.technologies && project.technologies.length">
-            <h3
-              class="text-[clamp(1.25rem,2.5vw,1.5rem)] font-bold text-white mb-8 tracking-tight"
-            >
-              Teknologi Inti
-            </h3>
-            <div class="flex flex-wrap gap-3">
-              <span
-                v-for="tag in project.technologies"
-                :key="tag"
-                class="px-5 py-2.5 bg-bg-secondary border border-white/5 rounded-full text-[0.9rem] text-text-secondary font-bold hover:text-white hover:border-white/20 hover:bg-white/5 transition-all cursor-default select-none shadow-sm"
-              >
-                {{ tag }}
-              </span>
-            </div>
-          </section>
-        </div>
-
-        <!-- Sidebar (Desktop Sticky) - STOPS HERE, BEFORE DEEP DIVE -->
-        <aside class="hidden lg:block relative font-sans h-fit sticky top-32">
-          <div class="space-y-8">
-            <div
-              class="bg-bg-secondary/80 backdrop-blur-xl border border-white/5 rounded-[32px] p-8 shadow-2xl overflow-hidden relative group"
-            >
-              <div
-                class="absolute -top-20 -right-20 w-60 h-60 bg-accent-primary/10 blur-[80px] rounded-full transition-all group-hover:bg-accent-primary/15 pointer-events-none"
-              ></div>
-
-              <h3
-                class="text-xl font-black mb-8 text-white tracking-tight relative z-10"
-              >
-                Akses Proyek
-              </h3>
-              <div class="flex flex-col gap-4 relative z-10">
-                <BaseButton
-                  v-if="project.liveUrl || project.demoUrl"
-                  variant="primary"
-                  size="lg"
-                  class="w-full shadow-lg shadow-accent-primary/20"
-                  @click="handlePreviewClick"
-                >
-                  <span>Live Preview</span>
-                  <ExternalLinkIcon :size="18" class="ml-2" />
-                </BaseButton>
-
-                <!-- Fallback Inquiry Button if Live Preview is missing -->
-                <BaseButton
-                  v-else
-                  variant="primary"
-                  size="lg"
-                  class="w-full shadow-lg shadow-accent-primary/20"
-                  @click="openContact"
-                >
-                  <span>Tanya Detail Teknis</span>
-                  <MessageCircleIcon :size="18" class="ml-2" />
-                </BaseButton>
-
-                <BaseButton
-                  v-if="project.githubUrl"
-                  :href="project.githubUrl"
-                  variant="outline"
-                  size="lg"
-                  class="w-full hover:bg-white/5"
-                >
-                  <span>Lihat Kode</span>
-                  <GithubIcon :size="18" class="ml-2" />
-                </BaseButton>
-
-                <!-- Privacy Note if no Github -->
-                <p 
-                  v-else
-                  class="text-[10px] text-text-tertiary italic leading-relaxed px-2 text-center"
-                >
-                  * Kode sumber bersifat rahasia (NDA) untuk melindungi aset bisnis klien.
-                </p>
-
-                <!-- Case Study Shortcut -->
-                <button
-                  v-if="project.content"
-                  @click="scrollToDeepDive"
-                  class="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-text-tertiary uppercase tracking-wider hover:text-white transition-colors border-t border-white/5 mt-2 pt-5"
-                >
-                  <span>Baca Studi Kasus</span>
-                  <ArrowDownIcon :size="16" class="animate-bounce" />
+            <!-- Share Box -->
+            <div class="mt-14 pt-8 border-t border-white/5">
+              <p class="text-[0.72rem] font-black uppercase tracking-[0.15em] text-text-tertiary mb-5">Bagikan Proyek</p>
+              <div class="flex flex-wrap gap-3">
+                <button @click="shareOnTwitter" class="px-5 py-2.5 rounded-full border border-white/8 bg-bg-secondary text-text-secondary font-bold flex items-center gap-2 transition-all hover:border-white/20 hover:text-white text-[0.8rem] cursor-pointer">
+                  <Twitter :size="15" class="shrink-0" /> Twitter
                 </button>
-
-                <div
-                  v-if="!project.liveUrl && !project.githubUrl"
-                  class="p-6 bg-white/5 border border-dashed border-white/10 rounded-2xl text-center"
-                >
-                  <LockIcon
-                    :size="24"
-                    class="text-text-tertiary mx-auto mb-3 opacity-50"
-                  />
-                  <p
-                    class="text-[10px] text-text-tertiary font-bold uppercase tracking-widest"
-                  >
-                    Proyek Internal / NDA Protected
-                  </p>
-                </div>
+                <button @click="shareOnLinkedIn" class="px-5 py-2.5 rounded-full border border-white/8 bg-bg-secondary text-text-secondary font-bold flex items-center gap-2 transition-all hover:border-white/20 hover:text-white text-[0.8rem] cursor-pointer">
+                  <LinkedinIcon :size="15" class="shrink-0" /> LinkedIn
+                </button>
+                <button @click="copyLink" class="px-5 py-2.5 rounded-full border border-white/8 bg-bg-secondary text-text-secondary font-bold flex items-center gap-2 transition-all hover:border-white/20 hover:text-white text-[0.8rem] cursor-pointer">
+                  <Copy :size="15" class="shrink-0" /> Salin Link
+                </button>
               </div>
-            </div>
-
-            <div
-              class="bg-linear-to-b from-bg-secondary to-bg-primary border border-white/5 rounded-[32px] p-8 space-y-6 shadow-lg"
-            >
-              <h3
-                class="text-xl font-black text-white tracking-tight leading-tight"
-              >
-                Membangun sesuatu yang serupa?
-              </h3>
-              <p
-                class="text-[0.95rem] text-text-secondary leading-relaxed opacity-70"
-              >
-                Konsultasikan visi Anda. Kita akan bedah strategi teknis yang
-                paling efisien.
-              </p>
-              <BaseButton
-                variant="outline"
-                size="lg"
-                class="w-full border-white/10 hover:bg-white/5"
-                @click="openContact"
-                >Mulai Diskusi</BaseButton
-              >
             </div>
           </div>
-        </aside>
+
+          <!-- RIGHT: Sidebar -->
+          <aside class="hidden lg:block relative font-sans h-fit sticky top-32">
+            <div class="space-y-5">
+              <!-- Access card -->
+              <div class="bg-bg-secondary/80 backdrop-blur-xl border border-white/5 rounded-[24px] p-6 shadow-xl">
+                <h3 class="text-[0.6rem] font-black text-text-tertiary uppercase tracking-[0.15em] mb-4">Akses Proyek</h3>
+                <div class="flex flex-col gap-3">
+                  <BaseButton v-if="project.liveUrl || project.demoUrl" variant="primary" size="lg" class="w-full shadow-lg shadow-accent-primary/20" @click="handlePreviewClick">
+                    <ExternalLinkIcon :size="16" class="mr-2" />
+                    <span>{{ project.liveUrl ? 'Live Preview' : 'Lihat Demo' }}</span>
+                  </BaseButton>
+                  <BaseButton v-else variant="primary" size="lg" class="w-full" @click="openContact">
+                    <MessageCircleIcon :size="16" class="mr-2" />
+                    <span>Tanya Detail Teknis</span>
+                  </BaseButton>
+                  <BaseButton v-if="project.githubUrl" :href="project.githubUrl" variant="outline" size="lg" class="w-full hover:bg-white/5" target="_blank">
+                    <GithubIcon :size="16" class="mr-2" />
+                    <span>Lihat Kode</span>
+                  </BaseButton>
+                  <p v-if="!project.githubUrl" class="text-[0.65rem] text-text-tertiary italic leading-relaxed text-center">
+                    * Kode sumber bersifat rahasia (NDA) untuk melindungi aset bisnis klien.
+                  </p>
+                </div>
+              </div>
+              <!-- Detail card -->
+              <div class="border border-white/5 rounded-[24px] p-6">
+                <h3 class="text-[0.6rem] font-black text-text-tertiary uppercase tracking-[0.15em] mb-4">Detail</h3>
+                <div>
+                  <div class="flex justify-between items-center py-2.5 border-b border-white/5 text-[0.78rem]">
+                    <span class="text-text-tertiary font-semibold">Klien</span>
+                    <span class="text-text-primary font-bold text-right">{{ project.client || 'Internal' }}</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2.5 border-b border-white/5 text-[0.78rem]">
+                    <span class="text-text-tertiary font-semibold">Selesai</span>
+                    <span class="text-text-primary font-bold">{{ project.date || '-' }}</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2.5 border-b border-white/5 text-[0.78rem]">
+                    <span class="text-text-tertiary font-semibold">Kategori</span>
+                    <span class="text-text-primary font-bold">{{ project.category }}</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2.5 text-[0.78rem]">
+                    <span class="text-text-tertiary font-semibold">Platform</span>
+                    <span class="text-text-primary font-bold text-right">{{ project.technologies?.[0] || project.tags?.[0] || '-' }}</span>
+                  </div>
+                </div>
+              </div>
+              <!-- CTA card -->
+              <div class="border border-white/5 rounded-[24px] p-6 space-y-4">
+                <h3 class="text-[0.9rem] font-black text-white tracking-tight leading-snug">Membangun sesuatu yang serupa?</h3>
+                <p class="text-[0.8rem] text-text-secondary leading-relaxed opacity-70">Diskusikan strategi teknis yang paling efisien untuk proyek Anda.</p>
+                <BaseButton variant="outline" size="lg" class="w-full border-white/10 hover:bg-white/5" @click="openContact">Mulai Diskusi</BaseButton>
+              </div>
+            </div>
+          </aside>
+
+        </div>
       </div>
 
-      <!-- Project Goals Section -->
-      <section
-        v-if="project.goals && project.goals.length > 0"
-        class="mt-24 border-t border-white/5 pt-16 max-w-5xl mx-auto px-6 md:px-0"
-      >
-        <div class="text-left mb-16">
-          <div
-            class="text-[10px] font-black text-accent-primary uppercase tracking-[0.3em] mb-6 flex items-center justify-start gap-3"
-          >
-            <div class="w-8 h-px bg-accent-primary/50"></div>
-            Definisi Sukses
+      <!-- ═══ GALLERY ═══ -->
+      <section v-if="project.gallery && project.gallery.length" class="border-t border-white/5 pt-12 pb-16 max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <p class="text-[0.58rem] font-black uppercase tracking-[0.18em] text-text-tertiary mb-1.5">Galeri Proyek</p>
+            <h3 class="text-[clamp(1.2rem,3vw,1.6rem)] font-black text-white tracking-tight">Eksplorasi Visual</h3>
           </div>
-          <h2
-            class="text-[clamp(2.5rem,5vw,3.5rem)] font-black text-white tracking-tight mb-4"
-          >
-            Project Objectives
-          </h2>
-          <p
-            class="text-text-tertiary text-sm font-bold uppercase tracking-widest max-w-2xl"
-          >
-            Target utama dan Key Performance Indicators (KPI) yang disepakati
-          </p>
+          <div class="flex gap-2">
+            <button class="w-10 h-10 rounded-xl bg-bg-secondary border border-white/5 flex items-center justify-center text-text-primary transition-all hover:border-accent-primary/40 hover:text-accent-primary active:scale-95" @click="scrollGallery('left')"><ChevronLeft :size="18" /></button>
+            <button class="w-10 h-10 rounded-xl bg-bg-secondary border border-white/5 flex items-center justify-center text-text-primary transition-all hover:border-accent-primary/40 hover:text-accent-primary active:scale-95" @click="scrollGallery('right')"><ChevronRight :size="18" /></button>
+          </div>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div 
-            v-for="(goal, idx) in project.goals" 
-            :key="idx" 
-            class="bg-bg-secondary border border-border-color rounded-3xl p-8 hover:border-accent-primary/50 transition-all duration-300 group hover:-translate-y-1 hover:shadow-lg hover:shadow-accent-primary/5"
-          >
-            <div class="w-14 h-14 rounded-2xl bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary mb-6 group-hover:bg-accent-primary group-hover:text-white transition-colors duration-300 shadow-sm">
-              <Target :size="28" />
+        <div class="overflow-x-auto no-scrollbar scroll-smooth" ref="scrollContainer">
+          <div class="flex gap-4 w-max pb-3">
+            <div
+              v-for="(img, idx) in project.gallery"
+              :key="idx"
+              class="w-[80vw] max-w-[480px] md:w-[400px] aspect-video bg-bg-secondary rounded-2xl border border-white/5 cursor-zoom-in overflow-hidden group shrink-0 relative"
+              @click="openLightbox(urlFor(img).url())"
+            >
+              <img :src="urlFor(img).url()" :alt="project.title + ' ' + (Number(idx) + 1)" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+              <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
             </div>
-            <p class="text-white text-lg font-bold leading-tight mb-2">{{ goal.title }}</p>
-            <p class="text-text-secondary leading-relaxed text-sm h-auto">{{ goal.desc }}</p>
           </div>
         </div>
       </section>
 
-      <!-- Full Width Deep Dive Section (Outside Grid) -->
-      <!-- Fase 04: Konten Detail / Case Study Tambahan (Deep Dive) -->
-      <section
-        v-if="project.content"
-        id="deep-dive-section"
-        class="mt-24 md:mt-32 border-t border-white/5 pt-20 max-w-5xl mx-auto px-6 md:px-0"
-      >
-        <div class="text-left mb-16">
-          <div
-            class="text-[10px] font-black text-accent-primary uppercase tracking-[0.3em] mb-6 flex items-center justify-start gap-3"
-          >
-            <div class="w-8 h-px bg-accent-primary/50"></div>
-            Eksplorasi Mendalam
+      <!-- ═══ CTA BANNER ═══ -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
+        <div class="border border-white/5 rounded-2xl p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <h3 class="text-[clamp(1.1rem,2.5vw,1.45rem)] font-black text-white tracking-tight mb-2">Punya tantangan teknis serupa?</h3>
+            <p class="text-[0.88rem] text-text-secondary leading-relaxed opacity-70">Ceritakan masalah Anda. Saya spesialis dalam situasi yang sudah dicoba orang lain tapi gagal.</p>
           </div>
-          <h2
-            class="text-[clamp(2.5rem,5vw,3.5rem)] font-black text-white tracking-tight mb-4"
-          >
-            Studi Kasus Detail
-          </h2>
-          <p
-            class="text-text-tertiary text-sm font-bold uppercase tracking-widest max-w-lg"
-          >
-            Dokumentasi teknis, tantangan unik, dan solusi arsitektural yang
-            diterapkan
-          </p>
+          <BaseButton variant="primary" size="lg" class="shrink-0 shadow-lg shadow-accent-primary/20 md:min-w-[180px]" @click="openContact">
+            <MessageCircleIcon :size="16" class="mr-2" />Mulai Diskusi
+          </BaseButton>
         </div>
+      </div>
 
-        <div class="rich-content" v-html="renderedContent"></div>
-
-        <!-- Sharing Box -->
-        <div class="bg-bg-secondary p-8 md:p-10 rounded-[32px] border border-border-color mb-[60px] mt-20">
-            <h3 class="text-xl font-bold text-white mb-6">Bagikan proyek ini:</h3>
-            <div class="flex flex-wrap gap-4">
-                <button @click="shareOnTwitter"
-                    class="px-6 py-3 rounded-full border border-white/10 bg-bg-primary text-text-primary font-bold flex items-center gap-2.5 transition-all hover:border-accent-primary hover:bg-bg-secondary hover:-translate-y-0.5 cursor-pointer w-full md:w-auto justify-center text-sm">
-                    <Twitter :size="18" class="shrink-0" /> Twitter
-                </button>
-                <button @click="shareOnLinkedIn"
-                    class="px-6 py-3 rounded-full border border-white/10 bg-bg-primary text-text-primary font-bold flex items-center gap-2.5 transition-all hover:border-accent-primary hover:bg-bg-secondary hover:-translate-y-0.5 cursor-pointer w-full md:w-auto justify-center text-sm">
-                    <LinkedinIcon :size="18" class="shrink-0" /> LinkedIn
-                </button>
-                <button @click="shareOnWhatsApp"
-                    class="px-6 py-3 rounded-full border border-white/10 bg-bg-primary text-text-primary font-bold flex items-center gap-2.5 transition-all hover:border-accent-primary hover:bg-bg-secondary hover:-translate-y-0.5 cursor-pointer w-full md:w-auto justify-center text-sm">
-                    <MessageCircleIcon :size="18" class="shrink-0" /> WhatsApp
-                </button>
-                <button @click="copyLink"
-                    class="px-6 py-3 rounded-full border border-white/10 bg-bg-primary text-text-primary font-bold flex items-center gap-2.5 transition-all hover:border-accent-primary hover:bg-bg-secondary hover:-translate-y-0.5 cursor-pointer w-full md:w-auto justify-center text-sm">
-                    <Copy :size="18" class="shrink-0" /> Salin Link
-                </button>
-            </div>
+      <!-- ═══ FAQ (Hidden) ═══ 
+      <section class="border-t border-white/5 pt-16 pb-20 max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="mb-10">
+          <p class="text-[0.58rem] font-black uppercase tracking-[0.18em] text-text-tertiary mb-2">FAQ</p>
+          <h2 class="text-[clamp(1.4rem,3vw,2rem)] font-black text-white tracking-tight">Pertanyaan Umum</h2>
         </div>
-      </section>
-
-      <!-- FAQ Section (Moved to Bottom) -->
-      <section
-        class="border-t border-white/5 pt-20 mt-24 max-w-5xl mx-auto px-6 md:px-0"
-      >
-        <div class="text-left mb-16">
-          <div
-            class="w-16 h-16 rounded-3xl bg-accent-primary/10 flex items-center justify-center text-accent-primary mb-6"
-          >
-            <HelpCircle :size="32" />
-          </div>
-          <h2
-            class="text-[clamp(2rem,4vw,2.5rem)] font-black text-white tracking-tight mb-4"
-          >
-            Pertanyaan Umum
-          </h2>
-          <p
-            class="text-text-tertiary uppercase tracking-widest font-bold text-xs"
-          >
-            Detail Pengerjaan & Hasil
-          </p>
-        </div>
-
-        <!-- FAQ Grid (Desktop) -->
-        <div class="hidden md:grid grid-cols-1 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div
             v-for="(faq, i) in displayFAQs"
             :key="i"
-            class="bg-bg-secondary/40 border border-white/5 rounded-[24px] p-8 hover:bg-bg-secondary hover:border-white/10 transition-all duration-300 group"
+            class="p-6 bg-bg-secondary/30 border border-white/5 rounded-2xl hover:bg-bg-secondary/60 transition-all group"
           >
-            <h4
-              class="text-xl font-bold text-white mb-4 leading-snug group-hover:text-accent-primary transition-colors flex items-start gap-3"
-            >
-              <span class="text-accent-primary/50 opacity-50">Q.</span>
-              {{ faq.q }}
-            </h4>
-            <p
-              class="text-text-secondary leading-relaxed text-[1.05rem] opacity-80 pl-8"
-            >
-              {{ faq.a }}
-            </p>
+            <p class="text-[0.8rem] font-black text-white mb-3 leading-snug group-hover:text-accent-primary transition-colors">{{ faq.q }}</p>
+            <p class="text-[0.82rem] text-text-secondary leading-relaxed opacity-80">{{ faq.a }}</p>
           </div>
         </div>
-
-        <!-- FAQ Accordion (Mobile) -->
-        <div class="md:hidden space-y-3">
-          <AccordionItem
-            v-for="(faq, i) in displayFAQs"
-            :key="'mob-faq-' + i"
-            :title="faq.q"
-            :isOpen="activeFaqIndex === i"
-            @toggle="toggleFaq(i)"
-            class="bg-bg-secondary/40 border-white/5 rounded-2xl overflow-hidden shadow-sm"
-          >
-            <p
-              class="text-[0.95rem] text-text-secondary leading-relaxed opacity-80"
-            >
-              {{ faq.a }}
-            </p>
-          </AccordionItem>
-        </div>
       </section>
+      -->
     </main>
+
 
     <!-- Modals & Overlays (Placed inside v-else-if for structure) -->
 
@@ -1044,41 +562,124 @@
       </Transition>
     </Teleport>
 
+    <!-- Demo Info Modal (Desktop popup + Mobile BottomSheet) -->
+    <!-- Desktop modal -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="isDemoModalOpen"
+          class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9000] hidden lg:flex items-center justify-center p-6"
+          @click.self="isDemoModalOpen = false"
+        >
+          <Transition
+            enter-active-class="transition duration-250 ease-out"
+            enter-from-class="scale-95 opacity-0"
+            enter-to-class="scale-100 opacity-100"
+          >
+            <div
+              v-if="isDemoModalOpen"
+              class="bg-bg-secondary border border-white/8 rounded-[24px] p-8 w-full max-w-[420px] shadow-2xl"
+            >
+              <!-- Close -->
+              <div class="flex justify-end mb-4">
+                <button
+                  @click="isDemoModalOpen = false"
+                  class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-tertiary hover:text-white transition-colors"
+                >
+                  <XIcon :size="16" />
+                </button>
+              </div>
+              <!-- Icon -->
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
+                :class="project?.demoType === 'nda' ? 'bg-red-500/10 border border-red-500/20 text-red-400' : 'bg-amber-500/10 border border-amber-500/20 text-amber-400'"
+              >
+                <LockIcon v-if="project?.demoType === 'nda'" :size="22" />
+                <MonitorIcon v-else :size="22" />
+              </div>
+              <!-- Content -->
+              <h4 class="text-[1rem] font-black text-white tracking-tight mb-2">{{ demoInfo.title }}</h4>
+              <p class="text-[0.82rem] text-text-secondary leading-relaxed mb-6" v-html="demoInfo.message"></p>
+              <!-- Actions -->
+              <div class="flex gap-3">
+                <BaseButton
+                  v-if="project?.demoUrl"
+                  :href="project.demoUrl"
+                  variant="primary"
+                  size="lg"
+                  class="flex-1"
+                  target="_blank"
+                  @click="isDemoModalOpen = false"
+                >{{ demoInfo.buttonText }}</BaseButton>
+                <BaseButton
+                  v-else
+                  variant="primary"
+                  size="lg"
+                  class="flex-1"
+                  @click="isDemoModalOpen = false; openContact()"
+                >{{ demoInfo.buttonText }}</BaseButton>
+                <BaseButton
+                  variant="ghost"
+                  size="lg"
+                  class="flex-1"
+                  @click="isDemoModalOpen = false"
+                >Tutup</BaseButton>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <!-- Mobile BottomSheet (existing) -->
     <BottomSheet
       v-model="isDemoModalOpen"
-      title="Demo Version"
-      :icon="MonitorIcon"
+      :title="demoInfo.title"
+      :icon="project?.demoType === 'nda' ? LockIcon : MonitorIcon"
+      class="lg:hidden"
     >
       <div class="p-8 text-center space-y-6">
-        <div class="w-16 h-16 bg-accent-primary/10 rounded-2xl flex items-center justify-center text-accent-primary mx-auto">
-          <InfoIcon :size="32" />
+        <div
+          class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
+          :class="project?.demoType === 'nda' ? 'bg-red-500/10 border border-red-500/20 text-red-400' : 'bg-amber-500/10 border border-amber-500/20 text-amber-400'"
+        >
+          <LockIcon v-if="project?.demoType === 'nda'" :size="32" />
+          <MonitorIcon v-else :size="32" />
         </div>
-        
         <div class="space-y-3">
           <h4 class="text-xl font-bold text-white">{{ demoInfo.title }}</h4>
           <p class="text-sm text-text-secondary leading-relaxed" v-html="demoInfo.message"></p>
         </div>
-
         <div class="pt-4 space-y-3">
-          <BaseButton 
-            v-if="project"
+          <BaseButton
+            v-if="project?.demoUrl"
             :href="project.demoUrl"
-            variant="primary" 
-            size="lg" 
+            variant="primary"
+            size="lg"
             class="w-full"
             target="_blank"
             @click="isDemoModalOpen = false"
-          >
-            {{ demoInfo.buttonText }}
-          </BaseButton>
-          <BaseButton 
-            variant="ghost" 
-            size="md" 
+          >{{ demoInfo.buttonText }}</BaseButton>
+          <BaseButton
+            v-else
+            variant="primary"
+            size="lg"
+            class="w-full"
+            @click="isDemoModalOpen = false; openContact()"
+          >{{ demoInfo.buttonText }}</BaseButton>
+          <BaseButton
+            variant="ghost"
+            size="md"
             class="w-full"
             @click="isDemoModalOpen = false"
-          >
-            Tutup
-          </BaseButton>
+          >Tutup</BaseButton>
         </div>
       </div>
     </BottomSheet>
@@ -1119,37 +720,25 @@ import { urlFor } from "../../services/portfolioService";
 import { portfolioService } from "../../services/portfolioService";
 import { projectsData } from "../../data/landing/projects"; // Direct import for instant load
 import { usePopupManager, Popups } from "../../composables/usePopupManager";
-import SectionHeader from "../../components/ui/SectionHeader.vue";
 import { BaseButton } from "@kangjessy/ui";
 import { BottomSheet } from "@kangjessy/ui";
-import AccordionItem from "../../components/ui/AccordionItem.vue";
 
 import {
   ArrowLeft as ArrowLeftIcon,
   ExternalLink as ExternalLinkIcon,
   Github as GithubIcon,
-  ArrowDown as ArrowDownIcon,
   X as XIcon,
   ChevronLeft,
   ChevronRight,
-  HelpCircle,
   Globe as GlobeIcon,
   Layers as LayersIcon,
-  Zap,
-  Target,
-  TrendingUp,
-  BarChart,
-  Clock,
   ShieldCheck,
   MessageCircle as MessageCircleIcon,
   Lock as LockIcon,
-  ShieldAlert,
-  Leaf,
-  Boxes,
-  Cpu,
-  MapPinned,
   Monitor as MonitorIcon,
-  Info as InfoIcon,
+  Building2 as Building2Icon,
+  Calendar as CalendarIcon,
+  Package as PackageIcon,
   Twitter, 
   Linkedin as LinkedinIcon, 
   Copy, 
@@ -1168,8 +757,6 @@ const selectedImage = ref<string | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
 const isLinksOpen = ref(false);
 const isDemoModalOpen = ref(false);
-
-const activeFaqIndex = ref<number | null>(null);
 const showToast = ref(false);
 const toastMessage = ref('');
 
@@ -1186,18 +773,7 @@ useSEO({
   url: computed(() => `/project/${route.params.slug}`),
 });
 
-const isIdea = computed(() => {
-  return project.value?.status === "IDEA";
-});
-
 const showDesktopBar = ref(false);
-
-const scrollToDeepDive = () => {
-  const el = document.getElementById("deep-dive-section");
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-};
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1226,32 +802,22 @@ const setupScrollObserver = () => {
   observer.observe(deepDiveSection);
 };
 
-const impactQuote = computed(() => {
-  if (isIdea.value) {
-    return "Project ini merupakan representasi dari visi teknologi 2025-2026. Fokus pengembangannya adalah pada otomatisasi cerdas dan antarmuka yang lebih human-centric. Meskipun saat ini masih dalam tahap ide/konsep, fundamental teknisnya telah dirancang untuk skalabilitas masif.";
-  }
-  return (
-    project.value?.impact ||
-    "Proyek ini berhasil diselesaikan sesuai target dan memberikan dampak positif bagi operasional bisnis klien."
-  );
-});
-
 const projectFAQs = [
   {
-    q: "Bagaimana pendekatan keamanan yang diterapkan?",
-    a: 'Saya menggunakan pendekatan "Defense in Depth", melapisi keamanan dari level server, aplikasi, hingga user interface untuk meminimalkan celah risiko.',
+    q: "Berapa lama waktu pengerjaan proyek serupa?",
+    a: "Tergantung kompleksitas fitur. Untuk website premium biasanya 2-4 minggu, sedangkan sistem custom bisa memakan waktu 1-3 bulan untuk hasil maksimal.",
   },
   {
-    q: "Apakah sistem ini mempengaruhi performa website?",
-    a: "Tidak signifikan. Semua modul keamanan dikonfigurasi secara efisien dan menggunakan caching level lanjut agar user experience tetap instan.",
+    q: "Apakah saya mendapatkan akses ke source code?",
+    a: "Ya, setelah proyek selesai dan serah terima dilakukan, source code sepenuhnya menjadi milik Anda (kecuali ada perjanjian khusus).",
   },
   {
-    q: "Berapa lama proses implementasi fitur keamanan ini?",
-    a: "Untuk audit dan hardening standar biasanya memakan waktu 3-5 hari kerja, tergantung kompleksitas sistem yang sudah ada.",
+    q: "Bagaimana dengan dukungan setelah proyek rilis?",
+    a: "Saya memberikan garansi maintenance dan bug fixing gratis selama 30 hari pertama untuk memastikan transisi berjalan mulus.",
   },
   {
-    q: "Apakah ada garansi jika website tetap terkena hack?",
-    a: "Keamanan adalah proses berkelanjutan, bukan status permanen. Namun, saya memberikan layanan monitoring dan patching gratis selama 30 hari pasca-rilis.",
+    q: "Apakah platform ini bisa di-scale di masa depan?",
+    a: "Tentu. Saya membangun arsitektur kode yang modular dan terdokumentasi dengan baik agar mudah dikembangkan oleh tim developer lain nantinya.",
   },
 ];
 
@@ -1262,35 +828,6 @@ const displayFAQs = computed(() => {
     a: f.a || f.answer || "",
   }));
 });
-
-const defaultSteps = [
-  {
-    title: "Research & Discovery",
-    desc: "Menganalisis kebutuhan bisnis dan target audiens secara mendalam.",
-  },
-  {
-    title: "Strategy & Architecture",
-    desc: "Menyusun arsitektur informasi dan strategi teknologi yang paling efisien.",
-  },
-  {
-    title: "Implementation & Launch",
-    desc: "Eksekusi teknis dengan standar kualitas tinggi dan pengawasan ketat.",
-  },
-];
-
-const displaySteps = computed(() => {
-  // Prioritize Sanity/Local dynamic steps if they exist
-  if (project.value?.steps?.length) return project.value.steps;
-
-  // Fallback to manual template handling or defaults
-  if (isIdea.value) return [];
-  return defaultSteps;
-});
-
-const toggleFaq = (index: number | string) => {
-  const idx = typeof index === "string" ? parseInt(index) : index;
-  activeFaqIndex.value = activeFaqIndex.value === idx ? null : idx;
-};
 
 const openLightbox = (url: string) => {
   selectedImage.value = url;
@@ -1320,23 +857,6 @@ const scrollGallery = (direction: "left" | "right") => {
       });
     }
   }
-};
-
-const getIcon = (iconName: string) => {
-  const icons: Record<string, any> = {
-    Zap,
-    Target,
-    TrendingUp,
-    BarChart,
-    Clock,
-    ShieldCheck,
-    ShieldAlert,
-    Leaf,
-    Boxes,
-    Cpu,
-    MapPinned,
-  };
-  return icons[iconName] || BarChart;
 };
 
 const openContact = () => {
@@ -1391,11 +911,15 @@ onMounted(async () => {
 const handlePreviewClick = () => {
   if (!project.value) return;
   const demoUrl = project.value.demoUrl;
+  const liveUrl = project.value.liveUrl;
 
-  if (demoUrl && !project.value.liveUrl) {
+  if (liveUrl) {
+    triggerToast("Membuka Situs Live...");
+    setTimeout(() => {
+        window.open(liveUrl, "_blank");
+    }, 800);
+  } else if (demoUrl) {
     isDemoModalOpen.value = true;
-  } else if (project.value.liveUrl) {
-    window.open(project.value.liveUrl, "_blank");
   } else {
     // If no links at all, though button shouldn't show
     openContact();
@@ -1443,17 +967,25 @@ const demoInfo = computed(() => {
   
   if (type === 'nda') {
     return {
-      title: 'Versi Terbatas (NDA)',
-      message: `Dikarenakan proyek ini bersifat <strong>Rahasia (NDA)</strong> dan merupakan dashboard internal perusahaan, saya hanya dapat menampilkan <strong>versi samaran/dummy</strong> yang telah disetujui untuk tujuan demonstrasi portofolio, tanpa mengungkap data sensitif klien.`,
-      buttonText: 'Buka Demo Terbatas'
+      title: 'Akses Terbatas — NDA',
+      message: `Proyek ini dilindungi perjanjian kerahasiaan (NDA) dengan klien untuk menjaga kerahasiaan data bisnis & intelektual. Preview publik tidak tersedia. Hubungi saya untuk diskusi teknis mendalam.`,
+      buttonText: 'Tanya Detail Teknis'
     };
   }
 
-  // Default to legacy
+  if (type === 'archive') {
+    return {
+      title: 'Membuka Demo Arsip',
+      message: `Website asli sudah tidak aktif di domain klien (expired/migrasi). Yang akan Anda buka adalah <strong>Demo Clone</strong> yang saya hosting sendiri untuk keperluan portofolio agar fungsionalitas tetap bisa dicoba.`,
+      buttonText: 'Lihat Demo Arsip'
+    };
+  }
+
+  // legacy / fallback
   return {
-    title: 'Versi Demonstrasi',
-    message: `Dikarenakan website asli proyek ini sudah tidak aktif (legacy), saya telah menyiapkan <strong>versi kloning/demonstrasi</strong> dengan data dummy agar Anda tetap dapat meninjau interface dan alur fungsionalitasnya.`,
-    buttonText: 'Buka Demo Project'
+    title: 'Membuka Demo Clone',
+    message: `Proyek asli bersifat internal atau berjalan di domain privat. Yang akan dibuka adalah <strong>demo clone</strong> dengan data simulasi agar Anda bisa melihat alur kerjanya secara langsung.`,
+    buttonText: 'Buka Demo'
   };
 });
 
@@ -1475,13 +1007,6 @@ const shareOnTwitter = () => {
 const shareOnLinkedIn = () => {
     const url = encodeURIComponent(window.location.href);
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
-};
-
-const shareOnWhatsApp = () => {
-    if (!project.value) return;
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(`Check out ${project.value.title} by KangJessy`);
-    window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
 };
 
 const copyLink = () => {

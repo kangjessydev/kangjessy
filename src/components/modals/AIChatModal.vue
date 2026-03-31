@@ -1,5 +1,5 @@
 <template>
-    <BottomSheet :modelValue="isOpen" title="AI Assistant" :icon="BotIcon" maxWidth="5xl" contentClass="!overflow-hidden !pb-0" fullHeight
+    <BottomSheet :modelValue="isOpen" title="Smart Support" :icon="BotIcon" maxWidth="5xl" contentClass="!overflow-hidden !pb-0" fullHeight
         @update:modelValue="$emit('close')" @close="$emit('close')">
         
         <div class="flex flex-col lg:grid lg:grid-cols-12 bg-bg-primary h-[calc(100dvh-64px)] lg:h-[600px] lg:max-h-[75vh] overflow-hidden border-t border-border-color/50">
@@ -9,9 +9,9 @@
                 <div class="pt-4 lg:pt-16 pb-4 lg:pb-12 px-4 lg:px-8 overflow-y-auto custom-scrollbar lg:h-full">
                     
                     <div class="hidden lg:block mb-8 shrink-0">
-                        <span class="text-[0.65rem] font-black text-accent-primary uppercase tracking-[0.4em] mb-3 block">AI Assistant</span>
-                        <h3 class="text-2xl font-black text-white leading-tight">Diskusi & Konsultasi</h3>
-                        <p class="text-xs text-text-tertiary mt-2 leading-relaxed">Pilih mode interaksi yang sesuai dengan kebutuhan project Anda.</p>
+                        <span class="text-[0.65rem] font-black text-accent-primary uppercase tracking-[0.4em] mb-3 block">Smart Support</span>
+                        <h3 class="text-2xl font-black text-white leading-tight">Jawaban Cepat & FAQ</h3>
+                        <p class="text-xs text-text-tertiary mt-2 leading-relaxed">Pilih pertanyaan dari daftar FAQ, atau gunakan AI untuk diskusi jika diperlukan.</p>
                     </div>
 
                     <!-- Mode Switcher -->
@@ -66,7 +66,7 @@
                         <div class="mt-10 pt-8 border-t border-border-color shrink-0">
                             <div class="flex items-center gap-2 mb-2">
                                 <div class="w-1.5 h-1.5 rounded-full bg-accent-primary animate-pulse"></div>
-                                <span class="text-[10px] font-black text-white uppercase tracking-widest">Model: Gemini 2.0 Pro</span>
+                                <span class="text-[10px] font-black text-white uppercase tracking-widest">Mode: Smart FAQ</span>
                             </div>
                             <p class="text-[9px] text-text-tertiary leading-relaxed uppercase tracking-widest opacity-40">AI models can make mistakes. Please verify important information.</p>
                         </div>

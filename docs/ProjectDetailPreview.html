@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project Detail — Konsep Prose-First</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #090c12;
+      --bg-2:    #0f1320;
+      --bg-3:    #161b28;
+      --border:  rgba(255,255,255,0.07);
+      --text:    #e2e5ee;
+      --muted:   #8b909e;
+      --dim:     #4a5060;
+      --accent:  #3b82f6;
+      --ad:      rgba(59,130,246,0.10);
+      --green:   #22c55e;
+      --gd:      rgba(34,197,94,0.10);
+    }
+
+    html { scroll-behavior: smooth; color-scheme: dark; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══════════════════════════════
+       UTILITY
+    ═══════════════════════════════ */
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    @media (min-width: 640px)  { .container { padding: 0 28px; } }
+    @media (min-width: 1024px) { .container { padding: 0 40px; } }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      border-radius: 100px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .tag-blue { background: var(--ad); border: 1px solid rgba(59,130,246,0.22); color: var(--accent); }
+    .tag-green { background: var(--gd); border: 1px solid rgba(34,197,94,0.2); color: var(--green); }
+    .tag-green .live-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%; background: var(--green);
+      animation: blink 2s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ═══════════════════════════════
+       HERO — redesigned
+    ═══════════════════════════════ */
+    .hero {
+      position: relative;
+      padding: 100px 0 64px;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (min-width: 768px) { .hero { padding: 140px 0 80px; } }
+
+    .hero-inner { position: relative; }
+
+    /* Back link — tighter, no uppercase on "Portofolio" */
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 40px;
+      transition: color .18s;
+    }
+    .back svg { transition: transform .18s; }
+    .back:hover { color: var(--text); }
+    .back:hover svg { transform: translateX(-3px); }
+
+    /* Eyebrow: category label above title */
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .hero-eyebrow-line { width: 28px; height: 1.5px; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+    .hero-eyebrow-text {
+      font-size: 0.62rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+    }
+    .hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: var(--gd);
+      border: 1px solid rgba(34,197,94,0.2);
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .hero-lead {
+      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 580px;
+      margin-bottom: 44px;
+    }
+
+    /* Meta row — horizontal, icon + text pairs, separated by thin line */
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 0;
+    }
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 28px;
+      margin-right: 28px;
+      border-right: 1px solid var(--border);
+    }
+    .hero-meta-item:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+    .hero-meta-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--dim);
+      flex-shrink: 0;
+    }
+
+    .hero-meta-label {
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--dim);
+      margin-bottom: 2px;
+    }
+    .hero-meta-value {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    @media (max-width: 540px) {
+      .hero-meta { flex-direction: column; gap: 16px; }
+      .hero-meta-item { border-right: none; margin-right: 0; padding-right: 0; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+      .hero-meta-item:last-child { border-bottom: none; padding-bottom: 0; }
+    }
+
+    /* ═══════════════════════════════
+       COVER IMAGE
+    ═══════════════════════════════ */
+    .cover-wrap {
+      padding: 40px 0 0;
+    }
+    .cover-img {
+      width: 100%;
+      aspect-ratio: 16/7;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    @media (min-width: 768px) {
+      .cover-wrap { padding: 60px 0 0; }
+      .cover-img { border-radius: 24px; }
+    }
+
+    /* ═══════════════════════════════
+       LAYOUT: content + sidebar
+    ═══════════════════════════════ */
+    .page-body {
+      padding: 60px 0 80px;
+    }
+    @media (min-width: 768px) { .page-body { padding: 80px 0 120px; } }
+
+    .body-grid {
+      display: grid;
+      gap: 48px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 1024px) {
+      .body-grid {
+        grid-template-columns: 1fr 300px;
+        gap: 72px;
+        align-items: start;
+      }
+    }
+
+    /* ═══════════════════════════════
+       PROSE — the heart of this design
+       One rich-text editor output,
+       beautifully styled.
+    ═══════════════════════════════ */
+    .prose {
+      color: var(--muted);
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      line-height: 1.85;
+    }
+
+    .prose h2 {
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .prose h2:first-child { margin-top: 0; }
+
+    .prose h3 {
+      font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin-top: 2rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .prose p { margin-bottom: 1.25rem; }
+    .prose p:last-child { margin-bottom: 0; }
+
+    .prose strong { color: var(--text); font-weight: 700; }
+    .prose em { color: #fff; font-style: normal; font-weight: 600; }
+    .prose a { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(59,130,246,0.35); }
+
+    .prose ul, .prose ol {
+      padding-left: 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose blockquote {
+      margin: 2.5rem 0;
+      padding: 20px 24px;
+      border-left: 3px solid var(--accent);
+      background: var(--ad);
+      border-radius: 0 12px 12px 0;
+      font-size: 1rem;
+      color: var(--text);
+      font-style: italic;
+      line-height: 1.7;
+    }
+    @media (min-width: 768px) {
+      .prose blockquote { padding: 24px 32px; }
+    }
+
+    .prose code {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 0.82em;
+      color: var(--accent);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* Inline image inside prose */
+    .prose figure {
+      margin: 2.5rem 0;
+    }
+    .prose figure img {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .prose figcaption {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--dim);
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* Tech stack chips (metadata, not rich text) */
+    .tech-meta-section { margin-top: 2.5rem; }
+    .tech-meta-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+      margin-bottom: 12px;
+    }
+    .tech-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 6px 14px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    /* Metrics strip (still from structured data, but minimal) */
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 2.5rem 0;
+      padding: 2rem;
+      background: var(--gd);
+      border: 1px solid rgba(34,197,94,0.12);
+      border-radius: 20px;
+    }
+    @media (max-width: 500px) { .metrics-strip { grid-template-columns: 1fr 1fr; } }
+    .metric { text-align: center; }
+    .metric-val {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .metric-lbl {
+      font-size: 0.55rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--green);
+      opacity: 0.7;
+    }
+
+    /* ═══════════════════════════════
+       SIDEBAR
+    ═══════════════════════════════ */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    @media (min-width: 1024px) {
+      .sidebar { position: sticky; top: 100px; }
+    }
+
+    .s-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+    }
+    .s-card-label {
+      font-size: 0.58rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+      margin-bottom: 14px;
+    }
+
+    .s-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      margin-bottom: 8px;
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .s-btn:last-child { margin-bottom: 0; }
+    .s-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(59,130,246,0.2);
+    }
+    .s-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .s-outline {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .s-outline:hover { border-color: rgba(59,130,246,0.3); color: var(--accent); }
+
+    .meta-table { width: 100%; }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.78rem;
+    }
+    .meta-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .meta-key { color: var(--dim); font-weight: 700; flex-shrink: 0; }
+    .meta-val-r { color: var(--text); font-weight: 700; text-align: right; }
+
+    /* ═══════════════════════════════
+       GALLERY (simple strip)
+    ═══════════════════════════════ */
+    .gallery-section { padding: 0 0 80px; }
+    .gallery-label {
+      font-size: 0.6rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+      margin-bottom: 16px;
+    }
+    .gallery-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .gallery-scroll::-webkit-scrollbar { display: none; }
+    .gallery-item {
+      flex: 0 0 auto;
+      width: 80vw;
+      max-width: 480px;
+      aspect-ratio: 16/9;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      scroll-snap-align: start;
+    }
+    @media (min-width: 768px) {
+      .gallery-item { width: 420px; }
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .5s;
+      display: block;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+
+    /* ═══════════════════════════════
+       CTA BANNER
+    ═══════════════════════════════ */
+    .cta-banner {
+      padding: 48px 32px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.07) 0%, transparent 70%);
+      border: 1px solid rgba(59,130,246,0.15);
+      border-radius: 24px;
+      margin-bottom: 80px;
+      text-align: center;
+    }
+    @media (min-width: 768px) {
+      .cta-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: left;
+        padding: 40px 48px;
+      }
+    }
+    .cta-text h3 {
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .cta-text p { font-size: 0.88rem; color: var(--muted); margin-bottom: 24px; }
+    @media (min-width: 768px) { .cta-text p { margin-bottom: 0; } }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 28px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: 0 8px 28px rgba(59,130,246,0.25);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(59,130,246,0.35); }
+
+    /* ═══════════════════════════════
+       DEMO MODAL
+    ═══════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0 16px 32px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+    @media (min-width: 640px) {
+      .modal-overlay { align-items: center; padding: 24px; }
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal-box {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      transform: translateY(20px);
+      transition: transform .3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+
+    .modal-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+    .modal-icon-legacy { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); color: #f59e0b; }
+    .modal-icon-nda    { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.2);  color: #ef4444; }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .modal-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      transition: all .18s;
+      text-align: center;
+      text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .modal-btn-primary { background: var(--accent); color: #fff; }
+    .modal-btn-primary:hover { filter: brightness(1.1); }
+    .modal-btn-ghost { background: var(--bg-3); color: var(--muted); border: 1px solid var(--border); }
+    .modal-btn-ghost:hover { color: var(--text); }
+    .modal-close-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 16px;
+    }
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--dim);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color .15s;
+      display: flex; align-items: center;
+    }
+    .modal-close-btn:hover { color: var(--text); }
+
+    /* ═══════════════════════════════
+       FLOATING BAR
+    ═══════════════════════════════ */
+    .float-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10,13,20,0.90);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 100px;
+      padding: 8px 8px 8px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      z-index: 999;
+      white-space: nowrap;
+    }
+    .float-info { line-height: 1.35; }
+    .float-info span:first-child { display: block; font-size: 0.55rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); }
+    .float-info span:last-child  { font-size: 0.8rem; font-weight: 800; color: #fff; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+    .float-sep { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
+    .float-btn {
+      padding: 9px 18px;
+      border-radius: 100px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+    .float-primary { background: var(--accent); color: #fff; }
+    .float-primary:hover { filter: brightness(1.15); }
+    .float-ghost { background: transparent; color: var(--muted); }
+    .float-ghost:hover { color: #fff; }
+    @media (max-width: 480px) {
+      .float-info { display: none; }
+      .float-sep { display: none; }
+      .float-bar { gap: 8px; padding: 8px; }
+    }
+
+    /* Note */
+    .preview-note {
+      position: fixed; top: 16px; right: 16px;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.3);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.67rem;
+      color: #f59e0b;
+      font-weight: 700;
+      z-index: 1000;
+      max-width: 200px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<div class="preview-note">⚡ PREVIEW — Konsep Prose-First</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+
+      <!-- Back link -->
+      <a href="#" class="back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 5-7 7 7 7"/></svg>
+        Semua Proyek
+      </a>
+
+      <!-- Eyebrow + status -->
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line"></span>
+        <span class="hero-eyebrow-text">Security</span>
+        <span class="hero-status">
+          <span class="live-dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite;"></span>
+          Live
+        </span>
+      </div>
+
+      <h1 class="hero-title">Nur Alam Hotel<br>Security Hardening</h1>
+      <p class="hero-lead">Pembersihan malware tingkat lanjut dan rekonstruksi total sistem keamanan server hotel bintang 4. Pemulihan penuh dari Google Blacklist dalam 4 jam.</p>
+
+      <!-- Meta row with icons — 3 universal fields only -->
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="hero-meta-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div>
+            <div class="hero-meta-label">Klien</div>
+            <div class="hero-meta-value">Nur Alam Hotel</div>
+          </div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </div>
+          <div>
+            <div class="hero-meta-label">Selesai</div>
+            <div class="hero-meta-value">Januari 2025</div>
+          </div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div>
+            <div class="hero-meta-label">Industri</div>
+            <div class="hero-meta-value">Hospitality</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ COVER ═══ -->
+<div class="container">
+  <div class="cover-wrap">
+    <img
+      src="https://plus.unsplash.com/premium_photo-1767600118415-3ae902ccb5f1?q=80&w=1400&auto=format&fit=crop"
+      alt="Security Hardening"
+      class="cover-img"
+    />
+  </div>
+</div>
+
+<!-- ═══ BODY ═══ -->
+<div class="container">
+  <div class="page-body">
+    <div class="body-grid">
+
+      <!-- LEFT: Prose content + metadata chips -->
+      <main>
+        <!-- PROSE — ini outputnya satu rich text editor di backend -->
+        <div class="prose">
+          <h2>Apa yang Terjadi?</h2>
+          <p>
+            Nur Alam Hotel, properti bintang 4 yang prestisius, mengalami serangan <strong>Japanese Keyword Hack</strong> — ribuan halaman berisi link judi online disuntikkan ke server secara diam-diam. Akibatnya, <em>Google melabeli seluruh website sebagai berbahaya</em> dan direct booking turun hingga 90% dalam waktu kurang dari 24 jam.
+          </p>
+          <p>
+            Tim IT internal sudah berusaha membersihkan, namun malware terus meregenerasi dirinya sendiri dalam hitungan menit. Ini adalah <strong>Polymorphic Backdoor</strong> yang ditanamkan jauh di file inti sistem, menyamar sebagai file lisensi plugin resmi.
+          </p>
+
+          <blockquote>
+            "Sistem keamanan terbaik bukanlah yang paling mahal, tapi yang paling membosankan bagi peretas. Kami membuat server mereka 'mahal' untuk diretas."
+          </blockquote>
+
+          <h2>Strategi & Eksekusi</h2>
+          <p>
+            Kami menerapkan pendekatan <strong>Defense in Depth</strong> — berlapis dari level plugin, server (Nginx config), hingga DNS (Cloudflare WAF). Prosesnya dimulai dengan audit forensik selama 2 jam sebelum menyentuh satu baris kode pun.
+          </p>
+
+          <h3>1. Forensic Audit</h3>
+          <p>
+            Scanning seluruh direktori menggunakan tools heuristik. Analisis 1.2 GB log server untuk melacak pola <code>User-Agent</code> aneh yang digunakan botnet saat menyuntikkan script.
+          </p>
+
+          <h3>2. Surgical Malware Removal</h3>
+          <p>
+            Pembersihan manual file-file terinfeksi tanpa merusak fungsionalitas website. Setiap file dibandingkan checksum-nya dengan repositori resmi WordPress.org untuk mendeteksi modifikasi sekecil 1 byte.
+          </p>
+
+          <h3>3. Hardening & WAF</h3>
+          <p>
+            Mematikan eksekusi PHP di folder <code>/uploads</code> dan <code>/cache</code>. Memasang Web Application Firewall via Cloudflare dengan aturan custom untuk memblokir botnet secara permanen.
+          </p>
+
+          <figure>
+            <img src="https://plus.unsplash.com/premium_photo-1682145181120-73cfdfc8a36d?q=80&w=1200&auto=format" alt="Monitoring Dashboard" loading="lazy"/>
+            <figcaption>Monitoring dashboard — semua ancaman terblokir secara real-time.</figcaption>
+          </figure>
+
+          <h2>Hasil & Dampak</h2>
+          <p>
+            Dalam waktu <strong>4 jam kerja</strong>, server dinyatakan bersih total. Google mencabut label "Deceptive Site Ahead" dalam 2 minggu. Sebagai jaminan, kami memberikan <em>garansi 12 bulan bebas infeksi ulang</em>.
+          </p>
+        </div>
+
+        <!-- Metrics (dari structured field, minimal) -->
+        <div class="metrics-strip">
+          <div class="metric"><div class="metric-val">15k+</div><div class="metric-lbl">Threats Blocked</div></div>
+          <div class="metric"><div class="metric-val">A+</div><div class="metric-lbl">Security Score</div></div>
+          <div class="metric"><div class="metric-val">4 Jam</div><div class="metric-lbl">Recovery</div></div>
+        </div>
+
+        <!-- Tech stack (dari array di backend) -->
+        <div class="tech-meta-section">
+          <div class="tech-meta-label">Tech & Tools</div>
+          <div class="tech-chips">
+            <span class="chip">Cloudflare Enterprise</span>
+            <span class="chip">Wordfence Premium</span>
+            <span class="chip">WP-CLI</span>
+            <span class="chip">Linux Hardening</span>
+            <span class="chip">2FA Hardware Key</span>
+            <span class="chip">Nginx</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- RIGHT: Sidebar -->
+      <aside class="sidebar">
+        <div class="s-card">
+          <div class="s-card-label">Akses Proyek</div>
+          <!-- demoType="legacy" → modal clone explanation -->
+          <!-- demoType="nda"    → modal NDA explanation    -->
+          <!-- liveUrl (real)   → langsung buka tab baru   -->
+          <button class="s-btn s-primary" onclick="openModal('modal-legacy')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="m10 14 11-11"/></svg>
+            Live Preview
+          </button>
+          <a href="#" class="s-btn s-outline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Lihat Kode
+          </a>
+        </div>
+
+        <div class="s-card">
+          <div class="s-card-label">Detail</div>
+          <div class="meta-table">
+            <div class="meta-row">
+              <span class="meta-key">Klien</span>
+              <span class="meta-val-r">Nur Alam Hotel</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Selesai</span>
+              <span class="meta-val-r">Jan 2025</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Kategori</span>
+              <span class="meta-val-r">Security</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Platform</span>
+              <span class="meta-val-r">WordPress + Cloudflare</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="s-card" style="background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, transparent 100%);">
+          <p style="font-size: 0.88rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Punya masalah serupa?</p>
+          <p style="font-size: 0.78rem; color: var(--muted); margin-bottom: 14px; line-height: 1.6;">Konsultasi gratis, tanpa komitmen.</p>
+          <button class="s-btn s-primary" style="margin-bottom:0">Mulai Diskusi</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GALLERY ═══ -->
+<div class="container">
+  <div class="gallery-section">
+    <div class="gallery-label">Galeri Proyek</div>
+    <div class="gallery-scroll">
+      <div class="gallery-item"><img src="https://plus.unsplash.com/premium_photo-1767600118415-3ae902ccb5f1?q=80&w=800" alt="" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1760199789455-49098afd02f0?q=80&w=800" alt="" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://plus.unsplash.com/premium_photo-1682145181120-73cfdfc8a36d?q=80&w=800" alt="" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://plus.unsplash.com/premium_photo-1733306489269-449d1e8ae119?q=80&w=800" alt="" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- ═══ CTA BANNER ═══ -->
+  <div class="cta-banner">
+    <div class="cta-text">
+      <h3>Punya tantangan teknis serupa?</h3>
+      <p>Ceritakan masalah Anda. Saya spesialis dalam situasi yang "sudah dicoba orang lain tapi gagal".</p>
+    </div>
+    <button class="cta-btn">💬 Konsultasi Gratis</button>
+  </div>
+</div>
+
+<!-- ═══ DEMO MODAL — LEGACY variant ═══ -->
+<!-- Toggle: click "Live Preview" buttons below to simulate -->
+<div class="modal-overlay" id="modal-legacy">
+  <div class="modal-box">
+    <div class="modal-close-row">
+      <button class="modal-close-btn" onclick="closeModal('modal-legacy')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-icon modal-icon-legacy">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+    </div>
+    <div class="modal-title">Membuka Demo Clone</div>
+    <div class="modal-desc">
+      Proyek asli berjalan di domain klien dan bersifat privat. Yang akan dibuka adalah <strong style="color:var(--text)">demo clone</strong> yang kami hosting secara terpisah — tampilan dan fitur tetap sama, namun data bersifat simulasi.
+    </div>
+    <div class="modal-actions">
+      <a href="https://demo.kangjessy.com" target="_blank" class="modal-btn modal-btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="m10 14 11-11"/></svg>
+        Buka Demo
+      </a>
+      <button class="modal-btn modal-btn-ghost" onclick="closeModal('modal-legacy')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DEMO MODAL — NDA variant ═══ -->
+<div class="modal-overlay" id="modal-nda">
+  <div class="modal-box">
+    <div class="modal-close-row">
+      <button class="modal-close-btn" onclick="closeModal('modal-nda')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-icon modal-icon-nda">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <div class="modal-title">Akses Terbatas — NDA</div>
+    <div class="modal-desc">
+      Proyek ini dilindungi perjanjian kerahasiaan (NDA) dengan klien. Preview publik tidak tersedia. Hubungi kami langsung jika Anda ingin mengetahui detail teknis lebih lanjut.
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="closeModal('modal-nda')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Tanya Detail Teknis
+      </button>
+      <button class="modal-btn modal-btn-ghost" onclick="closeModal('modal-nda')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  // Close on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', function(e) {
+      if (e.target === this) closeModal(this.id);
+    });
+  });
+</script>
+
+<!-- ═══ FLOATING BAR ═══ -->
+<div class="float-bar">
+  <div class="float-info">
+    <span>Membaca</span>
+    <span>Nur Alam Hotel Security</span>
+  </div>
+  <div class="float-sep"></div>
+  <button class="float-btn float-ghost">Share</button>
+  <button class="float-btn float-primary">Order →</button>
+</div>
+
+</body>
+</html>

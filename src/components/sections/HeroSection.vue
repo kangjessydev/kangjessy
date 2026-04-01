@@ -176,9 +176,8 @@
             </div>
           </div>
 
-          <!-- 🔵 OPTION 2: PREMIUM CODE WINDOW (Active Now) -->
-          <div class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016]/80 backdrop-blur-2xl rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group/ide hover:border-accent-primary/30 transition-all duration-700">
-             <!-- IDE Header Bar -->
+          <!-- 🔵 OPTION 2: PREMIUM CODE WINDOW (Preserved) -->
+          <div v-if="false" class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016]/80 backdrop-blur-2xl rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group/ide hover:border-accent-primary/30 transition-all duration-700">
              <div class="flex items-center justify-between px-6 py-4 bg-white/5 border-b border-white/5">
                 <div class="flex gap-2">
                    <div class="w-3 h-3 rounded-full bg-rose-500/80 shadow-[0_0_8px_rgba(244,63,94,0.4)]"></div>
@@ -192,40 +191,28 @@
                    </div>
                 </div>
              </div>
-
-             <!-- IDE Content Area -->
              <div class="p-6 md:p-8 font-mono text-xs md:text-sm leading-relaxed overflow-hidden">
                 <div class="flex gap-6">
-                   <!-- Line Numbers -->
                    <div class="hidden md:flex flex-col text-white/20 select-none text-right">
                       <span v-for="i in 12" :key="i">{{ i }}</span>
                    </div>
-                   
-                   <!-- Code Content -->
                    <div class="flex-1 space-y-1">
                       <div class="flex items-center gap-2 group/line">
-                         <span class="text-purple-400">const</span>
-                         <span class="text-blue-400">collaboration</span>
-                         <span class="text-text-primary">=</span>
-                         <span class="text-accent-primary">{</span>
+                         <span class="text-purple-400">const</span> <span class="text-blue-400">collaboration</span> <span class="text-text-primary">=</span> <span class="text-accent-primary">{</span>
                       </div>
                       <div class="pl-6 group/line hover:bg-white/[0.02]">
-                         <span class="text-blue-300">client</span><span class="text-text-primary">:</span>
-                         <span class="text-emerald-300">"YourBusiness"</span>,
+                         <span class="text-blue-300">client</span><span class="text-text-primary">:</span> <span class="text-emerald-300">"YourBusiness"</span>,
                       </div>
                       <div class="pl-6 group/line">
-                         <span class="text-blue-300">duration</span><span class="text-text-primary">:</span>
-                         <span class="text-emerald-300">"LongTerm"</span>,
+                         <span class="text-blue-300">duration</span><span class="text-text-primary">:</span> <span class="text-emerald-300">"LongTerm"</span>,
                       </div>
                       <div class="pl-6 group/line">
-                         <span class="text-blue-300">status</span><span class="text-text-primary">:</span>
-                         <span class="text-emerald-300">"Automated"</span>
+                         <span class="text-blue-300">status</span><span class="text-text-primary">:</span> <span class="text-emerald-300">"Automated"</span>
                       </div>
                       <div class="group/line"><span class="text-accent-primary">}</span>;</div>
                       <div class="py-2"></div>
                       <div class="flex items-center gap-2 group/line">
-                         <span class="text-purple-400">function</span>
-                         <span class="text-amber-300">optimizeWorkflow</span><span class="text-text-primary">() {</span>
+                         <span class="text-purple-400">function</span> <span class="text-amber-300">optimizeWorkflow</span><span class="text-text-primary">() {</span>
                       </div>
                       <div class="pl-6 group/line">
                          <span class="text-purple-400">while</span> <span class="text-text-primary">(isManualWork) {</span>
@@ -240,14 +227,105 @@
                       <div class="group/line"><span>}</span></div>
                    </div>
                 </div>
-
-                <!-- Subtle Cursor Blink -->
                 <div class="mt-8 flex items-center gap-2 bg-accent-primary/20 border border-accent-primary/30 rounded-lg px-4 py-2 w-fit">
                    <span class="text-[10px] font-bold text-accent-primary leading-none uppercase tracking-widest">Building your future...</span>
                    <div class="w-1.5 h-4 bg-accent-primary animate-pulse"></div>
                 </div>
              </div>
           </div>
+
+          <!-- 🟠 OPTION 3: BEFORE/AFTER SLIDER (Active Now) -->
+          <div class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016] rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group/compare select-none hero-compare-slider"
+               @mousedown="startDragging" 
+               @touchstart="startDragging">
+            
+            <!-- After Image (Bottom Layer) -->
+            <div class="absolute inset-0 pointer-events-none">
+               <img src="/home/kangjessy/.gemini/antigravity/brain/41388e3c-15ad-4ea5-a704-63de05e12f86/premium_automated_dashboard_after_work_1775061036463.png" 
+                    alt="Premium Dashboard After" 
+                    draggable="false"
+                    @dragstart.prevent
+                    class="w-full h-full object-cover" />
+               <div class="absolute bottom-4 right-6 px-3 py-1 bg-accent-primary/90 text-black text-[10px] font-black rounded-full backdrop-blur-md uppercase tracking-widest">Otomatis</div>
+            </div>
+
+            <!-- Before Image (Top Layer, Clipped) -->
+            <div class="absolute inset-0 pointer-events-none" :style="{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }">
+               <img src="/home/kangjessy/.gemini/antigravity/brain/41388e3c-15ad-4ea5-a704-63de05e12f86/messy_manual_spreadsheet_before_work_1775061018146.png" 
+                    alt="Messy Spreadsheet Before" 
+                    draggable="false"
+                    @dragstart.prevent
+                    class="w-full h-full object-cover grayscale-[1.0] group-hover/compare:grayscale-[0.5] transition-all duration-700" />
+               <div class="absolute bottom-4 left-6 px-3 py-1 bg-white/20 text-white text-[10px] font-black rounded-full backdrop-blur-md border border-white/20 uppercase tracking-widest">Manual</div>
+            </div>
+
+            <!-- Clickable Zones (Transparent Overlays) -->
+            <div class="absolute inset-0 flex z-10">
+               <div class="h-full cursor-zoom-in" :style="{ width: `${sliderPos}%` }" @click.stop="openLightbox(0)"></div>
+               <div class="h-full flex-1 cursor-zoom-in" @click.stop="openLightbox(1)"></div>
+            </div>
+
+            <!-- Slider Handle (The Draggable Part) -->
+            <div class="absolute inset-y-0 pointer-events-none z-50" :style="{ left: `${sliderPos}%` }">
+               <!-- The Vertical Line (Solid White for Visibility) -->
+               <div class="absolute inset-y-0 -left-[2px] w-1 bg-white shadow-lg"></div>
+               
+               <!-- The Interactive Circle -->
+               <div class="absolute top-1/2 -left-6 w-12 h-12 bg-white rounded-full shadow-2xl flex items-center justify-center -translate-y-1/2 pointer-events-auto cursor-ew-resize border-4 border-accent-primary group-active/compare:scale-110 transition-transform">
+                  <div class="flex items-center gap-0.5 text-accent-primary">
+                     <ChevronLeftIcon :size="20" stroke-width="4" />
+                     <ChevronRightIcon :size="20" stroke-width="4" />
+                  </div>
+               </div>
+            </div>
+
+            <!-- Lightbox Trigger Overlay -->
+            <div class="absolute inset-0 bg-transparent hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover/compare:opacity-100 pointer-events-none">
+               <div class="px-6 py-3 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl text-white text-xs font-bold pointer-events-auto cursor-pointer flex items-center gap-2 hover:scale-105 transition-all shadow-2xl" @click.stop="openLightbox(1)">
+                  <SparklesIcon :size="14" class="text-accent-primary" />
+                  View Showcase
+               </div>
+            </div>
+          </div>
+
+          <!-- Lightbox Modal -->
+          <Transition name="fade">
+             <div v-if="isLightboxOpen" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl p-4 md:p-10 flex flex-col items-center justify-center" @click="isLightboxOpen = false">
+                <!-- Navigation Buttons -->
+                <button class="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl flex items-center justify-center text-white transition-all hover:scale-110 z-110" 
+                        @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
+                   <ChevronLeftIcon :size="24" />
+                </button>
+                <button class="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl flex items-center justify-center text-white transition-all hover:scale-110 z-110" 
+                        @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
+                   <ChevronRightIcon :size="24" />
+                </button>
+
+                <div class="relative w-full max-w-6xl aspect-video bg-black/40 rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(var(--accent-primary-rgb),0.3)] border border-white/5" @click.stop>
+                   <Transition mode="out-in" name="fade">
+                      <img :key="lightboxImageIndex" 
+                           :src="lightboxImages[lightboxImageIndex]?.src" 
+                           class="w-full h-full object-contain" alt="Full Preview" />
+                   </Transition>
+                   
+                   <button class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl flex items-center justify-center text-white transition-colors" @click="isLightboxOpen = false">
+                      ✕
+                   </button>
+
+                   <!-- Image Labels in Lightbox -->
+                   <div class="absolute bottom-6 left-6 right-6 p-6 bg-linear-to-t from-black/80 to-transparent backdrop-blur-sm rounded-2xl border-t border-white/5 pointer-events-none">
+                      <h3 class="text-2xl font-black text-white mb-2 tracking-tight">{{ lightboxImages[lightboxImageIndex]?.title }}</h3>
+                      <p class="text-text-tertiary max-max-w-2xl text-sm">{{ lightboxImages[lightboxImageIndex]?.desc }}</p>
+                   </div>
+                </div>
+
+                <!-- Page Indicator -->
+                <div class="mt-8 flex gap-2">
+                   <div v-for="i in 2" :key="i" class="w-2.5 h-2.5 rounded-full transition-all duration-300" 
+                        :class="lightboxImageIndex === i-1 ? 'bg-accent-primary w-8' : 'bg-white/20'"></div>
+                </div>
+             </div>
+          </Transition>
         </div>
       </div>
     </div>
@@ -270,7 +348,9 @@ import {
   LayoutGrid as LayoutGridIcon,
   Database as DatabaseIcon,
   Briefcase as BriefcaseIcon,
-  TrendingUp as TrendingUpIcon
+  TrendingUp as TrendingUpIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon
 } from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
 import WhatsAppModal from "../modals/WhatsAppModal.vue";
@@ -289,6 +369,75 @@ const liveRevenue = ref(12450);
 const activeUsers = ref(842);
 const chartData = ref([30, 45, 25, 60, 40, 75, 50, 90]);
 const activeTooltip = ref<string | null>(null);
+
+// Before/After Slider State
+const sliderPos = ref(50);
+const isDragging = ref(false);
+const isLightboxOpen = ref(false);
+const lightboxImageIndex = ref(0); // 0: Manual, 1: Automated
+const dragDistance = ref(0);
+
+const lightboxImages = [
+  {
+    src: "/home/kangjessy/.gemini/antigravity/brain/41388e3c-15ad-4ea5-a704-63de05e12f86/messy_manual_spreadsheet_before_work_1775061018146.png",
+    title: "The Workflow: SEBELUM",
+    desc: "Proses manual yang lambat, rentan kesalahan, dan melelahkan (Spreadsheet Chaos)."
+  },
+  {
+    src: "/home/kangjessy/.gemini/antigravity/brain/41388e3c-15ad-4ea5-a704-63de05e12f86/premium_automated_dashboard_after_work_1775061036463.png",
+    title: "The Workflow: SESUDAH",
+    desc: "Dashboard premium otomatis, rapi, dan memberikan insight bisnis secara real-time."
+  }
+];
+
+const openLightbox = (index: number) => {
+  // Hanya buka jika tidak sedang menggeser (pelacak gerakan rendah)
+  if (dragDistance.value > 10) return;
+  lightboxImageIndex.value = index;
+  isLightboxOpen.value = true;
+};
+
+const updatePosition = (e: MouseEvent | TouchEvent) => {
+  const container = document.querySelector('.hero-compare-slider');
+  if (!container) return;
+  
+  const rect = container.getBoundingClientRect();
+  const x = 'touches' in e ? (e.touches?.[0]?.clientX ?? 0) : (e as MouseEvent).clientX;
+  
+  let position = ((x - rect.left) / rect.width) * 100;
+  position = Math.max(0, Math.min(100, position));
+  
+  sliderPos.value = position;
+};
+
+const startDragging = (e: MouseEvent | TouchEvent) => {
+  isDragging.value = true;
+  dragDistance.value = 0;
+  if (e.cancelable) e.preventDefault();
+  
+  updatePosition(e);
+  
+  window.addEventListener('mousemove', handleGlobalDrag);
+  window.addEventListener('touchmove', handleGlobalDrag, { passive: false });
+  window.addEventListener('mouseup', stopDragging);
+  window.addEventListener('touchend', stopDragging);
+};
+
+const stopDragging = () => {
+  isDragging.value = false;
+  window.removeEventListener('mousemove', handleGlobalDrag);
+  window.removeEventListener('touchmove', handleGlobalDrag);
+  window.removeEventListener('mouseup', stopDragging);
+  window.removeEventListener('touchend', stopDragging);
+};
+
+const handleGlobalDrag = (e: MouseEvent | TouchEvent) => {
+  if (!isDragging.value) return;
+  if (e.cancelable) e.preventDefault();
+  
+  dragDistance.value += 1;
+  updatePosition(e);
+};
 
 const formatCurrency = (val: number) => val.toLocaleString();
 

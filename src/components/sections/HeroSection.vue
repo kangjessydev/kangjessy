@@ -241,7 +241,7 @@
             
             <!-- After Image (Bottom Layer) -->
             <div class="absolute inset-0 pointer-events-none">
-               <img src="/home/kangjessy/.gemini/antigravity/brain/41388e3c-15ad-4ea5-a704-63de05e12f86/premium_automated_dashboard_after_work_1775061036463.png" 
+               <img src="/assets/hero/after.png" 
                     alt="Premium Dashboard After" 
                     draggable="false"
                     @dragstart.prevent
@@ -251,7 +251,7 @@
 
             <!-- Before Image (Top Layer, Clipped) -->
             <div class="absolute inset-0 pointer-events-none" :style="{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }">
-               <img src="/home/kangjessy/.gemini/antigravity/brain/41388e3c-15ad-4ea5-a704-63de05e12f86/messy_manual_spreadsheet_before_work_1775061018146.png" 
+               <img src="/assets/hero/before.png" 
                     alt="Messy Spreadsheet Before" 
                     draggable="false"
                     @dragstart.prevent
@@ -379,12 +379,12 @@ const dragDistance = ref(0);
 
 const lightboxImages = [
   {
-    src: "/home/kangjessy/.gemini/antigravity/brain/41388e3c-15ad-4ea5-a704-63de05e12f86/messy_manual_spreadsheet_before_work_1775061018146.png",
+    src: "/assets/hero/before.png",
     title: "The Workflow: SEBELUM",
     desc: "Proses manual yang lambat, rentan kesalahan, dan melelahkan (Spreadsheet Chaos)."
   },
   {
-    src: "/home/kangjessy/.gemini/antigravity/brain/41388e3c-15ad-4ea5-a704-63de05e12f86/premium_automated_dashboard_after_work_1775061036463.png",
+    src: "/assets/hero/after.png",
     title: "The Workflow: SESUDAH",
     desc: "Dashboard premium otomatis, rapi, dan memberikan insight bisnis secara real-time."
   }

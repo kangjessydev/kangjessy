@@ -441,7 +441,6 @@ onMounted(() => {
 });
 
 const activeFrequency = ref('monthly');
-const isFeaturesExpanded = ref(false);
 
 
 

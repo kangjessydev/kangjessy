@@ -12,7 +12,7 @@ export interface SiteSettings {
   socialLinks: { name: string, url: string, icon: string }[]
   marketingStats: {
     projects: number
-    bugfix: number
+    support: number
     experience: number
   }
 }
@@ -27,7 +27,7 @@ const siteSettings = ref<SiteSettings>({
   socialLinks: staticConfig.socialLinks,
   marketingStats: {
     projects: staticConfig.heroStats.projects,
-    bugfix: staticConfig.heroStats.bugfix,
+    support: staticConfig.heroStats.support,
     experience: staticConfig.heroStats.experience
   }
 })
@@ -60,7 +60,7 @@ export const useSiteSettings = () => {
       const marketingStats = await systemSettingsService.getByKey('marketing_stats')
       if (marketingStats) {
         siteSettings.value.marketingStats.projects = marketingStats.projects || siteSettings.value.marketingStats.projects
-        siteSettings.value.marketingStats.bugfix = marketingStats.bugfix || siteSettings.value.marketingStats.bugfix
+        siteSettings.value.marketingStats.support = marketingStats.support || siteSettings.value.marketingStats.support
         siteSettings.value.marketingStats.experience = marketingStats.experience || siteSettings.value.marketingStats.experience
       }
 

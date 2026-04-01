@@ -17,6 +17,10 @@ export default defineConfig(() => ({
         rewrite: (path) => path,
       },
     },
+    hmr: true,
+  },
+  optimizeDeps: {
+    force: false, // jangan re-bundle tiap restart
   },
   build: {
     cssCodeSplit: true,
@@ -67,5 +71,5 @@ export default defineConfig(() => ({
     onFinished() { 
       console.log('Static Site Generation finished.') 
     },
-  }
+  },
 }))

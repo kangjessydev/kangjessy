@@ -59,7 +59,7 @@
       <!-- Development Plans Grid -->
       <div v-if="activeCategory === 'development'" ref="devSliderRef" @scroll="handleScrollDev" class="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-6 animate-in fade-in zoom-in-95 duration-700 pt-16 pb-16 -mt-12 md:-mt-16 -mb-12 md:-mb-16 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar">
         <div 
-          v-for="(plan, planIndex) in developmentPlans" 
+          v-for="plan in developmentPlans" 
           :key="plan.id"
           class="relative group shrink-0 w-[85vw] md:w-auto snap-center hover:z-50"
         >
@@ -94,60 +94,71 @@
               </p>
             </div>
 
-            <!-- Features List -->
-            <ul class="grow space-y-4" :class="isFeaturesExpanded ? 'mb-4' : 'mb-0'">
-              <li 
-                v-for="(feature, index) in plan.features" 
-                :key="feature.text"
-                v-show="index < 5 || isFeaturesExpanded"
-                class="flex items-center gap-3 group/item relative"
-                :class="feature.included ? 'text-text-primary' : 'text-text-secondary opacity-40'"
-              >
-                <div class="shrink-0">
-                  <CheckCircle v-if="feature.included" :size="18" class="text-accent-primary transition-transform group-hover/item:scale-110" />
-                  <XCircle v-else :size="18" class="text-text-secondary shrink-0" />
-                </div>
-                <div class="w-full relative isolate">
-                  <span class="text-[0.9rem] leading-tight inline-flex items-center flex-wrap" :class="feature.isPopular ? 'font-semibold text-accent-primary' : ''">
-                    <span class="mr-1">{{ feature.text }}</span>
-                    <!-- Info Icon Trigger -->
-                    <div v-if="feature.tooltip" class="relative inline-flex items-center top-0.5 group/tooltip w-4 h-4 cursor-help text-text-tertiary hover:text-accent-primary transition-colors shrink-0">
-                      <div @click="openMobileTooltip(feature.text, feature.tooltip)" class="w-full h-full flex items-center justify-center">
-                        <Info :size="14" />
-                      </div>
-                      <!-- Tooltip Box (Desktop Only) -->
-                      <div class="hidden md:block absolute bottom-[calc(100%+0.5rem)] p-3.5 rounded-2xl bg-[#0f1117] border border-border-color shadow-xl text-[0.75rem] text-text-secondary font-medium leading-relaxed opacity-0 invisible pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:visible group-hover/tooltip:pointer-events-auto transition-all duration-300 z-50 min-w-[200px] sm:min-w-[240px] max-w-[260px]"
-                           :class="planIndex === developmentPlans.length - 1 ? 'right-0 md:right-0 md:left-auto md:translate-x-0' : 'left-0 md:left-1/2 md:-translate-x-1/2'">
-                        {{ feature.tooltip }}
-                        <!-- Arrow -->
-                        <div class="absolute -bottom-1.5 w-3 h-3 bg-[#0f1117] border-b border-r border-border-color rotate-45"
-                             :class="planIndex === developmentPlans.length - 1 ? 'right-3 md:right-3 md:left-auto md:translate-x-0' : 'left-2 md:left-1/2 md:-translate-x-1/2'"></div>
-                      </div>
-                    </div>
-                  </span>
-                </div>
-              </li>
-            </ul>
+            <!-- Metadata (Estimate, Revisions, Tech) -->
+            <div class="grid grid-cols-3 gap-2 mb-8 py-5 border-y border-white/5">
+              <div class="flex flex-col items-center text-center gap-1.5">
+                <Clock :size="16" class="text-accent-primary opacity-80" />
+                <span class="text-[0.65rem] text-text-tertiary uppercase font-black tracking-widest">Estimasi</span>
+                <span class="text-[0.8rem] text-text-primary font-bold">{{ plan.estimate }}</span>
+              </div>
+              <div class="flex flex-col items-center text-center gap-1.5 border-x border-white/5">
+                <RefreshCw :size="16" class="text-accent-primary opacity-80" />
+                <span class="text-[0.65rem] text-text-tertiary uppercase font-black tracking-widest">Revisi</span>
+                <span class="text-[0.8rem] text-text-primary font-bold">{{ plan.revisions }}</span>
+              </div>
+              <div class="flex flex-col items-center text-center gap-1.5">
+                <Zap :size="16" class="text-accent-primary opacity-80" />
+                <span class="text-[0.65rem] text-text-tertiary uppercase font-black tracking-widest">Teknologi</span>
+                <span class="text-[0.8rem] text-text-primary font-bold">{{ plan.technology }}</span>
+              </div>
+            </div>
 
-            <!-- Accordion Toggle for Development Plans -->
-            <button 
-              v-if="plan.features.length > 5" 
-              @click="toggleExpand()"
-              class="text-xs font-semibold text-accent-primary flex items-center gap-1.5 mb-8 hover:text-white transition-colors self-start pb-2"
-            >
-              <span>{{ isFeaturesExpanded ? 'Sembunyikan' : `Lihat ${plan.features.length - 5} Fitur Tambahan` }}</span>
-              <ChevronDown 
-                :size="14" 
-                class="transition-transform duration-300" 
-                :class="isFeaturesExpanded ? 'rotate-180' : ''" 
-              />
-            </button>
+            <!-- Features List (Grouped) -->
+            <div class="grow space-y-7 mb-10">
+               <div v-for="group in plan.featureGroups" :key="group.name" class="space-y-3.5">
+                  <h4 class="text-[0.7rem] font-black text-text-tertiary uppercase tracking-[0.2em] flex items-center gap-2.5">
+                    <span class="w-5 h-px bg-accent-primary/30"></span>
+                    {{ group.name }}
+                  </h4>
+                  <ul class="space-y-3 px-1">
+                    <li v-for="feature in group.items" :key="feature.text" class="flex items-start gap-3 group/item" :class="feature.included ? '' : 'opacity-25 grayscale select-none'">
+                       <div class="shrink-0 mt-0.5">
+                          <CheckCircle v-if="feature.included" :size="16" class="text-accent-primary group-hover/item:scale-110 transition-transform" />
+                          <XCircle v-else :size="16" class="text-text-tertiary shrink-0" />
+                       </div>
+                       <div class="flex items-center gap-1.5 flex-wrap">
+                          <span class="text-[0.9rem] leading-tight font-medium" :class="feature.isPopular ? 'text-accent-primary font-bold' : (feature.included ? 'text-text-primary' : 'text-text-tertiary')">
+                            {{ feature.text }}
+                          </span>
+                          <div v-if="feature.tooltip && feature.included" class="relative inline-flex items-center group/tooltip w-4 h-4 cursor-help text-text-tertiary hover:text-accent-primary transition-colors">
+                            <Info :size="12" @click="openMobileTooltip(feature.text, feature.tooltip)" />
+                            <!-- Desktop Tooltip -->
+                            <div class="hidden md:block absolute bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 p-3 rounded-xl bg-[#0f1117] border border-border-color shadow-xl text-[0.7rem] text-text-secondary font-medium leading-relaxed opacity-0 invisible pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 z-50 min-w-[200px]">
+                              {{ feature.tooltip }}
+                              <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0f1117] border-b border-r border-border-color rotate-45"></div>
+                            </div>
+                          </div>
+                       </div>
+                    </li>
+                  </ul>
+               </div>
+            </div>
+
+            <!-- Target User Note -->
+            <div class="mb-8 p-5 rounded-2xl bg-white/5 border border-white/5 relative overflow-hidden group/note">
+               <div class="absolute inset-0 bg-accent-primary/5 opacity-0 group-hover/note:opacity-100 transition-opacity"></div>
+               <p class="text-[0.85rem] text-text-secondary leading-relaxed relative z-10">
+                  <span class="text-text-primary font-black uppercase text-[0.7rem] tracking-widest block mb-1.5 opacity-60">Cocok untuk:</span>
+                  {{ plan.suitableFor }}
+               </p>
+            </div>
 
             <!-- CTA -->
             <BaseButton 
               :variant="plan.isPopular ? 'primary' : 'secondary'" 
               size="lg" 
-              class="w-full justify-center group-hover:scale-[1.02] transition-all"
+              class="w-full justify-center group-hover:scale-[1.02] transition-all py-6! text-[1rem] shadow-xl"
+              :class="plan.isPopular ? 'shadow-accent-primary/20' : ''"
               @click="handleOrder(plan.id)"
             >
               {{ plan.ctaText }}
@@ -198,7 +209,7 @@
       </div>
 
       <!-- Maintenance Plans Grid -->
-      <div v-if="activeCategory === 'maintenance'" ref="maintSliderRef" @scroll="handleScrollMaint" class="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-6 animate-in fade-in zoom-in-95 duration-700 pt-16 pb-16 -mt-12 md:-mt-16 -mb-12 md:-mb-16 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar">
+      <div v-if="activeCategory === 'maintenance'" ref="maintSliderRef" @scroll="handleScrollMaint" class="flex md:grid md:grid-cols-2 max-w-5xl md:mx-auto overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-6 animate-in fade-in zoom-in-95 duration-700 pt-16 pb-16 -mt-12 md:-mt-16 -mb-12 md:-mb-16 -mx-4 px-4 md:px-0 no-scrollbar">
         <div 
           v-for="plan in maintenancePlans" 
           :key="plan.id"
@@ -258,7 +269,7 @@
         <div>
           <h4 class="text-sm font-bold text-text-primary mb-1">Penting Diketahui</h4>
           <p class="text-[0.85rem] text-text-secondary leading-relaxed">
-            Layanan <strong>Maintenance</strong> bersifat satu kesatuan paket dan tidak dapat dipesan per fitur terpisah (no pick-and-choose). Saya akan melakukan <strong>evaluasi teknis awal</strong> terhadap infrastruktur web Anda sebelum servis dimulai untuk memastikan standar kualitas saya terpenuhi. Punya kendala mendesak? <a href="#" @click.prevent="openConsultation" class="text-accent-secondary font-semibold hover:underline border-b border-accent-secondary/30">Mari kita bicarakan!</a>
+            Setiap paket maintenance mencakup layanan secara menyeluruh — tidak dipisah per fitur — agar penanganannya lebih efektif dan terstruktur. Sebelum servis dimulai, saya akan melakukan pengecekan awal gratis untuk memahami kondisi website Anda dan memastikan layanan yang tepat. Punya pertanyaan atau kendala mendesak? <a href="#" @click.prevent="openConsultation" class="text-accent-secondary font-semibold hover:underline border-b border-accent-secondary/30">Mari kita bicarakan!</a>
           </p>
         </div>
       </div>
@@ -353,9 +364,11 @@ import {
   XCircle, 
   ShieldCheck,
   Info,
-  ChevronDown,
   ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon
+  ChevronRight as ChevronRightIcon,
+  Clock,
+  RefreshCw,
+  Zap
 } from 'lucide-vue-next';
 
 import { usePopupManager, Popups } from '../../composables/usePopupManager';
@@ -392,7 +405,6 @@ const categories = [
 ];
 
 const frequencies = [
-  { id: 'weekly', name: 'Weekly' },
   { id: 'monthly', name: 'Monthly' },
   { id: 'one-time', name: 'One-time' }
 ];
@@ -431,9 +443,7 @@ onMounted(() => {
 const activeFrequency = ref('monthly');
 const isFeaturesExpanded = ref(false);
 
-const toggleExpand = () => {
-  isFeaturesExpanded.value = !isFeaturesExpanded.value;
-};
+
 
 const devSlide = ref(0);
 const devSliderRef = ref<HTMLElement | null>(null);
@@ -506,7 +516,6 @@ const handleAddonOrder = (item: any, categoryName: string) => {
 };
 
 const getMaintenancePrice = (plan: MaintenancePlan) => {
-  if (activeFrequency.value === 'weekly') return plan.weeklyPrice;
   if (activeFrequency.value === 'one-time') return plan.oneTimePrice;
   return plan.monthlyPrice;
 };

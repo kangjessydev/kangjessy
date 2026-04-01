@@ -29,7 +29,7 @@ export interface MenuItem {
 
 export const menuItems: MenuItem[] = [
     {
-        text: 'Services',
+        text: 'Layanan & Solusi',
         url: '/services',
         icon: Monitor,
         isMegaMenu: true,
@@ -89,8 +89,8 @@ export const menuItems: MenuItem[] = [
         ]
     },
     */
-    { text: 'Industries', url: '/industries', icon: Rocket },
-    { text: 'Projects', url: '/projects', icon: Briefcase },
+    { text: 'Spesialisasi', url: '/industries', icon: Rocket },
+    { text: 'Karya Terpilih', url: '/projects', icon: Briefcase },
     /*
     {
         text: 'The Blueprint',
@@ -138,7 +138,7 @@ export const menuItems: MenuItem[] = [
     },
     */
     {
-        text: 'Hire Me',
+        text: 'Konsultasi Gratis',
         isAction: true,
         trigger: 'checkout',
         icon: Send
@@ -147,10 +147,10 @@ export const menuItems: MenuItem[] = [
 
 // Specialized menu for Mobile BottomSheet (Flat Structure)
 export const mobileNavItems = [
-    { text: 'Services', url: '/services#development', icon: Monitor },
+    { text: 'Layanan', url: '/services#development', icon: Monitor },
     { text: 'Tools', url: 'https://kangjessy-tools.vercel.app', icon: Zap },
-    { text: 'Industries', url: '/industries', icon: Rocket },
-    { text: 'Portfolio', url: '/projects', icon: Briefcase },
+    { text: 'Spesialisasi', url: '/industries', icon: Rocket },
+    { text: 'Portofolio', url: '/projects', icon: Briefcase },
     // { text: 'Store', url: '/store', icon: ShoppingCart },
     { text: 'Blog', url: '/blog', icon: BookOpen },
     { text: 'About', url: '/about', icon: Info },
@@ -172,9 +172,9 @@ export const mobileMenuGroups: {
     {
         title: 'Daily Business',
         items: [
-            { text: 'Services', url: '/services#development', icon: Monitor },
-            { text: 'Industries', url: '/industries', icon: Rocket },
-            { text: 'Portfolio', url: '/projects', icon: Briefcase },
+            { text: 'Layanan', url: '/services#development', icon: Monitor },
+            { text: 'Spesialisasi', url: '/industries', icon: Rocket },
+            { text: 'Portofolio', url: '/projects', icon: Briefcase },
             // { text: 'Store', url: '/store', icon: ShoppingCart },
             { text: 'Blog', url: '/blog', icon: BookOpen },
             { text: 'Tools', url: 'https://kangjessy-tools.vercel.app', icon: Zap },

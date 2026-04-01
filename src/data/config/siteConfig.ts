@@ -17,8 +17,8 @@ export const siteConfig = {
     // Hero Stats Targets
     heroStats: {
         projects: 10,
-        bugfix: 1000,
-        experience: 2,
+        support: 100, // Replacing bugfix with "Support" percentage or count
+        experience: 4,
     },
 
     whatsapp: {

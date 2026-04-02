@@ -165,7 +165,7 @@
                         <Transition mode="out-in" name="fade">
                            <div :key="lightboxImageIndex" class="absolute inset-0 w-full h-full">
                               <iframe v-if="lightboxImages[lightboxImageIndex]?.videoUrl" 
-                                      :src="lightboxImages[lightboxImageIndex].videoUrl" 
+                                      :src="lightboxImages[lightboxImageIndex]?.videoUrl" 
                                       class="w-full h-full" 
                                       frameborder="0" 
                                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -242,7 +242,6 @@ const stats = ref<Record<string, number>>({
 const liveRevenue = ref(12450);
 const activeUsers = ref(842);
 const chartData = ref([30, 45, 25, 60, 40, 75, 50, 90]);
-const activeTooltip = ref<string | null>(null);
 
 // Before/After Slider State
 const sliderPos = ref(50);
@@ -322,14 +321,7 @@ const handleGlobalDrag = (e: MouseEvent | TouchEvent) => {
   updatePosition(e);
 };
 
-const formatCurrency = (val: number) => val.toLocaleString();
 
-const toggleTooltip = (key: string) => {
-  activeTooltip.value = activeTooltip.value === key ? null : key;
-  if(activeTooltip.value) {
-    setTimeout(() => activeTooltip.value = null, 3000);
-  }
-};
 
 const updateLiveStats = () => {
   liveRevenue.value += Math.floor(Math.random() * 10) - 2;

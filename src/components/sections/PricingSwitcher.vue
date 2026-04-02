@@ -88,10 +88,6 @@
                 <span class="text-text-secondary text-lg font-medium">Rp</span>
                 <span class="text-4xl font-extrabold text-text-primary tracking-tight">{{ plan.price }}</span>
               </div>
-              <p v-if="plan.originalPrice" class="text-sm text-text-secondary mt-1 flex items-center justify-start gap-2">
-                <span class="line-through opacity-50">Was Rp {{ plan.originalPrice }}</span>
-                <span v-if="calculateDiscount(plan.originalPrice, plan.price) > 0" class="text-xs font-bold text-accent-primary bg-accent-primary/10 px-2 py-0.5 rounded-full">-{{ calculateDiscount(plan.originalPrice, plan.price) }}%</span>
-              </p>
             </div>
 
             <!-- Metadata (Estimate & Revisions) -->
@@ -443,13 +439,7 @@
                 <p class="text-[0.85rem] text-text-secondary mt-1">{{ item.desc }}</p>
               </div>
               <div class="text-right shrink-0">
-                <div v-if="item.originalPrice" class="text-[0.7rem] text-text-secondary line-through opacity-50 mb-0.5">
-                  Rp {{ item.originalPrice }}
-                </div>
-                <div class="flex items-center justify-end gap-1.5">
-                  <span v-if="item.originalPrice" class="text-[0.65rem] font-black text-accent-primary bg-accent-primary/10 px-1.5 py-0.5 rounded-md leading-none">
-                    -{{ calculateDiscount(item.originalPrice, item.price) }}%
-                  </span>
+                <div class="flex items-center justify-end">
                   <span class="text-text-primary font-bold text-[1rem]">Rp {{ item.price }}</span>
                 </div>
                 <button class="block w-full text-[0.7rem] text-accent-primary mt-2 font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
@@ -703,15 +693,7 @@ const handleOrder = (planId: string) => {
   });
 };
 
-const calculateDiscount = (original?: string, current?: string) => {
-  if (!original || !current) return 0;
-  const orig = parseInt(original.replace(/\./g, ''));
-  const curr = parseInt(current.replace(/\./g, ''));
-  if (orig && curr && orig > curr) {
-    return Math.round(((orig - curr) / orig) * 100);
-  }
-  return 0;
-};
+
 </script>
 
 <style scoped>

@@ -29,7 +29,7 @@
                                     {{ feature.title }}
                                 </h3>
                                 <p
-                                    class="text-text-secondary leading-[1.5] text-[clamp(0.75rem,1.5vw,0.875rem)] whitespace-normal">
+                                    class="text-text-secondary leading-normal text-[clamp(0.75rem,1.5vw,0.875rem)] whitespace-normal">
                                     {{ feature.description }}
                                 </p>
                             </article>
@@ -52,7 +52,7 @@
                                     {{ feature.title }}
                                 </h3>
                                 <p
-                                    class="text-text-secondary leading-[1.5] text-[clamp(0.75rem,1.5vw,0.875rem)] whitespace-normal">
+                                    class="text-text-secondary leading-normal text-[clamp(0.75rem,1.5vw,0.875rem)] whitespace-normal">
                                     {{ feature.description }}
                                 </p>
                             </article>
@@ -125,11 +125,11 @@ import TechLogo from '../../ui/TechLogo.vue';
 
 const features = [
     { icon: Zap, title: 'Eksekusi Anti-Lama', description: 'Gak perlu nunggu berbulan-bulan. Kita kerjain cepet dengan standar kode yang tetap solid.' },
-    { icon: Briefcase, title: 'Orientasi Bisnis', description: 'Bukan cuma desain cantik, tapi fitur yang emang ngebantu bisnis kamu dapat profit lebih.' },
-    { icon: Layout, title: "Tampilan 'Next-Gen'", description: 'Bikin kompetitor ngiri dengan antarmuka yang modern, clean, dan gampang dipakai siapa aja.' },
-    { icon: ShieldCheck, title: 'Aman & Siap Scale', description: 'Sistem nggak gampang tumbang. Siap nampung banyak user seiring bisnis kamu makin gede.' },
-    { icon: Cpu, title: 'Pecat Kerja Manual', description: 'Biar sistem yang capek, kamu jangan. Kita otomatisasi semua hal yang bikin operasional pusing.' },
-    { icon: MessageSquare, title: 'Ngobrol Langsung', description: 'Bebas dari ribetnya CS atau sales. Kamu diskusi langsung sama yang ngerjain kodenya.' }
+    { icon: Briefcase, title: 'Infrastruktur Profit', description: 'Bukan cuma desain cantik, tapi ekosistem fitur yang dirancang khusus untuk mendatangkan profit bisnis.' },
+    { icon: Layout, title: 'UI/UX High-Conversion', description: 'Antarmuka modern yang memandu pengunjung Anda menjadi pelanggan setia dengan alur yang mulus.' },
+    { icon: ShieldCheck, title: 'Aman & Siap Scale', description: 'Sistem tangguh yang nggak gampang tumbang. Siap nampung trafik tinggi seiring bisnis Anda makin besar.' },
+    { icon: Cpu, title: 'Ecosystem Automation', description: 'Biar sistem yang capek, Anda jangan. Kita otomatisasi seluruh alur kerja manual yang menguras energi.' },
+    { icon: MessageSquare, title: 'Diskusi Tanpa Sekat', description: 'Bebas dari ribetnya CS atau sales. Anda diskusi langsung dengan arsitek yang mengerjakan kodenya.' }
 ];
 
 const techStackItems = [

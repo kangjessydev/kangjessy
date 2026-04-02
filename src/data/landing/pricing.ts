@@ -18,7 +18,7 @@ export interface PricingPlan {
   description: string;
   estimate: string;
   revisions: string;
-  technology: string;
+  // technology: string;
   suitableFor: string;
   features: PricingFeature[];
   featureGroups?: PricingFeatureGroup[];
@@ -47,8 +47,8 @@ export const developmentPlans: PricingPlan[] = [
     description: 'Cocok untuk bisnis yang baru membangun kehadiran online — simpel, cepat, dan langsung bisa dipakai.',
     estimate: '1-2 Minggu',
     revisions: '2x Revisi',
-    technology: 'WordPress',
-    suitableFor: ' UMKM, toko lokal, jasa perorangan yang butuh website pertama mereka. ',
+    // technology: 'WordPress',
+    suitableFor: ' UMKM, toko lokal, atau jasa perorangan yang butuh website pertama mereka — simpel, cepat, dan profesional.',
     badge: 'Best for Beginners',
     ctaText: 'Start Your Brand',
     features: [],
@@ -56,32 +56,32 @@ export const developmentPlans: PricingPlan[] = [
       {
         name: 'Halaman & Konten',
         items: [
-          { text: 'Hingga 5 halaman', included: true, tooltip: 'Beranda, Tentang, Layanan, Kontak, + 1 bebas' },
-          { text: 'Desain responsif mobile & desktop', included: true },
-          { text: 'Copywriting dasar tiap halaman', included: true },
-          { text: 'Halaman dinamis', included: false },
-          { text: 'Halaman landing promo terpisah', included: false },
+          { text: '5 halaman utama', included: true, tooltip: 'Beranda, Tentang Kami, Layanan, Kontak, + 1 halaman bebas sesuai kebutuhan kamu.' },
+          { text: 'Desain responsif mobile & desktop', included: true, tooltip: 'Tampilan website akan menyesuaikan dengan ukuran layar perangkat yang digunakan (HP, tablet, laptop, desktop).' },
+          { text: 'Copywriting dasar tiap halaman', included: true, tooltip: 'Penulisan konten website yang ringkas, jelas, dan sesuai dengan brand kamu.' },
+          { text: 'Halaman statis', included: false, tooltip: 'Halaman yang kontennya tidak berubah-ubah dan dibuat sesuai kebutuhan awal. Contoh: halaman FAQ, halaman kebijakan privasi, halaman syarat & ketentuan.' },
+          { text: 'Katalog / Halaman dinamis', included: false, tooltip: 'Halaman yang kontennya bisa diubah-ubah dengan mudah melalui admin panel.' },
+          { text: 'Landing page campaign', included: false, tooltip: 'Halaman khusus untuk promosi atau iklan.' },
         ]
       },
       {
         name: 'Fitur Teknis',
         items: [
-          { text: 'Akses admin WordPress lengkap', included: true },
-          { text: 'Form kontak + notifikasi email otomatis', included: true },
-          { text: 'SSL & keamanan dasar terpasang', included: true },
-          { text: 'Optimasi performa standar (GTmetrix grade B+)', included: true },
-          { text: 'Setup Google Analytics & Search Console', included: true },
-          { text: 'Integrasi payment gateway', included: false },
-          { text: 'Sistem login / member area', included: false },
-          { text: 'Database / fitur kustom', included: false },
+          { text: 'Akses panel kelola konten', included: true, tooltip: 'Kamu bisa update konten website tanpa perlu bantuan developer.' },
+          { text: 'Form kontak + notifikasi email otomatis', included: true, tooltip: 'Setiap ada yang mengisi form, kamu akan mendapatkan notifikasi email.' },
+          { text: 'SSL & proteksi login', included: true, tooltip: 'SSL untuk keamanan website dan proteksi login untuk keamanan akun.' },
+          { text: 'Optimasi kecepatan loading', included: true, tooltip: 'Gambar dikompres, cache diaktifkan, dan kode dioptimalkan untuk kecepatan loading.' },
+          { text: 'Setup Google Analytics & Search Console', included: true, tooltip: 'Setup Google Analytics & Search Console untuk melacak pengunjung website.' },
+          { text: 'Sistem transaksi / pembayaran online', included: false, tooltip: 'Integrasi pembayaran menggunakan QRIS, transfer bank, atau payment gateway lainnya.' },
+          { text: 'Member area / Pelanggan akun', included: false, tooltip: 'Pengunjung bisa membuat akun dan login untuk mengakses konten khusus.' },
         ]
       },
       {
         name: 'Bonus',
         items: [
-          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain .com, .net, .org, .id' },
-          { text: 'Gratis setup Google Business Profile', included: true },
-          { text: 'Panduan kelola website', included: true, tooltip: 'Video tutorial singkat atau PDF tentang cara update konten & penggunaan website' },
+          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain my.id, .biz.id, .com, .id, .net, .org, .xyz, .info' },
+          { text: 'Video panduan kelola website', included: true, tooltip: 'Video singkat yang menunjukkan cara update konten & penggunaan website' },
+          { text: '1 bulan maintenance gratis', included: false, tooltip: 'Tersedia di paket Business Growth & Pro Scale' },
         ]
       }
     ]
@@ -89,13 +89,13 @@ export const developmentPlans: PricingPlan[] = [
   {
     id: 'business-growth',
     name: 'Business Growth',
-    price: '2.750.000',
+    price: '3.500.000',
     // originalPrice: '6.000.000',
     description: 'Untuk bisnis yang sudah berjalan dan butuh website yang bekerja aktif mendatangkan pelanggan & konversi.',
     estimate: '2-3 Minggu',
     revisions: '3x Revisi',
-    technology: 'WordPress / Laravel',
-    suitableFor: 'Toko online, bisnis jasa yang butuh sistem booking/order, atau UMKM yang ingin serius di digital.',
+    // technology: 'WordPress / Laravel',
+    suitableFor: 'Toko online, restoran, bisnis jasa yang butuh sistem pemesanan atau pembayaran online, dan UMKM yang ingin serius di digital.',
     badge: 'Most Popular',
     isPopular: true,
     ctaText: 'Grow Your Business',
@@ -105,31 +105,31 @@ export const developmentPlans: PricingPlan[] = [
         name: 'Halaman & Konten',
         items: [
           { text: 'Semua Fitur Starter Essential', included: true, isPopular: true },
-          { text: 'Hingga 5 halaman general + 2 halaman statis tambahan', included: true },
-          { text: '1 halaman dinamis', included: true, tooltip: 'Katalog gambar / portofolio / halaman postingan lainnya.' },
-          { text: '10 artikel SEO awal', included: true, tooltip: '500–700 kata/artikel' },
-          { text: '1 landing page promosi terpisah', included: true },
+          { text: 'Hingga 3 halaman statis tambahan ', included: true, tooltip: 'Halaman kontent tetap seperti FAQ, Kebijakan Privasi, Syarat & Ketentuan, dll.' },
+          { text: 'Katalog / menu / portofolio dinamis', included: true, tooltip: 'Halmaan yang isinya bisa kamu update sendiri melalui admin panel. Cocok untuk toko online, restoran, atau portofolio.' },
+          { text: 'Landing page campaign', included: true, tooltip: 'Halaman khusus untuk promosi atau iklan. Fokus ke satu pesan utama dengan call-to-action yang jelas. Cotok untuk event, promo, atau kampanye khusus.' },
+          { text: '5 artikel konten awal', included: true, tooltip: '5 artikel yang dioptimasi untuk pencarian google berdasarkan keyword bisnis kamu. ' },
+          { text: 'Desain UI Dashboard custom', included: false, tooltip: 'Desain UI Dashboard yang disesuaikan dengan kebutuhan bisnis kamu. ' },
         ]
       },
       {
         name: 'Fitur Teknis',
         items: [
-          { text: 'Struktur data & database relasional custom', included: true },
-          { text: 'Integrasi payment gateway', included: true, tooltip: 'Midtrans / Xendit / Tripay / Doku / Payment Gateway lainnya.' },
-          { text: 'Automasi form & lembar kerja prospek', included: true, tooltip: 'Notifikasi langsung ke Email/WhatsApp/Spreadsheet.' },
-          { text: 'Optimasi performa lanjutan', included: true, tooltip: 'GTmetrix grade A.' },
-          { text: 'Proteksi pencadangan otomatis', included: true, tooltip: 'mingguan' },
-          { text: 'Akses admin multi-level', included: true, tooltip: 'owner + operator' },
+          { text: 'Sistem transaksi / pembayaran online ', included: true, tooltip: 'Pelanggan bisa bayar langsung di website via QRIS, transfer bank, atau kartu kredit dan otomatis terkonfirmasi tanpa harus konfirmasi manual.' },
+          { text: 'Otomasi notifikasi & follow-up ', included: true, tooltip: 'Sistem otomatis kirim email atau notifikasi ke pelanggan setelah transaksi, pendaftaran, atau pengisian form tanpa harus kirim manual satu per satu.' },
+          { text: 'Optimasi kecepatan lanjutan', included: true, tooltip: 'Termasuk optimasi database, lazy load, dan pemisahan asset untuk performa yang lebih baik.' },
+          { text: 'Pencadangan otomatis mingguan', included: true, tooltip: 'Data website dicadangkan setiap minggu membantu pemulihan ketika terjadi kesalahan.' },
+          { text: 'Member area / akun pelanggan ', included: true, tooltip: 'Pengunjung bisa membuat akun dan login untuk mengakses konten khusus.' },
           { text: 'Arsitektur sistem terpisah', included: false, tooltip: 'Frontend dan backend terpisah untuk performa dan keamanan lebih baik.' },
-          { text: 'Sinkronisasi software lama', included: false, tooltip: 'Integrasi dengan sistem yang sudah ada (CRM, ERP, dll).' },
+          { text: 'Integrasi sistem / software lama ', included: false, tooltip: 'Integrasi dengan sistem yang sudah ada (CRM, ERP, dll).' },
         ]
       },
       {
         name: 'Bonus',
         items: [
-          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain .com, .net, .org, .id' },
-          { text: 'Gratis 1 bulan Basic Care maintenance', included: true },
-          { text: '1x sesi konsultasi strategi digital (60 menit)', included: true },
+          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain my.id, .biz.id, .com, .id, .net, .org, .xyz, .info' },
+          { text: '1 bulan Basic Care maintenance gratis', included: true, tooltip: 'Website kamu dipantau dan dirawat selama 1 bulan setelah launch. Termasuk update keamanan, backup, dan monitoring performa.' },
+          // { text: '1x sesi kick-off via video call', included: true, tooltip: 'Sesi diskusi singkat untuk memastikan website sesuai dengan kebutuhan bisnis kamu.' },
         ]
       }
     ]
@@ -137,13 +137,13 @@ export const developmentPlans: PricingPlan[] = [
   {
     id: 'pro-scale',
     name: 'Pro Scale',
-    price: '5.500.000',
+    price: '7.500.000',
     // originalPrice: '12.000.000',
     description: 'Solusi digital menyeluruh untuk bisnis yang butuh sistem kompleks, integrasi lanjutan, dan skalabilitas jangka panjang.',
     estimate: '3-5 Minggu',
     revisions: '5x Revisi',
-    technology: 'Laravel + Vue/React (custom stack)',
-    suitableFor: 'Startup, bisnis dengan sistem booking/CRM/inventori custom, atau perusahaan yang butuh platform digital sendiri. ',
+    // technology: 'Laravel + Vue/React (custom stack)',
+    suitableFor: 'Startup, bisnis dengan sistem reservasi/inventori/CRM custom, atau perusahaan yang butuh platform digital sendiri yang bisa tumbuh.',
     badge: 'Unlimited Scale',
     ctaText: 'Start Custom Project',
     features: [],
@@ -152,30 +152,30 @@ export const developmentPlans: PricingPlan[] = [
         name: 'Halaman & Konten',
         items: [
           { text: 'Semua Fitur Business Growth', included: true, isPopular: true },
-          { text: 'Hingga 5 halaman general + 5 halaman statis + 3 halaman dinamis', included: true },
-          { text: '10 artikel SEO awal', included: true, tooltip: '500–700 kata/artikel' },
-          { text: 'Desain UI sistem dashboard custom', included: true },
+          { text: 'Hingga 5 halaman statis tambahan', included: true },
+          { text: 'Hingga 3 jenis halaman dinamis', included: true, tooltip: 'Contoh: halaman produk, halaman event, halaman artikel, halaman portofolio, dll.' },
+          { text: 'Desain UI dashboard custom', included: true, tooltip: 'Desain UI Dashboard yang disesuaikan dengan kebutuhan bisnis kamu. ' },
+          { text: '5 artikel konten awal (lebih panjang & terstruktur)', included: true, tooltip: '5 artikel yang dioptimasi untuk pencarian google berdasarkan keyword bisnis kamu. ' },
         ]
       },
       {
         name: 'Fitur Teknis',
         items: [
           { text: 'Arsitektur sistem terpisah', included: true, tooltip: 'Frontend dan backend terpisah untuk performa dan keamanan lebih baik.' },
-          { text: 'Sinkronisasi & migrasi data dari sistem lama', included: true, tooltip: 'Integrasi dengan sistem yang sudah ada (CRM, ERP, dll).' },
-          { text: 'Dashboard otorisasi multi-level', included: true, tooltip: 'owner, admin, staff, klien' },
-          { text: 'Integrasi API pihak ketiga tak terbatas', included: true },
-          { text: 'Sistem keamanan terisolasi & enkripsi data', included: true },
-          { text: 'Skala beban trafik tinggi', included: true, tooltip: 'load-ready' },
-          { text: 'Pencadangan otomatis harian + monitoring uptime', included: true },
+          { text: 'Integrasi sistem / software lama', included: true, tooltip: 'Integrasi dengan sistem yang sudah ada (CRM, ERP, dll).' },
+          { text: 'Hak akses tim yang fleksibel', included: true, tooltip: 'Setiap anggota tim punya akses sesuai perannya (owner, admin, staff, dll).' },
+          { text: 'Integrasi hingga 2 layanan pihak ketiga', included: true, tooltip: 'Contoh: payment gateway, layanan email, google sheets, dll.' },
+          { text: 'Enkripsi & proteksi data sensitif', included: true, tooltip: 'Enkripsi data sensitif untuk melindungi data bisnis kamu.' },
+          { text: 'Dibangun untuk trafik tinggi', included: true, tooltip: 'Membuat website mampu menangani banyak pengunjung secara bersamaan tanpa melambat.' },
+          { text: 'Pencadangan harian + pantau uptime', included: true, tooltip: 'Backup data website setiap hari dan pantau performa website secara berkala.' },
         ]
       },
       {
         name: 'Bonus',
         items: [
-          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain .com, .net, .org, .id' },
-          { text: 'Gratis 1 bulan Growth Care maintenance', included: true },
-          { text: '2x sesi konsultasi strategi & roadmap teknis', included: true },
-          { text: 'Dokumentasi teknis sistem', included: true, tooltip: 'handover doc' },
+          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain my.id, .biz.id, .com, .id, .net, .org, .xyz, .info'},
+          { text: '1 bulan Growth Care maintenance gratis', included: true, tooltip: 'Website kamu dipantau dan dirawat selama 1 bulan setelah launch. Termasuk update keamanan, backup, dan monitoring performa.' },
+          { text: 'Video panduan + dokumen serah terima sistem', included: true, tooltip: 'Video tutorial dan dokumen untuk membantu kamu mengelola website.' },
         ]
       }
     ]
@@ -222,17 +222,28 @@ export const addonServices = [
   {
     category: 'Pages & Layout',
     items: [
-      { name: 'Standard Static Page', price: '100.000', originalPrice: '200.000', desc: 'Halaman informasi tambahan (About, FAQ, etc)' },
-      { name: 'Dynamic Feature Page', price: '350.000', originalPrice: '500.000', desc: 'Halaman dengan data dinamis (Filter, API Integration)' },
-      { name: 'High-Conversion Landing', price: '1.000.000', originalPrice: '1.500.000', desc: 'Halaman promosi khusus dengan copywriting persuasif' }
+      { name: 'Standard Static Page', price: '250.000', desc: 'Halaman informasi tambahan (Kontak, FAQ, Profil Tim, dsb) dengan desain yang serasi.' },
+      { name: 'Dynamic Interactive Page', price: '500.000', desc: 'Halaman dengan elemen interaktif seperti filter, pencarian, dan manajemen konten (CMS).' },
+      { name: 'Full API Integration Page', price: '850.000', desc: 'Halaman yang terhubung dengan layanan eksternal (API) untuk data real-time/otomasi.' },
+      { name: 'High-Conversion Landing', price: '1.200.000', desc: 'Landing page khusus campaign dengan riset copywriting persuasif yang fokus mendatangkan leads/sales.' },
+      { name: 'Custom UI Page Design', price: '400.000', desc: 'Pembuatan visual desain halaman premium (Figma/High-Fidelity) untuk konten bisnismu.' }
     ]
   },
   {
     category: 'Features & Optimization',
     items: [
-      { name: 'Advanced Animation (GSAP)', price: '1.000.000', desc: 'Animasi interaktif premium untuk kesan WOW' },
-      { name: 'Payment Gateway Setup', price: '1.000.000', originalPrice: '1.500.000', desc: 'Integrasi Midtrans/Xendit untuk pembayaran otomatis' },
-      { name: 'Advanced SEO Engine', price: '1.000.000', originalPrice: '2.000.000', desc: 'Setup SEO technical & Content Strategy mendalam' }
+      { name: 'Advanced Animation (GSAP)', price: '1.000.000', desc: 'Animasi interaktif premium, custom interactions, & storytelling visual yang meningkatkan engagement.' },
+      { name: 'Payment Gateway Setup', price: '1.000.000', desc: 'Integrasi Midtrans/Xendit untuk klien yang ingin mengaktifkan pembayaran otomatis di sistem eksisting.' },
+      { name: 'Advanced SEO Engine', price: '1.000.000', desc: 'Audit teknis mendalam, riset keyword kompetitor, on-page optimization per 5 halaman, & strategi konten.' },
+      { name: 'Core Web Vitals Boost', price: '550.000', desc: 'Optimasi kecepatan (Speed/Performance) hingga mencapai skor hijau di Google PageSpeed Insights.' }
+    ]
+  },
+  {
+    category: 'Management & Technical',
+    items: [
+      { name: 'Migrasi & Deployment', price: '450.000', desc: 'Pindah hosting, domain, atau migrasi platform lama ke ekosistem baru dengan zero downtime.' },
+      { name: 'Professional Email Setup', price: '200.000', desc: 'Konfigurasi email domain bisnis (halo@bisniskamu.com) dengan proteksi spam & sinkronisasi multi-device.' },
+      { name: 'WhatsApp Business Core', price: '650.000', desc: 'Setup chat-bot sederhana, pesan otomatis, & integrasi tombol WA yang teroptimasi konversi.' }
     ]
   }
 ];

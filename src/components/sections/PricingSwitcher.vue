@@ -3,14 +3,14 @@
     <div class="container relative z-10">
       <SectionHeader 
         badge="Tailored Solutions" 
-        title="Investment for Your Digital Future" 
-        subtitle="Pilih paket yang paling sesuai dengan target bisnis Anda saat ini. Transparan, terukur, dan berorientasi pada hasil."
+        title="Scale Your Digital Ecosystem" 
+        subtitle="Dari website yang memikat hingga dashboard automasi. Pilih paket investasi untuk pondasi digital bisnis Anda."
         align="center"
       />
 
       <!-- Category Tabs -->
       <div class="flex justify-center mt-12 mb-16">
-        <div class="inline-flex p-1.5 bg-white/[0.03] border border-border-color rounded-2xl backdrop-blur-md">
+        <div class="inline-flex p-1.5 bg-white/3 border border-border-color rounded-2xl backdrop-blur-md">
           <button 
             v-for="tab in categories" 
             :key="tab.id"
@@ -25,7 +25,7 @@
 
       <!-- Frequency Toggle (only for Maintenance) -->
       <div v-if="activeCategory === 'maintenance'" class="flex justify-center mb-16 animate-in fade-in slide-in-from-top-4 duration-500">
-        <div class="inline-flex p-1 bg-white/[0.02] border border-border-color/50 rounded-full">
+        <div class="inline-flex p-1 bg-white/2 border border-border-color/50 rounded-full">
           <button 
             v-for="freq in frequencies" 
             :key="freq.id"
@@ -66,8 +66,8 @@
           <div 
             class="h-full rounded-[32px] p-8 flex flex-col transition-all duration-500 backdrop-blur-xl group-hover:-translate-y-2 relative"
             :class="plan.isPopular 
-              ? 'bg-gradient-to-b from-accent-primary/[0.08] to-transparent border border-accent-primary shadow-[0_0_40px_rgba(59,130,246,0.2)]' 
-              : 'bg-white/[0.03] border border-border-color hover:bg-white/[0.05] hover:border-accent-primary/50'"
+              ? 'bg-gradient-to-b from-accent-primary/8 to-transparent border border-accent-primary shadow-[0_0_40px_rgba(59,130,246,0.2)]' 
+              : 'bg-white/3 border border-border-color hover:bg-white/5 hover:border-accent-primary/50'"
           >
             <!-- Plan Header -->
             <div class="mb-8 relative z-10">
@@ -94,22 +94,17 @@
               </p>
             </div>
 
-            <!-- Metadata (Estimate, Revisions, Tech) -->
-            <div class="grid grid-cols-3 gap-2 mb-8 py-5 border-y border-white/5">
-              <div class="flex flex-col items-center text-center gap-1.5">
+            <!-- Metadata (Estimate & Revisions) -->
+            <div class="grid grid-cols-2 gap-2 mb-8 py-5 border-y border-white/5">
+              <div class="flex flex-col items-center text-center gap-1.5 border-r border-white/5">
                 <Clock :size="16" class="text-accent-primary opacity-80" />
                 <span class="text-[0.65rem] text-text-tertiary uppercase font-black tracking-widest">Estimasi</span>
                 <span class="text-[0.8rem] text-text-primary font-bold">{{ plan.estimate }}</span>
               </div>
-              <div class="flex flex-col items-center text-center gap-1.5 border-x border-white/5">
+              <div class="flex flex-col items-center text-center gap-1.5">
                 <RefreshCw :size="16" class="text-accent-primary opacity-80" />
                 <span class="text-[0.65rem] text-text-tertiary uppercase font-black tracking-widest">Revisi</span>
                 <span class="text-[0.8rem] text-text-primary font-bold">{{ plan.revisions }}</span>
-              </div>
-              <div class="flex flex-col items-center text-center gap-1.5">
-                <Zap :size="16" class="text-accent-primary opacity-80" />
-                <span class="text-[0.65rem] text-text-tertiary uppercase font-black tracking-widest">Teknologi</span>
-                <span class="text-[0.8rem] text-text-primary font-bold">{{ plan.technology }}</span>
               </div>
             </div>
 
@@ -127,18 +122,18 @@
                           <XCircle v-else :size="16" class="text-text-tertiary shrink-0" />
                        </div>
                        <div class="flex items-center gap-1.5 flex-wrap">
-                          <span class="text-[0.9rem] leading-tight font-medium" :class="feature.isPopular ? 'text-accent-primary font-bold' : (feature.included ? 'text-text-primary' : 'text-text-tertiary')">
-                            {{ feature.text }}
-                          </span>
-                          <div v-if="feature.tooltip && feature.included" class="relative inline-flex items-center group/tooltip w-4 h-4 cursor-help text-text-tertiary hover:text-accent-primary transition-colors">
-                            <Info :size="12" @click="openMobileTooltip(feature.text, feature.tooltip)" />
-                            <!-- Desktop Tooltip -->
-                            <div class="hidden md:block absolute bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 p-3 rounded-xl bg-[#0f1117] border border-border-color shadow-xl text-[0.7rem] text-text-secondary font-medium leading-relaxed opacity-0 invisible pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 z-50 min-w-[200px]">
-                              {{ feature.tooltip }}
-                              <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0f1117] border-b border-r border-border-color rotate-45"></div>
-                            </div>
-                          </div>
-                       </div>
+                           <span class="text-[0.9rem] leading-tight font-medium" :class="feature.isPopular ? 'text-accent-primary font-bold' : (feature.included ? 'text-text-primary' : 'text-text-tertiary')">
+                             {{ feature.text }}
+                           </span>
+                           <div v-if="feature.tooltip && feature.included" class="relative inline-flex items-center group/tooltip w-4 h-4 cursor-help text-text-tertiary hover:text-accent-primary transition-colors">
+                             <Info :size="12" @click="openMobileTooltip(feature.text, feature.tooltip)" />
+                             <!-- Desktop Tooltip -->
+                             <div class="hidden md:block absolute bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 p-3 rounded-xl bg-[#0f1117] border border-border-color shadow-xl text-[0.7rem] text-text-secondary font-medium leading-relaxed opacity-0 invisible pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 z-50 min-w-[200px]">
+                               {{ feature.tooltip }}
+                               <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0f1117] border-b border-r border-border-color rotate-45"></div>
+                             </div>
+                           </div>
+                        </div>
                     </li>
                   </ul>
                </div>
@@ -168,13 +163,164 @@
       </div>
 
       <!-- Mobile Indicator for Development -->
-      <div v-if="activeCategory === 'development'" class="md:hidden flex justify-center gap-2 -mt-4 mb-4 relative z-20">
+      <div v-if="activeCategory === 'development'" class="md:hidden flex justify-center gap-2 -mt-4 mb-12 relative z-20">
         <span
           v-for="(_, i) in developmentPlans"
           :key="i"
           class="h-1.5 rounded-full transition-all duration-300"
           :class="devSlide === i ? 'w-6 bg-accent-primary' : 'w-2 bg-border-color'"
         ></span>
+      </div>
+
+      <!-- Divider / Transition to Custom -->
+      <div v-if="activeCategory === 'development'" class="mt-24 mb-12 text-center animate-in fade-in duration-700">
+        <div class="inline-flex items-center gap-4 mb-4">
+          <div class="w-12 h-px bg-linear-to-r from-transparent to-accent-primary/30"></div>
+          <span class="text-[0.7rem] font-black text-accent-primary uppercase tracking-[0.3em]">Limitless Possible</span>
+          <div class="w-12 h-px bg-linear-to-l from-transparent to-accent-primary/30"></div>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold text-text-primary tracking-tight">Butuh Yang Benar-benar Spesifik?</h3>
+        <p class="text-text-secondary mt-3 max-w-xl mx-auto text-sm leading-relaxed">
+          Jika bisnismu membutuhkan logika yang tidak biasa atau skala yang melampaui standar, kami siap mewujudkan ekosistem kustom tanpa batas.
+        </p>
+      </div>
+
+      <!-- Solusi Custom Card (Full Width) -->
+      <div v-if="activeCategory === 'development'" class="animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div class="relative group">
+          <!-- Ambient Glow -->
+          <div class="absolute -inset-4 bg-linear-to-r from-accent-primary/5 to-accent-secondary/5 rounded-[40px] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+          
+          <div class="relative bg-white/3 border border-border-color rounded-[40px] p-8 md:p-12 backdrop-blur-xl overflow-hidden flex flex-col lg:flex-row gap-12 lg:gap-20">
+            <!-- Left Side: Pricing & Info -->
+            <div class="flex-1 space-y-8">
+              <div>
+                <span class="inline-block px-4 py-1.5 bg-accent-primary/10 text-accent-primary text-[0.7rem] font-black uppercase tracking-widest rounded-full mb-6">Fully Custom</span>
+                <h2 class="text-4xl md:text-5xl font-black text-text-primary tracking-tight mb-6">Solusi Custom</h2>
+                <p class="text-text-secondary text-lg leading-relaxed max-w-xl">
+                  Kebutuhan bisnis kamu tidak cocok dengan paket manapun? Kita bangun dari nol — sesuai alur kerja, skala, dan visi bisnis kamu. Tidak ada template, tidak ada kompromi.
+                </p>
+              </div>
+
+              <div class="pt-8 border-y border-white/5 py-8">
+                <span class="text-text-tertiary text-[0.7rem] font-black uppercase tracking-widest mb-3 block">Investasi</span>
+                <div class="flex items-baseline gap-3 mb-2">
+                  <span class="text-text-primary text-3xl md:text-4xl font-extrabold tracking-tight">Mulai Rp 10.000.000</span>
+                </div>
+                <p class="text-sm text-text-secondary opacity-70 italic max-w-md">
+                  Harga final ditentukan setelah diskusi kebutuhan — tidak ada biaya tersembunyi, semua disepakati di awal.
+                </p>
+
+                <!-- Feature Tags Inline -->
+                <div class="flex flex-wrap gap-4 mt-8">
+                  <div class="flex items-center gap-2 group/tag cursor-default">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-accent-primary border border-white/10 group-hover/tag:bg-accent-primary group-hover/tag:text-white transition-all">
+                      <Clock :size="14" />
+                    </div>
+                    <span class="text-xs font-bold text-text-secondary group-hover/tag:text-text-primary transition-colors">Estimasi via diskusi</span>
+                  </div>
+                  <div class="flex items-center gap-2 group/tag cursor-default">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-accent-primary border border-white/10 group-hover/tag:bg-accent-primary group-hover/tag:text-white transition-all">
+                      <RefreshCw :size="14" />
+                    </div>
+                    <span class="text-xs font-bold text-text-secondary group-hover/tag:text-text-primary transition-colors">Revisi fleksibel</span>
+                  </div>
+                  <div class="flex items-center gap-2 group/tag cursor-default">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-accent-primary border border-white/10 group-hover/tag:bg-accent-primary group-hover/tag:text-white transition-all">
+                      <FileText :size="14" />
+                    </div>
+                    <span class="text-xs font-bold text-text-secondary group-hover/tag:text-text-primary transition-colors">Dokumentasi lengkap</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CTAs Redesigned -->
+              <div class="flex flex-col sm:flex-row gap-5 pt-4">
+                <button 
+                  @click="handleCustomOrder"
+                  class="group relative flex items-center justify-center gap-3 px-8 py-5 bg-linear-to-r from-accent-primary to-accent-secondary rounded-2xl text-white font-bold text-base tracking-wide shadow-2xl shadow-accent-primary/30 active:scale-95 transition-all overflow-hidden"
+                >
+                  <span class="relative z-10">Konsultasi Gratis</span>
+                  <MessageCircle :size="20" class="relative z-10 group-hover:rotate-12 transition-transform" />
+                  <!-- Shine Effect -->
+                  <div class="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                </button>
+                
+                <a 
+                  href="#projects"
+                  class="flex items-center justify-center gap-3 px-8 py-5 border border-white/10 hover:border-accent-primary/40 bg-white/5 hover:bg-white/10 rounded-2xl text-text-primary font-bold text-base tracking-wide active:scale-90 transition-all group/btn"
+                >
+                  <span>Lihat Projek</span>
+                  <ArrowRight :size="20" class="group-hover/btn:translate-x-1 transition-transform" />
+                </a>
+              </div>
+            </div>
+
+            <!-- Right Side: Capability & Process -->
+            <div class="flex-1 space-y-12">
+              <!-- What can be built -->
+              <div class="space-y-6">
+                <h4 class="text-[0.7rem] font-black text-text-tertiary uppercase tracking-[0.2em] flex items-center gap-3">
+                  <span class="w-8 h-px bg-accent-primary/30"></span>
+                  Apa Yang Bisa Dibangun
+                </h4>
+                <div class="space-y-5">
+                  <ul class="space-y-3.5">
+                    <li v-for="(item, index) in builtItems" :key="item.text" 
+                      v-show="isAllCapabilitiesOpen || index < 5"
+                      class="flex items-center gap-3.5 cursor-default group"
+                    >
+                      <div class="w-1.5 h-1.5 rounded-full bg-accent-primary shrink-0 opacity-60"></div>
+                      <span class="text-[1rem] md:text-[1.05rem] text-text-primary font-medium leading-tight">{{ item.text }}</span>
+                    </li>
+                  </ul>
+
+                  <!-- Expand/Collapse Button -->
+                  <button 
+                    @click="isAllCapabilitiesOpen = !isAllCapabilitiesOpen"
+                    class="group/toggle flex items-center gap-2 text-text-tertiary hover:text-accent-primary transition-all pt-2"
+                  >
+                    <span class="text-xs font-bold tracking-wider uppercase border-b border-transparent group-hover/toggle:border-accent-primary/30 pb-0.5">
+                      {{ isAllCapabilitiesOpen ? 'Sembunyikan' : 'Lihat Selengkapnya' }}
+                    </span>
+                    <ChevronDown v-if="!isAllCapabilitiesOpen" :size="14" class="group-hover/toggle:translate-y-0.5 transition-transform" />
+                    <ChevronUp v-else :size="14" class="group-hover/toggle:-translate-y-0.5 transition-transform" />
+                  </button>
+                </div>
+              </div>
+
+              <!-- Process -->
+              <div class="space-y-6">
+                <h4 class="text-[0.7rem] font-black text-text-tertiary uppercase tracking-[0.2em] flex items-center gap-3">
+                  <span class="w-8 h-px bg-accent-primary/30"></span>
+                  Proses Kerja
+                </h4>
+                <div class="space-y-6 border-l border-white/5 pl-4 ml-2">
+                  <div v-for="(process, i) in [
+                    { title: 'Diskusi kebutuhan', desc: 'Kamu ceritakan bisnis, masalah, dan tujuannya — via WhatsApp atau video call, gratis.' },
+                    { title: 'Analisis & penawaran', desc: 'Saya breakdown kebutuhan teknis dan kirim estimasi biaya + timeline yang jelas.' },
+                    { title: 'Sepakat & mulai', desc: 'Semua disepakati di awal — scope, harga, timeline — baru pengerjaan dimulai.' },
+                    { title: 'Serah terima + dokumentasi', desc: 'Sistem diserahkan lengkap dengan dokumentasi teknis dan panduan penggunaan.' }
+                  ]" :key="process.title" class="relative">
+                    <div class="absolute -left-[25px] top-1.5 w-4 h-4 rounded-full bg-accent-primary border-4 border-bg-primary shadow-[0_0_10px_rgba(59,130,246,0.3)]"></div>
+                    <h5 class="text-[0.95rem] font-black text-text-primary mb-1">{{ i+1 }}. {{ process.title }}</h5>
+                    <p class="text-xs text-text-secondary leading-relaxed opacity-70">{{ process.desc }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Consultation Note -->
+              <div class="p-6 rounded-3xl bg-accent-primary/5 border border-accent-primary/10 relative overflow-hidden group/note">
+                <div class="absolute top-0 right-0 p-3 opacity-10 group-hover/note:rotate-12 transition-transform">
+                  <MessageSquare :size="40" class="text-accent-primary" />
+                </div>
+                <p class="text-[0.85rem] text-text-secondary leading-relaxed italic relative z-10">
+                  <span class="text-text-primary font-bold">Konsultasi awal gratis.</span> Tidak ada kewajiban lanjut — kamu bebas memutuskan setelah tahu estimasi biaya dan pendekatannya.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Strategy Note (Development) -->
@@ -213,7 +359,7 @@
         <div 
           v-for="plan in maintenancePlans" 
           :key="plan.id"
-          class="bg-white/[0.03] border border-border-color rounded-[32px] p-8 flex flex-col hover:bg-white/[0.05] transition-all duration-500 backdrop-blur-xl group hover:border-accent-secondary/50 shrink-0 w-[85vw] md:w-auto snap-center"
+          class="bg-white/3 border border-border-color rounded-[32px] p-8 flex flex-col hover:bg-white/5 transition-all duration-500 backdrop-blur-xl group hover:border-accent-secondary/50 shrink-0 w-[85vw] md:w-auto snap-center"
         >
           <div class="mb-8">
             <h3 class="text-2xl font-bold text-text-primary mb-3">{{ plan.name }}</h3>
@@ -321,21 +467,7 @@
           </p>
         </div>
 
-        <!-- Consultation Banner -->
-        <div class="mt-20 p-10 bg-linear-to-br from-accent-primary/10 to-transparent border border-accent-primary/20 rounded-[40px] flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left backdrop-blur-xl relative overflow-hidden">
-          <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-accent-primary/5 blur-[80px] rounded-full"></div>
-          
-          <div class="relative z-10">
-            <h3 class="text-2xl font-bold text-text-primary mb-2">Punya Kebutuhan Sangat Spesifik?</h3>
-            <p class="text-text-secondary max-w-[500px]">Saya melayani pengembangan sistem custom yang dirancang khusus untuk alur bisnis unik Anda. Konsultasikan visi Anda secara gratis.</p>
-          </div>
-          
-          <div class="flex flex-wrap justify-center gap-4 relative z-10">
-            <BaseButton variant="primary" size="lg" @click="openConsultation">
-              Free Consultation
-            </BaseButton>
-          </div>
-        </div>
+
       </div>
     </div>
 
@@ -368,12 +500,44 @@ import {
   ChevronRight as ChevronRightIcon,
   Clock,
   RefreshCw,
-  Zap
+  FileText,
+  MessageSquare,
+  MessageCircle,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-vue-next';
 
 import { usePopupManager, Popups } from '../../composables/usePopupManager';
 
 const popup = usePopupManager();
+
+const isAllCapabilitiesOpen = ref(false);
+
+const isMobileTooltipOpen = ref(false);
+const mobileTooltipTitle = ref('');
+const mobileTooltipText = ref('');
+
+const openMobileTooltip = (title: string, text: string) => {
+  if (window.innerWidth < 768) {
+    mobileTooltipTitle.value = title;
+    mobileTooltipText.value = text;
+    isMobileTooltipOpen.value = true;
+  }
+};
+
+const builtItems = [
+  { text: 'E-Commerce Multi-Vendor', tooltip: 'Platform jual-beli kompleks dengan sistem komisi, manajemen toko mandiri untuk banyak penjual, dan sistem pengiriman otomatis.' },
+  { text: 'Custom CRM / ERP System', tooltip: 'Dashboard manajemen operasional internal yang disesuaikan dengan alur kerja tim Anda, dari manajemen stok hingga laporan keuangan otomatis.' },
+  { text: 'Sistem Reservasi & Booking', tooltip: 'Alur penjadwalan real-time untuk hotel, klinik, atau jasa profesional dengan integrasi pembayaran dan pengingat otomatis via email/WA.' },
+  { text: 'Platform SaaS Application', tooltip: 'Membangun produk digital berbasis langganan dengan manajemen akun pengguna, pembatasan fitur, dan sistem pembayaran recurring.' },
+  { text: 'Automasi & Integrasi Enterprise', tooltip: 'Menghubungkan berbagai software (accounting, CRM, marketing) dalam satu dashboard pusat untuk efisiensi bisnis mutlak.' },
+  { text: 'Learning Management System', tooltip: 'Portal edukasi online dengan manajemen kursus, kuis interaktif, sertifikasi otomatis, dan progres belajar siswa yang terstruktur.' },
+  { text: 'Real Estate & Property Portal', tooltip: 'Platform listing properti dengan filter pencarian lanjut, manajemen agen, integrasi peta interaktif, dan sistem booking survey.' },
+  { text: 'Job Portal & Recruitment System', tooltip: 'Sistem rekrutmen kustom dengan manajemen lowongan, filter pelamar otomatis, dan dashboard evaluasi kandidat untuk tim HR.' },
+  { text: 'API Gateway & Microservices', tooltip: 'Pengembangan infrastruktur backend yang mampu menangani banyak layanan dan trafik tinggi secara bersamaan dengan efisiensi tinggi.' },
+  { text: 'Custom Payment & FinTech Solution', tooltip: 'Implementasi alur keuangan kustom, wallet internal, integrasi multi-gateway, dan sistem rekonsiliasi data otomatis yang aman.' },
+];
 
 defineEmits(['consultation']);
 
@@ -384,19 +548,20 @@ const openConsultation = () => {
   });
 };
 
-// Mobile Tooltip State
-const isMobileTooltipOpen = ref(false);
-const mobileTooltipTitle = ref('');
-const mobileTooltipText = ref('');
-
-const openMobileTooltip = (title: string, text: string) => {
-  // Only trigger on mobile sizes if we restrict it, but relying on BottomSheet behavior is fine
-  // We'll just open it if window width is mobile, or we let it open on click anywhere since desktop has hover anyway.
-  if (window.innerWidth < 768) {
-    mobileTooltipTitle.value = title;
-    mobileTooltipText.value = text;
-    isMobileTooltipOpen.value = true;
-  }
+const handleCustomOrder = () => {
+  popup.openModal(Popups.ORDER_CHECKOUT, { 
+    plan: {
+      id: 'custom-project',
+      name: 'Custom Ecosystem Solution',
+      price: '10.000.000',
+      description: 'Solusi digital kustom yang dibangun dari nol sesuai kebutuhan unik bisnis Anda.',
+      badge: 'Fully Custom',
+      features: ['Arsitektur kustom', 'Integrasi tanpa batas', 'Skala enterprise', 'Full support & dokumentasi'],
+      ctaText: 'Mulai Proyek Custom',
+      isPopular: false,
+      billingCycle: 'project'
+    }
+  });
 };
 
 const categories = [

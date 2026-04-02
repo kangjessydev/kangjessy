@@ -140,8 +140,9 @@ export const menuItems: MenuItem[] = [
     {
         text: 'Konsultasi Gratis',
         isAction: true,
-        trigger: 'checkout',
-        icon: Send
+        trigger: 'whatsapp',
+        triggerProps: { initialMessage: 'Halo Kang Jessy, saya ingin konsultasi gratis mengenai proyek saya.' },
+        icon: MessageSquare
     }
 ]
 

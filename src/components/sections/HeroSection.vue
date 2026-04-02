@@ -18,11 +18,11 @@
           <h1
             class="text-[clamp(2.25rem,6vw,4.25rem)] leading-[1.1] font-bold text-text-primary mb-6 tracking-[-0.04em]"
           >
-            Stop Kerja Manual, Kelola Bisnis Anda dalam
+            Scale-Up Bisnis Lewat
             <span class="relative inline-block">
               <span
                 class="bg-clip-text text-transparent bg-linear-to-r from-accent-primary to-accent-secondary"
-                >Satu Dashboard</span
+                >Ekosistem Digital</span
               >
               <!-- Snake Line Underline -->
               <span
@@ -33,7 +33,7 @@
           <p
             class="text-text-secondary mb-10 max-w-[580px] text-[clamp(1rem,2vw,1.15rem)] leading-[1.6] mx-auto md:mx-0"
           >
-            Kami hadir sebagai partner digital jangka panjang untuk membantu UMKM & Agensi merapikan operasional lewat website dan sistem otomatis yang mudah dijalankan. Anda fokus kembangkan bisnis, urusan sistem biar kami yang jaga.
+            Dari website jualan yang mengundang pelanggan, hingga sistem otomatis yang memangkas jam kerja manual. Kami merancang, membangun, dan merawat seluruh infrastruktur IT agar Anda bisa fokus membesarkan bisnis.
           </p>
 
           <div
@@ -83,7 +83,7 @@
           <div class="absolute -inset-10 bg-linear-to-r from-accent-primary/10 to-accent-secondary/10 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
 
           <!-- 🟠 OPTION 3: BEFORE/AFTER SLIDER (Active Now) -->
-          <div class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016] rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group/compare select-none hero-compare-slider">
+          <div class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016] rounded-4xl border border-white/10 shadow-2xl overflow-hidden group/compare select-none hero-compare-slider">
             
             <!-- After Image (Bottom Layer) -->
             <div class="absolute inset-0 pointer-events-none">
@@ -111,9 +111,8 @@
                <div class="h-full flex-1 cursor-zoom-in" @click.stop="openLightbox(1)"></div>
             </div>
 
-            <!-- Slider Handle (The Interactive Part) -->
             <div class="absolute inset-y-0 z-30 flex items-center justify-center transition-all duration-500 ease-out -translate-x-1/2" 
-                 :class="{ '!duration-0': isDragging }"
+                 :class="{ 'duration-0!': isDragging }"
                  :style="{ left: `${sliderPos}%` }">
                
                <!-- The Vertical Line -->
@@ -148,13 +147,13 @@
           <!-- Lightbox Modal -->
           <Teleport to="body">
             <Transition name="fade">
-               <div v-if="isLightboxOpen" class="fixed inset-0 z-[99999] bg-black/98 backdrop-blur-3xl p-2 md:p-6 flex flex-col items-center justify-center" @click="isLightboxOpen = false">
+               <div v-if="isLightboxOpen" class="fixed inset-0 z-99999 bg-black/98 backdrop-blur-3xl p-2 md:p-6 flex flex-col items-center justify-center" @click="isLightboxOpen = false">
                   <!-- Navigation Buttons (Desktop) -->
-                  <button class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl items-center justify-center text-white transition-all hover:scale-110 z-[100000]" 
+                  <button class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl items-center justify-center text-white transition-all hover:scale-110 z-100000" 
                           @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
                      <ChevronLeftIcon :size="24" />
                   </button>
-                  <button class="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl items-center justify-center text-white transition-all hover:scale-110 z-[100000]" 
+                  <button class="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl items-center justify-center text-white transition-all hover:scale-110 z-100000" 
                           @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
                      <ChevronRightIcon :size="24" />
                   </button>
@@ -187,7 +186,7 @@
                         </button>
                         
                         <!-- Close button moving to the video container so it doesn't get pushed into the text below -->
-                        <button class="absolute top-3 right-3 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 bg-black/40 hover:bg-black/80 md:bg-white/10 md:hover:bg-white/20 rounded-full backdrop-blur-xl flex items-center justify-center text-white transition-colors z-[1000]" @click="isLightboxOpen = false">
+                        <button class="absolute top-3 right-3 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 bg-black/40 hover:bg-black/80 md:bg-white/10 md:hover:bg-white/20 rounded-full backdrop-blur-xl flex items-center justify-center text-white transition-colors z-1000" @click="isLightboxOpen = false">
                            ✕
                         </button>
                      </div>
@@ -223,13 +222,6 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import { 
   Sparkles as SparklesIcon,
-  Activity as ActivityIcon,
-  MessageCircle as MessageCircleIcon,
-  Mail as MailIcon,
-  LayoutGrid as LayoutGridIcon,
-  Database as DatabaseIcon,
-  Briefcase as BriefcaseIcon,
-  TrendingUp as TrendingUpIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Eye as EyeIcon
@@ -262,14 +254,14 @@ const dragDistance = ref(0);
 const lightboxImages = [
   {
     src: "/assets/hero/before.png",
-    title: "Before: Manual Operations",
-    desc: "Proses manual yang lambat, rentan kesalahan, dan menguras tenaga tim operasional setiap hari.",
+    title: "Before: Operasional Terpecah & Manual",
+    desc: "Berjalan tanpa sistem terpusat. Data tercecer, proses manual berulang, dan waktu habis untuk urusan teknis yang menguras energi tim Anda.",
     videoUrl: "https://www.youtube.com/embed/IWxbokFbBW4?autoplay=1"
   },
   {
     src: "/assets/hero/after.png",
-    title: "After: Seamless Automation",
-    desc: "Ekosistem otomatis yang terintegrasi penuh, memberikan visibilitas total dan efisiensi waktu hingga 80%.",
+    title: "After: Ekosistem Digital Terpadu",
+    desc: "Infrastruktur canggih yang mensinkronisasi website pencetak leads dengan dashboard automasi. Bisnis menjadi lebih terstruktur dan siap scale-up.",
     videoUrl: "https://www.youtube.com/embed/Q1bqnIf9Gv8?autoplay=1"
   }
 ];

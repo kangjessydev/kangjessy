@@ -82,162 +82,8 @@
           <!-- Glassmorphism Background Glow -->
           <div class="absolute -inset-10 bg-linear-to-r from-accent-primary/10 to-accent-secondary/10 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
 
-          <!-- 🟢 OPTION 1: BENTO DASHBOARD (Hidden for now, keep code) -->
-          <div v-if="false" class="grid grid-cols-2 md:grid-cols-6 md:grid-rows-6 gap-3 h-auto md:h-[550px] relative z-10">
-            <!-- 1. Main Dashboard Card (Interactive Revenue) -->
-            <div class="col-span-2 md:col-span-4 md:row-span-4 bg-bg-secondary/40 backdrop-blur-2xl rounded-3xl border border-white/10 p-5 md:p-6 shadow-2xl flex flex-col gap-5 md:gap-6 overflow-hidden group/card hover:border-accent-primary/50 transition-all duration-500 cursor-default">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 md:gap-3">
-                  <div class="w-2 h-2 rounded-full bg-accent-primary animate-pulse shadow-[0_0_10px_rgba(var(--accent-primary-rgb),0.5)]"></div>
-                  <span class="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-text-tertiary">Real-time Metrics</span>
-                </div>
-                <div class="px-1.5 py-0.5 md:px-2 md:py-1 rounded bg-white/5 border border-white/5 text-[8px] md:text-[9px] font-bold text-accent-primary">LIVE</div>
-              </div>
-              
-              <div class="flex-1 flex flex-col justify-between">
-                <div>
-                  <div class="relative inline-block mb-1 group/tooltip">
-                    <h4 class="text-3xl md:text-5xl font-black text-white tracking-tighter cursor-pointer active:scale-95 transition-transform hover:text-accent-primary" @click="toggleTooltip('revenue')">
-                      ${{ formatCurrency(liveRevenue) }}
-                    </h4>
-                    <Transition>
-                      <div v-if="activeTooltip === 'revenue'" class="absolute -top-10 left-0 px-3 py-1.5 bg-accent-primary text-black text-[10px] font-bold rounded-lg whitespace-nowrap shadow-xl z-20">
-                         Revenue Target: {{ (liveRevenue/15000 * 100).toFixed(1) }}% 🚀
-                      </div>
-                    </Transition>
-                  </div>
-                  <p class="text-[9px] md:text-[10px] text-text-tertiary font-bold uppercase tracking-widest flex items-center gap-1.5">
-                    <TrendingUpIcon :size="10" class="text-emerald-400" />
-                    +12.5% MTD Growth
-                  </p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 md:gap-3">
-                   <div class="p-3 md:p-4 bg-white/[0.03] rounded-2xl border border-white/5 hover:bg-white/[0.06] transition-colors group/stat">
-                      <span class="text-[8px] font-black text-text-tertiary uppercase block mb-1">Users</span>
-                      <span class="text-lg md:text-xl font-bold text-white tracking-tight">{{ activeUsers.toLocaleString() }}</span>
-                   </div>
-                   <div class="p-3 md:p-4 bg-white/[0.03] rounded-2xl border border-white/5 hover:bg-white/[0.06] transition-colors group/stat">
-                      <span class="text-[8px] font-black text-text-tertiary uppercase block mb-1">Conv.</span>
-                      <span class="text-lg md:text-xl font-bold text-white tracking-tight">4.2%</span>
-                   </div>
-                </div>
-
-                <div class="h-16 md:h-24 flex items-end gap-1 md:gap-1.5 mt-4">
-                  <div v-for="(val, idx) in chartData" :key="idx" 
-                    class="flex-1 bg-accent-primary/20 rounded-t-lg transition-all duration-700 hover:bg-accent-primary"
-                    :style="{ height: `${val}%` }">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 2. Performance Card (Interactive Gauge) -->
-            <div class="col-span-1 md:col-span-2 md:row-span-2 bg-bg-secondary/40 backdrop-blur-2xl rounded-3xl border border-white/10 p-4 shadow-xl flex flex-col items-center justify-center text-center group/speed hover:border-accent-secondary/50 transition-all duration-500 hover:scale-[1.02]">
-              <div class="relative w-12 h-12 md:w-16 md:h-16 mb-2 flex items-center justify-center">
-                <svg class="absolute inset-0 w-full h-full -rotate-90">
-                  <circle cx="50%" cy="50%" r="40%" stroke="currentColor" stroke-width="5" fill="transparent" class="text-white/5"/>
-                  <circle cx="50%" cy="50%" r="40%" stroke="currentColor" stroke-width="5" fill="transparent" class="text-accent-secondary" :stroke-dasharray="100" :stroke-dashoffset="10" style="transition: stroke-dashoffset 2s ease-in-out"/>
-                </svg>
-                <ActivityIcon :size="16" class="text-accent-secondary animate-pulse" />
-              </div>
-              <span class="text-xl md:text-2xl font-black text-white">99%</span>
-              <span class="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-text-tertiary">Efficiency</span>
-            </div>
-
-            <!-- 3. Integrations Card (Stack Display) -->
-            <div class="col-span-1 md:col-span-2 md:row-span-2 md:col-start-5 md:row-start-3 bg-bg-secondary/40 backdrop-blur-2xl rounded-3xl border border-white/10 p-4 md:p-5 shadow-xl flex flex-col gap-3 md:gap-4 justify-center items-center group/stack hover:border-accent-primary/50 transition-all duration-500 hover:-translate-y-1">
-              <div class="grid grid-cols-2 gap-1.5 md:gap-2">
-                <div v-for="i in 4" :key="i" class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center shadow-lg transform transition-transform group-hover/stack:scale-110 group-hover/stack:bg-white/[0.08]" :style="{ transitionDelay: `${i * 100}ms` }">
-                  <component :is="[MessageCircleIcon, MailIcon, LayoutGridIcon, DatabaseIcon][i-1]" :size="14" class="text-accent-primary" />
-                </div>
-              </div>
-              <div class="text-center">
-                <span class="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-text-tertiary block">Auto Stack</span>
-              </div>
-            </div>
-
-            <!-- 4. Partner Banner (Bottom Full Width) -->
-            <div class="col-span-2 md:col-span-6 md:row-span-2 bg-linear-to-br from-accent-primary/10 to-bg-secondary/60 backdrop-blur-2xl rounded-[1.5rem] md:rounded-[2rem] border border-white/10 p-4 md:p-6 shadow-2xl flex items-center justify-between group/partner hover:border-accent-primary/40 transition-all duration-700 overflow-hidden relative">
-              <div class="absolute inset-0 bg-linear-to-r from-accent-primary/5 to-transparent opacity-0 group-hover/partner:opacity-100 transition-opacity duration-1000"></div>
-              <div class="flex items-center gap-4 md:gap-6 z-10">
-                <div class="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-accent-primary/95 flex items-center justify-center text-white shadow-xl shadow-accent-primary/20 group-hover/partner:scale-110 group-hover/partner:rotate-3 transition-all duration-500">
-                  <BriefcaseIcon :size="20" />
-                </div>
-                <div class="flex flex-col">
-                  <h5 class="text-xs md:text-base font-black text-white mb-0.5 tracking-tight">Partner Strategis</h5>
-                  <p class="text-[9px] md:text-xs font-medium text-text-tertiary">Pendampingan penuh untuk bisnis Anda.</p>
-                </div>
-              </div>
-              <div class="hidden sm:flex items-center gap-2 z-10 px-3 py-1.5 md:px-4 md:py-2 bg-white/5 border border-white/10 rounded-full backdrop-blur-md">
-                 <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                 <span class="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-text-primary">Reliable</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 🔵 OPTION 2: PREMIUM CODE WINDOW (Preserved) -->
-          <div v-if="false" class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016]/80 backdrop-blur-2xl rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group/ide hover:border-accent-primary/30 transition-all duration-700">
-             <div class="flex items-center justify-between px-6 py-4 bg-white/5 border-b border-white/5">
-                <div class="flex gap-2">
-                   <div class="w-3 h-3 rounded-full bg-rose-500/80 shadow-[0_0_8px_rgba(244,63,94,0.4)]"></div>
-                   <div class="w-3 h-3 rounded-full bg-amber-500/80 shadow-[0_0_8px_rgba(245,158,11,0.4)]"></div>
-                   <div class="w-3 h-3 rounded-full bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
-                </div>
-                <div class="flex items-center gap-2">
-                   <div class="px-3 py-1 rounded bg-white/5 border border-white/10 flex items-center gap-2">
-                      <LayoutGridIcon :size="12" class="text-accent-primary" />
-                      <span class="text-[10px] font-bold text-text-tertiary tracking-tight">partnership.config.ts</span>
-                   </div>
-                </div>
-             </div>
-             <div class="p-6 md:p-8 font-mono text-xs md:text-sm leading-relaxed overflow-hidden">
-                <div class="flex gap-6">
-                   <div class="hidden md:flex flex-col text-white/20 select-none text-right">
-                      <span v-for="i in 12" :key="i">{{ i }}</span>
-                   </div>
-                   <div class="flex-1 space-y-1">
-                      <div class="flex items-center gap-2 group/line">
-                         <span class="text-purple-400">const</span> <span class="text-blue-400">collaboration</span> <span class="text-text-primary">=</span> <span class="text-accent-primary">{</span>
-                      </div>
-                      <div class="pl-6 group/line hover:bg-white/[0.02]">
-                         <span class="text-blue-300">client</span><span class="text-text-primary">:</span> <span class="text-emerald-300">"YourBusiness"</span>,
-                      </div>
-                      <div class="pl-6 group/line">
-                         <span class="text-blue-300">duration</span><span class="text-text-primary">:</span> <span class="text-emerald-300">"LongTerm"</span>,
-                      </div>
-                      <div class="pl-6 group/line">
-                         <span class="text-blue-300">status</span><span class="text-text-primary">:</span> <span class="text-emerald-300">"Automated"</span>
-                      </div>
-                      <div class="group/line"><span class="text-accent-primary">}</span>;</div>
-                      <div class="py-2"></div>
-                      <div class="flex items-center gap-2 group/line">
-                         <span class="text-purple-400">function</span> <span class="text-amber-300">optimizeWorkflow</span><span class="text-text-primary">() {</span>
-                      </div>
-                      <div class="pl-6 group/line">
-                         <span class="text-purple-400">while</span> <span class="text-text-primary">(isManualWork) {</span>
-                      </div>
-                      <div class="pl-12 group/line group-hover/ide:translate-x-1 transition-transform">
-                         <span class="text-blue-300">replaceWith</span><span class="text-text-primary">(</span><span class="text-amber-300">SmartSolution</span><span class="text-text-primary">);</span>
-                      </div>
-                      <div class="pl-12 group/line">
-                         <span class="text-blue-300">ensure</span><span class="text-text-primary">(</span><span class="text-emerald-300">"PeaceOfMind"</span><span class="text-text-primary">);</span>
-                      </div>
-                      <div class="pl-6 group/line"><span>}</span></div>
-                      <div class="group/line"><span>}</span></div>
-                   </div>
-                </div>
-                <div class="mt-8 flex items-center gap-2 bg-accent-primary/20 border border-accent-primary/30 rounded-lg px-4 py-2 w-fit">
-                   <span class="text-[10px] font-bold text-accent-primary leading-none uppercase tracking-widest">Building your future...</span>
-                   <div class="w-1.5 h-4 bg-accent-primary animate-pulse"></div>
-                </div>
-             </div>
-          </div>
-
           <!-- 🟠 OPTION 3: BEFORE/AFTER SLIDER (Active Now) -->
-          <div class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016] rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group/compare select-none hero-compare-slider"
-               @mousedown="startDragging" 
-               @touchstart="startDragging">
+          <div class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016] rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group/compare select-none hero-compare-slider">
             
             <!-- After Image (Bottom Layer) -->
             <div class="absolute inset-0 pointer-events-none">
@@ -246,7 +92,7 @@
                     draggable="false"
                     @dragstart.prevent
                     class="w-full h-full object-cover" />
-               <div class="absolute bottom-4 right-6 px-3 py-1 bg-accent-primary/90 text-black text-[10px] font-black rounded-full backdrop-blur-md uppercase tracking-widest">Otomatis</div>
+               <div class="absolute bottom-6 right-8 px-4 py-1.5 bg-emerald-500/80 text-white text-[10px] font-black rounded-full backdrop-blur-md uppercase tracking-widest border border-white/20">AFTER</div>
             </div>
 
             <!-- Before Image (Top Layer, Clipped) -->
@@ -256,76 +102,111 @@
                     draggable="false"
                     @dragstart.prevent
                     class="w-full h-full object-cover grayscale-[1.0] group-hover/compare:grayscale-[0.5] transition-all duration-700" />
-               <div class="absolute bottom-4 left-6 px-3 py-1 bg-white/20 text-white text-[10px] font-black rounded-full backdrop-blur-md border border-white/20 uppercase tracking-widest">Manual</div>
+               <div class="absolute bottom-6 left-8 px-4 py-1.5 bg-white/10 text-white text-[10px] font-black rounded-full backdrop-blur-md border border-white/20 uppercase tracking-widest">BEFORE</div>
             </div>
 
-            <!-- Clickable Zones (Transparent Overlays) -->
+            <!-- Clickable Zones (Transparent Overlays) - NOW ONLY FOR LIGHTBOX, NO DRAG SNAP -->
             <div class="absolute inset-0 flex z-10">
                <div class="h-full cursor-zoom-in" :style="{ width: `${sliderPos}%` }" @click.stop="openLightbox(0)"></div>
                <div class="h-full flex-1 cursor-zoom-in" @click.stop="openLightbox(1)"></div>
             </div>
 
-            <!-- Slider Handle (The Draggable Part) -->
-            <div class="absolute inset-y-0 pointer-events-none z-50" :style="{ left: `${sliderPos}%` }">
-               <!-- The Vertical Line (Solid White for Visibility) -->
-               <div class="absolute inset-y-0 -left-[2px] w-1 bg-white shadow-lg"></div>
+            <!-- Slider Handle (The Interactive Part) -->
+            <div class="absolute inset-y-0 z-30 flex items-center justify-center transition-all duration-500 ease-out -translate-x-1/2" 
+                 :class="{ '!duration-0': isDragging }"
+                 :style="{ left: `${sliderPos}%` }">
                
-               <!-- The Interactive Circle -->
-               <div class="absolute top-1/2 -left-6 w-12 h-12 bg-white rounded-full shadow-2xl flex items-center justify-center -translate-y-1/2 pointer-events-auto cursor-ew-resize border-4 border-accent-primary group-active/compare:scale-110 transition-transform">
-                  <div class="flex items-center gap-0.5 text-accent-primary">
-                     <ChevronLeftIcon :size="20" stroke-width="4" />
-                     <ChevronRightIcon :size="20" stroke-width="4" />
+               <!-- The Vertical Line -->
+               <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[4px] bg-white shadow-[0_0_20px_rgba(255,255,255,0.4)]"></div>
+               
+               <!-- Handle & Label Container -->
+               <div class="relative flex flex-col items-center justify-center">
+                  <!-- The Drag Circle -->
+                  <div class="w-12 h-12 bg-white rounded-full shadow-[0_0_50px_rgba(0,0,0,0.6)] flex items-center justify-center pointer-events-auto cursor-ew-resize border-2 border-white/20 transition-all duration-300 group-hover/compare:-translate-y-10 group-hover/compare:scale-90 active:scale-110 active:shadow-accent-primary/20"
+                       @mousedown.stop="startDragging" 
+                       @touchstart.stop="startDragging">
+                     <div class="flex items-center gap-0.5 text-black">
+                        <ChevronLeftIcon :size="18" stroke-width="3" />
+                        <ChevronRightIcon :size="18" stroke-width="3" />
+                     </div>
+                  </div>
+
+                  <!-- "Lihat Perbandingan" Label (Appears on Hover) -->
+                  <div class="absolute top-4 opacity-0 scale-90 group-hover/compare:opacity-100 group-hover/compare:scale-100 group-hover/compare:translate-y-4 transition-all duration-500 pointer-events-auto cursor-pointer flex flex-col items-center gap-2"
+                       @click.stop="openLightbox(1)">
+                     <div class="w-10 h-10 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center shadow-2xl hover:bg-white hover:text-black transition-colors">
+                        <EyeIcon :size="18" />
+                     </div>
+                     <span class="text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap drop-shadow-lg">Lihat Perbandingan</span>
                   </div>
                </div>
             </div>
 
-            <!-- Lightbox Trigger Overlay -->
-            <div class="absolute inset-0 bg-transparent hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover/compare:opacity-100 pointer-events-none">
-               <div class="px-6 py-3 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl text-white text-xs font-bold pointer-events-auto cursor-pointer flex items-center gap-2 hover:scale-105 transition-all shadow-2xl" @click.stop="openLightbox(1)">
-                  <SparklesIcon :size="14" class="text-accent-primary" />
-                  View Showcase
-               </div>
-            </div>
+
           </div>
 
           <!-- Lightbox Modal -->
-          <Transition name="fade">
-             <div v-if="isLightboxOpen" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl p-4 md:p-10 flex flex-col items-center justify-center" @click="isLightboxOpen = false">
-                <!-- Navigation Buttons -->
-                <button class="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl flex items-center justify-center text-white transition-all hover:scale-110 z-110" 
-                        @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
-                   <ChevronLeftIcon :size="24" />
-                </button>
-                <button class="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl flex items-center justify-center text-white transition-all hover:scale-110 z-110" 
-                        @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
-                   <ChevronRightIcon :size="24" />
-                </button>
+          <Teleport to="body">
+            <Transition name="fade">
+               <div v-if="isLightboxOpen" class="fixed inset-0 z-[99999] bg-black/98 backdrop-blur-3xl p-2 md:p-6 flex flex-col items-center justify-center" @click="isLightboxOpen = false">
+                  <!-- Navigation Buttons (Desktop) -->
+                  <button class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl items-center justify-center text-white transition-all hover:scale-110 z-[100000]" 
+                          @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
+                     <ChevronLeftIcon :size="24" />
+                  </button>
+                  <button class="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-3xl items-center justify-center text-white transition-all hover:scale-110 z-[100000]" 
+                          @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
+                     <ChevronRightIcon :size="24" />
+                  </button>
 
-                <div class="relative w-full max-w-6xl aspect-video bg-black/40 rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(var(--accent-primary-rgb),0.3)] border border-white/5" @click.stop>
-                   <Transition mode="out-in" name="fade">
-                      <img :key="lightboxImageIndex" 
-                           :src="lightboxImages[lightboxImageIndex]?.src" 
-                           class="w-full h-full object-contain" alt="Full Preview" />
-                   </Transition>
-                   
-                   <button class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl flex items-center justify-center text-white transition-colors" @click="isLightboxOpen = false">
-                      ✕
-                   </button>
+                  <div class="relative w-full max-w-6xl bg-black/80 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_0_120px_rgba(var(--accent-primary-rgb),0.2)] border border-white/5 flex flex-col" @click.stop>
+                     
+                     <!-- The Video Area -->
+                     <div class="relative w-full aspect-video bg-black z-0">
+                        <Transition mode="out-in" name="fade">
+                           <div :key="lightboxImageIndex" class="absolute inset-0 w-full h-full">
+                              <iframe v-if="lightboxImages[lightboxImageIndex]?.videoUrl" 
+                                      :src="lightboxImages[lightboxImageIndex].videoUrl" 
+                                      class="w-full h-full" 
+                                      frameborder="0" 
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                      allowfullscreen></iframe>
+                              <img v-else :src="lightboxImages[lightboxImageIndex]?.src" 
+                                   class="w-full h-full object-contain" alt="Full Preview" />
+                           </div>
+                        </Transition>
+                        
+                        <!-- Navigation Arrows (Mobile) - Positioned over the video -->
+                        <button class="absolute md:hidden left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full backdrop-blur-xl flex items-center justify-center text-white transition-all hover:scale-110 z-20" 
+                                @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
+                           <ChevronLeftIcon :size="20" />
+                        </button>
+                        <button class="absolute md:hidden right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full backdrop-blur-xl flex items-center justify-center text-white transition-all hover:scale-110 z-20" 
+                                @click.stop="lightboxImageIndex = (lightboxImageIndex === 0 ? 1 : 0)">
+                           <ChevronRightIcon :size="20" />
+                        </button>
+                        
+                        <!-- Close button moving to the video container so it doesn't get pushed into the text below -->
+                        <button class="absolute top-3 right-3 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 bg-black/40 hover:bg-black/80 md:bg-white/10 md:hover:bg-white/20 rounded-full backdrop-blur-xl flex items-center justify-center text-white transition-colors z-[1000]" @click="isLightboxOpen = false">
+                           ✕
+                        </button>
+                     </div>
 
-                   <!-- Image Labels in Lightbox -->
-                   <div class="absolute bottom-6 left-6 right-6 p-6 bg-linear-to-t from-black/80 to-transparent backdrop-blur-sm rounded-2xl border-t border-white/5 pointer-events-none">
-                      <h3 class="text-2xl font-black text-white mb-2 tracking-tight">{{ lightboxImages[lightboxImageIndex]?.title }}</h3>
-                      <p class="text-text-tertiary max-max-w-2xl text-sm">{{ lightboxImages[lightboxImageIndex]?.desc }}</p>
-                   </div>
-                </div>
+                     <!-- Image Labels in Lightbox (Flows below on mobile, Absolute on tablet+) -->
+                     <div class="relative p-5 pb-3 md:absolute md:bottom-6 md:left-6 md:right-6 md:p-6 bg-[#0c1016] md:bg-transparent md:bg-linear-to-t md:from-black/80 md:to-transparent md:backdrop-blur-sm md:rounded-2xl border-t border-white/5 pointer-events-none z-10 flex flex-col">
+                        <h3 class="text-lg md:text-2xl font-black text-white mb-1.5 md:mb-2 tracking-tight">{{ lightboxImages[lightboxImageIndex]?.title }}</h3>
+                        <p class="text-text-tertiary max-w-2xl text-[11px] md:text-sm leading-relaxed">{{ lightboxImages[lightboxImageIndex]?.desc }}</p>
+                     </div>
 
-                <!-- Page Indicator -->
-                <div class="mt-8 flex gap-2">
-                   <div v-for="i in 2" :key="i" class="w-2.5 h-2.5 rounded-full transition-all duration-300" 
-                        :class="lightboxImageIndex === i-1 ? 'bg-accent-primary w-8' : 'bg-white/20'"></div>
-                </div>
-             </div>
-          </Transition>
+                     <!-- Page Indicator (Absolute Overlay on desktop, Flow on mobile) -->
+                     <div class="pb-5 pt-1 md:pt-0 bg-[#0c1016] md:bg-transparent flex justify-center gap-1.5 md:gap-2.5 z-20 md:absolute md:bottom-6 md:left-1/2 md:-translate-x-1/2">
+                        <div v-for="i in 2" :key="i" class="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full transition-all duration-500 border border-white/5 shadow-xl" 
+                             :class="lightboxImageIndex === i-1 ? 'bg-accent-primary w-5 md:w-8 shadow-[0_0_12px_rgba(var(--accent-primary-rgb),0.5)]' : 'bg-white/20 hover:bg-white/40'"></div>
+                     </div>
+                  </div>
+               </div>
+            </Transition>
+          </Teleport>
         </div>
       </div>
     </div>
@@ -339,7 +220,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { 
   Sparkles as SparklesIcon,
   Activity as ActivityIcon,
@@ -350,7 +231,8 @@ import {
   Briefcase as BriefcaseIcon,
   TrendingUp as TrendingUpIcon,
   ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon
+  ChevronRight as ChevronRightIcon,
+  Eye as EyeIcon
 } from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
 import WhatsAppModal from "../modals/WhatsAppModal.vue";
@@ -380,19 +262,28 @@ const dragDistance = ref(0);
 const lightboxImages = [
   {
     src: "/assets/hero/before.png",
-    title: "The Workflow: SEBELUM",
-    desc: "Proses manual yang lambat, rentan kesalahan, dan melelahkan (Spreadsheet Chaos)."
+    title: "Before: Manual Operations",
+    desc: "Proses manual yang lambat, rentan kesalahan, dan menguras tenaga tim operasional setiap hari.",
+    videoUrl: "https://www.youtube.com/embed/IWxbokFbBW4?autoplay=1"
   },
   {
     src: "/assets/hero/after.png",
-    title: "The Workflow: SESUDAH",
-    desc: "Dashboard premium otomatis, rapi, dan memberikan insight bisnis secara real-time."
+    title: "After: Seamless Automation",
+    desc: "Ekosistem otomatis yang terintegrasi penuh, memberikan visibilitas total dan efisiensi waktu hingga 80%.",
+    videoUrl: "https://www.youtube.com/embed/Q1bqnIf9Gv8?autoplay=1"
   }
 ];
 
+// Body Scroll Lock & Z-Index Management
+watch(() => isLightboxOpen.value, (isOpen) => {
+  if (isOpen) {
+    document.body.classList.add('overflow-hidden');
+  } else {
+    document.body.classList.remove('overflow-hidden');
+  }
+});
+
 const openLightbox = (index: number) => {
-  // Hanya buka jika tidak sedang menggeser (pelacak gerakan rendah)
-  if (dragDistance.value > 10) return;
   lightboxImageIndex.value = index;
   isLightboxOpen.value = true;
 };
@@ -540,5 +431,15 @@ onUnmounted(() => {
 .v-leave-to {
   opacity: 0;
   transform: translateY(10px) scale(0.9);
+}
+
+/* Fade Transition for Slider */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

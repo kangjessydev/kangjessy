@@ -18,11 +18,11 @@
           <h1
             class="text-[clamp(2.25rem,6vw,4.25rem)] leading-[1.1] font-bold text-text-primary mb-6 tracking-[-0.04em]"
           >
-            Scale-Up Bisnis Lewat
+            Pelanggan Datang Sendiri.
             <span class="relative inline-block">
               <span
                 class="bg-clip-text text-transparent bg-linear-to-r from-accent-primary to-accent-secondary"
-                >Ekosistem Digital</span
+                >Kerja Manual Berkurang.</span
               >
               <!-- Snake Line Underline -->
               <span
@@ -33,7 +33,7 @@
           <p
             class="text-text-secondary mb-10 max-w-[580px] text-[clamp(1rem,2vw,1.15rem)] leading-[1.6] mx-auto md:mx-0"
           >
-            Dari website jualan yang mengundang pelanggan, hingga sistem otomatis yang memangkas jam kerja manual. Kami merancang, membangun, dan merawat seluruh infrastruktur IT agar Anda bisa fokus membesarkan bisnis.
+            Kami bangun website yang jualan dan sistem yang jalan otomatis — biar kamu fokus besarin bisnis, bukan urus teknis.
           </p>
 
           <div

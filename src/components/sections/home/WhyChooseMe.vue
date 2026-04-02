@@ -3,9 +3,8 @@
         <div class="container mx-auto px-4">
             <SectionHeader title="Why Choose Me" subtitle="Solusi nyata. Sistem bersih. Hasil serius.">
                 <template #title>
-                    Why <span
-                        class="bg-linear-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">Choose
-                        Me</span>
+                    Kenapa <span
+                        class="bg-linear-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">Beda?</span>
                 </template>
             </SectionHeader>
 
@@ -79,9 +78,9 @@
 
             <!-- Tech Stack: Infinity Loop (Always visible, but optimized) -->
             <footer class="mt-16 md:mt-20 overflow-hidden">
-                <h3
+                <!-- <h3
                     class="mb-8 text-[clamp(0.7rem,1.5vw,0.75rem)] uppercase tracking-[0.2em] font-bold text-text-tertiary text-center">
-                    Tech Stack I Master</h3>
+                    Tech Stack I Master</h3> -->
 
                 <div class="flex flex-col gap-4 md:gap-6">
                     <!-- Row 1 -->
@@ -124,12 +123,12 @@ import SectionHeader from '../../ui/SectionHeader.vue';
 import TechLogo from '../../ui/TechLogo.vue';
 
 const features = [
-    { icon: Zap, title: 'Eksekusi Anti-Lama', description: 'Gak perlu nunggu berbulan-bulan. Kita kerjain cepet dengan standar kode yang tetap solid.' },
-    { icon: Briefcase, title: 'Infrastruktur Profit', description: 'Bukan cuma desain cantik, tapi ekosistem fitur yang dirancang khusus untuk mendatangkan profit bisnis.' },
-    { icon: Layout, title: 'UI/UX High-Conversion', description: 'Antarmuka modern yang memandu pengunjung Anda menjadi pelanggan setia dengan alur yang mulus.' },
-    { icon: ShieldCheck, title: 'Aman & Siap Scale', description: 'Sistem tangguh yang nggak gampang tumbang. Siap nampung trafik tinggi seiring bisnis Anda makin besar.' },
-    { icon: Cpu, title: 'Ecosystem Automation', description: 'Biar sistem yang capek, Anda jangan. Kita otomatisasi seluruh alur kerja manual yang menguras energi.' },
-    { icon: MessageSquare, title: 'Diskusi Tanpa Sekat', description: 'Bebas dari ribetnya CS atau sales. Anda diskusi langsung dengan arsitek yang mengerjakan kodenya.' }
+    { icon: Zap, title: 'Eksekusi Anti-Lama', description: 'Gak perlu nunggu berbulan-bulan. Kita kerjain cepat dan hasilnya langsung bisa dipakai — tanpa kompromi kualitas.' },
+    { icon: Briefcase, title: 'Website yang Kerja, Bukan Cuma Tampil', description: 'Bukan cuma desain cantik — tapi sistem fitur yang dirancang khusus untuk mendatangkan pelanggan dan menghasilkan pendapatan nyata.' },
+    { icon: Layout, title: 'Desain yang Mengajak Beli', description: 'Tampilan modern yang memandu pengunjung jadi pelanggan setia — dengan alur yang mulus dan nyaman di semua perangkat.' },
+    { icon: ShieldCheck, title: 'Aman & Siap Scale', description: 'Sistem tangguh yang tidak gampang tumbang. Siap menampung trafik tinggi seiring bisnis kamu makin berkembang.' },
+    { icon: Cpu, title: 'Biar Sistemnya yang Kerja Keras', description: 'Biar sistem yang capek, kamu jangan. Kita otomatisasi seluruh alur kerja manual yang menguras energi dan waktu kamu.' },
+    { icon: MessageSquare, title: 'Diskusi Tanpa Sekat', description: 'Bebas dari ribetnya CS atau sales. Kamu diskusi langsung dengan yang mengerjakan kodenya — lebih cepat, lebih jelas, lebih tepat sasaran.' }
 ];
 
 const techStackItems = [

@@ -12,7 +12,7 @@ const socials = {
 export const siteConfig = {
     name: "KangJessy",
     fullName: "Kang Jessy",
-    tagline: "Partner Transformasi Digital & Automasi Bisnis",
+    tagline: "Untuk bisnis yang mau tumbuh tanpa tambah pusing",
 
     // Hero Stats Targets
     heroStats: {

@@ -453,7 +453,7 @@
         <!-- Addon Note -->
         <div class="max-w-3xl mx-auto mt-12 text-center px-4">
           <p class="text-[0.85rem] text-text-secondary italic opacity-80">
-            *Perlu diketahui: Penambahan fitur satuan atau custom module tetap memerlukan evaluasi dari saya untuk memastikan 100% kompatibilitas sistem dengan infrastruktur eksisting proyek Anda.
+            *Perlu diketahui: Setiap penambahan fitur akan dicek dulu kesesuaiannya dengan sistem website kamu — tanpa biaya tambahan untuk evaluasi awal. Harga berlaku untuk website baru atau yang dibangun oleh KangJessy. Untuk website pihak lain, estimasi diberikan setelah evaluasi singkat. 
           </p>
         </div>
 

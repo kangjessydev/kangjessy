@@ -222,28 +222,39 @@ export const addonServices = [
   {
     category: 'Pages & Layout',
     items: [
-      { name: 'Standard Static Page', price: '250.000', desc: 'Halaman informasi tambahan (Kontak, FAQ, Profil Tim, dsb) dengan desain yang serasi.' },
-      { name: 'Dynamic Interactive Page', price: '500.000', desc: 'Halaman dengan elemen interaktif seperti filter, pencarian, dan manajemen konten (CMS).' },
-      { name: 'Full API Integration Page', price: '850.000', desc: 'Halaman yang terhubung dengan layanan eksternal (API) untuk data real-time/otomasi.' },
-      { name: 'High-Conversion Landing', price: '1.200.000', desc: 'Landing page khusus campaign dengan riset copywriting persuasif yang fokus mendatangkan leads/sales.' },
-      { name: 'Custom UI Page Design', price: '400.000', desc: 'Pembuatan visual desain halaman premium (Figma/High-Fidelity) untuk konten bisnismu.' }
+      { name: 'Standard Static Page', price: '250.000', desc: 'Halaman informasi tambahan (Kontak, FAQ, Profil Tim, Kebijakan Privasi, dsb) dengan desain yang serasi dengan website utama.' },
+      { name: 'Dynamic Interactive Page', price: '500.000', desc: 'Halaman dengan elemen interaktif seperti filter produk, pencarian real-time, atau konten yang bisa dikelola mandiri via CMS.' },
+      { name: 'API Integration Page', price: '850.000', desc: 'Halaman terhubung ke layanan eksternal (peta, ongkir, cuaca, notifikasi, dsb) yang memiliki dokumentasi API publik. (Ketersediaan integrasi dikonfirmasi setelah evaluasi singkat — tanpa biaya tambahan)' },
+      { name: 'High-Conversion Landing Page', price: '1.200.000', desc: 'Halaman campaign dengan riset copywriting persuasif, struktur konversi, dan desain yang fokus mendatangkan leads atau penjualan.' },
     ]
   },
   {
     category: 'Features & Optimization',
     items: [
-      { name: 'Advanced Animation (GSAP)', price: '1.000.000', desc: 'Animasi interaktif premium, custom interactions, & storytelling visual yang meningkatkan engagement.' },
-      { name: 'Payment Gateway Setup', price: '1.000.000', desc: 'Integrasi Midtrans/Xendit untuk klien yang ingin mengaktifkan pembayaran otomatis di sistem eksisting.' },
-      { name: 'Advanced SEO Engine', price: '1.000.000', desc: 'Audit teknis mendalam, riset keyword kompetitor, on-page optimization per 5 halaman, & strategi konten.' },
-      { name: 'Core Web Vitals Boost', price: '550.000', desc: 'Optimasi kecepatan (Speed/Performance) hingga mencapai skor hijau di Google PageSpeed Insights.' }
+      { name: 'Advanced Animation (GSAP)', price: '1.000.000', desc: 'Animasi interaktif premium (scroll-triggered, hover, transisi halaman) untuk kesan visual yang kuat dan engagement lebih tinggi.' },
+      { name: 'Payment Gateway Setup', price: '1.000.000', desc: 'Integrasi pembayaran online (QRIS, transfer bank, kartu kredit) untuk website yang sudah ada tapi belum bisa terima pembayaran otomatis.' },
+      { name: 'Speed & Performance Boost', price: '550.000', desc: 'Optimasi kecepatan sisi teknis — kompresi aset, caching, lazy load, dan minifikasi kode untuk loading yang lebih cepat.' },
+      { name: 'Member Area / Login System', price: '1.200.000', desc: 'Sistem akun pelanggan — pengunjung bisa daftar, login, dan akses konten atau fitur khusus sesuai perannya.' },
+      { name: 'WhatsApp Business Integration', price: '450.000', desc: 'Tombol WA teroptimasi dengan pesan pre-filled sesuai konteks, plus notifikasi otomatis ke WhatsApp bisnis kamu saat ada form masuk atau order baru. (Bukan chatbot — untuk chatbot kompleks masuk ke paket Custom)' },
+      { name: 'Multi-language Support', price: '800.000', desc: 'Website bisa diakses dalam dua bahasa atau lebih — cocok untuk bisnis yang melayani klien lokal dan internasional sekaligus.' },
+    ]
+  },
+  {
+    category: 'Content & SEO',
+    items: [
+      { name: 'Advanced SEO Engine', price: '1.000.000', desc: 'Audit teknis mendalam, riset keyword kompetitor, on-page optimization per 5 halaman, dan panduan strategi konten untuk bisnis kamu.' },
+      { name: 'Paket Artikel Konten', price: '600.000', desc: '5 artikel blog yang dioptimasi untuk pencarian Google berdasarkan keyword bisnis kamu — ditulis alami, bukan sekadar isian.' },
+      { name: 'Copywriting Halaman (per halaman)', price: '350.000', desc: 'Penulisan ulang atau pembuatan teks konten untuk halaman tertentu — lebih persuasif, lebih jelas, dan lebih sesuai target audiens (dihitung per halaman)' },
+      { name: 'Google Analytics & Search Console Setup', price: '200.000', desc: 'Instalasi dan konfigurasi lengkap — pantau jumlah pengunjung, sumber trafik, dan performa keyword website kamu di Google.' }
     ]
   },
   {
     category: 'Management & Technical',
     items: [
-      { name: 'Migrasi & Deployment', price: '450.000', desc: 'Pindah hosting, domain, atau migrasi platform lama ke ekosistem baru dengan zero downtime.' },
-      { name: 'Professional Email Setup', price: '200.000', desc: 'Konfigurasi email domain bisnis (halo@bisniskamu.com) dengan proteksi spam & sinkronisasi multi-device.' },
-      { name: 'WhatsApp Business Core', price: '650.000', desc: 'Setup chat-bot sederhana, pesan otomatis, & integrasi tombol WA yang teroptimasi konversi.' }
+      { name: 'Migrasi & Deployment', price: '450.000', desc: 'Pindah hosting, domain, atau platform lama ke ekosistem baru — termasuk transfer data, konfigurasi DNS, dan verifikasi setelah migrasi.' },
+      { name: 'Professional Email Setup', price: '200.000', desc: 'Konfigurasi email domain bisnis (halo@namabisnis.com) dengan proteksi spam dan sinkronisasi ke HP maupun laptop.' },
+      { name: 'Backup System Setup', price: '300.000', desc: 'Konfigurasi sistem backup otomatis — data website dicadangkan secara berkala ke cloud sehingga bisa dipulihkan kapanpun dibutuhkan. (Pemulihan data hanya bisa dilakukan jika backup tersedia. Data yang hilang tanpa backup tidak dapat dijamin pemulihannya)' },
+      { name: 'Security Hardening', price: '350.000', desc: 'Penguatan keamanan website yang sudah ada — proteksi login, blokir serangan umum, SSL, dan pembaruan komponen kritis.' }
     ]
   }
 ];

@@ -36,22 +36,33 @@
             Saya bangun website yang jualan dan sistem yang jalan otomatis — biar kamu fokus besarin bisnis, bukan urus teknis.
           </p>
 
-          <!-- Micro-intro: Personal Identity -->
+          <!-- Micro-intro: Personal Identity (Responsive optimized) -->
           <div class="flex items-center mb-10 justify-center md:justify-start">
-            <div class="inline-flex items-center gap-3 px-4 py-2.5 bg-bg-secondary/60 border border-border-color rounded-2xl backdrop-blur-sm group/intro">
-              <!-- Avatar placeholder (swap ke foto asli nanti) -->
-              <div class="w-7 h-7 rounded-full bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary flex-shrink-0">
-                <UserIcon :size="14" />
+            <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 px-5 py-4 sm:py-2.5 bg-bg-secondary/60 border border-border-color rounded-[28px] sm:rounded-full backdrop-blur-sm group/intro w-full sm:w-auto shadow-xl shadow-black/10">
+              <div class="flex items-center gap-3">
+                <!-- Avatar placeholder -->
+                <div class="w-8 h-8 rounded-full bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary flex-shrink-0 group-hover/intro:scale-110 transition-transform">
+                  <UserIcon :size="15" />
+                </div>
+                <span class="text-[0.9rem] sm:text-[0.8rem] text-text-secondary font-medium">
+                  Halo, saya <strong class="text-text-primary font-bold">{{ siteConfig.firstName }}</strong>
+                </span>
               </div>
-              <span class="text-[0.8rem] text-text-secondary font-medium">
-                Halo, saya <strong class="text-text-primary font-bold">{{ siteConfig.firstName }}</strong>
-                &nbsp;·&nbsp; Developer
-                &nbsp;·&nbsp; {{ siteConfig.location }}
-                &nbsp;·&nbsp; {{ siteConfig.heroStats.experience }}+ tahun pengalaman
-              </span>
+              
+              <!-- Separator for desktop -->
+              <div class="hidden sm:block w-px h-4 bg-border-color mx-1"></div>
+
+              <div class="flex items-center gap-2 sm:gap-3 text-[0.75rem] sm:text-[0.8rem] text-text-tertiary sm:text-text-secondary">
+                <span>Developer</span>
+                <span class="opacity-40">·</span>
+                <span>{{ siteConfig.location }}</span>
+                <span class="opacity-40">·</span>
+                <span class="whitespace-nowrap">{{ siteConfig.heroStats.experience }}+ Thn Pengalaman</span>
+              </div>
+
               <router-link
                 to="/about"
-                class="text-[0.75rem] font-bold text-accent-primary hover:opacity-80 transition-opacity whitespace-nowrap border-l border-border-color pl-3 ml-1"
+                class="mt-1 sm:mt-0 text-[0.8rem] sm:text-[0.75rem] font-black text-accent-primary hover:opacity-80 transition-opacity whitespace-nowrap sm:border-l border-border-color sm:pl-3 sm:ml-1"
               >
                 Profil →
               </router-link>
@@ -59,18 +70,22 @@
           </div>
 
           <div
-            class="flex flex-wrap gap-4 mb-14 justify-center md:justify-start"
+            class="flex flex-col sm:flex-row gap-4 mb-14 justify-center md:justify-start px-4 sm:px-0"
           >
             <BaseButton
               variant="primary"
+              size="lg"
               aria-label="Let's Talk via WhatsApp"
               @click="openDirectChat()"
+              class="w-full sm:w-auto justify-center"
               >Konsultasi Gratis</BaseButton
             >
             <BaseButton
               href="#projects"
               aria-label="View my works"
               variant="secondary"
+              size="lg"
+              class="w-full sm:w-auto justify-center"
               >Lihat Karya Pilihan</BaseButton
             >
           </div>
@@ -231,7 +246,6 @@
         </div>
       </div>
     </div>
-    />
   </section>
 </template>
 

@@ -120,7 +120,7 @@
           <div class="absolute -inset-10 bg-linear-to-r from-accent-primary/10 to-accent-secondary/10 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
 
           <!-- 🟠 OPTION 3: BEFORE/AFTER SLIDER (Active Now) -->
-          <div class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016] rounded-4xl border border-white/10 shadow-2xl overflow-hidden group/compare select-none hero-compare-slider" style="touch-action: none;">
+          <div ref="sliderContainerRef" class="relative z-10 w-full h-[350px] md:h-[500px] bg-[#0c1016] rounded-4xl border border-white/10 shadow-2xl overflow-hidden group/compare select-none hero-compare-slider" style="touch-action: none;">
             
             <!-- After Image (Bottom Layer) -->
             <div class="absolute inset-0 pointer-events-none">
@@ -158,11 +158,7 @@
                <!-- Handle & Label Container -->
                <div class="relative flex flex-col items-center justify-center">
                   <!-- The Drag Circle -->
-                  <div class="w-12 h-12 bg-white rounded-full shadow-[0_0_50px_rgba(0,0,0,0.6)] flex items-center justify-center pointer-events-auto cursor-ew-resize border-2 border-white/20 transition-all duration-300 group-hover/compare:-translate-y-10 group-hover/compare:scale-90 active:scale-110 active:shadow-accent-primary/20"
-                       style="touch-action: none;"
-                       @mousedown.prevent="startDragging" 
-                       @touchstart.passive="false"
-                       @touchstart.stop.prevent="startDragging">
+                  <div class="w-12 h-12 bg-white rounded-full shadow-[0_0_50px_rgba(0,0,0,0.6)] flex items-center justify-center pointer-events-auto cursor-ew-resize border-2 border-white/20 transition-all duration-300 group-hover/compare:-translate-y-10 group-hover/compare:scale-90 active:scale-110 active:shadow-accent-primary/20">
                      <div class="flex items-center gap-0.5 text-black">
                         <ChevronLeftIcon :size="18" stroke-width="3" />
                         <ChevronRightIcon :size="18" stroke-width="3" />
@@ -278,10 +274,11 @@ const activeUsers = ref(842);
 const chartData = ref([30, 45, 25, 60, 40, 75, 50, 90]);
 
 // Before/After Slider State
+const sliderContainerRef = ref<HTMLElement | null>(null);
 const sliderPos = ref(50);
 const isDragging = ref(false);
 const isLightboxOpen = ref(false);
-const lightboxImageIndex = ref(0); // 0: Manual, 1: Automated
+const lightboxImageIndex = ref(0);
 const dragDistance = ref(0);
 
 const lightboxImages = [
@@ -313,12 +310,19 @@ const openLightbox = (index: number) => {
   isLightboxOpen.value = true;
 };
 
+const getClientX = (e: MouseEvent | TouchEvent): number => {
+  if ('touches' in e) {
+    return e.touches[0]?.clientX ?? 0;
+  }
+  return (e as MouseEvent).clientX;
+};
+
 const updatePosition = (e: MouseEvent | TouchEvent) => {
-  const container = document.querySelector('.hero-compare-slider');
+  const container = sliderContainerRef.value;
   if (!container) return;
   
   const rect = container.getBoundingClientRect();
-  const x = 'touches' in e ? (e.touches?.[0]?.clientX ?? 0) : (e as MouseEvent).clientX;
+  const x = getClientX(e);
   
   let position = ((x - rect.left) / rect.width) * 100;
   position = Math.max(0, Math.min(100, position));
@@ -326,33 +330,36 @@ const updatePosition = (e: MouseEvent | TouchEvent) => {
   sliderPos.value = position;
 };
 
-const startDragging = (e: MouseEvent | TouchEvent) => {
-  isDragging.value = true;
-  dragDistance.value = 0;
-  if (e.cancelable) e.preventDefault();
-  
+const onTouchMove = (e: TouchEvent) => {
+  if (!isDragging.value) return;
+  // This MUST be called here (non-passive context) to prevent page scroll
+  e.preventDefault();
   updatePosition(e);
-  
-  window.addEventListener('mousemove', handleGlobalDrag);
-  window.addEventListener('touchmove', handleGlobalDrag, { passive: false });
-  window.addEventListener('mouseup', stopDragging);
-  window.addEventListener('touchend', stopDragging);
+};
+
+const onMouseMove = (e: MouseEvent) => {
+  if (!isDragging.value) return;
+  updatePosition(e);
 };
 
 const stopDragging = () => {
+  if (!isDragging.value) return;
   isDragging.value = false;
-  window.removeEventListener('mousemove', handleGlobalDrag);
-  window.removeEventListener('touchmove', handleGlobalDrag);
+  window.removeEventListener('mousemove', onMouseMove);
+  window.removeEventListener('touchmove', onTouchMove);
   window.removeEventListener('mouseup', stopDragging);
   window.removeEventListener('touchend', stopDragging);
 };
 
-const handleGlobalDrag = (e: MouseEvent | TouchEvent) => {
-  if (!isDragging.value) return;
-  if (e.cancelable) e.preventDefault();
-  
-  dragDistance.value += 1;
+const onPointerDown = (e: MouseEvent | TouchEvent) => {
+  isDragging.value = true;
+  dragDistance.value = 0;
   updatePosition(e);
+  window.addEventListener('mousemove', onMouseMove);
+  // touchmove registered as non-passive so we can call preventDefault
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
+  window.addEventListener('mouseup', stopDragging);
+  window.addEventListener('touchend', stopDragging);
 };
 
 
@@ -411,10 +418,25 @@ const startObserver = () => {
 onMounted(() => {
   setTimeout(startObserver, 200);
   statsInterval = setInterval(updateLiveStats, 3000);
+
+  // Register touchstart as NON-PASSIVE on the slider container.
+  // Vue template modifiers cannot do this — browser forces passive by default,
+  // which means preventDefault() inside touchmove is ignored and page scrolls instead of dragging.
+  const el = sliderContainerRef.value;
+  if (el) {
+    el.addEventListener('mousedown', onPointerDown);
+    el.addEventListener('touchstart', onPointerDown, { passive: false });
+  }
 });
 
 onUnmounted(() => {
   if(statsInterval) clearInterval(statsInterval);
+  stopDragging();
+  const el = sliderContainerRef.value;
+  if (el) {
+    el.removeEventListener('mousedown', onPointerDown);
+    el.removeEventListener('touchstart', onPointerDown);
+  }
 });
 </script>
 

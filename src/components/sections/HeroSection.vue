@@ -332,7 +332,6 @@ const updatePosition = (e: MouseEvent | TouchEvent) => {
 
 const onTouchMove = (e: TouchEvent) => {
   if (!isDragging.value) return;
-  // This MUST be called here (non-passive context) to prevent page scroll
   e.preventDefault();
   updatePosition(e);
 };
@@ -352,14 +351,40 @@ const stopDragging = () => {
 };
 
 const onPointerDown = (e: MouseEvent | TouchEvent) => {
-  isDragging.value = true;
+  const startX = getClientX(e);
+  let hasDragged = false;
+
+  const onMove = (moveEvent: MouseEvent | TouchEvent) => {
+    const currentX = getClientX(moveEvent);
+    const delta = Math.abs(currentX - startX);
+
+    // Only commit to dragging after moving more than 5px (prevents jump on tap/click)
+    if (!hasDragged && delta < 5) return;
+
+    if (!hasDragged) {
+      hasDragged = true;
+      isDragging.value = true;
+    }
+
+    if ('touches' in moveEvent) {
+      (moveEvent as TouchEvent & { cancelable: boolean }).cancelable && moveEvent.preventDefault();
+    }
+    updatePosition(moveEvent);
+  };
+
+  const onUp = () => {
+    isDragging.value = false;
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('touchmove', onMove as any);
+    window.removeEventListener('mouseup', onUp);
+    window.removeEventListener('touchend', onUp);
+  };
+
   dragDistance.value = 0;
-  updatePosition(e);
-  window.addEventListener('mousemove', onMouseMove);
-  // touchmove registered as non-passive so we can call preventDefault
-  window.addEventListener('touchmove', onTouchMove, { passive: false });
-  window.addEventListener('mouseup', stopDragging);
-  window.addEventListener('touchend', stopDragging);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('touchmove', onMove as any, { passive: false });
+  window.addEventListener('mouseup', onUp);
+  window.addEventListener('touchend', onUp);
 };
 
 
@@ -431,7 +456,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if(statsInterval) clearInterval(statsInterval);
-  stopDragging();
+  // isDragging is scoped inside onPointerDown closures, no global cleanup needed
   const el = sliderContainerRef.value;
   if (el) {
     el.removeEventListener('mousedown', onPointerDown);

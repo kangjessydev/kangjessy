@@ -79,9 +79,13 @@ export const developmentPlans: PricingPlan[] = [
       {
         name: 'Bonus',
         items: [
-          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain my.id, .biz.id, .com, .id, .net, .org, .xyz, .info' },
           { text: 'Video panduan kelola website', included: true, tooltip: 'Video singkat yang menunjukkan cara update konten & penggunaan website' },
+          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain my.id, .biz.id, .com, .id' },
+          { text: 'Panduan pilih hosting gratis', included: true, tooltip: 'Saya akan merekomendasikan hosting yang sesuai dengan kebutuhan bisnis kamu.' },
+          { text: 'Setup hosting gratis', included: true, tooltip: 'Hosting di pihak kamu, estimasi Rp 15–30rb/bulan tergantung kebijakan provider hosting.' },
+          { text: 'Hosting tidak disediakan', included: false, tooltip: 'Tersedia di paket Business Growth & Pro Scale' },
           { text: '1 bulan maintenance gratis', included: false, tooltip: 'Tersedia di paket Business Growth & Pro Scale' },
+          
         ]
       }
     ]
@@ -127,7 +131,11 @@ export const developmentPlans: PricingPlan[] = [
       {
         name: 'Bonus',
         items: [
+          { text: 'Video panduan + dokumen serah terima sistem', included: true, tooltip: 'Video tutorial & dokumen untuk membantu kamu mengelola website.' },
           { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain my.id, .biz.id, .com, .id, .net, .org, .xyz, .info' },
+          { text: 'Hosting shared premium 1 tahun', included: true, tooltip: 'cukup untuk website bisnis aktif.' },
+          // { text: 'Spek: 5GB SSD, unlimited bandwidth', included: true, tooltip: 'Spesifikasi minimum yang digunakan untuk website kamu. ' },
+          { text: 'Setup & konfigurasi penuh', included: true, tooltip: 'Setup hosting, Setup SSL, setup email bisnis, dan konfigurasi awal website.' },
           { text: '1 bulan Basic Care maintenance gratis', included: true, tooltip: 'Website kamu dipantau dan dirawat selama 1 bulan setelah launch. Termasuk update keamanan, backup, dan monitoring performa.' },
           // { text: '1x sesi kick-off via video call', included: true, tooltip: 'Sesi diskusi singkat untuk memastikan website sesuai dengan kebutuhan bisnis kamu.' },
         ]
@@ -173,9 +181,12 @@ export const developmentPlans: PricingPlan[] = [
       {
         name: 'Bonus',
         items: [
-          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain my.id, .biz.id, .com, .id, .net, .org, .xyz, .info'},
-          { text: '1 bulan Growth Care maintenance gratis', included: true, tooltip: 'Website kamu dipantau dan dirawat selama 1 bulan setelah launch. Termasuk update keamanan, backup, dan monitoring performa.' },
           { text: 'Video panduan + dokumen serah terima sistem', included: true, tooltip: 'Video tutorial dan dokumen untuk membantu kamu mengelola website.' },
+          { text: 'Gratis domain 1 tahun', included: true, tooltip: 'Khusus domain my.id, .biz.id, .com, .id, .net, .org, .xyz, .info'},
+          { text: 'VPS entry level 1 tahun', included: true, tooltip: 'mampu menangani sistem dan trafik lebih tinggi' },
+          // { text: 'Spek: 2 vCPU, 2GB RAM, 20GB SSD', included: true, tooltip: 'Spesifikasi minimum yang digunakan untuk website kamu. ' },
+          { text: 'Setup, konfigurasi & optimasi server', included: true, tooltip: 'Setup VPS, konfigurasi server, dan optimasi performa website.' },
+          { text: '1 bulan Growth Care maintenance gratis', included: true, tooltip: 'Website kamu dipantau dan dirawat selama 1 bulan setelah launch. Termasuk update keamanan, backup, dan monitoring performa.' },
         ]
       }
     ]

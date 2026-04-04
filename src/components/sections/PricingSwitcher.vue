@@ -121,7 +121,7 @@
                            <span class="text-[0.9rem] leading-tight font-medium" :class="feature.isPopular ? 'text-accent-primary font-bold' : (feature.included ? 'text-text-primary' : 'text-text-tertiary')">
                              {{ feature.text }}
                            </span>
-                           <div v-if="feature.tooltip && feature.included" class="relative inline-flex items-center group/tooltip w-4 h-4 cursor-help text-text-tertiary hover:text-accent-primary transition-colors">
+                           <div v-if="feature.tooltip" class="relative inline-flex items-center group/tooltip w-4 h-4 cursor-help text-text-tertiary hover:text-accent-primary transition-colors">
                              <Info :size="12" @click="openMobileTooltip(feature.text, feature.tooltip)" />
                              <!-- Desktop Tooltip -->
                              <div class="hidden md:block absolute bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 p-3 rounded-xl bg-[#0f1117] border border-border-color shadow-xl text-[0.7rem] text-text-secondary font-medium leading-relaxed opacity-0 invisible pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 z-50 min-w-[200px]">

@@ -12,7 +12,7 @@
       <MobileNav />
       <FloatingAction
         class="hidden md:flex"
-        @open-wa="popup.openModal(Popups.CHAT_WA)"
+        @open-wa="openDirectChat()"
         @open-ai="popup.openModal(Popups.CHAT_AI)"
         @open-email="popup.openModal(Popups.CHAT_EMAIL)"
       />
@@ -79,11 +79,13 @@ import ToastContainer from "./components/ui/ToastContainer.vue";
 import { usePopupManager, Popups } from "./composables/usePopupManager";
 import { useGlobalTheme } from "./composables/useTheme";
 import { useSiteSettings } from "./composables/useSiteSettings";
+import { useWhatsApp } from "./composables/useWhatsApp";
 
 const route = useRoute();
 const popup = usePopupManager();
 const { initTheme } = useGlobalTheme();
 const { fetchSettings } = useSiteSettings();
+const { openDirectChat } = useWhatsApp();
 
 const isClientPortalRoute = computed(() => {
   return (

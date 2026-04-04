@@ -31,8 +31,113 @@ export interface Project {
 // @ts-ignore - import raw markdown
 import hijiruContent from "./case-studies/hijiru-company-profile.md?raw";
 import herbalInsaniContent from "./case-studies/redesign-wisata-herbal-insani.md?raw";
+import villaPurnamaContent from "./case-studies/villa-purnama-ubud.md?raw";
 
 export const projectsData: Project[] = [
+  // --- NEW VISUAL SHOWCASE (HOME FOCUS) ---
+  {
+    id: 101,
+    slug: "arkana-consultant",
+    title: "Arkana Consultant",
+    category: "Corporate Style",
+    tags: ["Professional", "Corporate", "Clean"],
+    icon: "Building2",
+    color: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop",
+    description: "Desain profesional dan otoritatif untuk perusahaan konsultan skala besar.",
+    content: "## Desain Corporate yang Terpercaya\n\nMenonjolkan sisi profesionalisme dengan tipografi yang kuat dan tata letak yang terstruktur rapi. Cocok untuk industri yang mengedepankan kepercayaan dan integritas.",
+    client: "Arkana Group",
+    date: "Agt 2025",
+    liveUrl: "https://kangjessydev.github.io/arkana-consultant",
+    githubUrl: "",
+    status: "SHOWCASE"
+  },
+  {
+    id: 102,
+    slug: "warung-dapur-nusantara",
+    title: "Warung Dapur Nusantara",
+    category: "Vibrant Style",
+    tags: ["Cheerful", "Culinary", "Vibrant"],
+    icon: "UtensilsCrossed",
+    color: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop",
+    description: "Nuansa ceria dan menggugah selera untuk marketplace kuliner lokal.",
+    content: "## Energi Kuliner Nusantara\n\nPenggunaan warna-warna hangat dan elemen visual yang playful untuk menciptakan pengalaman yang bersahabat bagi pelanggan.",
+    client: "Dapur Nusantara",
+    date: "Sep 2025",
+    liveUrl: "https://kangjessydev.github.io/warung-dapur-nusantara",
+    githubUrl: "",
+    status: "SHOWCASE"
+  },
+  {
+    id: 103,
+    slug: "villa-purnama-ubud",
+    title: "Villa Purnama Ubud",
+    category: "Minimalist Style",
+    tags: ["Minimalist", "Luxury", "Clean"],
+    icon: "Palmtree",
+    color: "linear-gradient(135deg, #059669 0%, #064e3b 100%)",
+    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=800&auto=format&fit=crop",
+    description: "Estetika minimalis dan mewah yang tenang, terinspirasi dari alam Ubud.",
+    content: villaPurnamaContent,
+    client: "Purnama Hospitality",
+    date: "Okt 2025",
+    liveUrl: "https://kangjessydev.github.io/villa-purnama-ubud",
+    githubUrl: "",
+    status: "SHOWCASE"
+  },
+  {
+    id: 104,
+    slug: "nexara",
+    title: "Nexara",
+    category: "Modern Tech Style",
+    tags: ["Modern", "Tech", "SaaS"],
+    icon: "Cpu",
+    color: "linear-gradient(135deg, #6366f1 0%, #4338ca 100%)",
+    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop",
+    description: "Dark mode dengan elemen futuristik untuk platform teknologi dan SaaS.",
+    content: "## Masa Depan Digital\n\nImplementasi glassmorphism dan efek gradasi neon yang memberikan kesan tech-heavy dan mutakhir.",
+    client: "Nexara Corp",
+    date: "Nov 2025",
+    liveUrl: "https://kangjessydev.github.io/nexara",
+    githubUrl: "",
+    status: "SHOWCASE"
+  },
+  {
+    id: 105,
+    slug: "rupa",
+    title: "Rupa",
+    category: "Creative Style",
+    tags: ["Artistic", "Creative", "Bold"],
+    icon: "Palette",
+    color: "linear-gradient(135deg, #d946ef 0%, #a855f7 100%)",
+    image: "/projects/rupa-cover.png",
+    description: "Desain berani dan artistik untuk agensi kreatif yang ingin tampil beda.",
+    content: "## Ekspresi Tanpa Batas\n\nLayout yang unik dan berani, memadukan seni visual dengan fungsionalitas web modern.",
+    client: "Rupa Agency",
+    date: "Des 2025",
+    liveUrl: "https://kangjessydev.github.io/rupa",
+    githubUrl: "",
+    status: "SHOWCASE"
+  },
+  {
+    id: 106,
+    slug: "ruang-studio",
+    title: "Ruang Studio",
+    category: "Clean Studio Style",
+    tags: ["Minimal", "Studio", "Gallery"],
+    icon: "Camera",
+    color: "linear-gradient(135deg, #000000 0%, #171717 100%)",
+    image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=800&auto=format&fit=crop",
+    description: "Aesthetic minimalis hitam-putih untuk showcase studio fotografi.",
+    content: "## Fokus pada Karya\n\nMenghilangkan distraksi untuk memastikan setiap karya foto mendapatkan atensi penuh melalui desain yang bersih.",
+    client: "Ruang Studio",
+    date: "Jan 2026",
+    liveUrl: "https://kangjessydev.github.io/ruang-studio/",
+    githubUrl: "",
+    status: "SHOWCASE"
+  },
+
   // --- WORDPRESS & CMS ---
   {
     id: 18,

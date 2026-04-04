@@ -34,7 +34,7 @@
 
       <!-- Pricing Bento Link -->
       <div class="mt-8 max-w-3xl mx-auto cursor-pointer group" @click="scrollToPricing">
-        <div class="relative rounded-[32px] overflow-hidden bg-accent-primary/[0.05] border border-accent-primary/30 backdrop-blur-xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-500 hover:bg-accent-primary/[0.08] hover:border-accent-primary hover:shadow-[0_0_50px_rgba(59,130,246,0.15)] hover:-translate-y-1">
+        <div class="relative rounded-[32px] overflow-hidden bg-accent-primary/5 border border-accent-primary/30 backdrop-blur-xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-500 hover:bg-accent-primary/8 hover:border-accent-primary hover:shadow-[0_0_50px_rgba(59,130,246,0.15)] hover:-translate-y-1">
           <!-- Background Glow -->
           <div class="absolute -right-20 -top-20 w-48 h-48 bg-accent-primary/20 blur-[60px] rounded-full transition-all group-hover:bg-accent-primary/30"></div>
           
@@ -56,13 +56,7 @@
 
     </div>
 
-    <!-- Modals -->
-    <WhatsAppModal
-      :isOpen="isWAModalOpen"
-      initialMessage="Halo Kang Jessy! Saya ingin diskusi tentang project baru."
-      category="Contact Section"
-      @close="isWAModalOpen = false"
-    />
+
     <EmailModal
       :isOpen="isEmailModalOpen"
       initialSubject="Project Inquiry"
@@ -74,15 +68,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import SectionHeader from "../../ui/SectionHeader.vue";
-import WhatsAppModal from "../../modals/WhatsAppModal.vue";
-import EmailModal from "../../modals/EmailModal.vue";
 import { Mail, MapPin, ArrowRight as ArrowRightIcon, Rocket as RocketIcon } from "lucide-vue-next";
 import WhatsappIcon from "../../icons/WhatsappIcon.vue";
 import { useSiteSettings } from "../../../composables/useSiteSettings";
+import { useWhatsApp } from "../../../composables/useWhatsApp";
 
 const { settings } = useSiteSettings();
+const { openDirectChat } = useWhatsApp();
 
-const isWAModalOpen = ref(false);
 const isEmailModalOpen = ref(false);
 
 const scrollToPricing = () => {
@@ -97,7 +90,7 @@ const contactItems = [
     icon: WhatsappIcon,
     label: "WhatsApp",
     value: settings.value.whatsapp,
-    action: () => (isWAModalOpen.value = true),
+    action: () => openDirectChat(),
   },
   {
     icon: Mail,

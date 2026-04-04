@@ -6,12 +6,15 @@ const socials = {
     youtube: "https://youtube.com/@kangjessydev",
     thread: "https://threads.net/@kangjessydev",
     email: "hi.kangjessy@gmail.com",
-    whatsapp: "0881023762866",
+    whatsapp: "088218705236",
+    // whatsapp: "0881023762866",
 };
 
 export const siteConfig = {
     name: "KangJessy",
     fullName: "Kang Jessy",
+    firstName: "Jessy",
+    location: "Bandung",
     tagline: "Untuk bisnis yang mau tumbuh tanpa tambah pusing",
 
     // Hero Stats Targets

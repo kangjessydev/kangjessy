@@ -5,8 +5,7 @@
     <!-- <BentoServices /> -->
     <!-- <MicroServices /> -->
     <PricingSwitcher />
-    <Projects />
-    <!-- <Testimonials /> -->
+    <DesignStyleShowcase />
     <FAQ />
     <Contact />
   </div>
@@ -26,11 +25,8 @@ useSEO({
 
 // Lazy load below-fold sections
 const WhyChooseMe = defineAsyncComponent(() => import('../../components/sections/home/WhyChooseMe.vue'))
-// const BentoServices = defineAsyncComponent(() => import('../../components/sections/home/BentoServices.vue'))
-// const MicroServices = defineAsyncComponent(() => import('../../components/sections/home/MicroServices.vue'))
 const PricingSwitcher = defineAsyncComponent(() => import('../../components/sections/PricingSwitcher.vue'))
-const Projects = defineAsyncComponent(() => import('../../components/sections/home/Projects.vue'))
-// const Testimonials = defineAsyncComponent(() => import('../../components/sections/home/Testimonials.vue'))
+const DesignStyleShowcase = defineAsyncComponent(() => import('../../components/sections/home/DesignStyleShowcase.vue'))
 const FAQ = defineAsyncComponent(() => import('../../components/sections/home/FAQ.vue'))
 const Contact = defineAsyncComponent(() => import('../../components/sections/home/Contact.vue'))
 </script>

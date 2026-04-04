@@ -134,7 +134,7 @@
               Resources & Learn
             </h4>
             <ul class="flex flex-col gap-3.5">
-              <li>
+              <!-- <li>
                 <a
                   href="https://kangjessy-docs.vercel.app"
                   target="_blank"
@@ -142,7 +142,7 @@
                   class="nav-link text-[0.95rem] font-medium"
                   >Documentation</a
                 >
-              </li>
+              </li> -->
               <li>
                 <router-link
                   to="/blog"
@@ -180,13 +180,13 @@
                   >About Us</router-link
                 >
               </li>
-              <li>
+              <!-- <li>
                 <router-link
                   to="/portal"
                   class="nav-link text-[0.95rem] font-medium"
                   >Client Portal</router-link
                 >
-              </li>
+              </li> -->
               <li>
                 <button
                   @click="popup.openModal(Popups.CHAT_WA)"

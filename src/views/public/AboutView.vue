@@ -6,7 +6,8 @@
                 <div class="lg:w-1/3 flex justify-center lg:justify-start">
                     <div class="relative group">
                         <div class="absolute inset-0 bg-accent-primary/5 rounded-[48px] rotate-6 group-hover:rotate-3 transition-transform duration-700"></div>
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jessy" alt="Avatar"
+                        <!-- Ganti src di bawah ini dengan foto asli saat sudah siap -->
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jessy" alt="Foto Jessy"
                             class="relative z-10 w-48 h-48 md:w-60 md:h-60 rounded-[40px] bg-bg-secondary border border-border-color shadow-sm object-cover" />
                     </div>
                 </div>
@@ -17,8 +18,9 @@
                         <span class="text-[10px] font-bold text-accent-primary uppercase tracking-[0.2em]">Currently Available</span>
                     </div>
                     <h1 class="text-3xl md:text-5xl font-bold text-text-primary tracking-tight leading-[1.2]">
-                        Expert Software Solutions <br class="hidden md:block" /> 
-                        <span class="text-text-tertiary">for Scalable Business Growth.</span>
+                        Saya Jessy — Developer
+                        <br class="hidden md:block" />
+                        <span class="text-text-tertiary">yang bantu bisnis tumbuh.</span>
                     </h1>
                     <p class="text-base md:text-lg text-text-secondary leading-relaxed max-w-xl font-medium">
                         {{ introData.description }}

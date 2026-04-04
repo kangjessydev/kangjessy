@@ -217,9 +217,7 @@
             </div>
         </footer>
 
-        <WhatsAppModal :is-open="isWAModalOpen"
-            initial-message="Halo Kang Jessy! Saya tertarik dengan penawaran di landing page ini."
-            category="Landing Page Inquiry" @close="isWAModalOpen = false" />
+
     </div>
 </template>
 
@@ -231,15 +229,15 @@ import {
     ShieldCheck, Flame as FlameIcon
 } from 'lucide-vue-next';
 import { getLandingPage } from '../../data/landing/landingPages';
-import WhatsAppModal from '../../components/modals/WhatsAppModal.vue';
 import { BaseButton } from "@kangjessy/ui";
 import { useSEO } from '../../composables/useSEO';
+import { useWhatsApp } from '../../composables/useWhatsApp';
 
 const route = useRoute();
 const router = useRouter();
 const pageData = ref<any>(null);
 const loading = ref(true);
-const isWAModalOpen = ref(false);
+const { openDirectChat } = useWhatsApp();
 
 const sections = computed(() => pageData.value?.sections || {});
 
@@ -271,7 +269,7 @@ watch(() => route.params.slug, loadPageData);
 
 const handleCtaClick = (cta: any) => {
     if (cta.link === '#whatsapp-modal') {
-        isWAModalOpen.value = true;
+        openDirectChat("Halo Kang Jessy! Saya tertarik dengan penawaran " + (pageData.value?.title || "ini") + ". Bisa diskusi?");
     }
 };
 

@@ -2,9 +2,9 @@
   <section class="py-24 md:py-32" id="pricing">
     <div class="container relative z-10">
       <SectionHeader 
-        badge="Tailored Solutions" 
-        title="Scale Your Digital Ecosystem" 
-        subtitle="Dari website yang memikat hingga dashboard automasi. Pilih paket investasi untuk pondasi digital bisnis Anda."
+        badge="Solusi Digital Untuk Bisnis Anda" 
+        title="Pilih Paket Investasi Untuk Pondasi Digital Bisnis Anda" 
+        subtitle="Mulai dari website yang memikat hingga sistem automasi yang efisien, kami punya solusi yang tepat untuk kebutuhan bisnis Anda."
         align="center"
       />
 
@@ -499,8 +499,10 @@ import {
 } from 'lucide-vue-next';
 
 import { usePopupManager, Popups } from '../../composables/usePopupManager';
+import { useWhatsApp } from '../../composables/useWhatsApp';
 
 const popup = usePopupManager();
+const { openDirectChat } = useWhatsApp();
 
 const isAllCapabilitiesOpen = ref(false);
 
@@ -532,10 +534,7 @@ const builtItems = [
 defineEmits(['consultation']);
 
 const openConsultation = () => {
-  popup.openModal(Popups.CHAT_WA, {
-    title: 'Free Consultation',
-    bubbleMessage: 'Halo! Saya siap berdiskusi tentang kebutuhan proyek Anda secara gratis. Ceritakan visi Anda dan kita cari solusi terbaik bersama!',
-  });
+  openDirectChat("Halo! Saya ingin berdiskusi tentang kebutuhan proyek saya. Bisa bantu?");
 };
 
 const handleCustomOrder = () => {

@@ -31,10 +31,32 @@
             </span>
           </h1>
           <p
-            class="text-text-secondary mb-10 max-w-[580px] text-[clamp(1rem,2vw,1.15rem)] leading-[1.6] mx-auto md:mx-0"
+            class="text-text-secondary mb-5 max-w-[580px] text-[clamp(1rem,2vw,1.15rem)] leading-[1.6] mx-auto md:mx-0"
           >
-            Kami bangun website yang jualan dan sistem yang jalan otomatis — biar kamu fokus besarin bisnis, bukan urus teknis.
+            Saya bangun website yang jualan dan sistem yang jalan otomatis — biar kamu fokus besarin bisnis, bukan urus teknis.
           </p>
+
+          <!-- Micro-intro: Personal Identity -->
+          <div class="flex items-center mb-10 justify-center md:justify-start">
+            <div class="inline-flex items-center gap-3 px-4 py-2.5 bg-bg-secondary/60 border border-border-color rounded-2xl backdrop-blur-sm group/intro">
+              <!-- Avatar placeholder (swap ke foto asli nanti) -->
+              <div class="w-7 h-7 rounded-full bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary flex-shrink-0">
+                <UserIcon :size="14" />
+              </div>
+              <span class="text-[0.8rem] text-text-secondary font-medium">
+                Halo, saya <strong class="text-text-primary font-bold">{{ siteConfig.firstName }}</strong>
+                &nbsp;·&nbsp; Developer
+                &nbsp;·&nbsp; {{ siteConfig.location }}
+                &nbsp;·&nbsp; {{ siteConfig.heroStats.experience }}+ tahun pengalaman
+              </span>
+              <router-link
+                to="/about"
+                class="text-[0.75rem] font-bold text-accent-primary hover:opacity-80 transition-opacity whitespace-nowrap border-l border-border-color pl-3 ml-1"
+              >
+                Profil →
+              </router-link>
+            </div>
+          </div>
 
           <div
             class="flex flex-wrap gap-4 mb-14 justify-center md:justify-start"
@@ -42,7 +64,7 @@
             <BaseButton
               variant="primary"
               aria-label="Let's Talk via WhatsApp"
-              @click="isWAModalOpen = true"
+              @click="openDirectChat()"
               >Konsultasi Gratis</BaseButton
             >
             <BaseButton
@@ -54,7 +76,7 @@
           </div>
 
           <!-- Hero Stats Grid -->
-          <div class="flex gap-6 sm:gap-12 justify-center md:justify-start">
+          <!-- <div class="flex gap-6 sm:gap-12 justify-center md:justify-start">
             <div
               v-for="(val, key) in stats"
               :key="key"
@@ -71,7 +93,7 @@
                 {{ formatLabel(String(key)) }}
               </p>
             </div>
-          </div>
+          </div> -->
         </header>
 
         <!-- Hero Visual (Dynamic Display) -->
@@ -209,11 +231,6 @@
         </div>
       </div>
     </div>
-    <WhatsAppModal
-      :isOpen="isWAModalOpen"
-      initialMessage="Halo Kang Jessy! Saya ingin diskusi tentang project baru."
-      category="Hero CTA"
-      @close="isWAModalOpen = false"
     />
   </section>
 </template>
@@ -224,13 +241,14 @@ import {
   Sparkles as SparklesIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  Eye as EyeIcon
+  Eye as EyeIcon,
+  User as UserIcon
 } from "lucide-vue-next";
 import { BaseButton } from "@kangjessy/ui";
-import WhatsAppModal from "../modals/WhatsAppModal.vue";
+import { useWhatsApp } from "../../composables/useWhatsApp";
 import { siteConfig } from "../../data/config/siteConfig";
 
-const isWAModalOpen = ref(false);
+const { openDirectChat } = useWhatsApp();
 
 const stats = ref<Record<string, number>>({
   projects: 0,
@@ -333,14 +351,7 @@ const updateLiveStats = () => {
 
 let statsInterval: any = null;
 
-const formatLabel = (key: string): string => {
-  const map: Record<string, string> = {
-    projects: "Karya Pilihan",
-    support: "Layanan Penuh",
-    experience: "Tahun Melayani",
-  };
-  return map[key] || key;
-};
+
 
 const animateStatValue = (key: string, target: number, duration: number) => {
   let startTime: number | null = null;

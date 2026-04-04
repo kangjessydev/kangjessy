@@ -4,7 +4,7 @@
         <header class="relative pt-[180px] pb-[100px] overflow-hidden border-b border-border-color">
             <!-- Grid Pattern overlay -->
             <div class="absolute inset-x-0 top-0 h-[800px] opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 40px 40px;">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-primary"></div>
+                <div class="absolute inset-0 bg-linear-to-b from-transparent to-bg-primary"></div>
             </div>
 
             <div class="container relative z-10">
@@ -27,7 +27,7 @@
         </header>
 
         <!-- Pricing Section -->
-        <PricingSwitcher @consultation="isConsultationOpen = true" />
+        <PricingSwitcher @consultation="handleConsultation" />
 
         <!-- Methodology Section -->
         <section class="py-[100px] bg-bg-primary/30">
@@ -39,7 +39,7 @@
                 <!-- Timeline Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-20 relative">
                     <!-- Base Connector line behind for desktop -->
-                    <div class="hidden lg:block absolute top-14 left-[10%] w-[80%] h-[1px] bg-linear-to-r from-accent-primary/0 via-accent-primary/30 to-accent-primary/0 z-0"></div>
+                    <div class="hidden lg:block absolute top-14 left-[10%] w-[80%] h-px bg-linear-to-r from-accent-primary/0 via-accent-primary/30 to-accent-primary/0 z-0"></div>
                     
                     <div v-for="(step, idx) in methodology" :key="step.title"
                         class="group flex flex-col items-start px-8 py-10 rounded-[20px] bg-bg-secondary border border-border-color hover:-translate-y-1 hover:border-border-color hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-all duration-300 relative overflow-hidden">
@@ -79,7 +79,7 @@
                             class="mt-10 p-8 border border-border-color bg-bg-secondary rounded-[20px] text-left">
                             <h4 class="mb-3 text-text-primary font-bold text-xl">Kebutuhan spesifik?</h4>
                             <p class="text-[0.9rem] text-text-secondary mb-8 leading-relaxed">Jangan ragu menghubungi saya untuk merancang paket atau solusi khusus di luar skema FAQ yang tersedia.</p>
-                            <BaseButton variant="primary" size="md" @click="isConsultationOpen = true"
+                            <BaseButton variant="primary" size="md" @click="handleConsultation"
                                 class="w-full justify-center">
                                 Mulai Diskusi
                             </BaseButton>
@@ -110,7 +110,7 @@
                         Ayo mulai dengan konsultasi bebas biaya. Mari bahas ruang lingkup proyek, target waktu, dan pastikan kita sejalan secara pemikiran.
                     </p>
                     <div class="flex justify-center gap-4 flex-wrap">
-                        <BaseButton variant="primary" size="lg" @click="isConsultationOpen = true"
+                        <BaseButton variant="primary" size="lg" @click="handleConsultation"
                             class="inline-flex items-center gap-2 group/btn">
                             Jadwalkan Konsultasi
                             <ArrowRightIcon :size="18" class="group-hover/btn:translate-x-1 transition-transform" />
@@ -124,10 +124,7 @@
                 </div>
             </section>
 
-        <!-- WhatsApp Modal -->
-        <WhatsAppModal :isOpen="isConsultationOpen"
-            initialMessage="Halo Kang Jessy! Saya tertarik untuk konsultasi mengenai project saya."
-            category="Services Consultation" @close="isConsultationOpen = false" />
+
     </div>
 </template>
 
@@ -136,10 +133,10 @@ import { ref, computed, onMounted } from 'vue';
 import { commonServicesFaq } from '../../data/faqs/servicesFaq';
 import SectionHeader from '../../components/ui/SectionHeader.vue';
 import { BaseButton } from "@kangjessy/ui";
-import WhatsAppModal from '../../components/modals/WhatsAppModal.vue';
 import PricingSwitcher from '../../components/sections/PricingSwitcher.vue';
 import AccordionItem from '../../components/ui/AccordionItem.vue';
 import { useSEO } from '../../composables/useSEO';
+import { useWhatsApp } from '../../composables/useWhatsApp';
 import {
     ArrowRight as ArrowRightIcon
 } from 'lucide-vue-next';
@@ -151,7 +148,8 @@ useSEO({
     url: '/services'
 });
 
-const isConsultationOpen = ref(false);
+const { openDirectChat } = useWhatsApp();
+const handleConsultation = () => openDirectChat("Halo Kang Jessy! Saya tertarik untuk konsultasi mengenai project saya.");
 
 const stats = [
     { label: 'Successful Projects', value: '50+' },

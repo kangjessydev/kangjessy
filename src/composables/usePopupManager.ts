@@ -1,5 +1,6 @@
 import { ref, reactive } from "vue";
 import { closeAllSheets } from "@kangjessy/ui";
+import { useWhatsApp } from "./useWhatsApp";
 
 // Registered Modal IDs as a const object
 export const Popups = {
@@ -36,6 +37,13 @@ const closeAll = () => {
 
 export function usePopupManager() {
   const openModal = (id: PopupId, props: Record<string, any> = {}) => {
+    // Intercept WhatsApp to open direct chat instead of modal
+    if (id === Popups.CHAT_WA) {
+      const { openDirectChat } = useWhatsApp();
+      openDirectChat(props.initialMessage || props.bubbleMessage);
+      return;
+    }
+
     // Close all bottom sheets when opening a modal
     closeAllSheets();
     

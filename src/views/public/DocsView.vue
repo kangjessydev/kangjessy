@@ -132,7 +132,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ChevronDown as ChevronDownIcon, List } from 'lucide-vue-next';
+import { List } from 'lucide-vue-next';
 import { BottomSheet } from "@kangjessy/ui";
 import WhatsappIcon from '../../components/icons/WhatsappIcon.vue';
 import { docsService, type DocumentDetail } from '../../services/docsService';

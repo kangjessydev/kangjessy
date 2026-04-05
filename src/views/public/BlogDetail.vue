@@ -445,7 +445,6 @@ import {
 } from 'lucide-vue-next';
 import { blogService } from '../../services/blogService';
 import { PortableText } from '@portabletext/vue';
-import { usePopupManager, Popups } from '../../composables/usePopupManager';
 import { BottomSheet } from '@kangjessy/ui';
 import CodeBlock from '../../components/ui/CodeBlock.vue';
 import TableOfContents from '../../components/ui/TableOfContents.vue';
@@ -466,7 +465,6 @@ const toHTML = (node: any): string => {
 };
 
 const route = useRoute();
-const popup = usePopupManager();
 
 const post = ref<any>(null);
 const loading = ref(true);
@@ -849,17 +847,7 @@ const copyLink = () => {
 };
 
 // Interactions
-const chatWithAI = () => {
-    popup.openModal(Popups.CHAT_AI);
-};
-
-const consultOnWhatsApp = () => {
-    if (!post.value) return;
-    popup.openModal(Popups.CHAT_WA, {
-        category: 'Blog Consultation',
-        initialMessage: `Saya baru saja membaca artikel "${post.value.title}" dan tertarik untuk konsultasi profesional mengenai topik ini.`
-    });
-};
+// Removed unused chatWithAI and consultOnWhatsApp as CTA was commented out
 
 onMounted(() => {
     window.scrollTo(0, 0);

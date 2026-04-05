@@ -145,6 +145,13 @@
               </li> -->
               <li>
                 <router-link
+                  to="/docs"
+                  class="nav-link text-[0.95rem] font-medium"
+                  >Documentation</router-link
+                >
+              </li>
+              <li>
+                <router-link
                   to="/blog"
                   class="nav-link text-[0.95rem] font-medium"
                   >Blog & Articles</router-link

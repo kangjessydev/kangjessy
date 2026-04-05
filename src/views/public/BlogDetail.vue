@@ -175,7 +175,7 @@
                         </div>
 
                         <!-- AI Concierge CTA -->
-                        <div
+                        <!-- <div
                             class="bg-gradient-to-br from-accent-primary/10 to-accent-primary/2 border border-accent-primary/20 rounded-[32px] p-8 md:p-10 mb-8 text-center text-bg-primary">
                             <div class="mb-5">
                                 <div
@@ -200,10 +200,10 @@
                                     Tanya WhatsApp (Diskusi Langsung)
                                 </button>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- WhatsApp Professional Consultation CTA -->
-                        <div class="text-center mb-[60px]">
+                        <!-- <div class="text-center mb-[60px]">
                             <p class="text-[0.9rem] text-text-tertiary">
                                 Mau langsung eksekusi project?
                                 <span @click="consultOnWhatsApp"
@@ -212,7 +212,7 @@
                                     <WhatsAppIcon :size="14" class="shrink-0" />
                                 </span>
                             </p>
-                        </div>
+                        </div> -->
 
                         <!-- CTA Ebook Vibe Coding -->
                         <div v-if="showLeadMagnet" class="bg-gradient-to-r from-accent-primary to-accent-secondary p-[2px] rounded-[32px] relative overflow-hidden mt-8">

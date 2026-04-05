@@ -65,6 +65,11 @@ export const routes = [
       name: 'services',
       component: () => import('../views/public/ServicesView.vue')
     },
+    {
+      path: '/docs/:slug?',
+      name: 'docs',
+      component: () => import('../views/public/DocsView.vue')
+    },
 
     {
       path: '/about',

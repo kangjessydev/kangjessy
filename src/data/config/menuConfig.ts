@@ -4,7 +4,6 @@ import {
     BookOpen,
     Send,
     Info,
-    Mail,
     Zap,
     Rocket,
     MessageSquare,

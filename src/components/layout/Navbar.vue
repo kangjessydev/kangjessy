@@ -626,7 +626,6 @@ import {
   ChevronRight,
   Globe,
   Rocket,
-  Zap
 } from "lucide-vue-next";
 import { BaseButton, BottomSheet, activeSheet } from "@kangjessy/ui";
 import { useGlobalTheme } from "../../composables/useTheme";

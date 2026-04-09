@@ -235,7 +235,7 @@ export const allFaqs: FAQItem[] = [
     },
     {
         id: 'bonus-01',
-        category: 'bonus',
+        category: 'trust',
         question: 'Siapa yang mengerjakan bonus konten TikTok?',
         answer: 'Bonus konten TikTok dikerjakan oleh Fergin Creative Agency dalam maksimal 1 minggu setelah brief diterima. Bahan konten menggunakan materi dari project website kamu. Tersedia 1x revisi.',
         keywords: ['bonus', 'konten', 'tiktok', 'fca', 'fergin', 'creative', 'agency', 'revisi'],

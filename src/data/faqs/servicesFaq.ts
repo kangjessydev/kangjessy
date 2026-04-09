@@ -13,5 +13,5 @@ export const commonServicesFaq = [
     question: "Apakah ada biaya maintenance bulanan?",
     answer:
       "Tergantung paket yang dipilih. Untuk website statis biasanya tidak ada, namun untuk aplikasi kompleks kami menawarkan paket maintenance untuk security update dan backup.",
-  },
+  }
 ];

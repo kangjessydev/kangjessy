@@ -442,8 +442,8 @@
                 <div class="flex items-center justify-end">
                   <span class="text-text-primary font-bold text-[1rem]">Rp {{ item.price }}</span>
                 </div>
-                <button class="block w-full text-[0.7rem] text-accent-primary mt-2 font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-                   + Add Service
+                <button class="block w-full text-[0.7rem] text-accent-primary mt-2 font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                   + Diskusi Kebutuhan
                 </button>
               </div>
             </div>
@@ -661,7 +661,7 @@ const handleAddonOrder = (item: any, categoryName: string) => {
       description: item.desc,
       badge: categoryName,
       features: [],
-      ctaText: 'Pesan Layanan',
+      ctaText: 'Konsultasi Fitur',
       isPopular: false,
       billingCycle: 'one-time'
     }

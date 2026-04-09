@@ -89,8 +89,8 @@ export const menuItems: MenuItem[] = [
         ]
     },
     */
-    { text: 'Spesialisasi', url: '/industries', icon: Rocket },
-    { text: 'Karya Terpilih', url: '/projects', icon: Briefcase },
+    { text: 'Expertise', url: '/industries', icon: Rocket },
+    { text: 'Showcase', url: '/projects', icon: Briefcase },
     /*
     {
         text: 'The Blueprint',
@@ -124,6 +124,7 @@ export const menuItems: MenuItem[] = [
     },
     */
     { text: 'Blog', url: '/blog', icon: BookOpen },
+    { text: 'Docs', url: '/docs', icon: BookOpen },
     /*
     {
         text: 'Resources',
@@ -138,10 +139,10 @@ export const menuItems: MenuItem[] = [
     },
     */
     {
-        text: 'Konsultasi Gratis',
+        text: 'Hubungi Kami',
         isAction: true,
         trigger: 'whatsapp',
-        triggerProps: { initialMessage: 'Halo Kang Jessy, saya ingin konsultasi gratis mengenai proyek saya.' },
+        triggerProps: { initialMessage: 'Halo Kang Jessy, saya ingin klaim sesi konsultasi gratis mengenai proyek saya.' },
         icon: MessageSquare
     }
 ]
@@ -150,14 +151,14 @@ export const menuItems: MenuItem[] = [
 export const mobileNavItems = [
     { text: 'Layanan', url: '/services#development', icon: Monitor },
     { text: 'Tools', url: 'https://kangjessy-tools.vercel.app', icon: Zap },
-    { text: 'Spesialisasi', url: '/industries', icon: Rocket },
-    { text: 'Portofolio', url: '/projects', icon: Briefcase },
+    { text: 'Expertise', url: '/industries', icon: Rocket },
+    { text: 'Showcase', url: '/projects', icon: Briefcase },
     // { text: 'Store', url: '/store', icon: ShoppingCart },
     { text: 'Blog', url: '/blog', icon: BookOpen },
     { text: 'About', url: '/about', icon: Info },
     // { text: 'Reviews', url: '/testimonials', icon: Star },
     // { text: 'FAQ', url: '/faq', icon: HelpCircle },
-    { text: 'Contact', trigger: 'whatsapp', icon: Mail },
+    { text: 'Konsul Gratis', trigger: 'whatsapp', icon: Zap },
 ];
 
 export const mobileResourceLinks = [
@@ -174,8 +175,8 @@ export const mobileMenuGroups: {
         title: 'Daily Business',
         items: [
             { text: 'Layanan', url: '/services#development', icon: Monitor },
-            { text: 'Spesialisasi', url: '/industries', icon: Rocket },
-            { text: 'Portofolio', url: '/projects', icon: Briefcase },
+            { text: 'Expertise', url: '/industries', icon: Rocket },
+            { text: 'Showcase', url: '/projects', icon: Briefcase },
             // { text: 'Store', url: '/store', icon: ShoppingCart },
             { text: 'Blog', url: '/blog', icon: BookOpen },
             { text: 'Tools', url: 'https://kangjessy-tools.vercel.app', icon: Zap },

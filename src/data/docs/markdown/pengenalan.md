@@ -1,15 +1,29 @@
 # Pengenalan Panduan
 
-Selamat datang di pusat bantuan (Documentation) KangJessy! 
+Selamat datang di pusat bantuan (Documentation) **KangJessy!**
 
 Di sini Anda akan menemukan semua panduan teknis yang dibutuhkan untuk mengelola, memelihara, dan mengembangkan website yang telah kami bangun untuk Anda.
 
+---
+
+### Pilih Jalur Panduan Anda
+Agar tidak bingung, silakan pilih kategori yang sesuai dengan platform website Anda saat ini:
+
+1. **WordPress Ecosystem**
+   - *Gunakan kategori ini jika website Anda berbasis WordPress (Elementor/Gutenberg).*
+   - Kelola artikel, edit halaman, dan backup plugin.
+
+2. **Custom Dashboard (Premium CMS)**
+   - *Gunakan kategori ini jika kami membuatkan Dashboard Admin khusus untuk Anda.*
+   - Kelola user role, audit log, dan integrasi API khusus.
+
+3. **Modern Web (Non-CMS)**
+   - *Gunakan kategori ini untuk landing page berkecepatan tinggi atau site statis.*
+   - Cara praktis update konten teks dan gambar via konfigurasi sederhana.
+
+---
+
 ### Untuk Siapa Panduan Ini?
-Panduan ini dirancang khusus untuk klien kami yang ingin menguasai dashboard (CMS) mereka secara mandiri, tanpa perlu menunggu bantuan teknis untuk tugas-tugas sehari-hari.
+Panduan ini dirancang khusus untuk klien kami yang ingin menguasai dashboard secara mandiri, tanpa perlu menunggu bantuan teknis untuk tugas-tugas rutin.
 
-### Topik Populer
-- **Manajemen Artikel:** Cara membuat, mengedit, dan menghapus artikel blog.
-- **Akun Pengguna:** Cara menambahkan tim Anda ke dalam sistem dengan Role yang berbeda.
-- **Produk & E-commerce:** Cara memanajemen inventory dan gambar produk.
-
-Jangan ragu untuk mengeksplorasi sidebar di sebelah kiri untuk melihat topik-topik yang tersedia. Jika Anda tidak menemukan apa yang Anda cari, hubungi support kami via WhatsApp!
+Jika Anda tidak menemukan apa yang Anda cari, hubungi support kami via **WhatsApp** di link yang tersedia pada navigasi!

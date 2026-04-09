@@ -36,90 +36,6 @@
               ></span
             >
           </router-link>
-
-          <!-- Ecosystem Dropdown (Desktop Only) -->
-          <!-- <div class="hidden md:block relative" ref="ecosystemDropdownRef">
-            <button
-              @click="toggleEcosystemDropdown"
-              aria-label="Toggle ecosystem dropdown"
-              class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-color hover:border-accent-primary/50 bg-bg-secondary/50 text-text-secondary hover:text-text-primary transition-all text-xs font-bold cursor-pointer"
-            >
-              <span>Ecosystem</span>
-              <ChevronDown
-                :size="12"
-                class="transition-transform duration-300"
-                :class="{ 'rotate-180': isEcosystemDropdownOpen }"
-              />
-            </button>
-
-            <Transition
-              enter-active-class="transition duration-200 ease-out"
-              enter-from-class="transform scale-95 opacity-0 translate-y-2"
-              enter-to-class="transform scale-100 opacity-100 translate-y-0"
-              leave-active-class="transition duration-150 ease-in"
-              leave-from-class="transform scale-100 opacity-100 translate-y-0"
-              leave-to-class="transform scale-95 opacity-0 translate-y-2"
-            >
-              <div
-                v-if="isEcosystemDropdownOpen"
-                class="absolute top-full left-0 mt-2 w-56 bg-bg-secondary border border-border-color rounded-xl shadow-xl overflow-hidden py-1 z-50"
-              >
-                <router-link
-                  to="/"
-                  class="flex items-center gap-3 px-4 py-3 bg-accent-primary/5 border-l-2 border-accent-primary"
-                >
-                  <Globe :size="14" class="text-accent-primary" />
-                  <div class="flex flex-col">
-                    <span class="text-xs font-bold text-accent-primary"
-                      >Main Agency</span
-                    >
-                    <span class="text-[10px] text-accent-primary/70"
-                      >Current Workspace</span
-                    >
-                  </div>
-                </router-link>
-                <div class="h-px bg-border-color/50 my-1"></div>
-                <a
-                  href="https://kangjessy-tools.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex items-center gap-3 px-4 py-3 hover:bg-bg-tertiary transition-colors group"
-                >
-                  <Wrench
-                    :size="14"
-                    class="text-text-tertiary group-hover:text-accent-primary"
-                  />
-                  <div class="flex flex-col">
-                    <span class="text-xs font-bold text-text-primary"
-                      >Smart Tools</span
-                    >
-                    <span class="text-[10px] text-text-tertiary"
-                      >kangjessy-tools.vercel.app</span
-                    >
-                  </div>
-                </a>
-                <a
-                  href="https://kangjessy-store.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex items-center gap-3 px-4 py-3 hover:bg-bg-tertiary transition-colors group"
-                >
-                  <ShoppingBag
-                    :size="14"
-                    class="text-text-tertiary group-hover:text-accent-secondary"
-                  />
-                  <div class="flex flex-col">
-                    <span class="text-xs font-bold text-text-primary"
-                      >Digital Store</span
-                    >
-                    <span class="text-[10px] text-text-tertiary"
-                      >kangjessy-store.vercel.app</span
-                    >
-                  </div>
-                </a>
-              </div>
-            </Transition>
-          </div> -->
         </div>
 
         <!-- Desktop Links -->
@@ -137,6 +53,12 @@
                 }"
                 @click="toggleDropdown(item.text)"
               >
+                <component
+                  :is="item.icon"
+                  v-if="item.icon"
+                  :size="14"
+                  class="opacity-40 group-hover:opacity-100 transition-opacity"
+                />
                 {{ item.text }}
                 <ChevronDown
                   :size="14"
@@ -310,6 +232,12 @@
                 }"
                 @click="toggleDropdown(item.text)"
               >
+                <component
+                  :is="item.icon"
+                  v-if="item.icon"
+                  :size="14"
+                  class="opacity-40 group-hover:opacity-100 transition-opacity"
+                />
                 {{ item.text }}
                 <ChevronDown
                   :size="14"
@@ -420,8 +348,9 @@
               variant="primary"
               size="sm"
               @click="handleActionClick(item)"
-              class="font-bold text-[13px] px-5!"
+              class="font-bold text-[13px] px-5! flex items-center gap-2"
             >
+              <component :is="item.icon" v-if="item.icon" :size="14" />
               {{ item.text }}
             </BaseButton>
 
@@ -433,8 +362,14 @@
               :href="ensureProtocol(item.url || '')"
               target="_blank"
               rel="noopener noreferrer"
-              class="nav-link text-[14px] font-medium py-2"
+              class="nav-link text-[14px] font-medium py-2 flex items-center gap-2"
             >
+              <component
+                :is="item.icon"
+                v-if="item.icon"
+                :size="14"
+                class="opacity-40 group-hover:opacity-100 transition-opacity"
+              />
               {{ item.text }}
             </a>
 
@@ -445,36 +380,21 @@
                   ? { path: '/', hash: item.url || '#' }
                   : item.url || '#'
               "
-              class="nav-link text-[14px] font-medium py-2"
+              class="nav-link text-[14px] font-medium py-2 flex items-center gap-2"
             >
+              <component
+                :is="item.icon"
+                v-if="item.icon"
+                :size="14"
+                class="opacity-40 group-hover:opacity-100 transition-opacity"
+              />
               {{ item.text }}
             </router-link>
           </div>
-
-          <!-- Theme Toggle -->
-          <!-- <button
-            @click="toggleTheme"
-            :aria-label="
-              isDark ? 'Switch to light mode' : 'Switch to dark mode'
-            "
-            class="w-[38px] h-[38px] rounded-xl bg-white/5 border border-border-color text-text-primary flex items-center justify-center cursor-pointer hover:bg-border-color hover:text-accent-primary transition-all hover:-translate-y-0.5 active:scale-95"
-          >
-            <component :is="isDark ? Moon : Sun" :size="18" />
-          </button> -->
         </div>
 
         <!-- Mobile Actions -->
         <div class="flex md:hidden items-center gap-2 z-1001">
-          <!-- Theme Toggle -->
-          <!-- <button
-            @click="toggleTheme"
-            :aria-label="
-              isDark ? 'Switch to light mode' : 'Switch to dark mode'
-            "
-            class="w-9 h-9 rounded-xl bg-white/5 border border-border-color text-text-primary flex items-center justify-center active:scale-95"
-          >
-            <component :is="isDark ? Moon : Sun" :size="18" />
-          </button> -->
           <button
             @click="toggleMobileMenu"
             aria-label="Toggle mobile menu"
@@ -506,36 +426,6 @@
       @close="closeMenu"
     >
       <div class="p-6">
-        <!-- Ecosystem Switcher (Mobile) -->
-        <!-- <div
-          class="mb-8 p-1.5 bg-bg-secondary border border-border-color rounded-2xl flex gap-1"
-        >
-          <button
-            class="flex-1 py-2.5 px-2 rounded-xl bg-accent-primary text-white shadow-lg text-[10px] font-black uppercase tracking-wider flex flex-col items-center gap-1 cursor-default"
-          >
-            <Globe :size="16" />
-            Agency
-          </button>
-          <a
-            href="https://kangjessy-tools.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex-1 py-2.5 px-2 rounded-xl hover:bg-bg-tertiary text-text-tertiary hover:text-accent-primary transition-all text-[10px] font-bold uppercase tracking-wider flex flex-col items-center gap-1 decoration-none"
-          >
-            <Wrench :size="16" />
-            Tools
-          </a>
-          <a
-            href="https://kangjessy-store.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex-1 py-2.5 px-2 rounded-xl hover:bg-bg-tertiary text-text-tertiary hover:text-accent-secondary transition-all text-[10px] font-bold uppercase tracking-wider flex flex-col items-center gap-1 decoration-none"
-          >
-            <ShoppingBag :size="16" />
-            Store
-          </a>
-        </div> -->
-
         <!-- Main Nav Links Groups (3 Columns Pattern) -->
         <div class="space-y-10 mb-10 mt-2">
           <div
@@ -736,6 +626,7 @@ import {
   ChevronRight,
   Globe,
   Rocket,
+  Zap
 } from "lucide-vue-next";
 import { BaseButton, BottomSheet, activeSheet } from "@kangjessy/ui";
 import { useGlobalTheme } from "../../composables/useTheme";
@@ -790,15 +681,10 @@ const toggleDropdown = (itemText: string) => {
   activeDropdown.value = activeDropdown.value === itemText ? null : itemText;
 };
 
-// const toggleEcosystemDropdown = () => {
-//   isEcosystemDropdownOpen.value = !isEcosystemDropdownOpen.value;
-// };
-
 const closeMenu = () => {
   isMobileMenuOpen.value = false;
   document.body.style.overflow = "";
   activeDropdown.value = null;
-  isEcosystemDropdownOpen.value = false;
 };
 
 const handleTrigger = (trigger?: string, props?: any) => {
@@ -832,9 +718,6 @@ const handleActionClick = (item: any) => {
 
 const handleMobileItemClick = (item: any) => {
   if (handleTrigger(item.trigger, item.triggerProps)) return;
-  if (item.url && !item.url.startsWith("/")) {
-    // window.location.href = item.url;
-  }
   closeMenu();
 };
 
@@ -850,7 +733,7 @@ const handleClickOutside = (event: MouseEvent) => {
     isEcosystemDropdownOpen.value = false;
   }
 
-  // Close Mega Menu if clicked outside (optional, existing logic was checking closure)
+  // Close Mega Menu if clicked outside
   const isOutsideNav = navbarRef.value && !navbarRef.value.contains(target);
   if (isOutsideNav && activeDropdown.value) {
     activeDropdown.value = null;

@@ -139,6 +139,12 @@ export const developmentPlans: PricingPlan[] = [
           { text: '1 bulan Basic Care maintenance gratis', included: true, tooltip: 'Website kamu dipantau dan dirawat selama 1 bulan setelah launch. Termasuk update keamanan, backup, dan monitoring performa.' },
           // { text: '1x sesi kick-off via video call', included: true, tooltip: 'Sesi diskusi singkat untuk memastikan website sesuai dengan kebutuhan bisnis kamu.' },
         ]
+      },
+      {
+        name: 'Bonus Opsinal',
+        items: [
+          { text: '2 konten TikTok profesional untuk promosi launch website, bekerja sama dengan partner kami FCA.', included: true, tooltip: 'Klaim bonus ini via WhatsApp, maksimal 7 hari setelah website kamu resmi tayang.', isPopular: true },
+        ]
       }
     ]
   },
@@ -188,6 +194,12 @@ export const developmentPlans: PricingPlan[] = [
           { text: 'Setup, konfigurasi & optimasi server', included: true, tooltip: 'Setup VPS, konfigurasi server, dan optimasi performa website.' },
           { text: '1 bulan Growth Care maintenance gratis', included: true, tooltip: 'Website kamu dipantau dan dirawat selama 1 bulan setelah launch. Termasuk update keamanan, backup, dan monitoring performa.' },
         ]
+      },
+      {
+        name: 'Bonus Opsinal',
+        items: [
+          { text: '4 konten TikTok profesional untuk promosi launch website, bekerja sama dengan partner kami FCA.', included: true, tooltip: 'Klaim bonus ini via WhatsApp, maksimal 7 hari setelah website kamu resmi tayang.', isPopular: true },
+        ]
       }
     ]
   }
@@ -231,41 +243,28 @@ export const maintenancePlans: MaintenancePlan[] = [
 
 export const addonServices = [
   {
-    category: 'Pages & Layout',
+    category: 'Pages & Content',
     items: [
       { name: 'Standard Static Page', price: '250.000', desc: 'Halaman informasi tambahan (Kontak, FAQ, Profil Tim, Kebijakan Privasi, dsb) dengan desain yang serasi dengan website utama.' },
-      { name: 'Dynamic Interactive Page', price: '500.000', desc: 'Halaman dengan elemen interaktif seperti filter produk, pencarian real-time, atau konten yang bisa dikelola mandiri via CMS.' },
-      { name: 'API Integration Page', price: '850.000', desc: 'Halaman terhubung ke layanan eksternal (peta, ongkir, cuaca, notifikasi, dsb) yang memiliki dokumentasi API publik. (Ketersediaan integrasi dikonfirmasi setelah evaluasi singkat — tanpa biaya tambahan)' },
-      { name: 'High-Conversion Landing Page', price: '1.200.000', desc: 'Halaman campaign dengan riset copywriting persuasif, struktur konversi, dan desain yang fokus mendatangkan leads atau penjualan.' },
+      { name: 'High-Conversion Landing Page', price: '1.200.000', desc: 'Halaman campaign khusus promosional. Fokus dengan copywriting persuasif dan struktur untuk mendatangkan konversi penjualan/leads.' },
+      { name: 'Copywriting Halaman', price: '350.000', desc: 'Penulisan ulang teks untuk halaman tertentu agar lebih persuasif, jelas, dan "menjual" (harga dihitung per halaman).' },
+      { name: 'Paket 5 Artikel SEO', price: '600.000', desc: 'Pembuatan artikel blog yang disesuaikan dengan kata kunci pencarian. (Bagus untuk paket Starter, karena Business Growth & Pro sudah include ini).' }
     ]
   },
   {
-    category: 'Features & Optimization',
+    category: 'Features & Experience',
     items: [
-      { name: 'Advanced Animation (GSAP)', price: '1.000.000', desc: 'Animasi interaktif premium (scroll-triggered, hover, transisi halaman) untuk kesan visual yang kuat dan engagement lebih tinggi.' },
-      { name: 'Payment Gateway Setup', price: '1.000.000', desc: 'Integrasi pembayaran online (QRIS, transfer bank, kartu kredit) untuk website yang sudah ada tapi belum bisa terima pembayaran otomatis.' },
-      { name: 'Speed & Performance Boost', price: '550.000', desc: 'Optimasi kecepatan sisi teknis — kompresi aset, caching, lazy load, dan minifikasi kode untuk loading yang lebih cepat.' },
-      { name: 'Member Area / Login System', price: '1.200.000', desc: 'Sistem akun pelanggan — pengunjung bisa daftar, login, dan akses konten atau fitur khusus sesuai perannya.' },
-      { name: 'WhatsApp Business Integration', price: '450.000', desc: 'Tombol WA teroptimasi dengan pesan pre-filled sesuai konteks, plus notifikasi otomatis ke WhatsApp bisnis kamu saat ada form masuk atau order baru. (Bukan chatbot — untuk chatbot kompleks masuk ke paket Custom)' },
-      { name: 'Multi-language Support', price: '800.000', desc: 'Website bisa diakses dalam dua bahasa atau lebih — cocok untuk bisnis yang melayani klien lokal dan internasional sekaligus.' },
+      { name: 'Premium Animation (GSAP)', price: '1.000.000', desc: 'Buat website terasa jauh lebih berkesan dan eksklusif dengan efek transisi interaktif dan animasi halus saat user melakukan scroll.' },
+      { name: 'Speed & Performance Boost', price: '550.000', desc: 'Optimasi kecepatan loading tingkat lanjut. Sangat berguna jika kamu memiliki website lama yang terasa lambat saat diakses pelanggan.' },
+      { name: 'WhatsApp Automations', price: '450.000', desc: 'Integrasi WA di mana format pesannya sudah tersusun menyesuaikan produk, plus notif otomatis saat ada order di form.' },
+      { name: 'Advanced SEO Setup', price: '1.000.000', desc: 'Optimalisasi sisi dalam website agar lebih terdeteksi oleh mesin pencari seperti Google, membantu calon klien menemukan situsmu.' }
     ]
   },
   {
-    category: 'Content & SEO',
+    category: 'Technical Management',
     items: [
-      { name: 'Advanced SEO Engine', price: '1.000.000', desc: 'Audit teknis mendalam, riset keyword kompetitor, on-page optimization per 5 halaman, dan panduan strategi konten untuk bisnis kamu.' },
-      { name: 'Paket Artikel Konten', price: '600.000', desc: '5 artikel blog yang dioptimasi untuk pencarian Google berdasarkan keyword bisnis kamu — ditulis alami, bukan sekadar isian.' },
-      { name: 'Copywriting Halaman (per halaman)', price: '350.000', desc: 'Penulisan ulang atau pembuatan teks konten untuk halaman tertentu — lebih persuasif, lebih jelas, dan lebih sesuai target audiens (dihitung per halaman)' },
-      { name: 'Google Analytics & Search Console Setup', price: '200.000', desc: 'Instalasi dan konfigurasi lengkap — pantau jumlah pengunjung, sumber trafik, dan performa keyword website kamu di Google.' }
-    ]
-  },
-  {
-    category: 'Management & Technical',
-    items: [
-      { name: 'Migrasi & Deployment', price: '450.000', desc: 'Pindah hosting, domain, atau platform lama ke ekosistem baru — termasuk transfer data, konfigurasi DNS, dan verifikasi setelah migrasi.' },
-      { name: 'Professional Email Setup', price: '200.000', desc: 'Konfigurasi email domain bisnis (halo@namabisnis.com) dengan proteksi spam dan sinkronisasi ke HP maupun laptop.' },
-      { name: 'Backup System Setup', price: '300.000', desc: 'Konfigurasi sistem backup otomatis — data website dicadangkan secara berkala ke cloud sehingga bisa dipulihkan kapanpun dibutuhkan. (Pemulihan data hanya bisa dilakukan jika backup tersedia. Data yang hilang tanpa backup tidak dapat dijamin pemulihannya)' },
-      { name: 'Security Hardening', price: '350.000', desc: 'Penguatan keamanan website yang sudah ada — proteksi login, blokir serangan umum, SSL, dan pembaruan komponen kritis.' }
+      { name: 'Migrasi & Pemindahan Sistem', price: '450.000', desc: 'Terima beres untuk pindahan hosting, domain, atau pemindahan website dari platform lamamu ke sistem yang baru.' },
+      { name: 'Setup Professional Email', price: '200.000', desc: 'Punya email resmi dengan nama bisnismu sendiri (contoh: cs@bisnis.com) lengkap dengan sinkronisasi ke HP klien.' }
     ]
   }
 ];
